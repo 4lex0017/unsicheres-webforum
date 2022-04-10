@@ -1,0 +1,29 @@
+<div class="main">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 " >
+
+        <div class = "categories">
+          <app-category *ngFor="let category of accessData.categories"
+                        [categoryObject]="category"
+          ></app-category>
+        </div>
+      </div>
+
+
+      <div class="col-md-3">
+        --Side Content--
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--#        <mat-list>-->
+<!--  <mat-list-item *ngFor="let category of accessData.categories">-->
+<!--    <app-category [categoryObject]="category"></app-category>-->
+<!--  </mat-list-item>-->
+<!--</mat-list>-->

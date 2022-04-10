@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {ThemeService} from "../../theme.service";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent  {
   username;
   password;
 
-  constructor(private http : HttpClient, private router : Router) { }
-
-  ngOnInit(): void {
-
+  constructor(private http : HttpClient, private router : Router) {
   }
+
 
   handleLoginClick(){
     if(this.username && this.password){

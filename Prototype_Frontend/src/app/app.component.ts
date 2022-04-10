@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {ThemeService} from "./theme.service";
-import {SidenavComponent} from "./admin/sidenav/sidenav.component";
 
 @Component({
   selector: 'app-root',
@@ -11,8 +10,7 @@ import {SidenavComponent} from "./admin/sidenav/sidenav.component";
 export class AppComponent {
   title = 'Prototype';
 
-
-  constructor() {
+  constructor(private themeService : ThemeService) {
+    this.themeService.initTheme();
   }
-
 }

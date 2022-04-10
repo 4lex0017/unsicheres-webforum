@@ -1,0 +1,70 @@
+//Table general
+
+.mat-header-cell{
+  background-color: rgba(17, 119, 255, 0.72);
+  color:white;
+}
+.category-table {
+  width: 100%;
+  background-color:transparent
+}
+.mat-column-author-icon{
+  width: 5%;
+}
+.mat-column-general-information {
+  width: 60%;
+  padding-right: 24px;
+  text-align: left;
+}
+.mat-column-specific-information-header{
+  padding-left: 16px;
+}
+.mat-column-specific-information-body{
+  padding-left: 16px;
+}
+
+
+//Table category data
+.category-title{
+
+  font-size: 22px;
+  position: relative;
+  left: -30px;
+}
+.category-replies{
+  position: relative;
+  left: -30px;
+  padding: 5px 0 0 0;
+  font-size: 14px;
+}
+.category-container{
+  padding: 40px 0 5px 0 ;
+}
+
+//Table thread data
+
+.thread-title{
+  padding: 10px 0 0 0 ;
+  font-size: 17px;
+
+}
+.thread-author{
+  font-size: 12px;
+  padding: 0 0 5px 0 ;
+}
+
+.thread-author-symbol{
+  position: relative;
+  left: -10px;
+
+}
+
+
+thread-replies{
+  font-size: 12px;
+}
+thread-endorsements{
+  font-size: 1px;
+}
+
+

@@ -1,0 +1,84 @@
+<div class = "category-container">
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="categoryObject.threads" class="mat-elevation-z8 category-table">
+
+  <!--Column 1: Author Icon-->
+      <ng-container matColumnDef="author-icon">
+        <th mat-header-cell *matHeaderCellDef>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="thread-author-symbol"><mat-icon size="30px">face</mat-icon></div>
+        </td>
+      </ng-container>
+
+
+  <!--Column 2: Category Title + #Threads + Thread Title + Author Name-->
+      <ng-container matColumnDef="general-information">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="category-title">{{categoryObject.title}} </div>
+          <div class="category-replies">Threads: {{categoryObject.threads.length}}</div>
+        </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="thread-title"> {{element.title}} </div>
+            <div class="thread-author"> Author: {{element.author.username}}</div>
+        </td>
+      </ng-container>
+
+      <!--  Column 3: Replies & Endorsement Header -->
+      <ng-container matColumnDef="specific-information-header">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="thread-replies">Replies:  </div>
+          <div class="thread-endorsements">Endorsements:</div>
+        </td>
+      </ng-container>
+
+      <!--  Column 3: Replies & Endorsement Body -->
+      <ng-container matColumnDef="specific-information-body">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="thread-replies">{{element.posts.length}} </div>
+          <div class="thread-endorsements">{{element.endorsements}}</div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 20, 35]"
+                   [hidden]="categoryObject.threads.length < 5"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
+</div>
+
+
+<!--<app-thread *ngFor="let thread of categoryObject.threads"-->
+<!--            [threadObject]="thread">-->
+<!--  <mat-divider></mat-divider>-->
+<!--</app-thread>-->
+
+<!--<mat-list>-->
+<!--  <app-thread mat-list-item-->
+<!--              *ngFor="let thread of categoryObject.threads"-->
+<!--              [threadObject]="thread">-->
+<!--  </app-thread>-->
+<!--</mat-list>-->
+
+<!--<table mat-table [dataSource]="categoryObject.threads" class="mat-elevation-z8 demo-table">-->
+<!--  &lt;!&ndash; Position Column &ndash;&gt;-->
+<!--  <ng-container matColumnDef="demo-position">-->
+<!--    <th mat-header-cell *matHeaderCellDef> {{categoryObject.title}} </th>-->
+<!--    <td mat-cell *matCellDef="let element"> {{element.title}} </td>-->
+<!--  </ng-container>-->
+
+<!--  &lt;!&ndash; Name Column &ndash;&gt;-->
+<!--  <ng-container matColumnDef="demo-name">-->
+<!--    <th mat-header-cell *matHeaderCellDef> Replies </th>-->
+<!--    <td mat-cell *matCellDef="let element"> {{element.posts.length}} </td>-->
+<!--  </ng-container>-->
+
+<!--  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>-->
+<!--  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>-->
+<!--</table>-->

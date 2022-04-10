@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
   path: 'forum',
-  loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+  loadChildren: () => import('./user/user-home/user-home.module').then(m => m.UserHomeModule)
   },
   { path: '', redirectTo : 'login', pathMatch:'full' },
   { path: '**', component: ErrorComponent }
