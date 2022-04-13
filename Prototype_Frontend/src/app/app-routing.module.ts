@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from "./shared/login/login.component";
 import {RouteGuardService} from "./route-guard.service";
 import {ErrorComponent} from "./shared/error/error.component";
@@ -22,7 +22,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [],
-  imports: [RouterModule.forRoot(routes)
+  imports: [RouterModule.forRoot(routes
+  //   , {
+  //     //DELETE Again
+  //     preloadingStrategy: PreloadAllModules,
+  //     relativeLinkResolution: 'legacy'
+  // }
+  )
   ],
   exports:[RouterModule]
 })

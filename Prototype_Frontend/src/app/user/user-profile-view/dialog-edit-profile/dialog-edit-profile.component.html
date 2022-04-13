@@ -1,0 +1,21 @@
+<div mat-dialog-content>
+  <p>Username</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="data.username">
+  </mat-form-field>
+  <p>About</p>
+  <mat-form-field appearance="fill" class="user-edit-textarea-container">
+    <textarea matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="10"
+              [(ngModel)]="data.about">
+
+    </textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
+</div>

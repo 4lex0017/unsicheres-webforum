@@ -1,16 +1,33 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Category} from "../../../data-access/models/category";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
+import {Thread} from "../../../data-access/models/thread";
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss']
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements AfterViewInit, OnInit {
   @Input() categoryObject : Category;
+  shortThreads : Thread[];
+  @ViewChild(MatPaginator) paginator : MatPaginator;
   constructor() { }
 
+
+  displayedColumns: string[] = ['author-icon','general-information', 'specific-information-header', 'specific-information-body']
+  // displayedColumns: string[] = ['slug','title', 'content', 'date']
+  dataSource;
+
+
+
   ngOnInit(): void {
+    this.shortThreads = this.categoryObject.threads.slice(0,5) ;
+    this.dataSource  = new MatTableDataSource<Thread>(this.categoryObject.threads);
   }
-  displayedColumns: string[] = ['author-icon','general-information', 'specific-information-header', 'specific-information-body'];
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
 }

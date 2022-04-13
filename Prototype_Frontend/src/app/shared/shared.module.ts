@@ -6,10 +6,12 @@ import {FormsModule} from "@angular/forms";
 
 
 
+
 @NgModule({
   declarations: [
     LoginComponent,
-    ErrorComponent
+    ErrorComponent,
+
   ],
   imports: [
     CommonModule,

@@ -13,7 +13,7 @@ export class ForumComponent implements OnInit {
   accessData: Access;
 
   ngOnInit(): void {
-    this.accessData = this.backEndService.loadBoard();
+    this.accessData = this.backEndService.loadData();
   }
 
 }

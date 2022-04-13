@@ -14,6 +14,7 @@ import { UserHomeComponent } from './user-home.component';
 import {RouterModule} from "@angular/router";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     UserHomeRoutingModule,
     RouterModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    UserThreadViewModule  //Delete later
   ]
 })
 export class UserHomeModule { }
