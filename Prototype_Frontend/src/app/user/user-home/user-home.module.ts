@@ -15,6 +15,13 @@ import {RouterModule} from "@angular/router";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module";
+import {MatInputModule} from "@angular/material/input";
+import {MatCardModule} from "@angular/material/card";
+import { DialogCreateThreadComponent } from './dialog-create-thread/dialog-create-thread.component';
+import {FormsModule} from "@angular/forms";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -23,7 +30,8 @@ import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module"
     ForumComponent,
     FooterComponent,
     ToolbarComponent,
-    UserHomeComponent
+    UserHomeComponent,
+    DialogCreateThreadComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +44,14 @@ import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module"
     RouterModule,
     MatTableModule,
     MatPaginatorModule,
-    UserThreadViewModule  //Delete later
+    UserThreadViewModule,
+    MatInputModule,
+    MatCardModule,
+    FormsModule,
+    MatDialogModule,
+    MatOptionModule,
+    MatSelectModule,
+    //Delete later
   ]
 })
 export class UserHomeModule { }

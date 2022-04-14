@@ -8,11 +8,18 @@ import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
+import { DialogCreatePostComponent } from './dialog-create-post/dialog-create-post.component';
+import {MatSelectModule} from "@angular/material/select";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatRadioModule} from "@angular/material/radio";
+import { DialogEditPostComponent } from './dialog-edit-post/dialog-edit-post.component';
 
 
 @NgModule({
   declarations: [
-    DialogEditThreadComponent
+    DialogEditThreadComponent,
+    DialogCreatePostComponent,
+    DialogEditPostComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +28,10 @@ import {MatInputModule} from "@angular/material/input";
     FormsModule,
     MatButtonModule,
     MatDialogModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatRadioModule
   ]
 })
 export class UserThreadViewModule { }

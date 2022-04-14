@@ -4,7 +4,10 @@
       <div mat-card-avatar class="user-image"><mat-icon>face</mat-icon></div>
       <mat-card-title>
         {{userFullObject.username}}
-        <button mat-raised-button color="primary" (click)="openDialog()">Edit</button>
+        <span class="spacer"></span>
+        <button mat-mini-fab   color="primary" (click)="openDialog()">
+          <mat-icon>edit</mat-icon>
+        </button>
       </mat-card-title>
       <mat-card-subtitle>
         <div> Joined: {{userFullObject.joined}} </div>
@@ -13,7 +16,6 @@
     </mat-card-header>
     <mat-card-content>
       <h2>About: </h2>
-
       <p>
         {{userFullObject.about}}
       </p>
@@ -70,5 +72,6 @@
 
 
 </div>
+
 
 <!--<span matBadge="1" matBadgeOverlap="false">-->

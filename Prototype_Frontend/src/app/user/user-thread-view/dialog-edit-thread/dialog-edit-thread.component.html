@@ -1,14 +1,16 @@
 <div mat-dialog-content>
-  <p>Title</p>
-  <mat-form-field appearance="fill">
-    <mat-label></mat-label>
+<!--  <p>Title</p>-->
+  <mat-form-field appearance="fill" class="user-edit-input-container">
+    <mat-label>Title</mat-label>
     <input matInput [(ngModel)]="data.title">
   </mat-form-field>
-  <p>About</p>
+  <p></p>
+<!--  <p>About</p>-->
   <mat-form-field appearance="fill" class="user-edit-textarea-container">
+    <mat-label>About</mat-label>
     <textarea matInput
               cdkTextareaAutosize
-              cdkAutosizeMinRows="1"
+              cdkAutosizeMinRows="3"
               cdkAutosizeMaxRows="10"
               [(ngModel)]="data.content">
 
@@ -16,6 +18,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
+  <button mat-raised-button color="primary" (keyup.enter)=data [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
   <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
-  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
 </div>

@@ -1,0 +1,31 @@
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="user-create-input-container">
+    <mat-label>Title</mat-label>
+    <input matInput [(ngModel)]="data.title">
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill">
+    <mat-label>Categories</mat-label>
+    <mat-select matNativeControl required [(ngModel)]="data.category">
+      <mat-option   value="Community">Community</mat-option >
+      <mat-option  value="Support">Support</mat-option >
+      <mat-option  value="General">General</mat-option >
+    </mat-select>
+  </mat-form-field>
+  <p></p>
+  <!--  <p>About</p>-->
+  <mat-form-field appearance="fill" class="user-create-textarea-container">
+    <mat-label>Content</mat-label>
+    <textarea matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="10"
+              [(ngModel)]="data.content">
+
+    </textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
+</div>

@@ -1,6 +1,6 @@
 <div class = "category-container">
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="shortThreads"  class="mat-elevation-z8 category-table">
+    <table mat-table [dataSource]="categoryObject.threads.slice(0,5)"  class="mat-elevation-z8 category-table">
 
       <!--Column 1: Author Icon-->
       <ng-container matColumnDef="author-icon">

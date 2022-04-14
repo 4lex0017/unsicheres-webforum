@@ -13,7 +13,8 @@ import {User} from "../models/user";
 })
 export class BackendService {
   readonly url: string = 'http://localhost:4200';
-
+  idThreadTracker: number = 100;
+  idPostTracker:number = 200;
   constructor(private httpClient: HttpClient) {}
 
   loadData(): Access{
@@ -120,6 +121,62 @@ export class BackendService {
     }
   }
 
+
+  createPostObject(content: string, repliedTo?: string, ):Post{
+    if(!repliedTo){
+      repliedTo = "";
+    }
+    let postObject: Post =
+      {
+        id: this.idPostTracker,
+        content: content,
+        repliedTo: repliedTo,
+        date: this.formatDate(),
+        author: this.getUser1()
+     }
+     this.idPostTracker++;
+     return postObject;
+  }
+  createThreadObject(title:string, content:string, ):Thread{
+
+    let threadObject :Thread = {
+      id: this.idThreadTracker,
+      title: title,
+      content:content,
+      date: this.formatDate(),
+      slug: this.getSlugFromTitle(title),
+      posts: [],
+      endorsements:0,
+      author: this.getUser1()
+    }
+    this.idThreadTracker++;
+    return threadObject;
+  }
+
+  getSlugFromTitle(title:string){
+    return title.replace(/\s+/g, '-').toLowerCase();
+  }
+  getUser1() : User{
+    let author : User =
+    {
+      id: 1,
+      username: "TestUsername1"
+    };
+    return author;
+  }
+  padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+  formatDate():string {
+    let date: Date = new Date();
+    return (
+      [
+        this.padTo2Digits(date.getDate()),
+        this.padTo2Digits(date.getMonth() + 1),
+        date.getFullYear(),
+      ].join('.'));
+
+  }
   updateUser(id:number, user: UserFull):void{
 
   }
