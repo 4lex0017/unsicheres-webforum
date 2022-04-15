@@ -13,7 +13,6 @@ export class DialogCreatePostComponent  {
     @Inject(MAT_DIALOG_DATA) public data: CreatePostData
   ) {}
 
-  //showReply:boolean = true;
   onNoClick(): void {
     this.dialogRef.close();
   }

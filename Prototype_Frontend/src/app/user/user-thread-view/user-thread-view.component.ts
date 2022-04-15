@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DialogEditProfileComponent} from "../user-profile-view/dialog-edit-profile/dialog-edit-profile.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
@@ -9,6 +9,9 @@ import {BackendService} from "../../data-access/services/backend.service";
 import {User} from "../../data-access/models/user";
 import {DialogEditPostComponent} from "./dialog-edit-post/dialog-edit-post.component";
 import {Post} from "../../data-access/models/post";
+import {DialogDeletePostComponent} from "./dialog-delete-post/dialog-delete-post.component";
+import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
+import {DataManagementService} from "../../data-access/services/data-management.service";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -17,7 +20,13 @@ import {Post} from "../../data-access/models/post";
 })
 export class UserThreadViewComponent implements OnInit {
   threadObject: Thread;
-  constructor(private route: ActivatedRoute, private dialog : MatDialog, private backEndService : BackendService) { }
+
+
+  constructor(private route: ActivatedRoute,
+              private dialog : MatDialog,
+              private backEndService : BackendService,
+              private router : Router,
+              private dataManagement: DataManagementService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe( (data : any) => {
@@ -67,5 +76,53 @@ export class UserThreadViewComponent implements OnInit {
 
     });
   }
+  openDeletePostDialog(postObjectId : number) {
+    const dialogRef = this.dialog.open(DialogDeletePostComponent,{
+          width: '55%',
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        for(let z = 0; z < this.threadObject.posts.length; z++){
+          if(this.threadObject.posts[z].id == postObjectId){
+            this.threadObject.posts.splice(z, 1);
+            break;
+          }
+        }
+
+      }
+    });
+  }
+  openDeleteThreadDialog() {
+    const dialogRef = this.dialog.open(DialogDeleteThreadComponent,{
+      width: '55%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result){
+        this.dataManagement.notifyRest(this.threadObject.id)
+        this.router.navigate(['/forum/home']);
+        }
+
+      });
+  }
+  likeThreadButton():void{
+    this.threadObject.endorsements++;
+  }
+  likePostButton(post:Post):void{
+    post.endorsements++;
+  }
 
 }
+
+// openEditPostDialog(postObject: Post):void{
+//   const dialogRef = this.dialog.open(DialogEditPostComponent, {
+//     width: '65%',
+//     data :{
+//       content : postObject.content,
+//     },
+//   });
+//   dialogRef.afterClosed().subscribe(result => {
+//     postObject.content = result.content;
+//   });
+// }

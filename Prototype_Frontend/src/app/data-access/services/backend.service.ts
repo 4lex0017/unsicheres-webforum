@@ -131,6 +131,7 @@ export class BackendService {
         id: this.idPostTracker,
         content: content,
         repliedTo: repliedTo,
+        endorsements: 0,
         date: this.formatDate(),
         author: this.getUser1()
      }
@@ -204,6 +205,7 @@ export class BackendService {
                 "id": 1,
                 "content": "this is a test post",
                 "date":"04.01.0001",
+                "endorsements":100,
                 "author":
                   {
                     "id": 2,
@@ -214,6 +216,7 @@ export class BackendService {
                 "id": 2,
                 "content": "this is a 2nd answer test post",
                 "date":"06.01.0001",
+                "endorsements":100,
                 "author":
                   {
                     "id": 135,
@@ -238,6 +241,7 @@ export class BackendService {
               {
                 "id": 3,
                 "content": "this is a test post2",
+                "endorsements":111,
                 "date":"07.01.0001",
                 "author":
                   {
@@ -270,6 +274,7 @@ export class BackendService {
                 "id": 1,
                 "content": "this is a test post",
                 "date":"06.02.0001",
+                "endorsements":0,
                 "author":
                   {
                     "id": 2,
@@ -296,6 +301,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date":"06.03.0001",
+                "endorsements":150,
                 "author":
                   {
                     "id": 553,
@@ -327,6 +333,7 @@ export class BackendService {
                 "id": 1,
                 "content": "this is a test post",
                 "date":"06.02.0001",
+                "endorsements":3,
                 "author":
                   {
                     "id": 2,
@@ -353,6 +360,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date":"06.03.0001",
+                "endorsements":100,
                 "author":
                   {
                     "id": 553,
@@ -378,6 +386,7 @@ export class BackendService {
                 "id": 1,
                 "content": "this is a test post",
                 "date":"06.02.0001",
+                "endorsements":10,
                 "author":
                   {
                     "id": 2,
@@ -404,6 +413,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date":"06.03.0001",
+                "endorsements":99,
                 "author":
                   {
                     "id": 553,
@@ -413,7 +423,7 @@ export class BackendService {
             ]
           },
           {
-            "id": 5,
+            "id": 9,
             "title": "Support Thread 5",
             "slug": "support-thread-5",
             "content":"This is the content of the thread.",
@@ -429,6 +439,7 @@ export class BackendService {
                 "id": 1,
                 "content": "this is a test post",
                 "date":"06.02.0001",
+                "endorsements":100,
                 "author":
                   {
                     "id": 2,
@@ -439,7 +450,7 @@ export class BackendService {
             ]
           },
           {
-            "id": 7,
+            "id": 17,
             "title": "Support Thread 6",
             "slug": "support-thread-6",
             "content":"This is the content of the 2nd general thread.",
@@ -455,6 +466,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date": "06.03.0001",
+                "endorsements":15,
                 "author":
                   {
                     "id": 553,
@@ -465,6 +477,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date":"06.03.0001",
+                "endorsements":100,
                 "author":
                   {
                     "id": 553,
@@ -475,6 +488,7 @@ export class BackendService {
                 "id": 33,
                 "content": "this is a test post33",
                 "date":"06.03.0001",
+                "endorsements":8,
                 "author":
                   {
                     "id": 553,

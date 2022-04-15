@@ -5,6 +5,8 @@ import {DialogEditThreadComponent} from "../../user-thread-view/dialog-edit-thre
 import {MatDialog} from "@angular/material/dialog";
 import {Thread} from "../../../data-access/models/thread";
 import {DialogCreateThreadComponent} from "../dialog-create-thread/dialog-create-thread.component";
+import {DataManagementService} from "../../../data-access/services/data-management.service";
+import {Category} from "../../../data-access/models/category";
 
 @Component({
   selector: 'app-forum',
@@ -15,10 +17,13 @@ export class ForumComponent implements OnInit {
 
   constructor( private backEndService : BackendService, private dialog: MatDialog) { }
   accessData: Access;
-
+  currentCategoryObject: Category;
+  showFull=false;
 
   ngOnInit(): void {
     this.accessData = this.backEndService.loadData();
+    // this.currentCategoryObject = this.accessData.categories[0];
+
   }
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogCreateThreadComponent, {
@@ -43,6 +48,22 @@ export class ForumComponent implements OnInit {
     }
 
   }
+  showMoreEventConsumer($event){
+  console.log($event.showIndex +""+ $event.showMore);
+    this.showFull = $event.showMore;
+    if($event.showMore){
+      for(let z = 0; z < this.accessData.categories.length; z++){
+        if(this.accessData.categories[z].id == $event.showIndex){
+          this.currentCategoryObject = this.accessData.categories[z];
+          break;
+        }
+      }
+    }
+
+
+
+  }
+
 
 
 }

@@ -13,13 +13,17 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import { DialogEditPostComponent } from './dialog-edit-post/dialog-edit-post.component';
+import { DialogDeletePostComponent } from './dialog-delete-post/dialog-delete-post.component';
+import { DialogDeleteThreadComponent } from './dialog-delete-thread/dialog-delete-thread.component';
 
 
 @NgModule({
   declarations: [
     DialogEditThreadComponent,
     DialogCreatePostComponent,
-    DialogEditPostComponent
+    DialogEditPostComponent,
+    DialogDeletePostComponent,
+    DialogDeleteThreadComponent
   ],
   imports: [
     CommonModule,

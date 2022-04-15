@@ -24,6 +24,7 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 
 
+
 @NgModule({
   declarations: [
     CategoryComponent,
@@ -31,7 +32,7 @@ import {MatSelectModule} from "@angular/material/select";
     FooterComponent,
     ToolbarComponent,
     UserHomeComponent,
-    DialogCreateThreadComponent
+    DialogCreateThreadComponent,
   ],
   imports: [
     CommonModule,

@@ -25,3 +25,22 @@
 .spacer{
   padding: 0 0 0 10px;
 }
+
+
+.mat-badge-content{
+
+  width: auto;
+  display: grid;
+  min-width: 22px;
+  min-height: 18px;
+  text-align: center;
+  align-items: center;
+  padding: 2px;
+  // border-radius: 10px;
+
+}
+.stretch-badge > .mat-badge-content {
+  width: auto;
+  border-radius: 13px;
+  right: unset !important;
+}
