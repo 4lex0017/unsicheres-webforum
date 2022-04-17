@@ -23,7 +23,6 @@ import {DataManagementService} from "../../../data-access/services/data-manageme
 export class CategoryComponent implements AfterViewInit {
   @Input()
   categoryObject : Category ;
-
   @Input()
   showFull:boolean;
   @Output()
@@ -47,7 +46,6 @@ export class CategoryComponent implements AfterViewInit {
     })
   }
   showMoreTransmitter(showMore: boolean, showIndex: number){
-    console.log({showMore: showMore, showIndex:showIndex})
     this.showMoreEvent.emit({showMore: showMore, showIndex:showIndex});
   }
 

@@ -6,11 +6,17 @@
         <div>
           {{threadObject.title}}
           <span class="spacer"></span>
-          <button mat-mini-fab   color="primary" (click)="openEditThreadDialog()">
+          <button mat-mini-fab   color="primary"
+                  (click)="openEditThreadDialog()"
+                  matTooltip="Edit Thread"
+                  [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab   color="warn" (click)="openDeleteThreadDialog()">
+          <button mat-mini-fab   color="warn"
+                  (click)="openDeleteThreadDialog()"
+                  matTooltip="Delete Thread"
+                  [matTooltipShowDelay]="500">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -22,7 +28,7 @@
         {{threadObject.content}}
       </p>
     </mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions class="spacer">
       <span class="stretch-badge" matBadge="{{threadObject.endorsements}}" matBadgeSize="small" matBadgePosition="above before" matBadgeColor="primary">
         <button mat-button (click)="likeThreadButton()">LIKE</button>
       </span>
@@ -39,11 +45,17 @@
         <mat-card-title>
           <a [routerLink]="['/forum/users', post.author.id]" >{{post.author.username}}</a> answered on {{post.date}}
           <span class="spacer"></span>
-          <button mat-mini-fab   color="primary" (click)="openEditPostDialog(post)">
+          <button mat-mini-fab   color="primary"
+                  (click)="openEditPostDialog(post)"
+                  matTooltip="Edit Post"
+                  [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab   color="warn" (click)="openDeletePostDialog(post.id)">
+          <button mat-mini-fab   color="warn"
+                  (click)="openDeletePostDialog(post.id)"
+                  matTooltip="Delete Post"
+                  [matTooltipShowDelay]="500">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-card-title>
@@ -57,7 +69,7 @@
           {{post.content}}
         </p>
       </mat-card-content>
-      <mat-card-actions >
+      <mat-card-actions class="spacer">
         <span class="stretch-badge" matBadge="{{post.endorsements}}" matBadgeSize="small" matBadgePosition="above before" matBadgeColor="primary">
           <button mat-button (click)="likePostButton(post)">LIKE</button>
         </span>

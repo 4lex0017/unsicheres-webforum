@@ -15,6 +15,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatListModule} from "@angular/material/list";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -22,21 +23,22 @@ import {MatListModule} from "@angular/material/list";
     UserThreadViewComponent,
     UserProfileViewComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    SharedModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatBadgeModule,
-    MatChipsModule,
-    MatListModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        SharedModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTabsModule,
+        MatBadgeModule,
+        MatChipsModule,
+        MatListModule,
+        MatTooltipModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

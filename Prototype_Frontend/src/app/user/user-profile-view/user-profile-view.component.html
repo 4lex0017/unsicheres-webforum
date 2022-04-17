@@ -5,7 +5,10 @@
       <mat-card-title>
         {{userFullObject.username}}
         <span class="spacer"></span>
-        <button mat-mini-fab   color="primary" (click)="openDialog()">
+        <button mat-mini-fab   color="primary"
+                (click)="openDialog()"
+                matTooltip="Edit Profile"
+                [matTooltipShowDelay]="500">
           <mat-icon>edit</mat-icon>
         </button>
       </mat-card-title>

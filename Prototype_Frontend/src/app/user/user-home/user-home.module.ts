@@ -22,6 +22,7 @@ import {FormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 
@@ -34,25 +35,26 @@ import {MatSelectModule} from "@angular/material/select";
     UserHomeComponent,
     DialogCreateThreadComponent,
   ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatSidenavModule,
-    MatButtonModule,
-    UserHomeRoutingModule,
-    RouterModule,
-    MatTableModule,
-    MatPaginatorModule,
-    UserThreadViewModule,
-    MatInputModule,
-    MatCardModule,
-    FormsModule,
-    MatDialogModule,
-    MatOptionModule,
-    MatSelectModule,
-    //Delete later
-  ]
+    imports: [
+        CommonModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatListModule,
+        MatSidenavModule,
+        MatButtonModule,
+        UserHomeRoutingModule,
+        RouterModule,
+        MatTableModule,
+        MatPaginatorModule,
+        UserThreadViewModule,
+        MatInputModule,
+        MatCardModule,
+        FormsModule,
+        MatDialogModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatTooltipModule,
+        //Delete later
+    ]
 })
 export class UserHomeModule { }

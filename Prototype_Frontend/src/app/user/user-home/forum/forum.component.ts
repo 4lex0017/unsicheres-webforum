@@ -22,16 +22,18 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessData = this.backEndService.loadData();
-    // this.currentCategoryObject = this.accessData.categories[0];
-
   }
   openDialog(): void {
+    let selected = "";
+    if(this.showFull){
+      selected = this.currentCategoryObject.title;
+    }
     const dialogRef = this.dialog.open(DialogCreateThreadComponent, {
       width: '65%',
       data :{
         title: "",
-        category:"",
-        content : ""
+        category: selected,
+        content : "",
       },
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -49,7 +51,6 @@ export class ForumComponent implements OnInit {
 
   }
   showMoreEventConsumer($event){
-  console.log($event.showIndex +""+ $event.showMore);
     this.showFull = $event.showMore;
     if($event.showMore){
       for(let z = 0; z < this.accessData.categories.length; z++){
@@ -59,9 +60,6 @@ export class ForumComponent implements OnInit {
         }
       }
     }
-
-
-
   }
 
 

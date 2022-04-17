@@ -21,7 +21,7 @@ export class BackendService {
     return this.accessData;
   }
   getAllUsers():UserFull[]{
-    return [];
+    return[];
   }
   //Get Array for User Profile
   getThreadsFromUser(id: number): Thread[]{

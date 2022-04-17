@@ -1,5 +1,9 @@
 <div class = "category-container">
   <div class="mat-elevation-z8">
+
+<!--    Rework dataSource ngIf-->
+
+
     <table mat-table *ngIf="!showFull" [dataSource]="categoryObject.threads.slice(0,3)"
            class="mat-elevation-z8 category-table">
 
@@ -44,7 +48,10 @@
 
       <ng-container matColumnDef="showMore">
         <td mat-footer-cell *matFooterCellDef colspan="2">
-          <button mat-raised-button (click)="showMoreTransmitter(true, categoryObject.id)">Show more</button>
+          <button mat-raised-button
+                  (click)="showMoreTransmitter(true, categoryObject.id)"
+                  matTooltip="Show whole category"
+                  [matTooltipShowDelay]="500">Show more</button>
         </td>
       </ng-container>
 
@@ -59,9 +66,7 @@
 
 
 
-
-
-    <table mat-table *ngIf="showFull" [dataSource]="categoryObject.threads"
+    <table mat-table *ngIf="showFull" [dataSource]="categoryObject.threads.slice(0, categoryObject.threads.length)"
            class="mat-elevation-z8 category-table">
 
       <!--Column 1: Author Icon-->
@@ -106,7 +111,10 @@
 
       <ng-container matColumnDef="showLess">
         <td mat-footer-cell *matFooterCellDef colspan="2">
-          <button mat-raised-button (click)="showMoreTransmitter(false, categoryObject.id)">Show less</button>
+          <button mat-raised-button
+                  (click)="showMoreTransmitter(false, categoryObject.id)"
+                  matTooltip="Show all categories"
+                  [matTooltipShowDelay]="500">Show less</button>
         </td>
       </ng-container>
 
