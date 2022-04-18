@@ -23,6 +23,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { SearchComponent } from './search/search.component';
+import { DialogSearchErrorMessageComponent } from './dialog-search-error-message/dialog-search-error-message.component';
 
 
 
@@ -34,6 +36,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     ToolbarComponent,
     UserHomeComponent,
     DialogCreateThreadComponent,
+    SearchComponent,
+    DialogSearchErrorMessageComponent,
   ],
     imports: [
         CommonModule,

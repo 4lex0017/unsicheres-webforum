@@ -153,7 +153,6 @@ export class BackendService {
     this.idThreadTracker++;
     return threadObject;
   }
-
   getSlugFromTitle(title:string){
     return title.replace(/\s+/g, '-').toLowerCase();
   }
@@ -178,9 +177,21 @@ export class BackendService {
       ].join('.'));
 
   }
-  updateUser(id:number, user: UserFull):void{
-
+  getRandomUsers(): UserFull[]{
+    let users :UserFull[] = [];
+    for(let z = 0; z < 4; z++){
+      users.push(this.userData.UserFull[Math.floor(Math.random()*9 )]);
+      console.log(users)
+    }
+    return users;
   }
+  getRandomPosts(): Post[]{
+    return this.getPostsFromUser(2);
+  }
+  getRandomThreads(): Thread[]{
+    return this.getThreadsFromUser(1);
+  }
+
    accessData =
     {
     "categories":[

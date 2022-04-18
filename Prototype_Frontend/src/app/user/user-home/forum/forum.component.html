@@ -1,16 +1,16 @@
 <div class="main">
   <div class="container">
     <div class="row">
-      <div class="col-xs-11 col-md-10 col-lg-9" >
+      <div class="col-xs-11 col-md-10 col-lg-9">
 
-        <div *ngIf="!showFull" class = "categories">
-          <app-category  *ngFor="let category of accessData.categories"
+        <div *ngIf="!showFull" class="categories">
+          <app-category *ngFor="let category of accessData.categories"
                         [categoryObject]="category"
                         [showFull]="showFull"
-                         (showMoreEvent)="showMoreEventConsumer($event)"
+                        (showMoreEvent)="showMoreEventConsumer($event)"
           ></app-category>
         </div>
-        <div *ngIf="showFull" class = "categories">
+        <div *ngIf="showFull" class="categories">
           <app-category [categoryObject]="currentCategoryObject"
                         [showFull]="showFull"
                         (showMoreEvent)="showMoreEventConsumer($event)"
@@ -24,11 +24,19 @@
         <div class="side-content-container">
           <button color="primary" (click)="openDialog()" mat-raised-button>Create Thread</button>
           <span class="spacer"></span>
-            <mat-icon >search</mat-icon>
-          <span class="spacer-form-field"></span>
-            <mat-form-field >
-              <input type="tel" matInput placeholder="Search">
-            </mat-form-field>
+
+          <mat-form-field>
+            <input type="search" matInput placeholder="Search"
+                   [(ngModel)]="searchQuery"
+                   (keyup.enter)="clickSearch()"
+            >
+          </mat-form-field>
+          <button mat-icon-button color="primary"
+                  aria-label="Example icon button with a home icon"
+                  (click)="clickSearch()">
+            <mat-icon>search</mat-icon>
+          </button>
+
         </div>
 
         <mat-card>
