@@ -6,12 +6,11 @@
   <p></p>
   <mat-form-field appearance="fill">
     <mat-label>Categories</mat-label>
-    <mat-select matNativeControl required [(ngModel)]="data.category"  placeholder="Mode">
-<!--      [(value)]="selected"-->
-
-      <mat-option   value="Community">Community</mat-option >
-      <mat-option  value="Support">Support</mat-option >
-      <mat-option  value="General">General</mat-option >
+    <mat-select matNativeControl required [(ngModel)]="data.category" placeholder="Mode">
+      <!--      [(value)]="selected"-->
+      <mat-option value="Community">Community</mat-option>
+      <mat-option value="Support">Support</mat-option>
+      <mat-option value="General">General</mat-option>
     </mat-select>
 
   </mat-form-field>
@@ -24,7 +23,6 @@
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="10"
               [(ngModel)]="data.content">
-
     </textarea>
   </mat-form-field>
 </div>

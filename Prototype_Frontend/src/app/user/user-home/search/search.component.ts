@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Thread} from "../../../data-access/models/thread";
 import {Post} from "../../../data-access/models/post";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {UserFull} from "../../../data-access/models/userFull";
-import {SearchService} from "../../../data-access/services/search.service";
 import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
-import {Router} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 
 @Component({
@@ -16,30 +15,32 @@ import {MatDialog} from "@angular/material/dialog";
 export class SearchComponent implements OnInit {
 
   constructor(private backendService: BackendService,
-              private searchService: SearchService,
               private router: Router,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private route: ActivatedRoute) {
   }
 
-
+  // filter$: Observable<string>;
   threads: Thread[] = [];
   posts: Post[] = [];
   users: UserFull[] = [];
   currentSearchQuery: string;
   newSearchQuery: string = "";
+  paramsObject: ParamMap;
 
   ngOnInit(): void {
 
     this.threads = this.backendService.getRandomThreads();
     this.posts = this.backendService.getRandomPosts();
     this.users = this.backendService.getRandomUsers();
-    this.searchService.notifyOthersObservable$.subscribe((str: string) => {
-      this.currentSearchQuery = str;
-      console.log("Inside " + this.currentSearchQuery);
 
+    this.route.queryParamMap.subscribe((params) => {
+      this.currentSearchQuery = this.format(params.get('filter') || "");
     });
-    console.log("Outside " + this.currentSearchQuery);
+  }
 
+  format(filter: string): string {
+    return filter.replace(/_/g, " ");
   }
 
   cutPostContent(content: string): string {
@@ -62,10 +63,19 @@ export class SearchComponent implements OnInit {
 
   clickSearch() {
     if (this.newSearchQuery == "") {
-      this.dialog.open(DialogSearchErrorMessageComponent)
+      this.dialog.open(DialogSearchErrorMessageComponent, {
+        data: {
+          errorMessage: "The search query is empty."
+        },
+      });
+    } else if (this.newSearchQuery.length > 50) {
+      this.dialog.open(DialogSearchErrorMessageComponent, {
+        data: {
+          errorMessage: "The search query is too long (Max length = 50)"
+        },
+      });
     } else {
-      this.searchService.notifyRest(this.newSearchQuery);
-      this.router.navigate(['forum/search']);
+      this.router.navigate(['forum/search'], {queryParams: {filter: this.newSearchQuery.replace(/ /g, "_")}});
     }
 
   }
