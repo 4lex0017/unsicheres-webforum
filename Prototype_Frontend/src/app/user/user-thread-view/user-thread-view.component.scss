@@ -1,6 +1,7 @@
-.thread-container{
-  padding: 50px 0 0   150px;
+.thread-container {
+  padding: 50px 0 0 150px;
 }
+
 .thread-card {
   max-width: 70%;
 }
@@ -9,24 +10,25 @@
   background-size: cover;
 }
 
-.thread-footer{
+.thread-footer {
   padding: 0 0 10px 15px;
 }
 
-.thread-posts{
+.thread-posts {
   padding: 15px 0 0 15px;
 }
-.post-card{
+
+.post-card {
   max-width: 60%;
   align-self: center;
 }
 
 
-.spacer{
+.spacer {
   padding: 0 0 0 10px;
 }
 
-.mat-badge-content{
+.mat-badge-content {
 
   width: auto;
   display: grid;
@@ -38,6 +40,7 @@
   // border-radius: 10px;
 
 }
+
 .stretch-badge > .mat-badge-content {
   width: auto;
   border-radius: 14px;

@@ -31,35 +31,9 @@
     </mat-card-content>
 
     <mat-tab-group>
-      <!--      color="primary" -->
-      <!--backgroundColor="accent"-->
-      <mat-tab label="Threads: {{userThreads.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let thread of userThreads">
-            <a [routerLink]="['/forum', getCategoryFromThread(thread.id).toLowerCase(),thread.slug]">
-              <div mat-line>{{thread.title}}</div>
-              <div mat-line>Date: {{thread.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-tab>
-
-      <mat-tab label="Posts: {{userPosts.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let post of userPosts">
-            <a [routerLink]="['/forum/community', getThreadFromPost(post.id)]">
-              <div mat-line>{{cutPostContent(post.content)}}</div>
-              <div mat-line>Date: {{post.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-tab>
       <mat-tab label="Comments:  {{userFullObject.comments.length}}">
         <mat-list>
           <mat-list-item *ngFor="let comment of userFullObject.comments">
-
             <div mat-line>{{comment.content}}</div>
             <div mat-line>
               By:
@@ -71,13 +45,34 @@
           </mat-list-item>
         </mat-list>
       </mat-tab>
+
+
+      <mat-tab label="Threads: {{userThreads.length}}">
+        <mat-list>
+          <mat-list-item *ngFor="let thread of userThreads">
+            <a [routerLink]="['/forum/thread',thread.slug]">
+              <div mat-line>{{thread.title}}</div>
+              <div mat-line>Date: {{thread.date}}</div>
+            </a>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+
+      <mat-tab label="Posts: {{userPosts.length}}">
+        <mat-list>
+          <mat-list-item *ngFor="let post of userPosts">
+            <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
+              <div mat-line>{{cutPostContent(post.content)}}</div>
+              <div mat-line>Date: {{post.date}}</div>
+            </a>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+
     </mat-tab-group>
 
     <mat-card-footer class="user-footer"></mat-card-footer>
   </mat-card>
-
-
 </div>
-
-
-<!--<span matBadge="1" matBadgeOverlap="false">-->

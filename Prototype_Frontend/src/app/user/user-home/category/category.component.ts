@@ -1,13 +1,8 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
+
 } from '@angular/core';
 import {Category} from "../../../data-access/models/category";
 import {MatTableDataSource} from "@angular/material/table";
@@ -26,8 +21,6 @@ export class CategoryComponent implements AfterViewInit {
   categoryObject: Category;
   @Input()
   showFull: boolean;
-  @Output()
-  showMoreEvent = new EventEmitter<any>();
 
   constructor(private dataManagement: DataManagementService, private router: Router) {
   }

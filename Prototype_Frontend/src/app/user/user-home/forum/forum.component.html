@@ -2,7 +2,6 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-11 col-md-10 col-lg-9">
-
         <div *ngIf="!showFull" class="categories">
           <app-category *ngFor="let category of accessData.categories"
                         [categoryObject]="category"
@@ -14,15 +13,11 @@
                         [showFull]="showFull"
           ></app-category>
         </div>
-
       </div>
-
       <div class="col-xs-1 col-md-2 col-lg-3">
-
         <div class="side-content-container">
           <button color="primary" (click)="openDialog()" mat-raised-button>Create Thread</button>
           <span class="spacer"></span>
-
           <mat-form-field>
             <input type="search" matInput placeholder="Search"
                    [(ngModel)]="searchQuery"
@@ -34,11 +29,8 @@
                   (click)="clickSearch()">
             <mat-icon>search</mat-icon>
           </button>
-
         </div>
-
         <mat-card>
-
         </mat-card>
       </div>
     </div>

@@ -1,7 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
 import {ActivatedRoute, Router} from "@angular/router";
-import {DialogEditProfileComponent} from "../user-profile-view/dialog-edit-profile/dialog-edit-profile.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
 import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
@@ -30,9 +29,11 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
-        console.log(this.threadObject.title + " is here");
+        // @ts-ignore
+        document.getElementById('title').appendChild(document.createRange().createContextualFragment(this.threadObject.title));
       }
     );
   }

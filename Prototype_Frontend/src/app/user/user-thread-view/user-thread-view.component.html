@@ -1,19 +1,21 @@
 <div class="thread-container">
   <mat-card class="thread-card">
     <mat-card-header>
-      <div mat-card-avatar class="user-image-header"><mat-icon>face</mat-icon></div>
+      <div mat-card-avatar class="user-image-header">
+        <mat-icon>face</mat-icon>
+      </div>
       <mat-card-title>
         <div>
-          {{threadObject.title}}
+          <span id="title"></span>
           <span class="spacer"></span>
-          <button mat-mini-fab   color="primary"
+          <button mat-mini-fab color="primary"
                   (click)="openEditThreadDialog()"
                   matTooltip="Edit Thread"
                   [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab   color="warn"
+          <button mat-mini-fab color="warn"
                   (click)="openDeleteThreadDialog()"
                   matTooltip="Delete Thread"
                   [matTooltipShowDelay]="500">
@@ -29,30 +31,34 @@
       </p>
     </mat-card-content>
     <mat-card-actions class="spacer">
-      <span class="stretch-badge" matBadge="{{threadObject.endorsements}}" matBadgeSize="small" matBadgePosition="above before" matBadgeColor="primary">
+      <span class="stretch-badge" matBadge="{{threadObject.endorsements}}" matBadgeSize="small"
+            matBadgePosition="above before" matBadgeColor="primary">
         <button mat-button (click)="likeThreadButton()">LIKE</button>
       </span>
       <button mat-button>SHARE</button>
       <button mat-button (click)="openCreateDialog(threadObject.content, threadObject.author)">REPLY</button>
       <button mat-button>REPORT</button>
     </mat-card-actions>
-    <mat-card-footer class="thread-footer"><a [routerLink]="['/forum/users', threadObject.author.id]" >{{threadObject.author.username}}</a></mat-card-footer>
+    <mat-card-footer class="thread-footer"><a
+      [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.username}}</a></mat-card-footer>
   </mat-card>
   <div class="thread-posts" *ngFor="let post of threadObject.posts">
     <mat-card class="post-card">
       <mat-card-header>
-        <div mat-card-avatar class="user-image-header"><mat-icon>face</mat-icon></div>
+        <div mat-card-avatar class="user-image-header">
+          <mat-icon>face</mat-icon>
+        </div>
         <mat-card-title>
-          <a [routerLink]="['/forum/users', post.author.id]" >{{post.author.username}}</a> answered on {{post.date}}
+          <a [routerLink]="['/forum/users', post.author.id]">{{post.author.username}}</a> answered on {{post.date}}
           <span class="spacer"></span>
-          <button mat-mini-fab   color="primary"
+          <button mat-mini-fab color="primary"
                   (click)="openEditPostDialog(post)"
                   matTooltip="Edit Post"
                   [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab   color="warn"
+          <button mat-mini-fab color="warn"
                   (click)="openDeletePostDialog(post.id)"
                   matTooltip="Delete Post"
                   [matTooltipShowDelay]="500">
@@ -62,7 +68,7 @@
       </mat-card-header>
       <mat-card-content>
         <i *ngIf="post.repliedTo">
-            {{post.repliedTo}}
+          {{post.repliedTo}}
         </i>
         <p></p>
         <p>
@@ -70,7 +76,8 @@
         </p>
       </mat-card-content>
       <mat-card-actions class="spacer">
-        <span class="stretch-badge" matBadge="{{post.endorsements}}" matBadgeSize="small" matBadgePosition="above before" matBadgeColor="primary">
+        <span class="stretch-badge" matBadge="{{post.endorsements}}" matBadgeSize="small"
+              matBadgePosition="above before" matBadgeColor="primary">
           <button mat-button (click)="likePostButton(post)">LIKE</button>
         </span>
         <button mat-button>SHARE</button>
