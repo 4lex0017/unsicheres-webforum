@@ -7,13 +7,11 @@
           <app-category *ngFor="let category of accessData.categories"
                         [categoryObject]="category"
                         [showFull]="showFull"
-                        (showMoreEvent)="showMoreEventConsumer($event)"
           ></app-category>
         </div>
         <div *ngIf="showFull" class="categories">
           <app-category [categoryObject]="currentCategoryObject"
                         [showFull]="showFull"
-                        (showMoreEvent)="showMoreEventConsumer($event)"
           ></app-category>
         </div>
 

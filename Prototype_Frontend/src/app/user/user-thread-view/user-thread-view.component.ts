@@ -23,24 +23,26 @@ export class UserThreadViewComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute,
-              private dialog : MatDialog,
-              private backEndService : BackendService,
-              private router : Router,
-              private dataManagement: DataManagementService) { }
+              private dialog: MatDialog,
+              private backEndService: BackendService,
+              private router: Router,
+              private dataManagement: DataManagementService) {
+  }
 
   ngOnInit(): void {
-    this.route.data.subscribe( (data : any) => {
+    this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
-        console.log(this.threadObject.title+" is here");
+        console.log(this.threadObject.title + " is here");
       }
     );
   }
+
   openEditThreadDialog(): void {
     const dialogRef = this.dialog.open(DialogEditThreadComponent, {
       width: '65%',
-      data :{
+      data: {
         title: this.threadObject.title,
-        content : this.threadObject.content
+        content: this.threadObject.content
       },
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -49,80 +51,72 @@ export class UserThreadViewComponent implements OnInit {
       this.threadObject.slug = result.title.replace(/\s+/g, '-').toLowerCase();
     });
   }
-  openEditPostDialog(postObject: Post):void{
+
+  openEditPostDialog(postObject: Post): void {
     const dialogRef = this.dialog.open(DialogEditPostComponent, {
       width: '65%',
-      data :{
-        content : postObject.content,
+      data: {
+        content: postObject.content,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
       postObject.content = result.content;
     });
   }
+
   openCreateDialog(replyToContent: string, replyToUser: User): void {
-    let repliedTo :string = replyToUser.username + " wrote '"+ replyToContent+"'.";
+    let repliedTo: string = replyToUser.username + " wrote '" + replyToContent + "'.";
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
-      data :{
+      data: {
         reply: repliedTo,
-        content : "",
-        showReply:true,
+        content: "",
+        showReply: true,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(!result.showReply) repliedTo="";
+      if (!result.showReply) repliedTo = "";
       this.threadObject.posts.push(this.backEndService.createPostObject(result.content, repliedTo));
 
     });
   }
-  openDeletePostDialog(postObjectId : number) {
-    const dialogRef = this.dialog.open(DialogDeletePostComponent,{
-          width: '55%',
+
+  openDeletePostDialog(postObjectId: number) {
+    const dialogRef = this.dialog.open(DialogDeletePostComponent, {
+      width: '55%',
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        for(let z = 0; z < this.threadObject.posts.length; z++){
-          if(this.threadObject.posts[z].id == postObjectId){
+      if (result) {
+        for (let z = 0; z < this.threadObject.posts.length; z++) {
+          if (this.threadObject.posts[z].id == postObjectId) {
             this.threadObject.posts.splice(z, 1);
             break;
           }
         }
-
       }
     });
   }
+
   openDeleteThreadDialog() {
-    const dialogRef = this.dialog.open(DialogDeleteThreadComponent,{
+    const dialogRef = this.dialog.open(DialogDeleteThreadComponent, {
       width: '55%',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      if(result){
+      if (result) {
         this.dataManagement.notifyRest(this.threadObject.id)
         this.router.navigate(['/forum/home']);
-        }
-
-      });
+      }
+    });
   }
-  likeThreadButton():void{
+
+  likeThreadButton(): void {
     this.threadObject.endorsements++;
   }
-  likePostButton(post:Post):void{
+
+  likePostButton(post: Post): void {
     post.endorsements++;
   }
 
 }
 
-// openEditPostDialog(postObject: Post):void{
-//   const dialogRef = this.dialog.open(DialogEditPostComponent, {
-//     width: '65%',
-//     data :{
-//       content : postObject.content,
-//     },
-//   });
-//   dialogRef.afterClosed().subscribe(result => {
-//     postObject.content = result.content;
-//   });
-// }

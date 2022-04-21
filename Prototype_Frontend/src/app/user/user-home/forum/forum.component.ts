@@ -5,7 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Thread} from "../../../data-access/models/thread";
 import {DialogCreateThreadComponent} from "../dialog-create-thread/dialog-create-thread.component";
 import {Category} from "../../../data-access/models/category";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
 
 @Component({
@@ -18,6 +18,7 @@ export class ForumComponent implements OnInit {
   constructor(private backEndService: BackendService,
               private dialog: MatDialog,
               private router: Router,
+              private activeRoute: ActivatedRoute
   ) {
   }
 
@@ -29,6 +30,20 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessData = this.backEndService.loadData();
+    this.activeRoute.queryParamMap.subscribe((params) => {
+      if (params.get('view') == "community") {
+        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Community")!;
+        this.showFull = true;
+      } else if (params.get('view') == "support") {
+        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Support")!;
+        this.showFull = true;
+      } else if (params.get('view') == "general") {
+        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "General")!;
+        this.showFull = true;
+      } else {
+        this.showFull = false;
+      }
+    });
   }
 
   openDialog(): void {
@@ -59,19 +74,7 @@ export class ForumComponent implements OnInit {
     }
 
   }
-
-  showMoreEventConsumer($event) {
-    this.showFull = $event.showMore;
-    if ($event.showMore) {
-      for (let z = 0; z < this.accessData.categories.length; z++) {
-        if (this.accessData.categories[z].id == $event.showIndex) {
-          this.currentCategoryObject = this.accessData.categories[z];
-          break;
-        }
-      }
-    }
-  }
-
+  
   clickSearch() {
     if (this.searchQuery == "") {
       this.dialog.open(DialogSearchErrorMessageComponent, {
