@@ -2,7 +2,25 @@
   <p>Username</p>
   <mat-form-field appearance="fill" class="user-edit-input-container">
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="data.username" >
+    <input matInput [(ngModel)]="data.username">
+  </mat-form-field>
+  <p>Profile Picture</p>
+  <mat-form-field>
+    <div>
+      <mat-toolbar>
+        <input matInput [(ngModel)]="fileAttr" readonly name="name"/>
+        <button mat-flat-button color="primary">Browse File</button>
+      </mat-toolbar>
+      <input
+        type="file"
+        #fileInput
+        id="uploadFile"
+        (change)="uploadFileEvt($event)"
+        name="uploadFile"
+        multiple="multiple"
+        accept="image/*"
+      />
+    </div>
   </mat-form-field>
   <p>About</p>
   <mat-form-field appearance="fill" class="user-edit-textarea-container">

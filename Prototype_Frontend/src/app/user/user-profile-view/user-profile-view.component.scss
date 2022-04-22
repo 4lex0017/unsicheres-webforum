@@ -1,6 +1,7 @@
-.user-container{
-  padding: 50px 0 0   150px;
+.user-container {
+  padding: 50px 0 0 150px;
 }
+
 .user-card {
   max-width: 80%;
 }
@@ -9,15 +10,23 @@
   background-size: cover;
 }
 
-.user-footer{
+.user-footer {
   padding: 0 0 10px 15px;
 }
-.user-badge{
+
+.user-badge {
 
   pointer-events: none;
   cursor: default;
 
 }
-.spacer{
+
+.spacer {
   padding: 0 0 0 10px;
+}
+
+img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
 }

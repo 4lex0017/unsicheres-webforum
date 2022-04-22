@@ -74,7 +74,7 @@ export class ForumComponent implements OnInit {
     }
 
   }
-  
+
   clickSearch() {
     if (this.searchQuery == "") {
       this.dialog.open(DialogSearchErrorMessageComponent, {
@@ -82,10 +82,10 @@ export class ForumComponent implements OnInit {
           errorMessage: "The search query is empty."
         },
       });
-    } else if (this.searchQuery.length > 50) {
+    } else if (this.searchQuery.length > 200) {
       this.dialog.open(DialogSearchErrorMessageComponent, {
         data: {
-          errorMessage: "The search query is too long (Max length = 50)"
+          errorMessage: "The search query is too long (Max length = 200)"
         },
 
       });

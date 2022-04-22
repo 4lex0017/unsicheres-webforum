@@ -1,15 +1,14 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { UserProfileViewRoutingModule } from './user-profile-view-routing.module';
+import {UserProfileViewRoutingModule} from './user-profile-view-routing.module';
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-
-
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 
 @NgModule({
@@ -23,7 +22,9 @@ import {MatButtonModule} from "@angular/material/button";
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatToolbarModule
   ]
 })
-export class UserProfileViewModule { }
+export class UserProfileViewModule {
+}

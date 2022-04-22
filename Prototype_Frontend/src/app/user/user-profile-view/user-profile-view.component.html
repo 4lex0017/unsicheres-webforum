@@ -1,8 +1,11 @@
 <div class="user-container">
   <mat-card class="user-card">
     <mat-card-header>
-      <div mat-card-avatar class="user-image">
+      <div mat-card-avatar class="user-image" *ngIf="!this.userFullObject.image">
         <mat-icon>face</mat-icon>
+      </div>
+      <div mat-card-avatar class="user-image" *ngIf="this.userFullObject.image">
+        <img src="{{this.userFullObject.image.src}}" alt="image">
       </div>
       <mat-card-title>
         {{userFullObject.username}}

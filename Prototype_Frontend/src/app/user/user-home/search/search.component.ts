@@ -90,10 +90,10 @@ export class SearchComponent implements OnInit {
           errorMessage: "The search query is empty."
         },
       });
-    } else if (this.newSearchQuery.length > 800) {
+    } else if (this.newSearchQuery.length > 200) {
       this.dialog.open(DialogSearchErrorMessageComponent, {
         data: {
-          errorMessage: "The search query is too long (Max length = 50)"
+          errorMessage: "The search query is too long (Max length = 200)"
         },
       });
     } else {
