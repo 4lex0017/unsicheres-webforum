@@ -5,3 +5,40 @@ table {
 th.mat-sort-header-sorted {
   color: black;
 }
+
+
+.detail-row {
+  height: 0;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.detail-table {
+  background: rgba(154, 154, 154, 0.45);
+  text-align: left;
+}
+
+.mat-column-vulPoints {
+  width: 15%;
+}
+
+.mat-column-vulName {
+  width: 30%;
+}
+
+.collapse-expand-button {
+  position: relative;
+  top: -3px;
+
+}
+
+.outer-container {
+  padding: 30px;
+}

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
@@ -10,9 +10,9 @@ import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatMenuModule } from '@angular/material/menu';
-import { LayoutModule } from '@angular/cdk/layout';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatMenuModule} from '@angular/material/menu';
+import {LayoutModule} from '@angular/cdk/layout';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {VulnerabilitiesComponent} from "./vulnerabilities/vulnerabilities.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
@@ -23,7 +23,7 @@ import {RouterModule} from "@angular/router";
 import {AdminRoutingModule} from "./admin-routing.module";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
-
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -54,10 +54,10 @@ import {CommonModule} from "@angular/common";
     RouterModule,
     AdminRoutingModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatTooltipModule
   ],
-  exports:[
-
-  ]
+  exports: []
 })
-export class AdminModule { }
+export class AdminModule {
+}
