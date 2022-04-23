@@ -5,22 +5,22 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 
-export interface User {
+export interface AdminUser {
   ipaddress: string;
   username: string;
-  vulnerabilities: Vulnerability[];
+  vulnerabilities: AdminVulnerability[];
   expanded: boolean;
 
 }
 
-export interface Vulnerability {
+export interface AdminVulnerability {
   vulId: number;
   vulName: string;
   vulPoints: number;
   vulLevel: string
 }
 
-const ELEMENT_DATA: User[] = [
+const ELEMENT_DATA: AdminUser[] = [
   {
     ipaddress: '192.168 l78 2.1', username: 'Daniel', vulnerabilities: [
       {
@@ -402,6 +402,13 @@ export class ScoreboardComponent implements AfterViewInit {
   constructor(private _liveAnnouncer: LiveAnnouncer) {
   }
 
+  quickSort(vulnerabilities: AdminVulnerability[]): AdminVulnerability[] {
+    return vulnerabilities.sort((v1, v2) => {
+      if (v1.vulName > v2.vulName) return 1;
+      else return -1;
+    });
+  }
+
   toggleRow(element: { expanded: boolean; }) {
     // Uncommnet to open only single row at once
     // ELEMENT_DATA.forEach(row => {
@@ -416,7 +423,7 @@ export class ScoreboardComponent implements AfterViewInit {
     })
   }
 
-  getPoints(vulnerabilities: Vulnerability[]): number {
+  getPoints(vulnerabilities: AdminVulnerability[]): number {
     let result = 0;
     for (let z = 0; z < vulnerabilities.length; z++) {
       result += vulnerabilities[z].vulPoints;

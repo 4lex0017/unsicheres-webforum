@@ -33,7 +33,8 @@ export class UserThreadViewComponent implements OnInit {
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
         // @ts-ignore
-        document.getElementById('title').appendChild(document.createRange().createContextualFragment(this.threadObject.title));
+        document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+
       }
     );
   }
@@ -44,12 +45,15 @@ export class UserThreadViewComponent implements OnInit {
       data: {
         title: this.threadObject.title,
         content: this.threadObject.content
+
       },
     });
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
       this.threadObject.content = result.content;
       this.threadObject.slug = result.title.replace(/\s+/g, '-').toLowerCase();
+      // @ts-ignore
+      document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
     });
   }
 
