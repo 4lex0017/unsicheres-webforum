@@ -24,6 +24,9 @@ import {AdminRoutingModule} from "./admin-routing.module";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import { VulnerabilityPickerComponent } from './vulnerability-picker/vulnerability-picker.component';
 
 
 @NgModule({
@@ -33,6 +36,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     SettingsComponent,
     ScoreboardComponent,
     SidenavComponent,
+    VulnerabilityPickerComponent,
 
   ],
   imports: [
@@ -55,7 +59,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     AdminRoutingModule,
     FormsModule,
     CommonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTabsModule,
+    MatCheckboxModule
   ],
   exports: []
 })

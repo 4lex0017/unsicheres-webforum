@@ -31,7 +31,7 @@ export class UserProfileViewComponent implements OnInit {
     );
   }
 
-  openDialog(): void {
+  openEditProfileDialog(): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
       //data: {name: this.name, animal: this.animal},
@@ -57,6 +57,10 @@ export class UserProfileViewComponent implements OnInit {
     } else {
       return content
     }
+  }
+
+  getSlugFromTitle(title: string): string {
+    return this.backendService.getSlugFromTitle(title);
   }
 
   getCategoryFromThread(id: number): string {

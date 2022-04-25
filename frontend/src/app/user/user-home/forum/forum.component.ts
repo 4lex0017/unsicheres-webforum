@@ -46,7 +46,7 @@ export class ForumComponent implements OnInit {
     });
   }
 
-  openDialog(): void {
+  openCreateThreadDialog(): void {
     let selected = "";
     if (this.showFull) {
       selected = this.currentCategoryObject.title;

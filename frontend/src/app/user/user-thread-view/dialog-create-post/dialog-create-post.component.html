@@ -1,11 +1,11 @@
 <div mat-dialog-content>
   <section>
-    <mat-checkbox class="reply-button-spacer" disableRipple="true" color="primary" [(ngModel)]="data.showReply">Show reply</mat-checkbox>
+    <mat-checkbox class="reply-button-spacer" disableRipple="true" color="primary" [(ngModel)]="data.showReply">Show
+      reply
+    </mat-checkbox>
   </section>
-  <p *ngIf="data.showReply" >{{data.reply}}</p>
-
+  <p *ngIf="data.showReply">{{data.reply}}</p>
   <p></p>
-
   <mat-form-field appearance="fill" class="user-create-textarea-container">
     <mat-label>Your Post</mat-label>
     <textarea matInput

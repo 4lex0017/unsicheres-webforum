@@ -11,7 +11,7 @@
         {{userFullObject.username}}
         <span class="spacer"></span>
         <button mat-mini-fab color="primary"
-                (click)="openDialog()"
+                (click)="openEditProfileDialog()"
                 matTooltip="Edit Profile"
                 [matTooltipShowDelay]="500">
           <mat-icon>edit</mat-icon>
@@ -53,7 +53,7 @@
       <mat-tab label="Threads: {{userThreads.length}}">
         <mat-list>
           <mat-list-item *ngFor="let thread of userThreads">
-            <a [routerLink]="['/forum/thread',thread.slug]">
+            <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
               <div mat-line>{{thread.title}}</div>
               <div mat-line>Date: {{thread.date}}</div>
             </a>

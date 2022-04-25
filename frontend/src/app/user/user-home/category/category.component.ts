@@ -41,6 +41,10 @@ export class CategoryComponent implements AfterViewInit {
     })
   }
 
+  getSLugFromTitle(title: string): string {
+    return title.replace(/\s+/g, '-').toLowerCase();
+  }
+
   showMoreNav(category: string) {
     this.router.navigate(['forum/home'], {queryParams: {view: category}});
 

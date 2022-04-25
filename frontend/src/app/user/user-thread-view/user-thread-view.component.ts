@@ -51,7 +51,6 @@ export class UserThreadViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
       this.threadObject.content = result.content;
-      this.threadObject.slug = result.title.replace(/\s+/g, '-').toLowerCase();
       // @ts-ignore
       document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
     });

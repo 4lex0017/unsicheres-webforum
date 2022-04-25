@@ -83,6 +83,10 @@ export class SearchComponent implements OnInit {
     return this.backendService.getThreadSlugFromPostId(id);
   }
 
+  getSlugFromTitle(title: string): string {
+    return this.backendService.getSlugFromTitle(title);
+  }
+
   clickSearch() {
     if (this.newSearchQuery == "") {
       this.dialog.open(DialogSearchErrorMessageComponent, {

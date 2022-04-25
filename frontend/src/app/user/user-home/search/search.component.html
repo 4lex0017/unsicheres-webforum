@@ -4,13 +4,11 @@
     <mat-card-header>
       <mat-card-title>
 
-
         <mat-form-field class="search-field-size">
           <input type="search" matInput
                  placeholder="Search"
                  [(ngModel)]="newSearchQuery"
                  (keyup.enter)="clickSearch()">
-
 
         </mat-form-field>
         <button mat-icon-button color="primary"
@@ -27,7 +25,7 @@
       <mat-list>
         <div mat-subheader>Threads: Found {{threads.length}} results.</div>
         <mat-list-item *ngFor="let thread of threads">
-          <a [routerLink]="['/forum', getCategoryFromThread(thread.id).toLowerCase(),thread.slug]">
+          <a [routerLink]="['/forum', getCategoryFromThread(thread.id).toLowerCase(),getSlugFromTitle(thread.title)]">
             <div mat-line>{{thread.title}}</div>
           </a>
           <mat-divider></mat-divider>
