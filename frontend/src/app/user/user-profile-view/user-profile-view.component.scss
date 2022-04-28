@@ -1,0 +1,49 @@
+.user-container {
+  padding: 50px 0 0 150px;
+}
+
+.user-card {
+  max-width: 80%;
+}
+
+.user-image {
+  background-size: cover;
+  height: 52px;
+  width: 52px;
+
+}
+
+.user-default-img-container {
+  background-size: cover;
+  height: 52px;
+  width: 52px;
+  transform: scale(2);
+}
+
+.user-footer {
+  padding: 0 0 10px 15px;
+}
+
+.user-badge {
+
+  pointer-events: none;
+  cursor: default;
+
+}
+
+.spacer {
+  padding: 0 0 0 10px;
+}
+
+img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+.user-default-img {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+
+}

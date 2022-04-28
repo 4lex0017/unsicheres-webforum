@@ -1,0 +1,81 @@
+<div class="user-container">
+  <mat-card class="user-card">
+    <mat-card-header>
+      <div mat-card-avatar class="user-default-img-container" *ngIf="!this.userFullObject.image">
+        <mat-icon class="user-default-img">face</mat-icon>
+      </div>
+      <div mat-card-avatar class="user-image" *ngIf="this.userFullObject.image">
+        <img src="{{this.userFullObject.image.src}}" alt="image">
+      </div>
+      <mat-card-title>
+        {{userFullObject.username}}
+        <span class="spacer"></span>
+        <button mat-mini-fab color="primary"
+                (click)="openEditProfileDialog()"
+                matTooltip="Edit Profile"
+                [matTooltipShowDelay]="500">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <div> Joined: {{userFullObject.joined}} </div>
+        <div>Endorsements: NA</div>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <h2>About: </h2>
+      <p>
+        {{userFullObject.about}}
+      </p>
+      <mat-chip-list>
+        <mat-chip class="user-badge" color="primary" selected
+                  *ngFor="let role of userFullObject.role">{{role}}</mat-chip>
+      </mat-chip-list>
+    </mat-card-content>
+
+    <mat-tab-group>
+      <mat-tab label="Comments:  {{userFullObject.comments.length}}">
+        <mat-list>
+          <mat-list-item *ngFor="let comment of userFullObject.comments">
+            <div mat-line>{{comment.content}}</div>
+            <div mat-line>
+              By:
+              <a [routerLink]="['/forum/users', comment.userId]">
+                {{getFullUserFromUserId(comment.userId).username}}
+              </a>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+
+
+      <mat-tab label="Threads: {{userThreads.length}}">
+        <mat-list>
+          <mat-list-item *ngFor="let thread of userThreads">
+            <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
+              <div mat-line>{{thread.title}}</div>
+              <div mat-line>Date: {{thread.date}}</div>
+            </a>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+
+      <mat-tab label="Posts: {{userPosts.length}}">
+        <mat-list>
+          <mat-list-item *ngFor="let post of userPosts">
+            <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
+              <div mat-line>{{cutPostContent(post.content)}}</div>
+              <div mat-line>Date: {{post.date}}</div>
+            </a>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </mat-tab>
+
+    </mat-tab-group>
+
+    <mat-card-footer class="user-footer"></mat-card-footer>
+  </mat-card>
+</div>
