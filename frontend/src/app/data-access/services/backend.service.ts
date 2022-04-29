@@ -7,6 +7,7 @@ import {of} from 'rxjs';
 import {UserFull} from "../models/userFull";
 import {Post} from "../models/post";
 import {User} from "../models/user";
+import {PostReply} from "../models/postReply";
 
 @Injectable({
   providedIn: 'root',
@@ -134,9 +135,12 @@ export class BackendService {
     }
   }
 
-  createPostObject(content: string, repliedTo?: string,): Post {
+  createPostObject(content: string, repliedTo?: PostReply): Post {
     if (!repliedTo) {
-      repliedTo = "";
+      repliedTo = {
+        repliedToId: -1,
+        repliedToContent: ""
+      };
     }
     let postObject: Post =
       {

@@ -13,11 +13,72 @@ export class VulnerabilitiesComponent {
   constructor() {
   }
 
+  insecurePasswordHandling: VulnerabilityDifficultyOverview = {
+    name: 'All',
+    allCompleted: false,
+    completed: false,
+    color: 'primary',
+    description: 'Passwords are not stored as salted hashes, older algorithms are used.',
+    subtasks: [
+      {name: 'Easy', completed: false, color: 'primary'},
+      {name: 'Medium', completed: false, color: 'primary'},
+      {name: 'Hard', completed: false, color: 'primary'},
+    ],
+  };
+  brokenAuthentication: VulnerabilityDifficultyOverview = {
+    name: 'All',
+    allCompleted: false,
+    completed: false,
+    color: 'primary',
+    description: 'Short/Blank passwords allowed. Brute force attacks are allowed. Easy login with User Enumeration possibility.',
+    subtasks: [
+      {name: 'Easy', completed: false, color: 'primary'},
+      {name: 'Medium', completed: false, color: 'primary'},
+      {name: 'Hard', completed: false, color: 'primary'},
+    ],
+  };
+  sqlInjection: VulnerabilityDifficultyOverview = {
+    name: 'All',
+    allCompleted: false,
+    completed: false,
+    color: 'primary',
+    description: 'Allows the User to execute SQL Queries. Difficulty changes filtering for SQL Queries.',
+    subtasks: [
+      {name: 'Easy', completed: false, color: 'primary'},
+      {name: 'Medium', completed: false, color: 'primary'},
+      {name: 'Hard', completed: false, color: 'primary'},
+    ],
+  };
+  commandInjection: VulnerabilityDifficultyOverview = {
+    name: 'All',
+    allCompleted: false,
+    completed: false,
+    color: 'primary',
+    description: 'Allows the User to execute commands on the host OS.',
+    subtasks: [
+      {name: 'Easy', completed: false, color: 'primary'},
+      {name: 'Medium', completed: false, color: 'primary'},
+      {name: 'Hard', completed: false, color: 'primary'},
+    ],
+  };
+  fileUpload: VulnerabilityDifficultyOverview = {
+    name: 'All',
+    allCompleted: false,
+    completed: false,
+    color: 'primary',
+    description: '',
+    subtasks: [
+      {name: 'Easy', completed: false, color: 'primary'},
+      {name: 'Medium', completed: false, color: 'primary'},
+      {name: 'Hard', completed: false, color: 'primary'},
+    ],
+  };
   xssReflected: VulnerabilityDifficultyOverview = {
     name: 'All',
     allCompleted: false,
     completed: false,
     color: 'primary',
+    description: 'Allows the User to execute <script> and other tags on the site / in queries. Difficulty changes filtering for SQL Queries.',
     subtasks: [
       {name: 'Easy', completed: false, color: 'primary'},
       {name: 'Medium', completed: false, color: 'primary'},
@@ -29,6 +90,7 @@ export class VulnerabilitiesComponent {
     allCompleted: false,
     completed: false,
     color: 'primary',
+    description: 'Allows the User to save <script> and other tags on the site. Difficulty changes filtering for SQL Queries.',
     subtasks: [
       {name: 'Easy', completed: false, color: 'primary'},
       {name: 'Medium', completed: false, color: 'primary'},

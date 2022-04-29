@@ -1,25 +1,32 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {LoginComponent} from "./login/login.component";
 import {ErrorComponent} from "./error/error.component";
 import {FormsModule} from "@angular/forms";
-
-
+import {DidAThingComponent} from './did-a-thing/did-a-thing.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     ErrorComponent,
+    DidAThingComponent,
 
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    MatIconModule,
+    MatButtonModule
   ],
-  exports:[
+  exports: [
     LoginComponent,
-    ErrorComponent
+    ErrorComponent,
+    DidAThingComponent
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}

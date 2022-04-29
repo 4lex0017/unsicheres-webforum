@@ -11,6 +11,7 @@ import {Post} from "../../data-access/models/post";
 import {DialogDeletePostComponent} from "./dialog-delete-post/dialog-delete-post.component";
 import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
 import {DataManagementService} from "../../data-access/services/data-management.service";
+import {PostReply} from "../../data-access/models/postReply";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -32,8 +33,7 @@ export class UserThreadViewComponent implements OnInit {
 
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
-        // @ts-ignore
-        document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+        document.getElementById('content')!.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
 
       }
     );
@@ -68,21 +68,32 @@ export class UserThreadViewComponent implements OnInit {
     });
   }
 
-  openCreateDialog(replyToContent: string, replyToUser: User): void {
-    let repliedTo: string = replyToUser.username + " wrote '" + replyToContent + "'.";
+  openCreateDialog(replyToContent: string, replyToUser: User, postId: number): void {
+    let repliedTo: PostReply = {
+      repliedToId: postId,
+      repliedToContent: replyToUser.username + " wrote '" + replyToContent + "'."
+    };
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
       data: {
-        reply: repliedTo,
+        reply: repliedTo.repliedToContent,
         content: "",
         showReply: true,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (!result.showReply) repliedTo = "";
-      this.threadObject.posts.push(this.backEndService.createPostObject(result.content, repliedTo));
+      if (!result.showReply) {
+        this.threadObject.posts.push(this.backEndService.createPostObject(result.content));
+      } else {
+        this.threadObject.posts.push(this.backEndService.createPostObject(result.content, repliedTo));
+      }
+
 
     });
+  }
+
+  moveToPost(id: number) {
+    window.location.hash = id.toString();
   }
 
   openDeletePostDialog(postObjectId: number) {

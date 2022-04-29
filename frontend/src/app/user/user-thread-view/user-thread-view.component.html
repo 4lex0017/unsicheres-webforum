@@ -1,4 +1,4 @@
-<div class="thread-container">
+<div class="thread-container" id="{{threadObject.id}}">
   <mat-card class="thread-card">
     <mat-card-header>
       <div mat-card-avatar class="user-image-header">
@@ -6,7 +6,7 @@
       </div>
       <mat-card-title>
         <div>
-          <span id="title">{{threadObject.title}}</span>
+          <span>{{threadObject.title}}</span>
           <span class="spacer"></span>
           <button mat-mini-fab color="primary"
                   (click)="openEditThreadDialog()"
@@ -35,13 +35,15 @@
         <button mat-button (click)="likeThreadButton()">LIKE</button>
       </span>
       <button mat-button>SHARE</button>
-      <button mat-button (click)="openCreateDialog(threadObject.content, threadObject.author)">REPLY</button>
+      <button mat-button (click)="openCreateDialog(threadObject.content, threadObject.author, threadObject.id)">REPLY
+      </button>
       <button mat-button>REPORT</button>
     </mat-card-actions>
     <mat-card-footer class="thread-footer"><a
       [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.username}}</a></mat-card-footer>
   </mat-card>
-  <div class="thread-posts" *ngFor="let post of threadObject.posts">
+  <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
+
     <mat-card class="post-card">
       <mat-card-header>
         <div mat-card-avatar class="user-image-header">
@@ -67,7 +69,8 @@
       </mat-card-header>
       <mat-card-content>
         <i *ngIf="post.repliedTo">
-          {{post.repliedTo}}
+          <button class="moveToPost"
+                  (click)="moveToPost(post.repliedTo.repliedToId)">{{post.repliedTo.repliedToContent}}</button>
         </i>
         <p></p>
         <p>
@@ -80,7 +83,7 @@
           <button mat-button (click)="likePostButton(post)">LIKE</button>
         </span>
         <button mat-button>SHARE</button>
-        <button mat-button (click)="openCreateDialog(post.content, post.author)">REPLY</button>
+        <button mat-button (click)="openCreateDialog(post.content, post.author, post.id)">REPLY</button>
         <button mat-button>REPORT</button>
       </mat-card-actions>
     </mat-card>
