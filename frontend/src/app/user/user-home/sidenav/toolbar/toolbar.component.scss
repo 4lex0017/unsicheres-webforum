@@ -1,7 +1,16 @@
 .toolbar-spacer {
   flex: 1 1 auto;
 }
-.toolbar-route{
- text-decoration: none;
+
+.toolbar-route {
+  text-decoration: none;
   color: white;
+}
+
+.toolbar {
+  top: 0;
+  position: sticky;
+  z-index: 98;
+
+
 }

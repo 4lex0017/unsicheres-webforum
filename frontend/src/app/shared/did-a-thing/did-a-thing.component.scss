@@ -3,6 +3,7 @@
   position: fixed;
   left: 200px;
   top: 20px;
+  z-index: 99;
 }
 
 .text {
@@ -10,7 +11,7 @@
   height: 30px;
   width: 150px;
   border-radius: 5px;
-
+  z-index: 99;
   position: fixed;
   left: 280px;
   top: 15px;

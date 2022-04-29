@@ -69,7 +69,7 @@
       </mat-card-header>
       <mat-card-content>
         <i *ngIf="post.repliedTo">
-          <button class="moveToPost"
+          <button mat-button [disableRipple]="true" class="moveToPost"
                   (click)="moveToPost(post.repliedTo.repliedToId)">{{post.repliedTo.repliedToContent}}</button>
         </i>
         <p></p>
@@ -89,3 +89,4 @@
     </mat-card>
   </div>
 </div>
+<div class="footer-spacer"></div>

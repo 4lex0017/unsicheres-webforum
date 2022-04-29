@@ -393,7 +393,7 @@ const ELEMENT_DATA: AdminUser[] = [
   ],
 })
 export class ScoreboardComponent implements AfterViewInit {
-
+  allRowToggle = false;
   displayedColumns: string[] = ['score', 'ipaddress', 'username', 'vulnFound'];
   displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -418,8 +418,9 @@ export class ScoreboardComponent implements AfterViewInit {
   }
 
   manageAllRows() {
+    this.allRowToggle = !this.allRowToggle
     ELEMENT_DATA.forEach(row => {
-      row.expanded = !row.expanded;
+      row.expanded = this.allRowToggle;
     })
   }
 

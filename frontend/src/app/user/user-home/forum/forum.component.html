@@ -17,7 +17,7 @@
       <div class="col-xs-1 col-md-2 col-lg-3">
         <div class="side-content-container">
           <button color="primary" (click)="openCreateThreadDialog()" mat-raised-button>Create Thread</button>
-          
+
           <span class="spacer"></span>
           <mat-form-field>
             <input type="search" matInput placeholder="Search"
@@ -37,4 +37,4 @@
     </div>
   </div>
 </div>
-
+<div *ngIf="showFull" class="footer-spacer"></div>
