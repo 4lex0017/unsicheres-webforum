@@ -31,7 +31,13 @@
             <mat-icon>search</mat-icon>
           </button>
         </div>
-        <mat-card>
+        <mat-card class="userlist">
+          Users:
+          <em *ngFor="let user of backEndService.userData.UserFull; let i = index" [routerLink]="['/forum/users', user.id]" >
+            <a [routerLink]="['/forum/users', user.id]"> {{user.username}}</a>
+            ,
+          </em>
+          ...
         </mat-card>
       </div>
     </div>

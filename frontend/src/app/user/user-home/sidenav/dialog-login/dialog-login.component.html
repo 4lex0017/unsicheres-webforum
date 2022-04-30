@@ -1,0 +1,13 @@
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="username-login-input-container">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="data.username">
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="password-login-input-container">
+    <mat-label>Password</mat-label>
+    <input matInput [(ngModel)]="data.password">
+  </mat-form-field>
+</mat-dialog-content>
+<button mat-raised-button color="primary" (click)="checkeLogin()">Login</button>
+<button mat-raised-button color="warn" class = "close" (click)="close()">close</button>

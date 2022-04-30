@@ -25,6 +25,10 @@ export class LoginComponent  {
 
   }
 
+  openAdminLogin():void{
+    this.router.navigate(['/adminlogin'])
+  }
+
 
   authenticateUser(userName){
     sessionStorage.setItem("user", userName);

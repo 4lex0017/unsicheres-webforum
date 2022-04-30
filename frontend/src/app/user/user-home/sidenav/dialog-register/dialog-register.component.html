@@ -1,0 +1,18 @@
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="username-register-input-container">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="data.username">
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="password-register-input-container">
+    <mat-label>Password</mat-label>
+    <input matInput [(ngModel)]="data.password">
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="repeatPassword-register-input-container">
+    <mat-label>Please repeat the Password</mat-label>
+    <input matInput [(ngModel)]="data.repeatPassword">
+  </mat-form-field>
+</mat-dialog-content>
+<button mat-raised-button color="primary" (click)="registerUser()">Register & Login</button>
+<button mat-raised-button color="warn" class = "close" (click)="close()">close</button>
