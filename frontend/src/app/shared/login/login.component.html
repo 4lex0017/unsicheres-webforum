@@ -1,3 +1,4 @@
+<div class="back">
 <form class="form-signin">
   <img class="mb-4" alt="" width="72" height="72">
   <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -8,7 +9,8 @@
   <input type="password" id="inputPassword" name="password" [(ngModel)]="password" class="form-control"
          placeholder="Password" required>
   <button class="btn btn-lg btn-primary btn-block" (click)="handleLoginClick()" type="button">Sign in</button>
-  
-</form>
+  <button style=" margin-left: 11.3%" class="btn btn-lg btn-primary btn-block"  (click)="openAdminLogin()" type="button">Login as Admin</button>
 
+</form>
+</div>
 

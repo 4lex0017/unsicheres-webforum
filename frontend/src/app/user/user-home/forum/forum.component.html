@@ -17,7 +17,7 @@
       <div class="col-xs-1 col-md-2 col-lg-3">
         <div class="side-content-container">
           <button color="primary" (click)="openCreateThreadDialog()" mat-raised-button>Create Thread</button>
-          
+
           <span class="spacer"></span>
           <mat-form-field>
             <input type="search" matInput placeholder="Search"
@@ -31,7 +31,13 @@
             <mat-icon>search</mat-icon>
           </button>
         </div>
-        <mat-card>
+        <mat-card class="userlist">
+          Users:
+          <em *ngFor="let user of backEndService.userData.UserFull; let i = index" [routerLink]="['/forum/users', user.id]" >
+            <a [routerLink]="['/forum/users', user.id]"> {{user.username}}</a>
+            ,
+          </em>
+          ...
         </mat-card>
       </div>
     </div>

@@ -26,6 +26,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {SearchComponent} from './search/search.component';
 import {DialogSearchErrorMessageComponent} from './dialog-search-error-message/dialog-search-error-message.component';
 import {SharedModule} from "../../shared/shared.module";
+import {DialogContactformComponent} from "./sidenav/dialog-kontaktformular/dialog-contactform.component";
+import {DialogLoginComponent} from "./sidenav/dialog-login/dialog-login.component";
+import {DialogRegisterComponent} from "./sidenav/dialog-register/dialog-register.component";
 
 
 @NgModule({
@@ -38,6 +41,9 @@ import {SharedModule} from "../../shared/shared.module";
     DialogCreateThreadComponent,
     SearchComponent,
     DialogSearchErrorMessageComponent,
+    DialogContactformComponent,
+    DialogLoginComponent,
+    DialogRegisterComponent
   ],
   imports: [
     CommonModule,

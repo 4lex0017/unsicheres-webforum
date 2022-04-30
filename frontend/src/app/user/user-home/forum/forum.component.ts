@@ -15,7 +15,7 @@ import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/
 })
 export class ForumComponent implements OnInit {
 
-  constructor(private backEndService: BackendService,
+  constructor(public backEndService: BackendService,
               private dialog: MatDialog,
               private router: Router,
               private activeRoute: ActivatedRoute
