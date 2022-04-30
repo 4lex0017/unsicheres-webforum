@@ -1,6 +1,7 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" class="toolbar">
   <a [routerLink]="['./home']" [queryParams]="{ view : 'all' }" class="toolbar-route"><span>Forum</span></a>
   <span class="toolbar-spacer"></span>
+  <app-did-a-thing></app-did-a-thing>
   <button mat-button (click)="openLogin()">Login</button>
   <button mat-button (click)="openRegister()">Register</button>
 </mat-toolbar>
