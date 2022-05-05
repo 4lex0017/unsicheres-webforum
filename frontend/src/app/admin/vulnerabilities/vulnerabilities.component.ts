@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ThemePalette} from "@angular/material/core";
 import {VulnerabilityDifficultyOverview} from "../../data-access/models/vulnerabilityDifficultyOverview";
 
 
@@ -14,106 +13,66 @@ export class VulnerabilitiesComponent {
   }
 
   insecurePasswordHandling: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'Insecure Password Handling',
     description: 'Passwords are not stored as salted hashes, older algorithms are used.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'Oldest algorithm.', checked: false},
+      {state: 'Medium', description: 'Medium algorithm.', checked: false},
+      {state: 'Hard', description: 'Hard algorithm.', checked: false},
     ],
   };
   brokenAuthentication: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'Broken Authentication',
     description: 'Short/Blank passwords allowed. Brute force attacks are allowed. Easy login with User Enumeration possibility.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'User enumeration, very easy passwords.', checked: false},
+      {state: 'Medium', description: 'User enumeration, medium passwords.', checked: false},
+      {state: 'Hard', description: 'Hard passwords.', checked: false},
     ],
   };
   sqlInjection: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'SQL Injection',
     description: 'Allows the User to execute SQL Queries. Difficulty changes filtering for SQL Queries.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'No filtering.', checked: false},
+      {state: 'Medium', description: 'Easy filtering with String.matches().', checked: false,},
+      {state: 'Hard', description: 'Hard filtering.', checked: false},
     ],
   };
   commandInjection: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'Command Injection',
     description: 'Allows the User to execute commands on the host OS.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'No filtering.', checked: false},
+      {state: 'Medium', description: 'Easy filtering with String.matches().', checked: false},
+      {state: 'Hard', description: 'Hard filtering.', checked: false},
     ],
   };
   fileUpload: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'File Upload',
     description: '',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'Accept every Filetype.', checked: false},
+      {state: 'Medium', description: 'Accept some Filetypes.', checked: false},
+      {state: 'Hard', description: 'Accept selective Filetypes.', checked: false},
     ],
   };
   xssReflected: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'XSS Reflected',
     description: 'Allows the User to execute <script> and other tags on the site / in queries. Difficulty changes filtering for SQL Queries.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'No filtering.', checked: false},
+      {state: 'Medium', description: 'Easy filtering with String.matches().', checked: false},
+      {state: 'Hard', description: 'Hard filtering.', checked: false},
     ],
   };
   xssStored: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
+    name: 'XSS Stored',
     description: 'Allows the User to save <script> and other tags on the site. Difficulty changes filtering for SQL Queries.',
     subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
+      {state: 'Easy', description: 'No filtering.', checked: false},
+      {state: 'Medium', description: 'Easy filtering with String.matches().', checked: false},
+      {state: 'Hard', description: 'Hard filtering.', checked: false},
     ],
   };
-
-  updateAllComplete(task: VulnerabilityDifficultyOverview) {
-    task.allCompleted = task.subtasks != null && task.subtasks.every(t => t.completed);
-  }
-
-  someComplete(task: VulnerabilityDifficultyOverview): boolean {
-    if (task.subtasks == null) {
-      return false;
-    }
-    return task.subtasks.filter(t => t.completed).length > 0 && !task.allCompleted;
-  }
-
-  setAll(completed: boolean, task: VulnerabilityDifficultyOverview) {
-    task.allCompleted = completed;
-    if (task.subtasks == null) {
-      return;
-    }
-    task.subtasks.forEach(t => (t.completed = completed));
-  }
 }
