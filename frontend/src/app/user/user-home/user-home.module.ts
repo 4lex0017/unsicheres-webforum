@@ -29,6 +29,9 @@ import {SharedModule} from "../../shared/shared.module";
 import {DialogContactformComponent} from "./sidenav/dialog-kontaktformular/dialog-contactform.component";
 import {DialogLoginComponent} from "./sidenav/dialog-login/dialog-login.component";
 import {DialogRegisterComponent} from "./sidenav/dialog-register/dialog-register.component";
+import {UserSettingsComponent} from "../user-settings/user-settings.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 @NgModule({
@@ -43,30 +46,33 @@ import {DialogRegisterComponent} from "./sidenav/dialog-register/dialog-register
     DialogSearchErrorMessageComponent,
     DialogContactformComponent,
     DialogLoginComponent,
-    DialogRegisterComponent
+    DialogRegisterComponent,
+    UserSettingsComponent,
   ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatSidenavModule,
-    MatButtonModule,
-    UserHomeRoutingModule,
-    RouterModule,
-    MatTableModule,
-    MatPaginatorModule,
-    UserThreadViewModule,
-    MatInputModule,
-    MatCardModule,
-    FormsModule,
-    MatDialogModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatTooltipModule,
-    SharedModule,
-    //Delete later
-  ]
+    imports: [
+        CommonModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatListModule,
+        MatSidenavModule,
+        MatButtonModule,
+        UserHomeRoutingModule,
+        RouterModule,
+        MatTableModule,
+        MatPaginatorModule,
+        UserThreadViewModule,
+        MatInputModule,
+        MatCardModule,
+        FormsModule,
+        MatDialogModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatTooltipModule,
+        SharedModule,
+        MatSlideToggleModule,
+        MatMenuModule,
+        //Delete later
+    ]
 })
 export class UserHomeModule {
 }

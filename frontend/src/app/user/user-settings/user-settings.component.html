@@ -1,0 +1,26 @@
+<h1 class="headline">Settings</h1>
+<div class="container">
+  <mat-card class="settings-card">
+    <h2>Account</h2>
+    <h3>Change Username?</h3>
+    <h3>Change Password?</h3>
+  </mat-card>
+  <div> </div>
+  <mat-card class="settings-card">
+    <h2>Profile</h2>
+    <h3>Change Description?</h3>
+    <h3>Change Privacy? (Visible on Profile)</h3>
+  </mat-card>
+  <div> </div>
+  <mat-card class="settings-card">
+  <h2>Apperance</h2>
+  <div class="row">
+    <div class="col-sm">
+      <mat-slide-toggle (click)="toggleDarkMode()" [(ngModel)]="darkMode">
+        Dark Mode
+      </mat-slide-toggle>
+    </div>
+  </div>
+  </mat-card>
+</div>
+

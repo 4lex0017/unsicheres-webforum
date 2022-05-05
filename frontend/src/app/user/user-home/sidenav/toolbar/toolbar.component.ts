@@ -3,6 +3,8 @@ import {DialogCreateThreadComponent} from "../../dialog-create-thread/dialog-cre
 import {MatDialog} from "@angular/material/dialog";
 import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
 import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
+import {Router} from "@angular/router";
+import {ThemeService} from "../../../../theme.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -11,7 +13,14 @@ import {DialogRegisterComponent} from "../dialog-register/dialog-register.compon
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog,
+              private router: Router,
+              private themeService: ThemeService) {
+    this.themeService.initTheme();
+    this.darkMode = this.themeService.isDarkMode();
+  }
+
+  darkMode = true;
 
   ngOnInit(): void {
   }
@@ -35,6 +44,11 @@ export class ToolbarComponent implements OnInit {
         repeatPassword: "",
       },
     });
+  }
+
+  toggleDarkMode() {
+    this.darkMode = this.themeService.isDarkMode();
+    this.darkMode ? this.themeService.update('light-mode') : this.themeService.update('dark-mode');
   }
 
 }

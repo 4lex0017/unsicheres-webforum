@@ -5,9 +5,16 @@
   height: 40px;
   background-color: rgb(10, 76, 162);
   color: rgb(255, 255, 255);
-  text-align: center;
   margin-top: 0px;
   align-self: flex-end;
+}
+
+.settings{
+  float: left;
+}
+
+.form{
+  text-align: center;
 }
 
 .content {

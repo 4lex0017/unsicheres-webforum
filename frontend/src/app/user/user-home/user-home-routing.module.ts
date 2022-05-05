@@ -4,6 +4,7 @@ import {ForumComponent} from "./forum/forum.component";
 import {ErrorComponent} from "../../shared/error/error.component";
 import {UserHomeComponent} from "./user-home.component";
 import {SearchComponent} from "./search/search.component";
+import {UserSettingsComponent} from "../user-settings/user-settings.component";
 
 
 const routes: Routes = [
@@ -21,8 +22,8 @@ const routes: Routes = [
         loadChildren: () => import('../user-profile-view/user-profile-view.module').then(m => m.UserProfileViewModule)
       },
       {
-        path: 'settings',
-        loadChildren: () => import('../user-settings/user-settings.module').then(m => m.UserSettingsModule)
+        path: 'settings', component: UserSettingsComponent
+        //loadChildren: () => import('../user-settings/user-settings.module').then(m => m.UserSettingsModule)
       },
       {path: '**', component: ErrorComponent},
 

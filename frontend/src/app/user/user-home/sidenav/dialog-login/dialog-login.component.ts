@@ -13,18 +13,24 @@ export class DialogLoginComponent{
   bar: ToolbarComponent;
   constructor(
     public dialogRef: MatDialogRef<ForumComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogLogin) {
+    @Inject(MAT_DIALOG_DATA) public data: DialogLogin,
+    private backend: BackendService) {
   }
 
-  checkeLogin(): void{
-    if(this.data.username && this.data.password){
-
+  checkLogin(): void{
+    if(this.data.username && this.data.password) {
+      this.authenticateUser(this.data.username, this.data.password);
     }else if(this.data.username && !this.data.password){
-      alert('Falsches Passwort')
+      alert('please enter a password')
     }else{
-      alert('Falscher Username und falsches Passwort');
+      alert('please enter logindata')
     }
+  }
 
+  authenticateUser(userName, password) {
+    if(this.backend.checkLoginData(userName, password)) {
+      sessionStorage.setItem("user", userName)
+    }
   }
 
   close():void{

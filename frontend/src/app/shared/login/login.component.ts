@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {ThemeService} from "../../theme.service";
+import {BackendService} from "../../data-access/services/backend.service";
 
 @Component({
   selector: 'app-login',
@@ -32,11 +33,7 @@ export class LoginComponent  {
 
   authenticateUser(userName){
     sessionStorage.setItem("user", userName);
-    if(userName == "admin"){
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/forum']);
-    }
+    this.router.navigate(['/forum']);
   }
 
 }

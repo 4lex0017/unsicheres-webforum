@@ -8,7 +8,7 @@ import { UserSettingsRoutingModule } from './user-settings-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    UserSettingsRoutingModule
+    UserSettingsRoutingModule,
   ]
 })
 export class UserSettingsModule { }

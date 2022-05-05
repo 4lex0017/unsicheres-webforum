@@ -1,6 +1,7 @@
 import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
+import {BackendService} from "../../../../data-access/services/backend.service";
 
 @Component({
   selector: 'app-dialog-formular',
@@ -11,11 +12,20 @@ import {ForumComponent} from "../../forum/forum.component";
 export class DialogContactformComponent{
   constructor(
     public dialogref: MatDialogRef<ForumComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogContact) {
+    @Inject(MAT_DIALOG_DATA) public data: DialogContact,
+    private backend: BackendService) {
   }
 
-  public sendFile(): void{
+  public checkFile(): void{
+    if(this.data.username && this.data.topic && this.data.message){
+      this.sendFile(this.data.username, this.data.topic, this.data.message)
+    }else{
+      alert('Please fill out every field');
+    }
+  }
 
+  public sendFile(username, topic, message){
+    this.backend.contactForms.Forms.push(username,topic,message);
   }
 
   public close(): void{

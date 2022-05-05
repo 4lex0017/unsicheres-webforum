@@ -211,6 +211,19 @@ export class BackendService {
     return this.getThreadsFromUser(1);
   }
 
+  checkLoginData(username: string, password: string): boolean{
+    for(let i = 0; i < this.loginData.LoginData.length; i++){
+      if(this.loginData.LoginData[i].username == username){
+        if(this.loginData.LoginData[i].password == password){
+          return true
+        }else{
+          return false;
+        }
+      }
+    }
+    return false;
+  }
+
   accessData =
     {
       "categories": [
@@ -723,4 +736,38 @@ export class BackendService {
 
       ]
     };
+
+  loginData =
+    {
+      "LoginData" : [
+        {
+          "username": "loginUser1",
+          "password": "123"
+        },
+        {
+          "username": "loginUser2",
+          "password": "456"
+        },
+        {
+          "username": "loginUser3",
+          "password": "789"
+        }
+      ]
+    };
+
+  contactForms =
+    {
+      "Forms" : [
+        {
+          "username" : "user1",
+          "topic" : "Community",
+          "message"  : "ligma"
+        },
+        {
+          "username" : "user2",
+          "topic" : "Support",
+          "message"  : "oof"
+        }
+      ]
+    }
 }
