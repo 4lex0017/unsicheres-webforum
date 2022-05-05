@@ -211,12 +211,12 @@ export class BackendService {
     return this.getThreadsFromUser(1);
   }
 
-  checkLoginData(username: string, password: string): boolean{
-    for(let i = 0; i < this.loginData.LoginData.length; i++){
-      if(this.loginData.LoginData[i].username == username){
-        if(this.loginData.LoginData[i].password == password){
+  checkLoginData(username: string, password: string): boolean {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        if (this.loginData.loginData[i].password == password) {
           return true
-        }else{
+        } else {
           return false;
         }
       }
@@ -739,7 +739,7 @@ export class BackendService {
 
   loginData =
     {
-      "LoginData" : [
+      "loginData": [
         {
           "username": "loginUser1",
           "password": "123"
@@ -757,16 +757,16 @@ export class BackendService {
 
   contactForms =
     {
-      "Forms" : [
+      "Forms": [
         {
-          "username" : "user1",
-          "topic" : "Community",
-          "message"  : "ligma"
+          "username": "user1",
+          "topic": "Community",
+          "message": "ligma"
         },
         {
-          "username" : "user2",
-          "topic" : "Support",
-          "message"  : "oof"
+          "username": "user2",
+          "topic": "Support",
+          "message": "oof"
         }
       ]
     }

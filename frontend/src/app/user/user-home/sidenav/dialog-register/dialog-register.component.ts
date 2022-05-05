@@ -10,36 +10,37 @@ import {BackendService} from "../../../../data-access/services/backend.service";
   styleUrls: ['./dialog-register.component.scss']
 })
 
-export class DialogRegisterComponent{
+export class DialogRegisterComponent {
   bar: ToolbarComponent;
+
   constructor(
     public dialogref: MatDialogRef<ForumComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogRegister,
     private backend: BackendService) {
   }
 
-  registerUser(): void{
-    if(this.data.username && this.data.password && this.data.repeatPassword){
-      if(this.data.password == this.data.repeatPassword){
+  registerUser(): void {
+    if (this.data.username && this.data.password && this.data.repeatPassword) {
+      if (this.data.password == this.data.repeatPassword) {
         this.createNewUser(this.data.username, this.data.password)
-      }else{
+      } else {
         alert('Repeated password is different');
       }
-    }else{
+    } else {
       alert('Please fill out every line');
     }
   }
 
-  createNewUser(userName,userPassword){
-    this.backend.loginData.LoginData.push(userName,userPassword);
+  createNewUser(userName, userPassword) {
+    this.backend.loginData.loginData.push(userName, userPassword);
   }
 
-  close():void{
+  close(): void {
     this.dialogref.close();
   }
 }
 
-export interface DialogRegister{
+export interface DialogRegister {
   username: string;
   password: string;
   repeatPassword: string;

@@ -1,5 +1,6 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button class="example-icon" (click)="this.toggleSideNav()" aria-label="Example icon-button with menu icon">
+  <button mat-icon-button class="example-icon" (click)="this.toggleSideNav()"
+          aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button>
   <span>{{title}}</span>
@@ -7,7 +8,7 @@
 </mat-toolbar>
 <mat-sidenav-container
   id="sidenavContainer"
-  fullscreen >
+  fullscreen>
   <mat-sidenav
     mode="side"
     #sidenav
@@ -23,7 +24,8 @@
           class="menu-item"
           mat-flat-button>
           <mat-icon>dashboard</mat-icon>
-          Dashboard</button>
+          Dashboard
+        </button>
       </mat-list-item>
       <mat-list-item>
         <button
@@ -31,7 +33,8 @@
           class="menu-item"
           mat-flat-button>
           <mat-icon>error_outline</mat-icon>
-          Vulnerabilities</button>
+          Vulnerabilities
+        </button>
       </mat-list-item>
       <mat-list-item>
         <button
@@ -39,7 +42,8 @@
           class="menu-item"
           mat-flat-button>
           <mat-icon>insert_chart_outlined</mat-icon>
-          Scoreboard</button>
+          Scoreboard
+        </button>
       </mat-list-item>
       <mat-list-item>
         <button
@@ -47,7 +51,8 @@
           class="menu-item"
           mat-flat-button>
           <mat-icon>settings_application</mat-icon>
-          </button>
+          Settings
+        </button>
       </mat-list-item>
 
     </mat-list>
@@ -56,7 +61,7 @@
   <mat-sidenav-content
     [ngStyle]="{ 'margin-left.px': contentMargin }"
   >
-    <mat-selection-list class="content" >
+    <mat-selection-list class="content">
 
       <router-outlet></router-outlet>
 

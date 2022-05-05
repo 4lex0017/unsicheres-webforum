@@ -4,7 +4,6 @@ import {LoginComponent} from "./shared/login/login.component";
 import {RouteGuardService} from "./route-guard.service";
 import {ErrorComponent} from "./shared/error/error.component";
 import {AdminLoginComponent} from "./shared/adminlogin/adminlogin.component";
-import {UserSettingsComponent} from "./user/user-settings/user-settings.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
