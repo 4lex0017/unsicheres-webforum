@@ -1,44 +1,66 @@
-import {Component, Inject} from "@angular/core";
+import {Component, Inject, ViewEncapsulation} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ForumComponent} from "../../forum/forum.component";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {BackendService} from "../../../../data-access/services/backend.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {
+  SnackBarNotificationComponent
+} from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
+
 
 @Component({
   selector: 'app-dialog-login',
   templateUrl: './dialog-login.component.html',
   styleUrls: ['./dialog-login.component.scss']
 })
-export class DialogLoginComponent{
+export class DialogLoginComponent {
   bar: ToolbarComponent;
+  hide = true;
+  username: string;
+  password: string;
+
   constructor(
-    public dialogRef: MatDialogRef<ForumComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogLogin,
-    private backend: BackendService) {
+    public dialogRef: MatDialogRef<DialogLoginComponent>,
+    private backend: BackendService,
+    private _snackBar: MatSnackBar
+  ) {
   }
 
-  checkLogin(): void{
-    if(this.data.username && this.data.password) {
-      this.authenticateUser(this.data.username, this.data.password);
-    }else if(this.data.username && !this.data.password){
-      alert('please enter a password')
-    }else{
-      alert('please enter logindata')
+  checkLogin(): void {
+    if (this.username && this.password) {
+      this.authenticateUser(this.username, this.password);
+    } else if (this.username && !this.password) {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Please enter a password."
+      });
+    } else {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Please enter username & password."
+      });
     }
   }
 
   authenticateUser(userName, password) {
-    if(this.backend.checkLoginData(userName, password)) {
+    let response = this.backend.checkLoginData(userName, password);
+    if (response == 1) {
       sessionStorage.setItem("user", userName)
+      this.dialogRef.close();
+    } else if (response == -1) {
+      this.username = "";
+      this.password = "";
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {duration: 5000, data: "User doesn't exist."});
+    } else {
+      this.password = "";
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Wrong password."
+      });
     }
   }
 
-  close():void{
+  close(): void {
     this.dialogRef.close();
   }
-}
-
-export interface DialogLogin{
-  username: string;
-  password: string;
 }

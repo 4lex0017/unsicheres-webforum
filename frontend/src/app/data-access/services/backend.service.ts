@@ -211,17 +211,26 @@ export class BackendService {
     return this.getThreadsFromUser(1);
   }
 
-  checkLoginData(username: string, password: string): boolean {
+  checkRegisterUserExists(username: string): boolean {
     for (let i = 0; i < this.loginData.loginData.length; i++) {
       if (this.loginData.loginData[i].username == username) {
-        if (this.loginData.loginData[i].password == password) {
-          return true
-        } else {
-          return false;
-        }
+        return true;
       }
     }
     return false;
+  }
+
+  checkLoginData(username: string, password: string): number {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        if (this.loginData.loginData[i].password == password) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+    return -1;
   }
 
   accessData =

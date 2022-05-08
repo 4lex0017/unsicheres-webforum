@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-adminlogin',
   templateUrl: './adminlogin.component.html',
   styleUrls: ['./adminlogin.component.scss']
 })
-export class AdminLoginComponent implements OnInit {
+export class AdminLoginComponent {
   adminname;
   password;
   ipAdress;
@@ -30,7 +30,7 @@ export class AdminLoginComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-
+  openUserLogin() {
+    this.router.navigate(['/login'])
   }
 }

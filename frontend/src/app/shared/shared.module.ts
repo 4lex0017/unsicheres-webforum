@@ -7,7 +7,8 @@ import {DidAThingComponent} from './did-a-thing/did-a-thing.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {AdminLoginComponent} from "./adminlogin/adminlogin.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SnackBarNotificationComponent} from './snack-bar-notification/snack-bar-notification.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
@@ -16,17 +17,20 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     ErrorComponent,
     DidAThingComponent,
     AdminLoginComponent,
+    SnackBarNotificationComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressBarModule
   ],
   exports: [
     LoginComponent,
     ErrorComponent,
-    DidAThingComponent
+    DidAThingComponent,
+    SnackBarNotificationComponent
   ]
 })
 export class SharedModule {

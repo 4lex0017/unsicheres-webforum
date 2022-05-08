@@ -21,7 +21,9 @@ export class SearchComponent implements OnInit {
               private router: Router,
               private dialog: MatDialog,
               private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              // private difficulty: DifficultyService
+  ) {
   }
 
   threads: Thread[] = [];
@@ -44,8 +46,9 @@ export class SearchComponent implements OnInit {
 
     this.route.queryParamMap.subscribe((params) => {
       this.currentSearchQuery = this.format(params.get('filter') || "");
-      // @ts-ignore
-      document.getElementById('final').appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
+      // if (this.currentSearchQuery.includes("<script>"))  Nicht nur child anhängen!!
+      document.getElementById('final')!.replaceChildren();
+      document.getElementById('final')!.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
     });
   }
 

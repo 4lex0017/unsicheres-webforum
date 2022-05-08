@@ -31,6 +31,7 @@ import {DialogLoginComponent} from "./sidenav/dialog-login/dialog-login.componen
 import {DialogRegisterComponent} from "./sidenav/dialog-register/dialog-register.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatMenuModule} from "@angular/material/menu";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -69,6 +70,8 @@ import {MatMenuModule} from "@angular/material/menu";
     SharedModule,
     MatSlideToggleModule,
     MatMenuModule,
+    MatSnackBarModule
+
   ]
 })
 export class UserHomeModule {

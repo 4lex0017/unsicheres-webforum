@@ -25,21 +25,12 @@ export class ToolbarComponent {
   openLogin(): void {
     const dialogRef = this.dialog.open(DialogLoginComponent, {
       width: '30%',
-      data: {
-        username: "",
-        content: "",
-      },
     });
   }
 
   openRegister(): void {
     const dialogRef = this.dialog.open(DialogRegisterComponent, {
-      width: '30%',
-      data: {
-        username: "",
-        password: "",
-        repeatPassword: "",
-      },
+      width: '30%'
     });
   }
 
