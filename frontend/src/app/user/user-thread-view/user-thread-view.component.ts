@@ -12,6 +12,7 @@ import {DialogDeletePostComponent} from "./dialog-delete-post/dialog-delete-post
 import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
 import {DataManagementService} from "../../data-access/services/data-management.service";
 import {PostReply} from "../../data-access/models/postReply";
+import {AuthenticationService} from "../../data-access/services/authentication.service";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -26,7 +27,8 @@ export class UserThreadViewComponent implements OnInit {
               private dialog: MatDialog,
               private backEndService: BackendService,
               private router: Router,
-              private dataManagement: DataManagementService) {
+              private dataManagement: DataManagementService,
+              public authenticate: AuthenticationService) {
   }
 
   ngOnInit(): void {
@@ -37,6 +39,16 @@ export class UserThreadViewComponent implements OnInit {
 
       }
     );
+  }
+
+  canEditThread(): boolean {
+    if (this.threadObject.author.id == this.authenticate.currentUser) return true;
+    return false;
+  }
+
+  canEditPost(post: any): boolean {
+    if (post.author.id == this.authenticate.currentUser) return true;
+    return false;
   }
 
   openEditThreadDialog(): void {

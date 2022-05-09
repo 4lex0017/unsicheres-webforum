@@ -8,9 +8,8 @@ import {Router} from '@angular/router';
   styleUrls: ['./adminlogin.component.scss']
 })
 export class AdminLoginComponent {
-  adminname;
-  password;
-  ipAdress;
+  adminname: string;
+  password: string;
 
   constructor(private http: HttpClient, private router: Router) {
   }
@@ -24,7 +23,7 @@ export class AdminLoginComponent {
   }
 
   authenticateAdmin(adminName) {
-    sessionStorage.setItem("user", adminName);
+    sessionStorage.setItem("upperUser", adminName);
     if (adminName == "admin") {
       this.router.navigate(['/admin']);
     }

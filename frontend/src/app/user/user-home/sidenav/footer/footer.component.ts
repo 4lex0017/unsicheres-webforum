@@ -11,18 +11,13 @@ import {Router} from "@angular/router";
 })
 export class FooterComponent {
 
-  constructor( private dialog: MatDialog,
-               private router: Router) {
+  constructor(private dialog: MatDialog,
+              private router: Router) {
   }
 
-  openContactform(): void{
+  openContactform(): void {
     const dialogRef = this.dialog.open(DialogContactformComponent, {
-      width: '65%',
-      data: {
-        username: "",
-        topic:"",
-        message: "",
-      },
+      width: '65%'
     });
   }
 

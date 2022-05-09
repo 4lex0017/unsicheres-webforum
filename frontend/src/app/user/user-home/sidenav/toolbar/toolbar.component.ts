@@ -5,6 +5,7 @@ import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
 import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 import {Router} from "@angular/router";
 import {ThemeService} from "../../../../theme.service";
+import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 
 @Component({
   selector: 'app-toolbar',
@@ -15,12 +16,21 @@ export class ToolbarComponent {
 
   constructor(private dialog: MatDialog,
               private router: Router,
-              private themeService: ThemeService) {
+              private themeService: ThemeService,
+              public authenticate: AuthenticationService) {
     this.darkMode = this.themeService.isDarkMode();
   }
 
   darkMode: boolean;
 
+  logout(): void {
+    sessionStorage.removeItem("user");
+    this.authenticate.logout();
+  }
+
+  navigateProfile(): void {
+    this.router.navigate(['/forum/users', this.authenticate.currentUser]);
+  }
 
   openLogin(): void {
     const dialogRef = this.dialog.open(DialogLoginComponent, {

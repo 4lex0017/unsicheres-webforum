@@ -6,6 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
+import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 
 
 @Component({
@@ -22,7 +23,8 @@ export class DialogLoginComponent {
   constructor(
     public dialogRef: MatDialogRef<DialogLoginComponent>,
     private backend: BackendService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private authenticate: AuthenticationService
   ) {
   }
 
@@ -45,7 +47,8 @@ export class DialogLoginComponent {
   authenticateUser(userName, password) {
     let response = this.backend.checkLoginData(userName, password);
     if (response == 1) {
-      sessionStorage.setItem("user", userName)
+      sessionStorage.setItem("user", userName);
+      this.authenticate.login(userName, password);
       this.dialogRef.close();
     } else if (response == -1) {
       this.username = "";

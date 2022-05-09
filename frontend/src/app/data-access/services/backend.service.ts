@@ -233,6 +233,17 @@ export class BackendService {
     return -1;
   }
 
+  getLoginId(username: string, password: string): number {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        if (this.loginData.loginData[i].password == password) {
+          return this.loginData.loginData[i].id;
+        }
+      }
+    }
+    return -1;
+  }
+
   accessData =
     {
       "categories": [
@@ -750,17 +761,55 @@ export class BackendService {
     {
       "loginData": [
         {
-          "username": "loginUser1",
+          "id": 1,
+          "username": "TestUsername1",
           "password": "123"
         },
         {
-          "username": "loginUser2",
+          "id": 2,
+          "username": "TestUsername2",
           "password": "456"
         },
         {
-          "username": "loginUser3",
+          "id": 135,
+          "username": "test_test_testuser",
           "password": "789"
-        }
+        },
+        {
+          "id": 553,
+          "username": "TestUsername553",
+          "password": "789"
+        },
+        {
+          "id": 4,
+          "username": "TestUsername4",
+          "password": "789"
+        },
+        {
+          "id": 123,
+          "username": "TestUsername123",
+          "password": "789"
+        },
+        {
+          "id": 882,
+          "username": "TestUsername882",
+          "password": "789"
+        },
+        {
+          "id": 444,
+          "username": "TestUsername444",
+          "password": "789"
+        },
+        {
+          "id": 555,
+          "username": "TestUsername555",
+          "password": "789"
+        },
+        {
+          "id": 131,
+          "username": "TestUsername131",
+          "password": "789"
+        },
       ]
     };
 

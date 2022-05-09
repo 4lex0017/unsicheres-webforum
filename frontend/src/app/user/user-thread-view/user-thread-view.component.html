@@ -8,14 +8,14 @@
         <div>
           <span>{{threadObject.title}}</span>
           <span class="spacer"></span>
-          <button mat-mini-fab color="primary"
+          <button mat-mini-fab color="primary" *ngIf="canEditThread()"
                   (click)="openEditThreadDialog()"
                   matTooltip="Edit Thread"
                   [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab color="warn"
+          <button mat-mini-fab color="warn" *ngIf="canEditThread()"
                   (click)="openDeleteThreadDialog()"
                   matTooltip="Delete Thread"
                   [matTooltipShowDelay]="500">
@@ -52,14 +52,14 @@
         <mat-card-title>
           <a [routerLink]="['/forum/users', post.author.id]">{{post.author.username}}</a> answered on {{post.date}}
           <span class="spacer"></span>
-          <button mat-mini-fab color="primary"
+          <button mat-mini-fab color="primary" *ngIf="canEditPost(post)"
                   (click)="openEditPostDialog(post)"
                   matTooltip="Edit Post"
                   [matTooltipShowDelay]="500">
             <mat-icon>edit</mat-icon>
           </button>
           <span class="spacer"></span>
-          <button mat-mini-fab color="warn"
+          <button mat-mini-fab color="warn" *ngIf="canEditPost(post)"
                   (click)="openDeletePostDialog(post.id)"
                   matTooltip="Delete Post"
                   [matTooltipShowDelay]="500">

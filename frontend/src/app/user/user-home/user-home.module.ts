@@ -18,7 +18,7 @@ import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module"
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import {DialogCreateThreadComponent} from './dialog-create-thread/dialog-create-thread.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
@@ -70,7 +70,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     SharedModule,
     MatSlideToggleModule,
     MatMenuModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    ReactiveFormsModule
 
   ]
 })
