@@ -1,5 +1,5 @@
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {BackendService} from "../../../../data-access/services/backend.service";
@@ -7,6 +7,8 @@ import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthenticationService} from "../../../../data-access/services/authentication.service";
+import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-dialog-register',
@@ -31,7 +33,9 @@ export class DialogRegisterComponent {
   constructor(
     public dialogref: MatDialogRef<ForumComponent>,
     private backend: BackendService,
-    private _snackBar: MatSnackBar) {
+    private _snackBar: MatSnackBar,
+    private authenticate: AuthenticationService,
+    private dialog: MatDialog) {
   }
 
   registerUser(): void {
@@ -48,6 +52,7 @@ export class DialogRegisterComponent {
         } else {
           this.createNewUser(this.username, this.password)
           sessionStorage.setItem("user", this.username)
+          this.authenticate.login(this.username, this.password);
           this.dialogref.close();
         }
 
@@ -72,10 +77,17 @@ export class DialogRegisterComponent {
   }
 
   createNewUser(userName, userPassword) {
-    this.backend.loginData.loginData.push(userName, userPassword);
+    this.backend.registerNewUser(userName, userPassword);
   }
 
   close(): void {
     this.dialogref.close();
+  }
+
+  openLogin(): void {
+    this.dialogref.close();
+    const dialogRef = this.dialog.open(DialogLoginComponent, {
+      width: '30%'
+    });
   }
 }

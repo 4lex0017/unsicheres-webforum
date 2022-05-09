@@ -26,8 +26,9 @@
       <mat-card-subtitle>{{threadObject.date}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <p id="content">
-      </p>
+      <p *ngIf="contentDiff" #content></p>
+      <p *ngIf="!contentDiff"> {{this.threadObject.content}} </p>
+
     </mat-card-content>
     <mat-card-actions class="spacer">
       <span class="stretch-badge" matBadge="{{threadObject.endorsements}}" matBadgeSize="small"

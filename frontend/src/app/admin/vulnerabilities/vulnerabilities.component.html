@@ -1,89 +1,26 @@
 <div class="outer-container">
   <h1>Vulnerabilities
     <button class="refresh-button" mat-icon-button color="primary"
-            matTooltip="Save and Reload Site">
+            matTooltip="Save and Reload Site"
+            (click)="updateToDatabase()">
       <mat-icon>refresh</mat-icon>
+    </button>
+    <button class="refresh-button" mat-icon-button color="primary"
+            matTooltip="Save and Reload Site"
+            (click)="goToMain()">
+      Go to Forum
     </button>
   </h1>
   <mat-card>
     <mat-tab-group mat-align-tabs="start">
-      <mat-tab label="XSS">
+      <mat-tab *ngFor="let vulnerability of vulnerabilities" label="{{vulnerability.name}}">
         <div class="inner-container">
           <div class="container">
             <div class="row">
               <div class="col-xs-6 col-md-6 col-lg-6">
                 <app-vulnerability-picker
-                  [task]="xssReflected">
-                </app-vulnerability-picker>
-              </div>
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="xssStored">
-                </app-vulnerability-picker>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="File Upload">
-        <div class="inner-container">
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="fileUpload">
-                </app-vulnerability-picker>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="SQL Injection">
-        <div class="inner-container">
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="sqlInjection">
-                </app-vulnerability-picker>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Command Injection">
-        <div class="inner-container">
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="commandInjection">
-                </app-vulnerability-picker>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Insecure Passwords">
-        <div class="inner-container">
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="insecurePasswordHandling">
-                </app-vulnerability-picker>
-              </div>
-            </div>
-          </div>
-        </div>
-      </mat-tab>
-      <mat-tab label="Broken Authentication">
-        <div class="inner-container">
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6 col-md-6 col-lg-6">
-                <app-vulnerability-picker
-                  [task]="brokenAuthentication">
+                  [task]="vulnerability"
+                  (sendVulnerability)="updateVulnerability($event)">
                 </app-vulnerability-picker>
               </div>
             </div>

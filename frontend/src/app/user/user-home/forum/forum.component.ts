@@ -7,6 +7,8 @@ import {DialogCreateThreadComponent} from "../dialog-create-thread/dialog-create
 import {Category} from "../../../data-access/models/category";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
+import {AuthenticationService} from "../../../data-access/services/authentication.service";
+import {DialogLoginComponent} from "../sidenav/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-forum',
@@ -18,7 +20,8 @@ export class ForumComponent implements OnInit {
   constructor(public backEndService: BackendService,
               private dialog: MatDialog,
               private router: Router,
-              private activeRoute: ActivatedRoute
+              private activeRoute: ActivatedRoute,
+              public authenticate: AuthenticationService
   ) {
   }
 
@@ -27,6 +30,9 @@ export class ForumComponent implements OnInit {
   showFull = false;
   searchQuery: string = "";
 
+  canCreate(): boolean {
+    return this.authenticate.currentUserId;
+  }
 
   ngOnInit(): void {
     this.accessData = this.backEndService.loadData();
@@ -47,6 +53,12 @@ export class ForumComponent implements OnInit {
   }
 
   openCreateThreadDialog(): void {
+    if (!this.authenticate.currentUserId) {
+      const dialogRef = this.dialog.open(DialogLoginComponent, {
+        width: '30%',
+      });
+      return;
+    }
     let selected = "";
     if (this.showFull) {
       selected = this.currentCategoryObject.title;
@@ -61,7 +73,7 @@ export class ForumComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      let newThread = this.backEndService.createThreadObject(result.title, result.content);
+      let newThread = this.backEndService.createThreadObject(this.authenticate.currentUserId, result.title, result.content);
       this.addThread(newThread, result.category);
     });
   }

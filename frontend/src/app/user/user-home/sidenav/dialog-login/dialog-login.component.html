@@ -13,7 +13,12 @@
     </button>
   </mat-form-field>
 </mat-dialog-content>
+
 <div mat-dialog-actions>
   <button mat-raised-button color="primary" (click)="checkLogin()">Login</button>
   <button mat-raised-button color="warn" class="close" (click)="close()">Abort</button>
+  <div class="spacer"></div>
+  <button mat-raised-button color="primary" class="btn-register" (click)="openRegister()">Register</button>
 </div>
+
+

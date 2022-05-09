@@ -17,11 +17,13 @@ export class RouteGuardService implements CanActivate {
     let user = sessionStorage.getItem('upperUser');
     if (user == 'admin') {
       return true;
+    } else {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "You don't have permission to view this page."
+      });
+      return false;
     }
-    this._snackBar.openFromComponent(SnackBarNotificationComponent, {
-      duration: 5000,
-      data: "You don't have permission to view this page."
-    });
-    return false;
+
   }
 }

@@ -1,5 +1,5 @@
 import {Component, Inject, ViewEncapsulation} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {BackendService} from "../../../../data-access/services/backend.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -7,6 +7,7 @@ import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
+import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 
 
 @Component({
@@ -24,8 +25,16 @@ export class DialogLoginComponent {
     public dialogRef: MatDialogRef<DialogLoginComponent>,
     private backend: BackendService,
     private _snackBar: MatSnackBar,
-    private authenticate: AuthenticationService
+    private authenticate: AuthenticationService,
+    private dialog: MatDialog
   ) {
+  }
+
+  openRegister(): void {
+    this.dialogRef.close();
+    const dialogRef = this.dialog.open(DialogRegisterComponent, {
+      width: '30%'
+    });
   }
 
   checkLogin(): void {

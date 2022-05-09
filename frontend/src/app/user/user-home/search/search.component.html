@@ -17,7 +17,10 @@
 
           <mat-icon>search</mat-icon>
         </button>
-        <h2 id="final">Search Result for Query: </h2>
+        <div>Search Result for Query:
+          <span *ngIf="!queryDiff"> {{this.currentSearchQuery}}</span>
+          <span *ngIf="queryDiff" #search></span>
+        </div>
       </mat-card-title>
     </mat-card-header>
 
@@ -25,7 +28,7 @@
       <mat-list>
         <div mat-subheader>Threads: Found {{threads.length}} results.</div>
         <mat-list-item *ngFor="let thread of threads">
-          <a [routerLink]="['/forum', getCategoryFromThread(thread.id).toLowerCase(),getSlugFromTitle(thread.title)]">
+          <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
             <div mat-line>{{thread.title}}</div>
           </a>
           <mat-divider></mat-divider>
@@ -37,7 +40,7 @@
       <mat-list>
         <div mat-subheader>Posts: Found {{posts.length}} results.</div>
         <mat-list-item *ngFor="let post of posts">
-          <a [routerLink]="['/forum/community', getThreadSlugFromPostId(post.id)]">
+          <a [routerLink]="['/forum/thread', getThreadSlugFromPostId(post.id)]">
             <div mat-line>{{cutPostContent(post.content)}}</div>
           </a>
           <mat-divider></mat-divider>

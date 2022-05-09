@@ -7,7 +7,7 @@
   </button>
 
   <mat-menu #menu="matMenu" class="settings-menu" xPosition="before">
-    <button mat-menu-item (click)="navigateProfile()" *ngIf="this.authenticate.currentUser">
+    <button mat-menu-item (click)="navigateProfile()" *ngIf="this.authenticate.currentUserId">
       <mat-icon>account_circle</mat-icon>
       <span>Account</span>
     </button>
@@ -21,9 +21,9 @@
     </button>
 
   </mat-menu>
-  <button *ngIf="this.authenticate.currentUser" mat-button (click)="logout()">Logout</button>
-  <button *ngIf="!this.authenticate.currentUser" mat-button (click)="openLogin()">Login</button>
-  <button *ngIf="!this.authenticate.currentUser" mat-button (click)="openRegister()">Register</button>
+  <button *ngIf="this.authenticate.currentUserId" mat-button (click)="logout()">Logout</button>
+  <button *ngIf="!this.authenticate.currentUserId" mat-button (click)="openLogin()">Login</button>
+  <button *ngIf="!this.authenticate.currentUserId" mat-button (click)="openRegister()">Register</button>
 </mat-toolbar>
 
 

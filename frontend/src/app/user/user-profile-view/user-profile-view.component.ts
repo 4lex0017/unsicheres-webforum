@@ -23,7 +23,7 @@ export class UserProfileViewComponent implements OnInit {
   }
 
   canEdit(): boolean {
-    if (this.userFullObject.id == this.authenticate.currentUser) return true;
+    if (this.userFullObject.id == this.authenticate.currentUserId) return true;
     return false;
   }
 

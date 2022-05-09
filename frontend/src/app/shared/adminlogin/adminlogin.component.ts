@@ -16,15 +16,15 @@ export class AdminLoginComponent {
 
   handleLoginClick() {
     if (this.adminname && this.password) {
-      this.authenticateAdmin(this.adminname);
+      this.authenticateAdmin();
     } else {
       alert('enter adminname and password');
     }
   }
 
-  authenticateAdmin(adminName) {
-    sessionStorage.setItem("upperUser", adminName);
-    if (adminName == "admin") {
+  authenticateAdmin() {
+    sessionStorage.setItem("upperUser", this.adminname);
+    if (this.adminname == "admin") {
       this.router.navigate(['/admin']);
     }
   }

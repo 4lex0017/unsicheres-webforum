@@ -29,7 +29,7 @@ export class ToolbarComponent {
   }
 
   navigateProfile(): void {
-    this.router.navigate(['/forum/users', this.authenticate.currentUser]);
+    this.router.navigate(['/forum/users', this.authenticate.currentUserId]);
   }
 
   openLogin(): void {

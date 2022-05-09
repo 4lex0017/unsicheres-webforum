@@ -26,10 +26,8 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes
     ,
     {
-      // scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', scrollOffset: [0, 64]
-      //     //DELETE Again
-      //     preloadingStrategy: PreloadAllModules,
-      //     relativeLinkResolution: 'legacy'
+      preloadingStrategy: PreloadAllModules,
+      relativeLinkResolution: 'legacy'
     }
   )
   ],
