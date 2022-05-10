@@ -1,6 +1,8 @@
 <div class="back">
   <form class="form-signin" (keyup.enter)="handleLoginClick()">
-    <img class="mb-4" alt="" width="72" height="72">
+    <div class="spacer">
+      <mat-icon class="icon">supervised_user_circle</mat-icon>
+    </div>
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <label for="inputUsername" class="sr-only">Username</label>
     <input type="text" id="inputUsername" name="username" [(ngModel)]="adminname" class="form-control"

@@ -1,8 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {ThemeService} from "../../theme.service";
-import {BackendService} from "../../data-access/services/backend.service";
 
 @Component({
   selector: 'app-login',
