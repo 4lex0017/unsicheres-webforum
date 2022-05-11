@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('attackers', function (Blueprint $table) {
             $table->id('attacker_id');
-            $table->string('ip_address');
+            $table->string('ip_address')->unique();
             $table->string('name');
-            $table->json('found_vulnerabilities');
             $table->timestamps();
         });
     }
