@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Log::debug("XD");
     }
 
     /**
@@ -23,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        /**
+         * Create databases.
+         */
+        if (!file_exists('/var/www/html/database/secure.sqlite')) {
+            info('secure.sqlite created.');
+            file_put_contents('/var/www/html/database/secure.sqlite', '');
+        }
+
+        if (!file_exists('/var/www/html/database/insecure.sqlite')) {
+            info('insecure.sqlite created.');
+            file_put_contents('/var/www/html/database/insecure.sqlite', '');
+        }
     }
 }
