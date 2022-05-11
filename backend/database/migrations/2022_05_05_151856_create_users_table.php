@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::connection('insecure')->create('users', function (Blueprint $table) {
             $table->id('user_id');
             $table->string('email');
             $table->string('password');
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::connection('insecure')->dropIfExists('users');
     }
 };

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vulnerabilities', function (Blueprint $table) {
+        Schema::connection('secure')->create('vulnerabilities', function (Blueprint $table) {
             $table->id('vulnerability_id');
             $table->string('name');
             $table->string('difficulty');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vulnerabilities');
+        Schema::connection('secure')->dropIfExists('vulnerabilities');
     }
 };

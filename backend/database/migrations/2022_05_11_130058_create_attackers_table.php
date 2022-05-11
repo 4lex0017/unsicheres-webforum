@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attackers', function (Blueprint $table) {
+        Schema::connection('secure')->create('attackers', function (Blueprint $table) {
             $table->id('attacker_id');
             $table->string('ip_address')->unique();
             $table->string('name');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attackers');
+        Schema::connection('secure')->dropIfExists('attackers');
     }
 };

@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::connection('insecure')->create('threads', function (Blueprint $table) {
             $table->id('thread_id');
             $table->unsignedBigInteger('poster_id');
             $table->foreign('poster_id')->references('user_id')->on('users');
@@ -31,6 +31,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('threads');
+        Schema::connection('insecure')->dropIfExists('threads');
     }
 };

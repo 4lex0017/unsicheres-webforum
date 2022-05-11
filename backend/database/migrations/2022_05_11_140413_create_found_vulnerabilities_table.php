@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('found_vulnerabilities', function (Blueprint $table) {
+        Schema::connection('secure')->create('found_vulnerabilities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attacker_id');
             $table->foreign('attacker_id')->references('attacker_id')->on('attackers');
@@ -29,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('found_vulnerabilities');
+        Schema::connection('secure')->dropIfExists('found_vulnerabilities');
     }
 };
