@@ -14,26 +14,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('user', 'UserController@getAllUsers');
+Route::get('user', 'App\Http\Controllers\UserController@getAllUsers');
 
-Route::get('user/{id}', 'UserController@getUserById');
-
-
-Route::post('user', 'UserController@createUser');
-
-Route::put('user/{id}', 'UserController@updateUser');
-Route::get('user/{id}/post', 'PostController@getPostsOfUser');
-
-Route::get('user/{id}/session', 'UserController@authorizeUser');
+Route::get('user/{id}', 'App\Http\Controllers\UserController@getUserById');
 
 
-Route::get('thread/{sub_id}/{thread_id}', 'ThreadController@getThreadById');
+Route::post('user', 'App\Http\Controllers\UserController@createUser');
 
-Route::get('thread/search', "ThreadController@getThreadBySearch");
+Route::put('user/{id}', 'App\Http\Controllers\UserController@updateUser');
+Route::get('user/{id}/post', 'App\Http\Controllers\PostController@getPostsOfUser');
 
-Route::post('thread/{sub_id}', 'ThreadController@createThread');
+Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
-Route::post('thread/{sub_id}/{thread_id}', 'PostController@getAllPostsOfThread');
+
+Route::get('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
+
+Route::get('thread/search', "App\Http\Controllers\ThreadController@getThreadBySearch");
+
+Route::post('thread/{sub_id}', 'App\Http\Controllers\ThreadController@createThread');
+
+Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\PostController@getAllPostsOfThread');
 
 
 Route::get('home', function () {
