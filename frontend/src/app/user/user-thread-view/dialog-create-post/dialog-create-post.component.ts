@@ -7,20 +7,25 @@ import {ForumComponent} from "../../user-home/forum/forum.component";
   templateUrl: './dialog-create-post.component.html',
   styleUrls: ['./dialog-create-post.component.scss']
 })
-export class DialogCreatePostComponent  {
+export class DialogCreatePostComponent {
   constructor(
     public dialogRef: MatDialogRef<ForumComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreatePostData
-  ) {}
+  ) {
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  test(): void {
+    console.log("workks");
   }
 }
 
 export interface CreatePostData {
   content: string;
   reply: string;
-  showReply:boolean;
+  showReply: boolean;
 }
 

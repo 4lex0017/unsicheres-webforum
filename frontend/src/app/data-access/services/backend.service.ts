@@ -1,12 +1,13 @@
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable, Subscriber} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Thread} from "../models/thread";
 import {Access} from "../models/access";
 import {of} from 'rxjs';
 import {UserFull} from "../models/userFull";
 import {Post} from "../models/post";
 import {User} from "../models/user";
+import {PostReply} from "../models/postReply";
+import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficultyOverview";
 
 @Injectable({
   providedIn: 'root',
@@ -15,13 +16,15 @@ export class BackendService {
   readonly url: string = 'http://localhost:4200';
   idThreadTracker: number = 100;
   idPostTracker: number = 200;
+  idUserRegister: number = 500;
 
-  constructor(private httpClient: HttpClient) {
+  constructor() {
   }
 
   loadData(): Access {
     return this.accessData;
   }
+
 
   getAllUsers(): UserFull[] {
     return [];
@@ -134,9 +137,12 @@ export class BackendService {
     }
   }
 
-  createPostObject(content: string, repliedTo?: string,): Post {
+  createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {
     if (!repliedTo) {
-      repliedTo = "";
+      repliedTo = {
+        repliedToId: -1,
+        repliedToContent: ""
+      };
     }
     let postObject: Post =
       {
@@ -145,13 +151,13 @@ export class BackendService {
         repliedTo: repliedTo,
         endorsements: 0,
         date: this.formatDate(),
-        author: this.getUser1()
+        author: this.getUserFromUsername(userId)
       }
     this.idPostTracker++;
     return postObject;
   }
 
-  createThreadObject(title: string, content: string,): Thread {
+  createThreadObject(userId: number, title: string, content: string,): Thread {
 
     let threadObject: Thread = {
       id: this.idThreadTracker,
@@ -160,19 +166,21 @@ export class BackendService {
       date: this.formatDate(),
       posts: [],
       endorsements: 0,
-      author: this.getUser1()
+      author: this.getUserFromUsername(userId)
     }
     this.idThreadTracker++;
     return threadObject;
   }
 
-  getUser1(): User {
-    let author: User =
-      {
-        id: 1,
-        username: "TestUsername1"
-      };
-    return author;
+
+  getUserFromUsername(id: number): User {
+    let username = "";
+    for (let user of this.loginData.loginData) {
+      if (user.id == id) {
+        username = user.username;
+      }
+    }
+    return {id: id, username: username};
   }
 
   padTo2Digits(num: number) {
@@ -205,6 +213,81 @@ export class BackendService {
 
   getRandomThreads(): Thread[] {
     return this.getThreadsFromUser(1);
+  }
+
+  checkRegisterUserExists(username: string): boolean {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  checkLoginData(username: string, password: string): number {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        if (this.loginData.loginData[i].password == password) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+    return -1;
+  }
+
+  getLoginId(username: string, password: string): number {
+    for (let i = 0; i < this.loginData.loginData.length; i++) {
+      if (this.loginData.loginData[i].username == username) {
+        if (this.loginData.loginData[i].password == password) {
+          return this.loginData.loginData[i].id;
+        }
+      }
+    }
+    return -1;
+  }
+
+  registerNewUser(userName: string, userPassword: string): void {
+    this.loginData.loginData.push(
+      {
+        "id": this.idUserRegister,
+        "username": userName,
+        "password": userPassword
+      },
+    )
+    this.userData.UserFull.push({
+      "id": this.idUserRegister,
+      "username": userName,
+      "joined": this.formatDate(),
+      "about": "",
+      "role": [
+        "Member"
+      ],
+      "comments": []
+    })
+    this.idUserRegister++;
+  }
+
+  getVulnerabilities(): VulnerabilityDifficultyOverview[] {
+    return this.vulnerabilitiesOverview.vulnerabilities;
+  }
+
+  setVulnerabilities(vulnerabilities: VulnerabilityDifficultyOverview[]): void {
+    this.vulnerabilitiesOverview.vulnerabilities = vulnerabilities;
+  }
+
+  getVulnerabilitiesObservable(): Observable<VulnerabilityDifficultyOverview[]> {
+    return of(this.vulnerabilitiesOverview.vulnerabilities)
+  }
+
+  getVulnerability(id: number): VulnerabilityDifficultyOverview | null {
+    for (let v of this.vulnerabilitiesOverview.vulnerabilities) {
+      if (v.id == id) {
+        return v;
+      }
+    }
+    return null;
   }
 
   accessData =
@@ -719,4 +802,153 @@ export class BackendService {
 
       ]
     };
+
+  loginData =
+    {
+      "loginData": [
+        {
+          "id": 1,
+          "username": "TestUsername1",
+          "password": "123"
+        },
+        {
+          "id": 2,
+          "username": "TestUsername2",
+          "password": "123"
+        },
+        {
+          "id": 135,
+          "username": "test_test_testuser",
+          "password": "789"
+        },
+        {
+          "id": 553,
+          "username": "TestUsername553",
+          "password": "789"
+        },
+        {
+          "id": 4,
+          "username": "TestUsername4",
+          "password": "789"
+        },
+        {
+          "id": 123,
+          "username": "TestUsername123",
+          "password": "789"
+        },
+        {
+          "id": 882,
+          "username": "TestUsername882",
+          "password": "789"
+        },
+        {
+          "id": 444,
+          "username": "TestUsername444",
+          "password": "789"
+        },
+        {
+          "id": 555,
+          "username": "TestUsername555",
+          "password": "789"
+        },
+        {
+          "id": 131,
+          "username": "TestUsername131",
+          "password": "789"
+        },
+      ]
+    };
+
+  contactForms =
+    {
+      "Forms": [
+        {
+          "username": "user1",
+          "topic": "Community",
+          "message": "ligma"
+        },
+        {
+          "username": "user2",
+          "topic": "Support",
+          "message": "oof"
+        }
+      ]
+    }
+
+  vulnerabilitiesOverview = {
+    "vulnerabilities":
+      [
+        {
+          "id": 1,
+          "name": 'Insecure Password Handling',
+          "description": 'Passwords are not stored as salted hashes, older algorithms are used.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'Oldest algorithm.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Medium algorithm.', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Hard algorithm.', "checked": false},
+          ],
+        },
+        {
+          "id": 2,
+          "name": 'Broken Authentication',
+          "description": 'Short/Blank passwords allowed. Brute force attacks are allowed. Easy login with User Enumeration possibility.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'User enumeration, very easy passwords.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'User enumeration, medium passwords.', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Hard passwords.', "checked": false},
+          ],
+        },
+        {
+          "id": 3,
+          "name": 'SQL Injection',
+          "description": 'Allows the User to execute SQL Queries. Difficulty changes filtering for SQL Queries.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false,},
+            {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        },
+        {
+          "id": 4,
+          "name": 'Command Injection',
+          "description": 'Allows the User to execute commands on the host OS.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        },
+        {
+          "id": 5,
+          "name": 'File Upload',
+          "description": '',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'Accept every Filetype.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Accept some Filetypes.', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Accept selective Filetypes.', "checked": false},
+          ],
+        },
+        {
+          "id": 6,
+          "name": 'XSS Reflected',
+          "description": 'Allows the User to execute <script> and other tags on the site / in queries. Difficulty changes filtering for SQL Queries.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        },
+        {
+          "id": 7,
+          "name": 'XSS Stored',
+          "description": 'Allows the User to save <script> and other tags on the site. Difficulty changes filtering for SQL Queries.',
+          "subtasks": [
+            {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
+            {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false},
+            {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        }
+      ]
+  };
+
 }

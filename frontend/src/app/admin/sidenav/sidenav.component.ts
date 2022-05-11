@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ThemeService} from "../../theme.service";
 
@@ -12,17 +12,17 @@ export class SidenavComponent {
   sideNavigationMaximized = true;
   contentMargin = 240;
 
-  constructor(private router: Router, private themeService : ThemeService) {
+  constructor(private router: Router, private themeService: ThemeService) {
     this.themeService.initTheme();
 
   }
-  toggleSideNav(){
+
+  toggleSideNav() {
     this.sideNavigationMaximized = !this.sideNavigationMaximized;
-    if(!this.sideNavigationMaximized) {
+    if (!this.sideNavigationMaximized) {
       this.contentMargin = 70;
     } else {
       this.contentMargin = 210;
     }
   }
-
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,6 +11,10 @@ import {Post} from "../../data-access/models/post";
 import {DialogDeletePostComponent} from "./dialog-delete-post/dialog-delete-post.component";
 import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
 import {DataManagementService} from "../../data-access/services/data-management.service";
+import {PostReply} from "../../data-access/models/postReply";
+import {AuthenticationService} from "../../data-access/services/authentication.service";
+import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
+import {DialogLoginComponent} from "../user-home/sidenav/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -19,24 +23,47 @@ import {DataManagementService} from "../../data-access/services/data-management.
 })
 export class UserThreadViewComponent implements OnInit {
   threadObject: Thread;
+  contentDiff: boolean;
+  private contentPlaceholder: ElementRef;
 
+  @ViewChild('content', {static: false}) content: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
               private backEndService: BackendService,
               private router: Router,
-              private dataManagement: DataManagementService) {
+              private dataManagement: DataManagementService,
+              public authenticate: AuthenticationService,
+              private diffPicker: DifficultyPickerService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
 
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
-        // @ts-ignore
-        document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
+        // <scr<script>ipt>alert(2)</script> -> works
+        if (this.diffPicker.isEnabled(7, 2)) {
+          this.contentDiff = true;
+          this.changeDetectorRef.detectChanges();
+          this.content.nativeElement.replaceChildren();
+          this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
+          this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+        } else {
+          this.contentDiff = false;
+        }
       }
     );
+  }
+
+  canEditThread(): boolean {
+    if (this.threadObject.author.id == this.authenticate.currentUserId) return true;
+    return false;
+  }
+
+  canEditPost(post: any): boolean {
+    if (post.author.id == this.authenticate.currentUserId) return true;
+    return false;
   }
 
   openEditThreadDialog(): void {
@@ -51,8 +78,14 @@ export class UserThreadViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
       this.threadObject.content = result.content;
-      // @ts-ignore
-      document.getElementById('content').appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+      if (this.contentDiff) {
+        this.changeDetectorRef.detectChanges();
+        this.content.nativeElement.replaceChildren();
+        this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
+        console.log(this.threadObject.content)
+        this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+      }
+
     });
   }
 
@@ -68,21 +101,38 @@ export class UserThreadViewComponent implements OnInit {
     });
   }
 
-  openCreateDialog(replyToContent: string, replyToUser: User): void {
-    let repliedTo: string = replyToUser.username + " wrote '" + replyToContent + "'.";
+  openCreateDialog(replyToContent: string, replyToUser: User, postId: number): void {
+    if (!this.authenticate.currentUserId) {
+      const dialogRef = this.dialog.open(DialogLoginComponent, {
+        width: '30%',
+      });
+      return;
+    }
+    let repliedTo: PostReply = {
+      repliedToId: postId,
+      repliedToContent: replyToUser.username + " wrote '" + replyToContent + "'."
+    };
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
       data: {
-        reply: repliedTo,
+        reply: repliedTo.repliedToContent,
         content: "",
         showReply: true,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (!result.showReply) repliedTo = "";
-      this.threadObject.posts.push(this.backEndService.createPostObject(result.content, repliedTo));
+      if (!result.showReply) {
+        this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content));
+      } else {
+        this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content, repliedTo));
+      }
+
 
     });
+  }
+
+  moveToPost(id: number) {
+    window.location.hash = id.toString();
   }
 
   openDeletePostDialog(postObjectId: number) {

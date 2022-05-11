@@ -10,7 +10,7 @@
       <mat-card-title>
         {{userFullObject.username}}
         <span class="spacer"></span>
-        <button mat-mini-fab color="primary"
+        <button mat-mini-fab color="primary" *ngIf="canEdit()"
                 (click)="openEditProfileDialog()"
                 matTooltip="Edit Profile"
                 [matTooltipShowDelay]="500">

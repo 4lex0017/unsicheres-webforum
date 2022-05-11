@@ -1,6 +1,30 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" class="toolbar">
   <a [routerLink]="['./home']" [queryParams]="{ view : 'all' }" class="toolbar-route"><span>Forum</span></a>
   <span class="toolbar-spacer"></span>
-  <button mat-button>Login</button>
-  <button mat-button>Register</button>
+  <app-did-a-thing></app-did-a-thing>
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu" class="settings-menu" xPosition="before">
+    <button mat-menu-item (click)="navigateProfile()" *ngIf="this.authenticate.currentUserId">
+      <mat-icon>account_circle</mat-icon>
+      <span>Account</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>style</mat-icon>
+      <span style="margin-right: 15px">Dark Mode</span>
+      <mat-slide-toggle [(ngModel)]="darkMode"
+                        (click)="toggleDarkMode()"
+                        (click)="$event.stopPropagation()">
+      </mat-slide-toggle>
+    </button>
+
+  </mat-menu>
+  <button *ngIf="this.authenticate.currentUserId" mat-button (click)="logout()">Logout</button>
+  <button *ngIf="!this.authenticate.currentUserId" mat-button (click)="openLogin()">Login</button>
+  <button *ngIf="!this.authenticate.currentUserId" mat-button (click)="openRegister()">Register</button>
 </mat-toolbar>
+
+
+

@@ -1,73 +1,82 @@
 //Table general
 
-.mat-header-cell{
+.mat-header-cell {
   background-color: rgba(17, 119, 255, 0.72);
-  color:white;
+  color: white;
 }
+
 .category-table {
   width: 100%;
-  background-color:transparent
+  background-color: transparent
 }
-.mat-column-author-icon{
+
+.mat-column-author-icon {
   width: 5%;
 }
+
 .mat-column-general-information {
   width: 60%;
   padding-right: 24px;
   text-align: left;
 }
-.mat-column-specific-information-header{
+
+.mat-column-specific-information-header {
   padding-left: 16px;
 }
-.mat-column-specific-information-body{
+
+.mat-column-specific-information-body {
   padding-left: 16px;
 }
 
 
 //Table category data
-.category-title{
+.category-title {
 
   font-size: 22px;
   position: relative;
   left: -30px;
 }
-.category-replies{
+
+.category-replies {
   position: relative;
   left: -30px;
   padding: 5px 0 0 0;
   font-size: 14px;
 }
-.category-container{
-  padding: 40px 0 5px 0 ;
+
+.category-container {
+  padding: 30px 0 5px 0;
 }
 
 //Table thread data
 
-.thread-title{
-  padding: 10px 0 0 0 ;
+.thread-title {
+  padding: 10px 0 0 0;
   font-size: 17px;
 
 }
-.thread-author{
+
+.thread-author {
   font-size: 12px;
-  padding: 0 0 5px 0 ;
+  padding: 0 0 5px 0;
 }
 
-.thread-author-symbol{
+.thread-author-symbol {
   position: relative;
   left: -10px;
 
 }
 
 
-thread-replies{
+thread-replies {
   font-size: 12px;
 }
-thread-endorsements{
+
+thread-endorsements {
   font-size: 1px;
 }
 
-.footer-row{
+.footer-row {
   font-style: italic;
 }
 

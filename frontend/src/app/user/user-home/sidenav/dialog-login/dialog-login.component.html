@@ -1,0 +1,24 @@
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="username-login-input-container">
+    <mat-label>Enter username</mat-label>
+    <input matInput [(ngModel)]="this.username" required>
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="password-login-input-container">
+    <mat-label>Enter password</mat-label>
+    <input matInput [(ngModel)]="this.password" [type]="hide ? 'password' : 'text'" required>
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+</mat-dialog-content>
+
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="checkLogin()">Login</button>
+  <button mat-raised-button color="warn" class="close" (click)="close()">Abort</button>
+  <div class="spacer"></div>
+  <button mat-raised-button color="primary" class="btn-register" (click)="openRegister()">Register</button>
+</div>
+
+

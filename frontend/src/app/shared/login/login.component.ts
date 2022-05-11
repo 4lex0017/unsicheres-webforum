@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import {ThemeService} from "../../theme.service";
+import {Component, ViewEncapsulation} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent  {
+export class LoginComponent {
   username;
   password;
 
-  constructor(private http : HttpClient, private router : Router) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
 
-  handleLoginClick(){
-    if(this.username && this.password){
+  handleLoginClick() {
+    if (this.username && this.password) {
       this.authenticateUser(this.username);
     } else {
       alert('enter username and password');
@@ -25,14 +24,14 @@ export class LoginComponent  {
 
   }
 
+  openAdminLogin(): void {
+    this.router.navigate(['/adminlogin'])
+  }
 
-  authenticateUser(userName){
-    sessionStorage.setItem("user", userName);
-    if(userName == "admin"){
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/forum']);
-    }
+
+  authenticateUser(userName) {
+    sessionStorage.setItem("upperUser", userName);
+    this.router.navigate(['/forum']);
   }
 
 }

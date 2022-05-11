@@ -7,6 +7,7 @@ import {BackendService} from "../../data-access/services/backend.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {UserComment} from "../../data-access/models/comment";
+import {AuthenticationService} from "../../data-access/services/authentication.service";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -18,7 +19,12 @@ export class UserProfileViewComponent implements OnInit {
   userThreads: Thread[];
   userPosts: Post[];
 
-  constructor(private route: ActivatedRoute, private backendService: BackendService, private dialog: MatDialog) {
+  constructor(private route: ActivatedRoute, private backendService: BackendService, private dialog: MatDialog, public authenticate: AuthenticationService) {
+  }
+
+  canEdit(): boolean {
+    if (this.userFullObject.id == this.authenticate.currentUserId) return true;
+    return false;
   }
 
   ngOnInit(): void {

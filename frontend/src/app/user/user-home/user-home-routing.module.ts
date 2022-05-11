@@ -20,10 +20,6 @@ const routes: Routes = [
         path: 'users',
         loadChildren: () => import('../user-profile-view/user-profile-view.module').then(m => m.UserProfileViewModule)
       },
-      {
-        path: 'settings',
-        loadChildren: () => import('../user-settings/user-settings.module').then(m => m.UserSettingsModule)
-      },
       {path: '**', component: ErrorComponent},
 
     ]

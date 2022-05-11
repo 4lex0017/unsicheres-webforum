@@ -1,0 +1,29 @@
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="username-register-input-container">
+    <mat-label>Enter username</mat-label>
+    <input matInput [(ngModel)]="this.username" required>
+    <!--    <mat-error *ngIf="this.fillError">{{this.usernameErrorMessage}}</mat-error>-->
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="password-register-input-container">
+    <mat-label>Enter password</mat-label>
+    <input matInput [(ngModel)]="this.password" [type]="hide ? 'password' : 'text'" required>
+    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <!--    <mat-error *ngIf="this.passwordError">{{this.passwordErrorMessage}}</mat-error>-->
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="repeatPassword-register-input-container">
+    <mat-label>Repeat password</mat-label>
+    <input matInput [(ngModel)]="this.passwordRepeat" [type]="hide ? 'password' : 'text'" required>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="registerUser()">Register</button>
+  <button mat-raised-button color="warn" class="close" (click)="close()">Abort</button>
+  <div class="spacer"></div>
+  <button mat-raised-button color="primary" class="btn-login" (click)="openLogin()">Login</button>
+</div>
+

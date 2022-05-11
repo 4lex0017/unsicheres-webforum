@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ThemePalette} from "@angular/material/core";
 import {VulnerabilityDifficultyOverview} from "../../data-access/models/vulnerabilityDifficultyOverview";
+import {BackendService} from "../../data-access/services/backend.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -8,50 +9,31 @@ import {VulnerabilityDifficultyOverview} from "../../data-access/models/vulnerab
   templateUrl: './vulnerabilities.component.html',
   styleUrls: ['./vulnerabilities.component.scss']
 })
-export class VulnerabilitiesComponent {
+export class VulnerabilitiesComponent implements OnInit {
+  vulnerabilities: VulnerabilityDifficultyOverview[];
 
-  constructor() {
+  constructor(private backend: BackendService, private router: Router) {
   }
 
-  xssReflected: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
-    subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
-    ],
-  };
-  xssStored: VulnerabilityDifficultyOverview = {
-    name: 'All',
-    allCompleted: false,
-    completed: false,
-    color: 'primary',
-    subtasks: [
-      {name: 'Easy', completed: false, color: 'primary'},
-      {name: 'Medium', completed: false, color: 'primary'},
-      {name: 'Hard', completed: false, color: 'primary'},
-    ],
-  };
-
-  updateAllComplete(task: VulnerabilityDifficultyOverview) {
-    task.allCompleted = task.subtasks != null && task.subtasks.every(t => t.completed);
+  ngOnInit(): void {
+    this.vulnerabilities = this.backend.getVulnerabilities();
   }
 
-  someComplete(task: VulnerabilityDifficultyOverview): boolean {
-    if (task.subtasks == null) {
-      return false;
+  updateToDatabase(): void {
+    console.log(this.vulnerabilities)
+    this.backend.setVulnerabilities(this.vulnerabilities);
+  }
+
+  goToMain() {
+    this.router.navigate(['/forum'])
+  }
+
+  updateVulnerability(data: VulnerabilityDifficultyOverview): void {
+    for (let v of this.vulnerabilities) {
+      if (v.id == data.id) {
+        v = data;
+        break;
+      }
     }
-    return task.subtasks.filter(t => t.completed).length > 0 && !task.allCompleted;
-  }
-
-  setAll(completed: boolean, task: VulnerabilityDifficultyOverview) {
-    task.allCompleted = completed;
-    if (task.subtasks == null) {
-      return;
-    }
-    task.subtasks.forEach(t => (t.completed = completed));
   }
 }

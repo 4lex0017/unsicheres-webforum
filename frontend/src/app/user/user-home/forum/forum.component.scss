@@ -1,19 +1,29 @@
-.container{
+.container {
   min-width: 85%;
 
 }
 
+.side-content-container {
+  padding: 35px 0 5px 20px;
+}
 
-.side-content-container{
-  padding: 35px 0 5px 20px ;
+.spacer {
+  padding: 0 0 0 20px;
 }
-//.side-content-card{
-//
-//  width: 100%;
-//}
-.spacer{
-  padding: 0  0 0 20px  ;
+
+.spacer-form-field {
+  padding: 0 0 0 10px;
 }
-.spacer-form-field{
-  padding: 0 0 0 10px  ;
+
+.footer-spacer {
+  padding: 45px
+}
+
+.userlist {
+  font-weight: normal;
+  font-style: normal;
+}
+
+.sidecontent-users {
+  font-size: 25px;
 }

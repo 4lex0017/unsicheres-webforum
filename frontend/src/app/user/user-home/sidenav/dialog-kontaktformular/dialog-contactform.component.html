@@ -1,0 +1,22 @@
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="username-contact-input-container">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="example@example.com" [formControl]="email" required>
+    <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="topic-contact-input-container">
+    <mat-label>Topic</mat-label>
+    <input matInput [(ngModel)]="this.topic" required>
+  </mat-form-field>
+  <p></p>
+  <mat-form-field appearance="fill" class="message-contact-input-container">
+    <mat-label>Message</mat-label>
+    <textarea matInput rows="24" [(ngModel)]="this.message" required></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="checkFile()">Send</button>
+  <button mat-raised-button color="warn" class="close" (click)="close()">Abort</button>
+</div>
+

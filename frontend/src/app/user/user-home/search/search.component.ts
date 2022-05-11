@@ -1,12 +1,13 @@
-import {Component, OnInit, SecurityContext} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Thread} from "../../../data-access/models/thread";
 import {Post} from "../../../data-access/models/post";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {UserFull} from "../../../data-access/models/userFull";
 import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
+import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
 
 declare var jQuery: any;
 
@@ -21,7 +22,10 @@ export class SearchComponent implements OnInit {
               private router: Router,
               private dialog: MatDialog,
               private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer,
+              private diffPicker: DifficultyPickerService,
+              private changeDetectorRef: ChangeDetectorRef
+  ) {
   }
 
   threads: Thread[] = [];
@@ -29,37 +33,28 @@ export class SearchComponent implements OnInit {
   users: UserFull[] = [];
   currentSearchQuery: string;
   newSearchQuery: string = "";
-  paramsObject: ParamMap;
-  unsafeValue: string = 'Template <script>alert("0wned")</script> <b>Syntax</b>';
-  safeValue: string = "Test"
-  unsafeCode;
+  queryDiff: boolean;
+  @ViewChild('search', {static: false}) content: ElementRef;
 
   ngOnInit(): void {
-
     this.threads = this.backendService.getRandomThreads();
     this.posts = this.backendService.getRandomPosts();
     this.users = this.backendService.getRandomUsers();
-    this.unsafeCode = this.sanitizer.bypassSecurityTrustHtml(this.unsafeValue)
-
 
     this.route.queryParamMap.subscribe((params) => {
       this.currentSearchQuery = this.format(params.get('filter') || "");
-      // @ts-ignore
-      document.getElementById('final').appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
+      if (this.diffPicker.isEnabled(6, 1)) {
+        this.queryDiff = true;
+        this.changeDetectorRef.detectChanges();
+        this.content.nativeElement.replaceChildren();
+        this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
+      } else {
+        this.queryDiff = false;
+      }
+
     });
   }
 
-  unsafeDisply(display: string): string {
-    (function ($) {
-      $(document).ready(function () {
-        console.log("Hello from jQuery!");
-
-        display;
-      });
-    })(jQuery);
-
-    return display;
-  }
 
   format(filter: string): string {
     return filter.replace(/_/g, " ");

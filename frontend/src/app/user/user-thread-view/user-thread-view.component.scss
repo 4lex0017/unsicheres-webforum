@@ -1,5 +1,8 @@
 .thread-container {
   padding: 50px 0 0 150px;
+  //height: 100%;
+  background-color: inherit;
+  //  Fix: inherit won't work. Maybe import from service
 }
 
 .thread-card {
@@ -45,4 +48,13 @@
   width: auto;
   border-radius: 14px;
   right: unset !important;
+}
+
+.moveToPost {
+  background: none;
+  border: none;
+}
+
+.footer-spacer {
+  padding: 45px
 }

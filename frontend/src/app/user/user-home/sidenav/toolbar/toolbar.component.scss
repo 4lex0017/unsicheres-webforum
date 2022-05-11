@@ -1,7 +1,22 @@
 .toolbar-spacer {
   flex: 1 1 auto;
 }
-.toolbar-route{
- text-decoration: none;
+
+.toolbar-route {
+  text-decoration: none;
   color: white;
+}
+
+::ng-deep .mat-menu-content {
+  padding: 20px;
+}
+
+.toolbar {
+  top: 0;
+  position: sticky;
+  z-index: 98;
+}
+
+::ng-deep.settings-menu {
+  min-width: 300px !important;
 }
