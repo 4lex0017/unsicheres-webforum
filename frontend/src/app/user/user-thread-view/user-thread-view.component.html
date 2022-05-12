@@ -28,10 +28,9 @@
     <mat-card-content>
       <p *ngIf="contentDiff" #content></p>
       <p *ngIf="!contentDiff"> {{this.threadObject.content}} </p>
-
     </mat-card-content>
     <mat-card-actions class="spacer">
-      <span class="stretch-badge" matBadge="{{threadObject.endorsements}}" matBadgeSize="small"
+      <span class="stretch-badge" matBadge="{{threadObject.likedFrom.length}}" matBadgeSize="small"
             matBadgePosition="above before" matBadgeColor="primary">
         <button mat-button (click)="likeThreadButton()">LIKE</button>
       </span>
@@ -79,7 +78,7 @@
         </p>
       </mat-card-content>
       <mat-card-actions class="spacer">
-        <span class="stretch-badge" matBadge="{{post.endorsements}}" matBadgeSize="small"
+        <span class="stretch-badge" matBadge="{{post.likedFrom.length}}" matBadgeSize="small"
               matBadgePosition="above before" matBadgeColor="primary">
           <button mat-button (click)="likePostButton(post)">LIKE</button>
         </span>

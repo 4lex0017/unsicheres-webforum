@@ -35,8 +35,7 @@ export class DifficultyPickerService {
 
   filterTagsHard(content: string): string {
     if (content.includes("<script>")) {
-      content.replace("<script>", "");
-      return this.filterTagsHard(content);
+      return this.filterTagsHard(content.replace("<script>", ""));
     } else {
       return content;
     }

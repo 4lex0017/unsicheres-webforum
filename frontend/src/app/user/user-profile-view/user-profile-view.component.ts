@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {UserFull} from "../../data-access/models/userFull";
 import {Thread} from "../../data-access/models/thread";
@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {UserComment} from "../../data-access/models/comment";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
+import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -18,8 +19,15 @@ export class UserProfileViewComponent implements OnInit {
   userFullObject: UserFull;
   userThreads: Thread[];
   userPosts: Post[];
+  descriptionDiff: boolean;
+  @ViewChild('about', {static: false}) about: ElementRef;
 
-  constructor(private route: ActivatedRoute, private backendService: BackendService, private dialog: MatDialog, public authenticate: AuthenticationService) {
+  constructor(private route: ActivatedRoute,
+              private backendService: BackendService,
+              private dialog: MatDialog,
+              public authenticate: AuthenticationService,
+              private diffPicker: DifficultyPickerService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   canEdit(): boolean {
@@ -32,6 +40,15 @@ export class UserProfileViewComponent implements OnInit {
         this.userFullObject = data.user;
         this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
         this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
+        if (this.diffPicker.isEnabled(7, 3)) {
+          this.descriptionDiff = true;
+          this.changeDetectorRef.detectChanges();
+          this.about.nativeElement.replaceChildren();
+          this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
+        } else {
+          this.descriptionDiff = false;
+        }
+
         console.log(this.userFullObject.id + " is here");
       }
     );
@@ -48,10 +65,17 @@ export class UserProfileViewComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
       this.userFullObject.username = result.username;
       this.userFullObject.about = result.about;
       this.userFullObject.image = result.image;
+      if (this.diffPicker) {
+        this.changeDetectorRef.detectChanges();
+        this.about.nativeElement.replaceChildren();
+        this.userFullObject.about = this.diffPicker.filterTagsHard(this.userFullObject.about);
+        this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
+      }
+
+
     });
   }
 

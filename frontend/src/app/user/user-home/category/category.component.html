@@ -47,7 +47,7 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <div class="thread-replies">{{element.posts.length}} </div>
-          <div class="thread-endorsements">{{element.endorsements}}</div>
+          <div class="thread-endorsements">{{element.likedFrom.length}}</div>
         </td>
       </ng-container>
 
@@ -111,7 +111,7 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <div class="thread-replies">{{element.posts.length}} </div>
-          <div class="thread-endorsements">{{element.endorsements}}</div>
+          <div class="thread-endorsements">{{element.likedFrom.length}}</div>
         </td>
       </ng-container>
 

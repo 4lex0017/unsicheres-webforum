@@ -47,7 +47,7 @@ export class UserThreadViewComponent implements OnInit {
           this.contentDiff = true;
           this.changeDetectorRef.detectChanges();
           this.content.nativeElement.replaceChildren();
-          this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
+          // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
         } else {
           this.contentDiff = false;
@@ -102,12 +102,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   openCreateDialog(replyToContent: string, replyToUser: User, postId: number): void {
-    if (!this.authenticate.currentUserId) {
-      const dialogRef = this.dialog.open(DialogLoginComponent, {
-        width: '30%',
-      });
-      return;
-    }
+    if (!this.checkLoggedIn()) return;
     let repliedTo: PostReply = {
       repliedToId: postId,
       repliedToContent: replyToUser.username + " wrote '" + replyToContent + "'."
@@ -165,12 +160,34 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   likeThreadButton(): void {
-    this.threadObject.endorsements++;
+    if (!this.checkLoggedIn()) return;
+    let i = this.threadObject.likedFrom.indexOf(this.authenticate.currentUserId);
+    if (i != -1) {
+      this.threadObject.likedFrom.splice(i, 1)
+    } else {
+      console.log(this.authenticate.currentUserId)
+      this.threadObject.likedFrom.push(this.authenticate.currentUserId);
+    }
   }
 
   likePostButton(post: Post): void {
-    post.endorsements++;
+    if (!this.checkLoggedIn()) return;
+    let i = post.likedFrom.indexOf(this.authenticate.currentUserId);
+    if (i != -1) {
+      post.likedFrom.splice(i, 1)
+    } else {
+      post.likedFrom.push(this.authenticate.currentUserId);
+    }
   }
 
+  checkLoggedIn(): boolean {
+    if (!this.authenticate.currentUserId) {
+      const dialogRef = this.dialog.open(DialogLoginComponent, {
+        width: '30%',
+      });
+      return false;
+    }
+    return true;
+  }
 }
 

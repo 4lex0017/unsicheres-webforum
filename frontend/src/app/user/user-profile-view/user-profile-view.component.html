@@ -24,9 +24,11 @@
     </mat-card-header>
     <mat-card-content>
       <h2>About: </h2>
-      <p>
+      <p *ngIf="!descriptionDiff">
         {{userFullObject.about}}
       </p>
+      <p *ngIf="descriptionDiff" #about></p>
+
       <mat-chip-list>
         <mat-chip class="user-badge" color="primary" selected
                   *ngFor="let role of userFullObject.role">{{role}}</mat-chip>
