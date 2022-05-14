@@ -4,21 +4,22 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {AdminUser, AdminVulnerability} from "../../data-access/models/scoreboard";
 
-export interface AdminUser {
-  ipaddress: string;
-  username: string;
-  vulnerabilities: AdminVulnerability[];
-  expanded: boolean;
-
-}
-
-export interface AdminVulnerability {
-  vulId: number;
-  vulName: string;
-  vulPoints: number;
-  vulLevel: string
-}
+// export interface AdminUser {
+//   ipaddress: string;
+//   username: string;
+//   vulnerabilities: AdminVulnerability[];
+//   expanded: boolean;
+//
+// }
+//
+// export interface AdminVulnerability {
+//   vulId: number;
+//   vulName: string;
+//   vulPoints: number;
+//   vulLevel: string
+// }
 
 const ELEMENT_DATA: AdminUser[] = [
   {
