@@ -58,3 +58,22 @@
 .footer-spacer {
   padding: 45px
 }
+
+.user-default-img-container {
+  position: relative;
+  left: 15px;
+  top: 11px;
+  transform: scale(1.7);
+
+}
+
+.user-image {
+  position: relative;
+  left: 3px;
+}
+
+img {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+}

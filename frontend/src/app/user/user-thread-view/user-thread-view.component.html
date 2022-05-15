@@ -1,8 +1,11 @@
 <div class="thread-container" id="{{threadObject.id}}">
   <mat-card class="thread-card">
     <mat-card-header>
-      <div mat-card-avatar class="user-image-header">
-        <mat-icon>face</mat-icon>
+      <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(threadObject.author.id)">
+        <mat-icon class="user-default-img">face</mat-icon>
+      </div>
+      <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(threadObject.author.id)">
+        <img src="{{this.getUserPicture(threadObject.author.id)!.src}}" alt="image">
       </div>
       <mat-card-title>
         <div>
@@ -46,8 +49,11 @@
 
     <mat-card class="post-card">
       <mat-card-header>
-        <div mat-card-avatar class="user-image-header">
-          <mat-icon>face</mat-icon>
+        <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(post.author.id)">
+          <mat-icon class="user-default-img">face</mat-icon>
+        </div>
+        <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(post.author.id)">
+          <img src="{{this.getUserPicture(post.author.id)!.src}}" alt="image">
         </div>
         <mat-card-title>
           <a [routerLink]="['/forum/users', post.author.id]">{{post.author.username}}</a> answered on {{post.date}}

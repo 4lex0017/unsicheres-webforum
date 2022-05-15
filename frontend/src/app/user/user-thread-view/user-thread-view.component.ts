@@ -189,5 +189,9 @@ export class UserThreadViewComponent implements OnInit {
     }
     return true;
   }
+
+  getUserPicture(userId: number): HTMLImageElement | undefined {
+    return this.backEndService.getUserPicture(userId);
+  }
 }
 

@@ -61,9 +61,9 @@ export class BackendService {
   //Get Observables for Profile and Thread component
   getUser(id: number): Observable<UserFull> {
 
-    for (let i = 0; i < this.userData.UserFull.length; i++) {
-      if (id == this.userData.UserFull[i].id) {
-        return of(this.userData.UserFull[i]);
+    for (let i = 0; i < this.userData.length; i++) {
+      if (id == this.userData[i].id) {
+        return of(this.userData[i]);
       }
     }
 
@@ -116,9 +116,9 @@ export class BackendService {
 
   getFullUserFromUserId(id: number): UserFull {
 
-    for (let i = 0; i < this.userData.UserFull.length; i++) {
-      if (id == this.userData.UserFull[i].id) {
-        return this.userData.UserFull[i];
+    for (let i = 0; i < this.userData.length; i++) {
+      if (id == this.userData[i].id) {
+        return this.userData[i];
       }
     }
     return {
@@ -201,7 +201,7 @@ export class BackendService {
   getRandomUsers(): UserFull[] {
     let users: UserFull[] = [];
     for (let z = 0; z < 4; z++) {
-      users.push(this.userData.UserFull[Math.floor(Math.random() * 9)]);
+      users.push(this.userData[Math.floor(Math.random() * 9)]);
       console.log(users)
     }
     return users;
@@ -256,7 +256,7 @@ export class BackendService {
         "password": userPassword
       },
     )
-    this.userData.UserFull.push({
+    this.userData.push({
       "id": this.idUserRegister,
       "username": userName,
       "joined": this.formatDate(),
@@ -288,6 +288,15 @@ export class BackendService {
       }
     }
     return null;
+  }
+
+  getUserPicture(userId: number): HTMLImageElement | undefined {
+    for (let i = 0; i < this.userData.length; i++) {
+      if (userId == this.userData[i].id) {
+        if (this.userData[i].image) return this.userData[i].image;
+      }
+    }
+    return undefined;
   }
 
   accessData =
@@ -603,7 +612,203 @@ export class BackendService {
       ]
     };
 
-  userData =
+  userData: UserFull[] =
+    [
+      {
+        "id": 11,
+        "username": "TestUsername1",
+        "joined": "12.01.0003",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        "role": [
+          "Member",
+          "Admin"
+        ],
+        "comments": [
+          {
+            "id": 1,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 2,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "username": "TestUsername2",
+        "joined": "15.02.0003",
+        "about": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porttitor lobortis magna, mollis maximus nulla. Etiam sit amet feugiat lacus. Aenean ligula urna, malesuada eget libero accumsan, aliquet volutpat massa. Sed leo metus, convallis vel tincidunt sed, dapibus sed lacus. Cras euismod ligula vel ex maximus venenatis. Praesent maximus nisl eget leo finibus aliquam. Nunc vehicula libero sodales, condimentum diam in, placerat neque. Integer pretium eros a lacinia lobortis. Phasellus faucibus sem leo, nec venenatis purus venenatis vitae. Nulla semper massa ut dolor blandit sagittis. ",
+        "role": ["User", "Experienced"],
+        "comments": [
+          {
+            "id": 3,
+            "content": "Nice profile!",
+            "userId": 1
+          },
+          {
+            "id": 4,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 135,
+        "username": "test_test_testuser",
+        "joined": "15.02.0003",
+        "about": " Maecenas sed nibh sodales, egestas ex ac, ultricies tortor. Sed vitae odio pellentesque sapien pellentesque pellentesque. Mauris ac iaculis felis. Phasellus sed accumsan mauris. Quisque leo mi, luctus sed nulla non, luctus porttitor nunc. Pellentesque sit amet justo quis eros tempus scelerisque. Donec lacinia ut elit non lacinia. Ut ut purus et lectus euismod aliquet. Suspendisse interdum risus nec augue ornare laoreet. Sed pretium odio a nisl aliquet ultricies pulvinar vitae est. Pellentesque lacinia et sem egestas eleifend. Vivamus et tincidunt tortor, sit amet pretium libero. Pellentesque molestie turpis semper eros scelerisque, non sagittis justo ornare. Sed at porttitor diam, sed suscipit nulla. ",
+        "role": ["User",],
+        "comments": [
+          {
+            "id": 5,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 6,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1553,
+        "username": "TestUsername553",
+        "joined": "15.02.0003",
+        "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
+        "role": ["User", "Tester"],
+        "comments": [
+          {
+            "id": 7,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 8,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "username": "TestUsername4",
+        "joined": "15.02.0003",
+        "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
+        "role": ["User", "Developer"],
+        "comments": [
+          {
+            "id": 9,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 10,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 123,
+        "username": "TestUsername123",
+        "joined": "15.02.0003",
+        "about": "",
+        "role": ["User", "Admin"],
+        "comments": [
+          {
+            "id": 11,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 12,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1882,
+        "username": "TestUsername882",
+        "joined": "15.02.0003",
+        "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
+        "role": ["User", "Tester"],
+        "comments": [
+          {
+            "id": 13,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 14,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1444,
+        "username": "TestUsername444",
+        "joined": "15.02.0003",
+        "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
+        "role": ["Customer", "Member"],
+        "comments": [
+          {
+            "id": 15,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 16,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1555,
+        "username": "TestUsername555",
+        "joined": "15.02.0003",
+        "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
+        "role": ["Member", "Angular Expert"],
+        "comments": [
+          {
+            "id": 17,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 18,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 131,
+        "username": "TestUsername131",
+        "joined": "15.02.0003",
+        "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
+        "role": ["User", "Member"],
+        "comments": [
+          {
+            "id": 19,
+            "content": "Nice profile!",
+            "userId": 2
+          },
+          {
+            "id": 20,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+    ];
+  userDataOld =
     {
       "UserFull": [
         {
@@ -946,6 +1151,19 @@ export class BackendService {
             {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
             {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false},
             {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        },
+        {
+          "id": 8,
+          "name": 'Misc',
+          "description": 'Miscellaneous features, including tips and help.',
+          "subtasks": [
+            {
+              "id": 1,
+              "state": 'Tips',
+              "description": 'Adds posts and threads, depending on current vulnerability config, with tips about the vulnerabilities.',
+              "checked": false
+            },
           ],
         }
       ]

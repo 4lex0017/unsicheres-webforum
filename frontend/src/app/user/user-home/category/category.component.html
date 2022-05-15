@@ -12,8 +12,11 @@
         <th mat-header-cell *matHeaderCellDef>
         </th>
         <td mat-cell *matCellDef="let element">
-          <div class="thread-author-symbol">
-            <mat-icon size="30px">face</mat-icon>
+          <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(element.author.id)">
+            <mat-icon class="user-default-img">face</mat-icon>
+          </div>
+          <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
+            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
           </div>
         </td>
       </ng-container>
@@ -71,12 +74,23 @@
            class="mat-elevation-z8 category-table">
 
       <!--Column 1: Author Icon-->
+      <!--      <div mat-card-avatar class="user-default-img-container" *ngIf="!this.userFullObject.image">-->
+      <!--        <mat-icon class="user-default-img">face</mat-icon>-->
+      <!--      </div>-->
+      <!--      <div mat-card-avatar class="user-image" *ngIf="this.userFullObject.image">-->
+      <!--        <img src="{{this.userFullObject.image.src}}" alt="image">-->
+      <!--      </div>-->
+
+
       <ng-container matColumnDef="author-icon">
         <th mat-header-cell *matHeaderCellDef>
         </th>
         <td mat-cell *matCellDef="let element">
-          <div class="thread-author-symbol">
-            <mat-icon size="30px">face</mat-icon>
+          <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(element.author.id)">
+            <mat-icon class="user-default-img">face</mat-icon>
+          </div>
+          <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
+            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
           </div>
         </td>
       </ng-container>
