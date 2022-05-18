@@ -1,6 +1,6 @@
 import {Component, Inject, ViewEncapsulation} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {ToolbarComponent} from "../toolbar/toolbar.component";
+
 import {BackendService} from "../../../../data-access/services/backend.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {
@@ -9,6 +9,7 @@ import {
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 import {DifficultyPickerService} from "../../../../data-access/services/difficulty-picker.service";
+import {ToolbarComponent} from "../../sidenav/toolbar/toolbar.component";
 
 
 @Component({

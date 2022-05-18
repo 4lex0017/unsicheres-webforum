@@ -3,11 +3,14 @@ import {Thread} from "../../../data-access/models/thread";
 import {Post} from "../../../data-access/models/post";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {UserFull} from "../../../data-access/models/userFull";
-import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
+
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
+import {
+  DialogSearchErrorMessageComponent
+} from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
 
 declare var jQuery: any;
 

@@ -8,9 +8,10 @@ import {BackendService} from "../../../data-access/services/backend.service";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
 import {AuthenticationService} from "../../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
-import {DialogLoginComponent} from "../../user-home/sidenav/dialog-login/dialog-login.component";
+
 import {PostReply} from "../../../data-access/models/postReply";
 import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-post.component";
+import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-post',
@@ -71,7 +72,7 @@ export class PostComponent implements OnInit {
       }
     });
   }
-  
+
   openCreateDialog(): void {
     if (!this.checkLoggedIn()) return;
     let repliedTo: PostReply = {

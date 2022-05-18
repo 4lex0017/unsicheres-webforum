@@ -14,7 +14,7 @@ import {DataManagementService} from "../../data-access/services/data-management.
 import {PostReply} from "../../data-access/models/postReply";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
-import {DialogLoginComponent} from "../user-home/sidenav/dialog-login/dialog-login.component";
+import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -38,7 +38,6 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
         this.vEnabled = this.diffPicker.isEnabledInConfig();

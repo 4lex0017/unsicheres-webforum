@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DialogCreateThreadComponent} from "../../dialog-create-thread/dialog-create-thread.component";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogContactformComponent} from "../dialog-kontaktformular/dialog-contactform.component";
 import {Router} from "@angular/router";
+import {DialogContactFormComponent} from "../../dialog/dialog-contact-form/dialog-contact-form.component";
 
 @Component({
   selector: 'app-footer',
@@ -16,7 +15,7 @@ export class FooterComponent {
   }
 
   openContactform(): void {
-    const dialogRef = this.dialog.open(DialogContactformComponent, {
+    const dialogRef = this.dialog.open(DialogContactFormComponent, {
       width: '65%'
     });
   }
