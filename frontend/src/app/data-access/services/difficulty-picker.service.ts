@@ -29,6 +29,10 @@ export class DifficultyPickerService {
     return false;
   }
 
+  isEnabledInConfig(): boolean {
+    return true;
+  }
+
   filterTagsEasy(content: string): string {
     return content.replace("<script>", "");
   }

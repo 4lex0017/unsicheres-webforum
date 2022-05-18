@@ -17,6 +17,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatListModule} from "@angular/material/list";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {UserThreadViewModule} from "./user/user-thread-view/user-thread-view.module";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     MatListModule,
     MatTooltipModule,
     MatSnackBarModule,
+    UserThreadViewModule,
 
   ],
   providers: [],

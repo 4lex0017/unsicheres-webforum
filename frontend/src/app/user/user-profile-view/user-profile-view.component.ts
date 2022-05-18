@@ -6,7 +6,6 @@ import {Post} from "../../data-access/models/post";
 import {BackendService} from "../../data-access/services/backend.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
-import {UserComment} from "../../data-access/models/comment";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 
@@ -19,8 +18,10 @@ export class UserProfileViewComponent implements OnInit {
   userFullObject: UserFull;
   userThreads: Thread[];
   userPosts: Post[];
-  descriptionDiff: boolean;
+  vEnabled: boolean;
+
   @ViewChild('about', {static: false}) about: ElementRef;
+  @ViewChild('username', {static: false}) username: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private backendService: BackendService,
@@ -30,34 +31,20 @@ export class UserProfileViewComponent implements OnInit {
               private changeDetectorRef: ChangeDetectorRef) {
   }
 
-  canEdit(): boolean {
-    if (this.userFullObject.id == this.authenticate.currentUserId) return true;
-    return false;
-  }
 
   ngOnInit(): void {
     this.route.data.subscribe((data: any) => {
-        this.userFullObject = data.user;
-        this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
-        this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
-        if (this.diffPicker.isEnabled(7, 3)) {
-          this.descriptionDiff = true;
-          this.changeDetectorRef.detectChanges();
-          this.about.nativeElement.replaceChildren();
-          this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
-        } else {
-          this.descriptionDiff = false;
-        }
-
-        console.log(this.userFullObject.id + " is here");
-      }
-    );
+      this.userFullObject = data.user;
+      this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
+      this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
+      this.vEnabled = this.diffPicker.isEnabledInConfig();
+      if (this.vEnabled) this.injectContentToDom();
+    });
   }
 
   openEditProfileDialog(): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
-      //data: {name: this.name, animal: this.animal},
       data: {
         username: this.userFullObject.username,
         about: this.userFullObject.about,
@@ -68,15 +55,17 @@ export class UserProfileViewComponent implements OnInit {
       this.userFullObject.username = result.username;
       this.userFullObject.about = result.about;
       this.userFullObject.image = result.image;
-      if (this.diffPicker) {
-        this.changeDetectorRef.detectChanges();
-        this.about.nativeElement.replaceChildren();
-        this.userFullObject.about = this.diffPicker.filterTagsHard(this.userFullObject.about);
-        this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
-      }
-
-
+      if (this.vEnabled) this.injectContentToDom();
     });
+  }
+
+  injectContentToDom(): void {
+    this.changeDetectorRef.detectChanges();
+    // this.userFullObject.about = this.diffPicker.filterTagsHard(this.userFullObject.about); to be done in backend
+    this.about.nativeElement.replaceChildren();
+    this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
+    this.username.nativeElement.replaceChildren();
+    this.username.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.username));
   }
 
   cutPostContent(content: string): string {
@@ -87,6 +76,11 @@ export class UserProfileViewComponent implements OnInit {
     } else {
       return content
     }
+  }
+
+  canEdit(): boolean {
+    return this.userFullObject.id == this.authenticate.currentUserId;
+
   }
 
   getSlugFromTitle(title: string): string {

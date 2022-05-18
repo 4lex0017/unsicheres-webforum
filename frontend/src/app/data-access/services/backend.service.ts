@@ -208,11 +208,11 @@ export class BackendService {
   }
 
   getRandomPosts(): Post[] {
-    return this.getPostsFromUser(2);
+    return this.getPostsFromUser(12);
   }
 
   getRandomThreads(): Thread[] {
-    return this.getThreadsFromUser(1);
+    return this.getThreadsFromUser(11);
   }
 
   checkRegisterUserExists(username: string): boolean {
@@ -627,7 +627,7 @@ export class BackendService {
           {
             "id": 1,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 2,
@@ -646,7 +646,7 @@ export class BackendService {
           {
             "id": 3,
             "content": "Nice profile!",
-            "userId": 1
+            "userId": 11
           },
           {
             "id": 4,
@@ -665,7 +665,7 @@ export class BackendService {
           {
             "id": 5,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 6,
@@ -684,7 +684,7 @@ export class BackendService {
           {
             "id": 7,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 8,
@@ -703,7 +703,7 @@ export class BackendService {
           {
             "id": 9,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 10,
@@ -722,7 +722,7 @@ export class BackendService {
           {
             "id": 11,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 12,
@@ -741,7 +741,7 @@ export class BackendService {
           {
             "id": 13,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 14,
@@ -760,7 +760,7 @@ export class BackendService {
           {
             "id": 15,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 16,
@@ -779,7 +779,7 @@ export class BackendService {
           {
             "id": 17,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 18,
@@ -798,7 +798,7 @@ export class BackendService {
           {
             "id": 19,
             "content": "Nice profile!",
-            "userId": 2
+            "userId": 12
           },
           {
             "id": 20,

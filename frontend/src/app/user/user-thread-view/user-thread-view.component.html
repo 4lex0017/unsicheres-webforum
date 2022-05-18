@@ -9,7 +9,8 @@
       </div>
       <mat-card-title>
         <div>
-          <span>{{threadObject.title}}</span>
+          <span #title *ngIf="vEnabled"></span>
+          <span *ngIf="!vEnabled">{{threadObject.title}}</span>
           <span class="spacer"></span>
           <button mat-mini-fab color="primary" *ngIf="canEditThread()"
                   (click)="openEditThreadDialog()"
@@ -29,8 +30,8 @@
       <mat-card-subtitle>{{threadObject.date}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <p *ngIf="contentDiff" #content></p>
-      <p *ngIf="!contentDiff"> {{this.threadObject.content}} </p>
+      <p *ngIf="vEnabled" #content></p>
+      <p *ngIf="!vEnabled"> {{this.threadObject.content}} </p>
     </mat-card-content>
     <mat-card-actions class="spacer">
       <span class="stretch-badge" matBadge="{{threadObject.likedFrom.length}}" matBadgeSize="small"
@@ -38,7 +39,7 @@
         <button mat-button (click)="likeThreadButton()">LIKE</button>
       </span>
       <button mat-button>SHARE</button>
-      <button mat-button (click)="openCreateDialog(threadObject.content, threadObject.author, threadObject.id)">REPLY
+      <button mat-button (click)="openCreateDialog()">REPLY
       </button>
       <button mat-button>REPORT</button>
     </mat-card-actions>
@@ -46,53 +47,10 @@
       [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.username}}</a></mat-card-footer>
   </mat-card>
   <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
-
-    <mat-card class="post-card">
-      <mat-card-header>
-        <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(post.author.id)">
-          <mat-icon class="user-default-img">face</mat-icon>
-        </div>
-        <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(post.author.id)">
-          <img src="{{this.getUserPicture(post.author.id)!.src}}" alt="image">
-        </div>
-        <mat-card-title>
-          <a [routerLink]="['/forum/users', post.author.id]">{{post.author.username}}</a> answered on {{post.date}}
-          <span class="spacer"></span>
-          <button mat-mini-fab color="primary" *ngIf="canEditPost(post)"
-                  (click)="openEditPostDialog(post)"
-                  matTooltip="Edit Post"
-                  [matTooltipShowDelay]="500">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <span class="spacer"></span>
-          <button mat-mini-fab color="warn" *ngIf="canEditPost(post)"
-                  (click)="openDeletePostDialog(post.id)"
-                  matTooltip="Delete Post"
-                  [matTooltipShowDelay]="500">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <i *ngIf="post.repliedTo">
-          <button mat-button [disableRipple]="true" class="moveToPost"
-                  (click)="moveToPost(post.repliedTo.repliedToId)">{{post.repliedTo.repliedToContent}}</button>
-        </i>
-        <p></p>
-        <p>
-          {{post.content}}
-        </p>
-      </mat-card-content>
-      <mat-card-actions class="spacer">
-        <span class="stretch-badge" matBadge="{{post.likedFrom.length}}" matBadgeSize="small"
-              matBadgePosition="above before" matBadgeColor="primary">
-          <button mat-button (click)="likePostButton(post)">LIKE</button>
-        </span>
-        <button mat-button>SHARE</button>
-        <button mat-button (click)="openCreateDialog(post.content, post.author, post.id)">REPLY</button>
-        <button mat-button>REPORT</button>
-      </mat-card-actions>
-    </mat-card>
+    <app-post [postObject]="post"
+              (createPostEvent)="createPostConsumer($event)"
+              (deletePostEvent)="openDeletePostConsumer($event)"
+              (moveToPostEvent)="moveToPost($event)"></app-post>
   </div>
 </div>
 <div class="footer-spacer"></div>
