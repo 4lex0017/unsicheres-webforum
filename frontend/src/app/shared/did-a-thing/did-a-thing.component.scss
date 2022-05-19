@@ -6,6 +6,9 @@
   z-index: 99;
 }
 
+.field{
+  white-space: nowrap;
+}
 .text {
   background-color: rgba(102, 168, 98, 0);
   height: 30px;
@@ -13,8 +16,26 @@
   border-radius: 5px;
   z-index: 99;
   position: fixed;
-  left: 280px;
-  top: 15px;
-  text-align: center;
+  left: 250px;
+  top: 14px;
+  font-size: 1.5em;
 
+}
+
+.text1{
+  display: inline-block;
+  width: 57px;
+}
+.text2{
+  display: inline-block;
+  width: 45px;
+
+}
+.text3{
+  display: inline-block;
+  width: 20px;
+}
+.text4{
+  display: inline-block;
+  width:50px;
 }

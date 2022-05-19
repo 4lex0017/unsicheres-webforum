@@ -2,8 +2,21 @@
 
 <mat-icon class="icon" [@popOverState]="stateNameOver" [@popOverState.done]="toggleAfter()">check_circle_outline
 </mat-icon>
-<div class="text" [@popAfterState]="stateNameOver">
-  You did a thing
+<div class="field">
+  <div class="text" [@popAfterState]="stateNameOver">
+  <div class="text1" [@popAfterState1]="stateNameOver">
+    You
+  </div>
+  <div class="text2" [@popAfterState2]="stateNameOver">
+    did
+  </div>
+  <div class="text3" [@popAfterState3]="stateNameOver">
+    a
+  </div>
+  <div class="text4" [@popAfterState4]="stateNameOver">
+    thing
+  </div>
+  </div>
 </div>
 
 
