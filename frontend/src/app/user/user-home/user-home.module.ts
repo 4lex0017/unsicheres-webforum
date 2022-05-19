@@ -17,20 +17,26 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {UserThreadViewModule} from "../user-thread-view/user-thread-view.module";
 import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
-import {DialogCreateThreadComponent} from './dialog-create-thread/dialog-create-thread.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {SearchComponent} from './search/search.component';
-import {DialogSearchErrorMessageComponent} from './dialog-search-error-message/dialog-search-error-message.component';
 import {SharedModule} from "../../shared/shared.module";
-import {DialogContactformComponent} from "./sidenav/dialog-kontaktformular/dialog-contactform.component";
-import {DialogLoginComponent} from "./sidenav/dialog-login/dialog-login.component";
-import {DialogRegisterComponent} from "./sidenav/dialog-register/dialog-register.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatMenuModule} from "@angular/material/menu";
+import {
+  DialogContactFormDismissComponent
+} from './dialog/dialog-contact-form-dismiss/dialog-contact-form-dismiss.component';
+import {
+  DialogSearchErrorMessageComponent
+} from "./dialog/dialog-search-error-message/dialog-search-error-message.component";
+import {DialogCreateThreadComponent} from "./dialog/dialog-create-thread/dialog-create-thread.component";
+import {DialogLoginComponent} from "./dialog/dialog-login/dialog-login.component";
+import {DialogRegisterComponent} from "./dialog/dialog-register/dialog-register.component";
+import {DialogContactFormComponent} from './dialog/dialog-contact-form/dialog-contact-form.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
@@ -43,9 +49,11 @@ import {MatMenuModule} from "@angular/material/menu";
     DialogCreateThreadComponent,
     SearchComponent,
     DialogSearchErrorMessageComponent,
-    DialogContactformComponent,
+    DialogContactFormComponent,
     DialogLoginComponent,
     DialogRegisterComponent,
+    DialogContactFormDismissComponent,
+    DialogContactFormComponent,
   ],
   imports: [
     CommonModule,
@@ -69,7 +77,8 @@ import {MatMenuModule} from "@angular/material/menu";
     SharedModule,
     MatSlideToggleModule,
     MatMenuModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressBarModule
 
   ]
 })

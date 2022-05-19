@@ -6,7 +6,7 @@ export interface Thread {
   title: string;
   content: string;
   date: string;
-  endorsements: number;
   author: User;
   posts: Post[];
+  likedFrom: number[];
 }

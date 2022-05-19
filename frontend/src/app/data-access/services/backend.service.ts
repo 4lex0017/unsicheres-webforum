@@ -61,9 +61,9 @@ export class BackendService {
   //Get Observables for Profile and Thread component
   getUser(id: number): Observable<UserFull> {
 
-    for (let i = 0; i < this.userData.UserFull.length; i++) {
-      if (id == this.userData.UserFull[i].id) {
-        return of(this.userData.UserFull[i]);
+    for (let i = 0; i < this.userData.length; i++) {
+      if (id == this.userData[i].id) {
+        return of(this.userData[i]);
       }
     }
 
@@ -116,9 +116,9 @@ export class BackendService {
 
   getFullUserFromUserId(id: number): UserFull {
 
-    for (let i = 0; i < this.userData.UserFull.length; i++) {
-      if (id == this.userData.UserFull[i].id) {
-        return this.userData.UserFull[i];
+    for (let i = 0; i < this.userData.length; i++) {
+      if (id == this.userData[i].id) {
+        return this.userData[i];
       }
     }
     return {
@@ -149,9 +149,9 @@ export class BackendService {
         id: this.idPostTracker,
         content: content,
         repliedTo: repliedTo,
-        endorsements: 0,
         date: this.formatDate(),
-        author: this.getUserFromUsername(userId)
+        author: this.getUserFromUsername(userId),
+        likedFrom: []
       }
     this.idPostTracker++;
     return postObject;
@@ -165,8 +165,8 @@ export class BackendService {
       content: content,
       date: this.formatDate(),
       posts: [],
-      endorsements: 0,
-      author: this.getUserFromUsername(userId)
+      author: this.getUserFromUsername(userId),
+      likedFrom: []
     }
     this.idThreadTracker++;
     return threadObject;
@@ -201,18 +201,18 @@ export class BackendService {
   getRandomUsers(): UserFull[] {
     let users: UserFull[] = [];
     for (let z = 0; z < 4; z++) {
-      users.push(this.userData.UserFull[Math.floor(Math.random() * 9)]);
+      users.push(this.userData[Math.floor(Math.random() * 9)]);
       console.log(users)
     }
     return users;
   }
 
   getRandomPosts(): Post[] {
-    return this.getPostsFromUser(2);
+    return this.getPostsFromUser(12);
   }
 
   getRandomThreads(): Thread[] {
-    return this.getThreadsFromUser(1);
+    return this.getThreadsFromUser(11);
   }
 
   checkRegisterUserExists(username: string): boolean {
@@ -256,7 +256,7 @@ export class BackendService {
         "password": userPassword
       },
     )
-    this.userData.UserFull.push({
+    this.userData.push({
       "id": this.idUserRegister,
       "username": userName,
       "joined": this.formatDate(),
@@ -290,41 +290,50 @@ export class BackendService {
     return null;
   }
 
+  getUserPicture(userId: number): HTMLImageElement | undefined {
+    for (let i = 0; i < this.userData.length; i++) {
+      if (userId == this.userData[i].id) {
+        if (this.userData[i].image) return this.userData[i].image;
+      }
+    }
+    return undefined;
+  }
+
   accessData =
     {
       "categories": [
         {
-          "id": 1,
+          "id": 51,
           "title": "Community",
           "threads": [
             {
-              "id": 1,
+              "id": 21,
               "title": "Community Thread 1",
               "content": "Hello, I have a question about Angular.",
               "date": "01.01.0001",
-              "endorsements": 15,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "author":
                 {
-                  "id": 1,
+                  "id": 11,
                   "username": "TestUsername1"
                 },
               "posts": [
                 {
-                  "id": 1,
+                  "id": 31,
                   "content": "this is a test post",
                   "date": "04.01.0001",
-                  "endorsements": 100,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "author":
                     {
-                      "id": 2,
+                      "id": 12,
                       "username": "TestUsername2"
                     }
                 },
                 {
-                  "id": 2,
+                  "id": 32,
                   "content": "this is a 2nd answer test post",
                   "date": "06.01.0001",
-                  "endorsements": 100,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "author":
                     {
                       "id": 135,
@@ -334,25 +343,25 @@ export class BackendService {
               ]
             },
             {
-              "id": 2,
+              "id": 22,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Community Thread 2",
               "date": "02.01.0001",
               "content": "This is the content of the 2nd community thread.",
-              "endorsements": 33,
               "author":
                 {
-                  "id": 2,
+                  "id": 12,
                   "username": "TestUsername2"
                 },
               "posts": [
                 {
-                  "id": 3,
+                  "id": 33,
                   "content": "this is a test post2",
-                  "endorsements": 111,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "date": "07.01.0001",
                   "author":
                     {
-                      "id": 3,
+                      "id": 13,
                       "username": "TestUsername3"
                     }
                 }
@@ -361,29 +370,29 @@ export class BackendService {
           ]
         },
         {
-          "id": 2,
+          "id": 52,
           "title": "General",
           "threads": [
             {
-              "id": 5,
-              "title": "Genreal Thread 1",
+              "id": 25,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "title": "General Thread 1",
               "content": "This is the content of the first general thread.",
               "date": "06.01.0001",
-              "endorsements": 1,
               "author":
                 {
-                  "id": 1,
+                  "id": 11,
                   "username": "TestUsername1"
                 },
               "posts": [
                 {
-                  "id": 1,
+                  "id": 31,
+                  "likedFrom": [11, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "endorsements": 0,
                   "author":
                     {
-                      "id": 2,
+                      "id": 12,
                       "username": "TestUsername2"
                     }
 
@@ -391,25 +400,25 @@ export class BackendService {
               ]
             },
             {
-              "id": 7,
+              "id": 27,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "General Thread 2",
               "content": "This is the content of the 2nd general thread.",
-              "endorsements": 0,
               "date": "14.01.0001",
               "author":
                 {
-                  "id": 4,
+                  "id": 14,
                   "username": "TestUsername4"
                 },
               "posts": [
                 {
                   "id": 33,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "endorsements": 150,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 }
@@ -418,15 +427,15 @@ export class BackendService {
           ]
         },
         {
-          "id": 3,
+          "id": 53,
           "title": "Support",
           "threads": [
             {
-              "id": 51,
+              "id": 29,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Support Thread 1",
               "content": "This is the content of the first support thread.",
               "date": "12.01.0001",
-              "endorsements": 121,
               "author":
                 {
                   "id": 123,
@@ -434,13 +443,13 @@ export class BackendService {
                 },
               "posts": [
                 {
-                  "id": 1,
+                  "id": 393,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "endorsements": 3,
                   "author":
                     {
-                      "id": 2,
+                      "id": 12,
                       "username": "TestUsername2"
                     }
 
@@ -448,36 +457,36 @@ export class BackendService {
               ]
             },
             {
-              "id": 7111,
+              "id": 27111,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Support Thread 2",
               "content": "This is the content of the thread.",
-              "endorsements": -1,
               "date": "14.01.0001",
               "author":
                 {
-                  "id": 882,
+                  "id": 1882,
                   "username": "TestUsername882"
                 },
               "posts": [
                 {
-                  "id": 33,
+                  "id": 337,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "endorsements": 100,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 }
               ]
             },
             {
-              "id": 1235,
+              "id": 21235,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "support Thread 3",
               "content": "This is the content of the thread.",
               "date": "06.01.0001",
-              "endorsements": 16456,
               "author":
                 {
                   "id": 131,
@@ -485,13 +494,13 @@ export class BackendService {
                 },
               "posts": [
                 {
-                  "id": 1,
+                  "id": 3981,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "endorsements": 10,
                   "author":
                     {
-                      "id": 2,
+                      "id": 12,
                       "username": "TestUsername2"
                     }
 
@@ -499,50 +508,50 @@ export class BackendService {
               ]
             },
             {
-              "id": 8677,
+              "id": 28677,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Support Thread 4",
               "content": "This is the content of the thread.",
-              "endorsements": -33,
               "date": "14.01.0001",
               "author":
                 {
-                  "id": 444,
+                  "id": 1444,
                   "username": "TestUsername444"
                 },
               "posts": [
                 {
-                  "id": 33,
+                  "id": 3855363,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "endorsements": 99,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 }
               ]
             },
             {
-              "id": 9,
+              "id": 267459,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Support Thread 5",
               "content": "This is the content of the thread.",
               "date": "06.01.0001",
-              "endorsements": 11,
               "author":
                 {
-                  "id": 1,
+                  "id": 11,
                   "username": "TestUsername1"
                 },
               "posts": [
                 {
-                  "id": 1,
+                  "id": 3098751,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "endorsements": 100,
                   "author":
                     {
-                      "id": 2,
+                      "id": 12,
                       "username": "TestUsername2"
                     }
 
@@ -550,47 +559,47 @@ export class BackendService {
               ]
             },
             {
-              "id": 17,
+              "id": 296417,
+              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
               "title": "Support Thread 6",
               "content": "This is the content of the 2nd general thread.",
-              "endorsements": 3540,
               "date": "35.01.0001",
               "author":
                 {
-                  "id": 4,
+                  "id": 14,
                   "username": "TestUsername4"
                 },
               "posts": [
                 {
-                  "id": 33,
-                  "content": "this is a test post33",
+                  "id": 3836453,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "content": "this is a test post3asfdga3",
                   "date": "06.03.0001",
-                  "endorsements": 15,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 },
                 {
-                  "id": 33,
-                  "content": "this is a test post33",
+                  "id": 3387644,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "content": "this is a test post33adf",
                   "date": "06.03.0001",
-                  "endorsements": 100,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 },
                 {
-                  "id": 33,
-                  "content": "this is a test post33",
+                  "id": 30394673,
+                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "content": "this is a test post3db3",
                   "date": "06.03.0001",
-                  "endorsements": 8,
                   "author":
                     {
-                      "id": 553,
+                      "id": 1553,
                       "username": "TestUsername553"
                     }
                 }
@@ -603,11 +612,207 @@ export class BackendService {
       ]
     };
 
-  userData =
+  userData: UserFull[] =
+    [
+      {
+        "id": 11,
+        "username": "TestUsername1",
+        "joined": "12.01.0003",
+        "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        "role": [
+          "Member",
+          "Admin"
+        ],
+        "comments": [
+          {
+            "id": 1,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 2,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "username": "TestUsername2",
+        "joined": "15.02.0003",
+        "about": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porttitor lobortis magna, mollis maximus nulla. Etiam sit amet feugiat lacus. Aenean ligula urna, malesuada eget libero accumsan, aliquet volutpat massa. Sed leo metus, convallis vel tincidunt sed, dapibus sed lacus. Cras euismod ligula vel ex maximus venenatis. Praesent maximus nisl eget leo finibus aliquam. Nunc vehicula libero sodales, condimentum diam in, placerat neque. Integer pretium eros a lacinia lobortis. Phasellus faucibus sem leo, nec venenatis purus venenatis vitae. Nulla semper massa ut dolor blandit sagittis. ",
+        "role": ["User", "Experienced"],
+        "comments": [
+          {
+            "id": 3,
+            "content": "Nice profile!",
+            "userId": 11
+          },
+          {
+            "id": 4,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 135,
+        "username": "test_test_testuser",
+        "joined": "15.02.0003",
+        "about": " Maecenas sed nibh sodales, egestas ex ac, ultricies tortor. Sed vitae odio pellentesque sapien pellentesque pellentesque. Mauris ac iaculis felis. Phasellus sed accumsan mauris. Quisque leo mi, luctus sed nulla non, luctus porttitor nunc. Pellentesque sit amet justo quis eros tempus scelerisque. Donec lacinia ut elit non lacinia. Ut ut purus et lectus euismod aliquet. Suspendisse interdum risus nec augue ornare laoreet. Sed pretium odio a nisl aliquet ultricies pulvinar vitae est. Pellentesque lacinia et sem egestas eleifend. Vivamus et tincidunt tortor, sit amet pretium libero. Pellentesque molestie turpis semper eros scelerisque, non sagittis justo ornare. Sed at porttitor diam, sed suscipit nulla. ",
+        "role": ["User",],
+        "comments": [
+          {
+            "id": 5,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 6,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1553,
+        "username": "TestUsername553",
+        "joined": "15.02.0003",
+        "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
+        "role": ["User", "Tester"],
+        "comments": [
+          {
+            "id": 7,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 8,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "username": "TestUsername4",
+        "joined": "15.02.0003",
+        "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
+        "role": ["User", "Developer"],
+        "comments": [
+          {
+            "id": 9,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 10,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 123,
+        "username": "TestUsername123",
+        "joined": "15.02.0003",
+        "about": "",
+        "role": ["User", "Admin"],
+        "comments": [
+          {
+            "id": 11,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 12,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1882,
+        "username": "TestUsername882",
+        "joined": "15.02.0003",
+        "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
+        "role": ["User", "Tester"],
+        "comments": [
+          {
+            "id": 13,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 14,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1444,
+        "username": "TestUsername444",
+        "joined": "15.02.0003",
+        "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
+        "role": ["Customer", "Member"],
+        "comments": [
+          {
+            "id": 15,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 16,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 1555,
+        "username": "TestUsername555",
+        "joined": "15.02.0003",
+        "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
+        "role": ["Member", "Angular Expert"],
+        "comments": [
+          {
+            "id": 17,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 18,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+      {
+        "id": 131,
+        "username": "TestUsername131",
+        "joined": "15.02.0003",
+        "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
+        "role": ["User", "Member"],
+        "comments": [
+          {
+            "id": 19,
+            "content": "Nice profile!",
+            "userId": 12
+          },
+          {
+            "id": 20,
+            "content": "Nice profile test 123!",
+            "userId": 135
+          }
+        ]
+      },
+    ];
+  userDataOld =
     {
       "UserFull": [
         {
-          "id": 1,
+          "id": 11,
           "username": "TestUsername1",
           "joined": "12.01.0003",
           "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
@@ -629,7 +834,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 2,
+          "id": 12,
           "username": "TestUsername2",
           "joined": "15.02.0003",
           "about": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porttitor lobortis magna, mollis maximus nulla. Etiam sit amet feugiat lacus. Aenean ligula urna, malesuada eget libero accumsan, aliquet volutpat massa. Sed leo metus, convallis vel tincidunt sed, dapibus sed lacus. Cras euismod ligula vel ex maximus venenatis. Praesent maximus nisl eget leo finibus aliquam. Nunc vehicula libero sodales, condimentum diam in, placerat neque. Integer pretium eros a lacinia lobortis. Phasellus faucibus sem leo, nec venenatis purus venenatis vitae. Nulla semper massa ut dolor blandit sagittis. ",
@@ -667,7 +872,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 553,
+          "id": 1553,
           "username": "TestUsername553",
           "joined": "15.02.0003",
           "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
@@ -686,7 +891,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 4,
+          "id": 14,
           "username": "TestUsername4",
           "joined": "15.02.0003",
           "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
@@ -724,7 +929,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 882,
+          "id": 1882,
           "username": "TestUsername882",
           "joined": "15.02.0003",
           "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
@@ -743,7 +948,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 444,
+          "id": 1444,
           "username": "TestUsername444",
           "joined": "15.02.0003",
           "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
@@ -762,7 +967,7 @@ export class BackendService {
           ]
         },
         {
-          "id": 555,
+          "id": 1555,
           "username": "TestUsername555",
           "joined": "15.02.0003",
           "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
@@ -807,12 +1012,12 @@ export class BackendService {
     {
       "loginData": [
         {
-          "id": 1,
+          "id": 11,
           "username": "TestUsername1",
           "password": "123"
         },
         {
-          "id": 2,
+          "id": 12,
           "username": "TestUsername2",
           "password": "123"
         },
@@ -822,12 +1027,12 @@ export class BackendService {
           "password": "789"
         },
         {
-          "id": 553,
+          "id": 1553,
           "username": "TestUsername553",
           "password": "789"
         },
         {
-          "id": 4,
+          "id": 14,
           "username": "TestUsername4",
           "password": "789"
         },
@@ -837,17 +1042,17 @@ export class BackendService {
           "password": "789"
         },
         {
-          "id": 882,
+          "id": 1882,
           "username": "TestUsername882",
           "password": "789"
         },
         {
-          "id": 444,
+          "id": 1444,
           "username": "TestUsername444",
           "password": "789"
         },
         {
-          "id": 555,
+          "id": 1555,
           "username": "TestUsername555",
           "password": "789"
         },
@@ -946,6 +1151,19 @@ export class BackendService {
             {"id": 1, "state": 'Easy', "description": 'No filtering.', "checked": false},
             {"id": 2, "state": 'Medium', "description": 'Easy filtering with String.matches().', "checked": false},
             {"id": 3, "state": 'Hard', "description": 'Hard filtering.', "checked": false},
+          ],
+        },
+        {
+          "id": 8,
+          "name": 'Misc',
+          "description": 'Miscellaneous features, including tips and help.',
+          "subtasks": [
+            {
+              "id": 1,
+              "state": 'Tips',
+              "description": 'Adds posts and threads, depending on current vulnerability config, with tips about the vulnerabilities.',
+              "checked": false
+            },
           ],
         }
       ]

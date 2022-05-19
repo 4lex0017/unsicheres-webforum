@@ -38,7 +38,7 @@
             Registered Users
           </mat-card-title>
 
-          <span *ngFor="let user of backEndService.userData.UserFull; let i = index"
+          <span *ngFor="let user of backEndService.userData; let i = index"
                 [routerLink]="['/forum/users', user.id]"
                 style="word-wrap: break-word">
             <a [routerLink]="['/forum/users', user.id]"> {{user.username}}</a>

@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {DialogCreateThreadComponent} from "../../dialog-create-thread/dialog-create-thread.component";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
-import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 import {Router} from "@angular/router";
 import {ThemeService} from "../../../../theme.service";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
+import {DialogLoginComponent} from "../../dialog/dialog-login/dialog-login.component";
+import {DialogRegisterComponent} from "../../dialog/dialog-register/dialog-register.component";
 
 @Component({
   selector: 'app-toolbar',

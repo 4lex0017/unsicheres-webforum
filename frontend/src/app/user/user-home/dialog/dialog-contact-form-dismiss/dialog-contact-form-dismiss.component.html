@@ -1,0 +1,12 @@
+<div class="outer-container">
+  <h2 mat-dialog-title>Success! We will message you as soon as possible.</h2>
+  <mat-dialog-content class="mat-typography">
+    <h3>Your message:</h3>
+    <p *ngIf="vEnabled" #content></p>
+    <p *ngIf="!vEnabled">{{data}}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="close()" color="primary" cdkFocusInitial>Dismiss</button>
+  </mat-dialog-actions>
+</div>
+<mat-progress-bar class="progress-bar" mode="determinate" [value]="progressbarValue"></mat-progress-bar>

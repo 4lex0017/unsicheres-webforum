@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';import {MatSnackBar} from "@angular/material/snack-bar";
-import {
-  SnackBarNotificationComponent
-} from "../snack-bar-notification/snack-bar-notification.component";
-
+import {Router} from '@angular/router';
+import {ThemeService} from "../../theme.service";
+import {BackendService} from "../../data-access/services/backend.service";
 
 @Component({
   selector: 'app-login',
@@ -15,26 +13,17 @@ export class LoginComponent {
   username;
   password;
 
-  constructor(private http: HttpClient,
-              private router: Router,
-              private _snackBar: MatSnackBar) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
 
   handleLoginClick() {
     if (this.username && this.password) {
       this.authenticateUser(this.username);
-    } else if (this.username && !this.password){
-      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
-        duration: 5000,
-        data:"Please enter a password"
-      })
-    }else{
-      this._snackBar.openFromComponent(SnackBarNotificationComponent,{
-        duration: 5000,
-        data:"Please enter username & password"
-      });
+    } else {
+      alert('enter username and password');
     }
+
   }
 
   openAdminLogin(): void {

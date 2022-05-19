@@ -9,6 +9,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {Thread} from "../../../data-access/models/thread";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
 import {Router} from "@angular/router";
+import {BackendService} from "../../../data-access/services/backend.service";
 
 
 @Component({
@@ -22,7 +23,7 @@ export class CategoryComponent implements AfterViewInit {
   @Input()
   showFull: boolean;
 
-  constructor(private dataManagement: DataManagementService, private router: Router) {
+  constructor(private dataManagement: DataManagementService, private router: Router, private backend: BackendService) {
   }
 
 
@@ -50,5 +51,8 @@ export class CategoryComponent implements AfterViewInit {
 
   }
 
+  getUserPicture(userId: number): HTMLImageElement | undefined {
+    return this.backend.getUserPicture(userId)
+  }
 
 }

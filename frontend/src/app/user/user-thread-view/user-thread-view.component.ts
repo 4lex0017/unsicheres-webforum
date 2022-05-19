@@ -14,7 +14,7 @@ import {DataManagementService} from "../../data-access/services/data-management.
 import {PostReply} from "../../data-access/models/postReply";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
-import {DialogLoginComponent} from "../user-home/sidenav/dialog-login/dialog-login.component";
+import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -23,10 +23,9 @@ import {DialogLoginComponent} from "../user-home/sidenav/dialog-login/dialog-log
 })
 export class UserThreadViewComponent implements OnInit {
   threadObject: Thread;
-  contentDiff: boolean;
-  private contentPlaceholder: ElementRef;
-
+  vEnabled: boolean;
   @ViewChild('content', {static: false}) content: ElementRef;
+  @ViewChild('title', {static: false}) title: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
@@ -39,18 +38,18 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.data.subscribe((data: any) => {
         this.threadObject = data.thread;
-        // <scr<script>ipt>alert(2)</script> -> works
-        if (this.diffPicker.isEnabled(7, 2)) {
-          this.contentDiff = true;
+        this.vEnabled = this.diffPicker.isEnabledInConfig();
+        if (this.vEnabled) {
           this.changeDetectorRef.detectChanges();
+
           this.content.nativeElement.replaceChildren();
-          this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
+          // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-        } else {
-          this.contentDiff = false;
+
+          this.title.nativeElement.replaceChildren();
+          this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
         }
       }
     );
@@ -61,10 +60,6 @@ export class UserThreadViewComponent implements OnInit {
     return false;
   }
 
-  canEditPost(post: any): boolean {
-    if (post.author.id == this.authenticate.currentUserId) return true;
-    return false;
-  }
 
   openEditThreadDialog(): void {
     const dialogRef = this.dialog.open(DialogEditThreadComponent, {
@@ -78,39 +73,25 @@ export class UserThreadViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
       this.threadObject.content = result.content;
-      if (this.contentDiff) {
+      if (this.vEnabled) {
         this.changeDetectorRef.detectChanges();
+
         this.content.nativeElement.replaceChildren();
-        this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-        console.log(this.threadObject.content)
+        // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
         this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+
+        this.title.nativeElement.replaceChildren();
+        this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
       }
 
     });
   }
 
-  openEditPostDialog(postObject: Post): void {
-    const dialogRef = this.dialog.open(DialogEditPostComponent, {
-      width: '65%',
-      data: {
-        content: postObject.content,
-      },
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      postObject.content = result.content;
-    });
-  }
-
-  openCreateDialog(replyToContent: string, replyToUser: User, postId: number): void {
-    if (!this.authenticate.currentUserId) {
-      const dialogRef = this.dialog.open(DialogLoginComponent, {
-        width: '30%',
-      });
-      return;
-    }
+  openCreateDialog(): void {
+    if (!this.checkLoggedIn()) return;
     let repliedTo: PostReply = {
-      repliedToId: postId,
-      repliedToContent: replyToUser.username + " wrote '" + replyToContent + "'."
+      repliedToId: this.threadObject.id,
+      repliedToContent: this.threadObject.author.username + " wrote '" + this.threadObject.content + "'."
     };
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
@@ -135,20 +116,17 @@ export class UserThreadViewComponent implements OnInit {
     window.location.hash = id.toString();
   }
 
-  openDeletePostDialog(postObjectId: number) {
-    const dialogRef = this.dialog.open(DialogDeletePostComponent, {
-      width: '55%',
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        for (let z = 0; z < this.threadObject.posts.length; z++) {
-          if (this.threadObject.posts[z].id == postObjectId) {
-            this.threadObject.posts.splice(z, 1);
-            break;
-          }
-        }
+  openDeletePostConsumer(postObjectId: number) {
+    for (let z = 0; z < this.threadObject.posts.length; z++) {
+      if (this.threadObject.posts[z].id == postObjectId) {
+        this.threadObject.posts.splice(z, 1);
+        break;
       }
-    });
+    }
+  }
+
+  createPostConsumer(post: Post): void {
+    this.threadObject.posts.push(post);
   }
 
   openDeleteThreadDialog() {
@@ -165,12 +143,31 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   likeThreadButton(): void {
-    this.threadObject.endorsements++;
+    if (!this.checkLoggedIn()) return;
+    let i = this.threadObject.likedFrom.indexOf(this.authenticate.currentUserId);
+    if (i != -1) {
+      this.threadObject.likedFrom.splice(i, 1)
+    } else {
+      console.log(this.authenticate.currentUserId)
+      this.threadObject.likedFrom.push(this.authenticate.currentUserId);
+    }
   }
 
-  likePostButton(post: Post): void {
-    post.endorsements++;
+
+  checkLoggedIn(): boolean {
+    if (!this.authenticate.currentUserId) {
+      const dialogRef = this.dialog.open(DialogLoginComponent, {
+        width: '30%',
+      });
+      return false;
+    }
+    return true;
   }
+
+  getUserPicture(userId: number): HTMLImageElement | undefined {
+    return this.backEndService.getUserPicture(userId);
+  }
+
 
 }
 

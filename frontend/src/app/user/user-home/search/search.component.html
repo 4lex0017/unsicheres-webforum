@@ -18,8 +18,8 @@
           <mat-icon>search</mat-icon>
         </button>
         <div>Search Result for Query:
-          <span *ngIf="!queryDiff"> {{this.currentSearchQuery}}</span>
-          <span *ngIf="queryDiff" #search></span>
+          <span *ngIf="!vEnabled"> {{this.currentSearchQuery}}</span>
+          <span *ngIf="vEnabled" #search></span>
         </div>
       </mat-card-title>
     </mat-card-header>

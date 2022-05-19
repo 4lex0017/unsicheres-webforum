@@ -3,12 +3,16 @@ import {BackendService} from "../../../data-access/services/backend.service";
 import {Access} from "../../../data-access/models/access";
 import {MatDialog} from "@angular/material/dialog";
 import {Thread} from "../../../data-access/models/thread";
-import {DialogCreateThreadComponent} from "../dialog-create-thread/dialog-create-thread.component";
+
 import {Category} from "../../../data-access/models/category";
 import {ActivatedRoute, Router} from "@angular/router";
-import {DialogSearchErrorMessageComponent} from "../dialog-search-error-message/dialog-search-error-message.component";
+
 import {AuthenticationService} from "../../../data-access/services/authentication.service";
-import {DialogLoginComponent} from "../sidenav/dialog-login/dialog-login.component";
+import {DialogCreateThreadComponent} from "../dialog/dialog-create-thread/dialog-create-thread.component";
+import {
+  DialogSearchErrorMessageComponent
+} from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
+import {DialogLoginComponent} from "../dialog/dialog-login/dialog-login.component";
 
 @Component({
   selector: 'app-forum',

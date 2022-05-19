@@ -1,7 +1,9 @@
+
 .back {
-  background-image: url('/assets/background.png');
-  height: 100%;
-  width: 100%;
+  background: url('/assets/trianglesLogin6.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
 }
 
 .form-signin {
@@ -10,9 +12,11 @@
   padding: 15px;
   margin: auto;
 }
+
 .form-signin .checkbox {
   font-weight: 400;
 }
+
 .form-signin .form-control {
   position: relative;
   box-sizing: border-box;
@@ -20,14 +24,25 @@
   padding: 10px;
   font-size: 16px;
 }
+
 .form-signin .form-control:focus {
   z-index: 2;
 }
+
+.icon {
+  transform: scale(5);
+}
+
+.spacer {
+  padding: 50px;
+}
+
 .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
