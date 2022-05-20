@@ -24,6 +24,9 @@ Route::post('user', 'App\Http\Controllers\UserController@createUser');
 Route::put('user/{id}', 'App\Http\Controllers\UserController@updateUser');
 Route::get('user/{id}/post', 'App\Http\Controllers\PostController@getPostsOfUser');
 
+Route::get('user/{id}/thread', 'App\Http\Controllers\ThreadController@getThreadOfUser');
+
+
 Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
 
