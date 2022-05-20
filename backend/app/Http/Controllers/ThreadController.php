@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ThreadResource;
 use Illuminate\Http\Request;
 use App\Models\Thread;
-use Illuminate\Support\Facades\DB;
 
 class ThreadController extends Controller
 {
