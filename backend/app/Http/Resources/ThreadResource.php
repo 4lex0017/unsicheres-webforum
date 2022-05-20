@@ -20,7 +20,7 @@ class ThreadResource extends JsonResource
             'thread_title' => $this->thread_title,
             'tags' => $this->tags,
             'thread_prefix' => $this->thread_prefix,
-            'posts' => new PostResource::collection($this->posts)
+            'posts' => PostResource::collection($this->posts)
         ];
     }
 }

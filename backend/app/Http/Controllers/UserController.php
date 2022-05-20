@@ -13,7 +13,7 @@ class UserController extends Controller
 
     public function getAllUsers()
     {
-        return new UserResource::collection(User::all());
+        return UserResource::collection(User::all());
     }
 
     public function getUserById($user_id)
