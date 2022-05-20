@@ -23,14 +23,17 @@ class UserController extends Controller
 
     public function createUser(Request $user)
     {
-        return User::create($user->all());
+        return User::create([$user->all()]);
     }
 
     public function updateUser($user_id, Request $userinput)
     {
-        $user = UserController::findOrFail($user_id);
-        $user->update($userinput->all);
-        return new UserResource($user);
+        $user = User::where('user_id', '$user_id');
+        if ($user->user_id == $user_id) {
+            $user->update($userinput->all());
+            $user->save();
+            return new UserResource($user);
+        }
     }
 
     public function authorizeUser($user_id, $password)
@@ -39,18 +42,8 @@ class UserController extends Controller
         return User::authUser($user_id, $password->all);
     }
 
-
-    public function findOrFail($user_id)
-    {
-        $user = DB::table('users')->where('id', '$user_id');
-        if ($user === null) {
-            return null;
-        }
-        return $user;
-    }
-
     public function findUser($id)
     {
-        return DB::table('users')->where('id', '$id');
+        return User::where('user_id', '$id');
     }
 }
