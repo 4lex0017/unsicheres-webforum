@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ThreadResource extends JsonResource
+class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,7 @@ class ThreadResource extends JsonResource
             'thread_title' => $this->thread_title,
             'tags' => $this->tags,
             'thread_prefix' => $this->thread_prefix,
-            'posts' => new PostResource::collection($this->posts)
+            'posts' => $this->posts
         ];
     }
 }
