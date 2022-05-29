@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('user/small', 'App\Http\Controllers\UserController@getSmallUsers');
+
 Route::get('user', 'App\Http\Controllers\UserController@getAllUsers');
 
 Route::get('user/{id}', 'App\Http\Controllers\UserController@getUserById');
@@ -30,11 +32,11 @@ Route::get('user/{id}/thread', 'App\Http\Controllers\ThreadController@getThreadO
 Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
 
-Route::get('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
+Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
 Route::get('thread/search', "App\Http\Controllers\ThreadController@getThreadBySearch");
 
-Route::post('thread/{sub_id}', 'App\Http\Controllers\ThreadController@createThread');
+Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
 
 Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\PostController@getAllPostsOfThread');
 
