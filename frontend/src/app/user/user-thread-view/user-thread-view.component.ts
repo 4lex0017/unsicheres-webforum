@@ -24,7 +24,7 @@ import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-logi
 export class UserThreadViewComponent implements OnInit {
   threadObject: Thread;
   vEnabled: boolean;
-  @ViewChild('content', {static: false}) content: ElementRef;
+  // @ViewChild('content', {static: false}) content: ElementRef;
   @ViewChild('title', {static: false}) title: ElementRef;
 
   constructor(private route: ActivatedRoute,
@@ -44,9 +44,9 @@ export class UserThreadViewComponent implements OnInit {
         if (this.vEnabled) {
           this.changeDetectorRef.detectChanges();
 
-          this.content.nativeElement.replaceChildren();
+          // this.content.nativeElement.replaceChildren();
           // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-          this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+          // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
 
           this.title.nativeElement.replaceChildren();
           this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
@@ -66,19 +66,17 @@ export class UserThreadViewComponent implements OnInit {
       width: '65%',
       data: {
         title: this.threadObject.title,
-        content: this.threadObject.content
 
       },
     });
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
-      this.threadObject.content = result.content;
       if (this.vEnabled) {
         this.changeDetectorRef.detectChanges();
 
-        this.content.nativeElement.replaceChildren();
+        // this.content.nativeElement.replaceChildren();
         // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-        this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
+        // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
 
         this.title.nativeElement.replaceChildren();
         this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
@@ -89,26 +87,16 @@ export class UserThreadViewComponent implements OnInit {
 
   openCreateDialog(): void {
     if (!this.checkLoggedIn()) return;
-    let repliedTo: PostReply = {
-      repliedToId: this.threadObject.id,
-      repliedToContent: this.threadObject.author.username + " wrote '" + this.threadObject.content + "'."
-    };
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
       data: {
-        reply: repliedTo.repliedToContent,
+        reply: "",
         content: "",
-        showReply: true,
+        showReply: false,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (!result.showReply) {
-        this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content));
-      } else {
-        this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content, repliedTo));
-      }
-
-
+      this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content));
     });
   }
 

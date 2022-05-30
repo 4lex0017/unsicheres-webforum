@@ -9,4 +9,7 @@ export interface UserFull {
   role: string[];
   comments: UserComment[];
   image?: HTMLImageElement;
+
+  location?: string;
+  birthDate: string
 }

@@ -1,12 +1,36 @@
 .thread-container {
-  padding: 50px 0 0 150px;
+  padding: 40px 0 0 125px;
   //height: 100%;
   background-color: inherit;
   //  Fix: inherit won't work. Maybe import from service
 }
 
+.thread-user-icon {
+  transform: scale(0.93);
+  position: relative;
+  top: 7px;
+  right: -5px;
+}
+
+.thread-date-icon {
+  transform: scale(0.93);
+  position: relative;
+  top: 7px;
+}
+
+.spacer {
+  margin-right: 5px;
+}
+
+.title {
+  font-size: 25px;
+}
+
 .thread-card {
   max-width: 70%;
+  font-size: 20px !important;
+  box-shadow: none !important;
+  background-color: transparent;
 }
 
 .user-image-header {
@@ -18,7 +42,7 @@
 }
 
 .thread-posts {
-  padding: 15px 0 0 15px;
+  padding: 15px 0 0 45px;
 }
 
 .post-card {
@@ -26,6 +50,16 @@
   align-self: center;
 }
 
+.thread-buttons {
+  float: right;
+  position: relative;
+  top: -10px;
+}
+
+.thread-actions {
+  position: relative;
+  right: -30px;
+}
 
 .spacer {
   padding: 0 0 0 10px;
