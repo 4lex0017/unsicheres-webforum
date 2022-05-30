@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('name');
             $table->integer('score')->default(0);
             $table->integer('message_count')->default(0);
-            $table->string('profile_picture')->nullable();
+            $table->string('profile_picture')->default("");
             $table->string('description')->default("");
-            $table->string('birth_date')->nullable();
-            $table->string('location')->nullable();
+            $table->string('birth_date')->default("");
+            $table->string('location')->default("");
             $table->timestamps();
         });
     }
