@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreign('attacker_id')->references('attacker_id')->on('attackers');
             $table->unsignedBigInteger('vulnerability_id');
             $table->foreign('vulnerability_id')->references('vulnerability_id')->on('vulnerabilities');
+            $table->string('vuln_type');
             $table->timestamps();
         });
     }

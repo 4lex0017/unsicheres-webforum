@@ -24,7 +24,7 @@ class ThreadController extends Controller
         return Thread::all($search);
     }
 
-    public function createThread($sub_id, Request $request)
+    public function createThread(Request $request)
     {
         return Thread::create($request->all());
     }
@@ -36,11 +36,11 @@ class ThreadController extends Controller
 
     public function threadOfUser($id)
     {
-        return Thread::where('poster_id', '$id');
+        return Thread::where('poster_id', $id)->get();
     }
 
     public function findThread($thread_id)
     {
-        return Thread::where('thread_id', '$id');
+        return Thread::where('thread_id', $thread_id)->first();
     }
 }

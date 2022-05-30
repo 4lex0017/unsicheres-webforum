@@ -15,15 +15,14 @@ return new class extends Migration
     {
         Schema::connection('insecure')->create('users', function (Blueprint $table) {
             $table->id('user_id');
-            $table->string('email');
             $table->string('password');
             $table->string('name');
-            $table->integer('score');
-            $table->integer('message_count');
-            $table->string('profile_picture');
-            $table->string('description');
-            $table->string('birth_date');
-            $table->string('location');
+            $table->integer('score')->default(0);
+            $table->integer('message_count')->default(0);
+            $table->string('profile_picture')->nullable();
+            $table->string('description')->default("");
+            $table->string('birth_date')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }

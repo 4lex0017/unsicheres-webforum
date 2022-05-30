@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SmallUserCollection;
+use App\Http\Resources\SmallUserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    public function getSmallUsers()
+    {
+        return new SmallUserCollection(User::all());
+    }
 
     public function getAllUsers()
     {
@@ -22,12 +29,12 @@ class UserController extends Controller
 
     public function createUser(Request $user)
     {
-        return User::create([$user->all()]);
+        return User::create($user->all());
     }
 
     public function updateUser($user_id, Request $userinput)
     {
-        $user = User::where('user_id', '$user_id');
+        $user = User::find($user_id);
         if ($user->user_id == $user_id) {
             $user->update($userinput->all());
             $user->save();
@@ -41,8 +48,8 @@ class UserController extends Controller
         return User::authUser($user_id, $password->all);
     }
 
-    public function findUser($id)
+    public function findUser($user_id)
     {
-        return User::where('user_id', '$id');
+        return User::where('user_id', $user_id)->first();
     }
 }
