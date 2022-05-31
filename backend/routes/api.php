@@ -38,8 +38,7 @@ Route::get('thread/search', "App\Http\Controllers\ThreadController@getThreadBySe
 
 Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
 
-Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\PostController@getAllPostsOfThread');
-
+Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
 
 Route::get('home', function () {
     return Category::all();
@@ -47,20 +46,4 @@ Route::get('home', function () {
 
 Route::get('home/{sub_id}', function ($sub_id) {
     return Category::findSubforum($sub_id);
-});
-
-Route::get('admin', function () {
-    return Admin::getConfiguration();
-});
-
-Route::get('admin/scoreboard', function () {
-    return Admin::getScoreboard();
-});
-
-Route::post('admin', function (Request $request) {
-    return Admin::startServerWithConfig($request);
-});
-
-Route::put('admin', function (Request $request) {
-    return Admin::updateConfiguration($request);
 });
