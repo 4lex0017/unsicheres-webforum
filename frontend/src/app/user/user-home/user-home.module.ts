@@ -19,7 +19,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatCardModule} from "@angular/material/card";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
-import {MatOptionModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {SearchComponent} from './search/search.component';
@@ -37,6 +37,7 @@ import {DialogLoginComponent} from "./dialog/dialog-login/dialog-login.component
 import {DialogRegisterComponent} from "./dialog/dialog-register/dialog-register.component";
 import {DialogContactFormComponent} from './dialog/dialog-contact-form/dialog-contact-form.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 
 @NgModule({
@@ -78,7 +79,9 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     MatSlideToggleModule,
     MatMenuModule,
     ReactiveFormsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
 
   ]
 })

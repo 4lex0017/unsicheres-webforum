@@ -1,50 +1,45 @@
 <div class="thread-container" id="{{threadObject.id}}">
   <mat-card class="thread-card">
     <mat-card-header>
-      <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(threadObject.author.id)">
-        <mat-icon class="user-default-img">face</mat-icon>
-      </div>
-      <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(threadObject.author.id)">
-        <img src="{{this.getUserPicture(threadObject.author.id)!.src}}" alt="image">
-      </div>
+      <button mat-mini-fab color="primary" *ngIf="canEditThread()"
+              (click)="openEditThreadDialog()"
+              class="thread-buttons"
+              matTooltip="Edit Thread"
+              [matTooltipShowDelay]="500">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <button mat-mini-fab color="warn" *ngIf="canEditThread()"
+              (click)="openDeleteThreadDialog()"
+              class="thread-buttons"
+              matTooltip="Delete Thread"
+              [matTooltipShowDelay]="500">
+        <mat-icon>delete</mat-icon>
+      </button>
       <mat-card-title>
         <div>
-          <span #title *ngIf="vEnabled"></span>
-          <span *ngIf="!vEnabled">{{threadObject.title}}</span>
+          <span class="title" #title *ngIf="vEnabled"></span>
+          <span class="title" *ngIf="!vEnabled">{{threadObject.title}}</span>
           <span class="spacer"></span>
-          <button mat-mini-fab color="primary" *ngIf="canEditThread()"
-                  (click)="openEditThreadDialog()"
-                  matTooltip="Edit Thread"
-                  [matTooltipShowDelay]="500">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <span class="spacer"></span>
-          <button mat-mini-fab color="warn" *ngIf="canEditThread()"
-                  (click)="openDeleteThreadDialog()"
-                  matTooltip="Delete Thread"
-                  [matTooltipShowDelay]="500">
-            <mat-icon>delete</mat-icon>
-          </button>
+
         </div>
       </mat-card-title>
-      <mat-card-subtitle>{{threadObject.date}}</mat-card-subtitle>
+      <mat-card-subtitle>
+        <mat-icon class="thread-user-icon">supervised_user_circle</mat-icon>
+        <span class="spacer"> <a
+          [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.username}}</a></span>
+        <mat-icon class="thread-date-icon">access_time</mat-icon>
+        <span> {{threadObject.date}}</span>
+      </mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
-      <p *ngIf="vEnabled" #content></p>
-      <p *ngIf="!vEnabled"> {{this.threadObject.content}} </p>
-    </mat-card-content>
-    <mat-card-actions class="spacer">
-      <span class="stretch-badge" matBadge="{{threadObject.likedFrom.length}}" matBadgeSize="small"
-            matBadgePosition="above before" matBadgeColor="primary">
-        <button mat-button (click)="likeThreadButton()">LIKE</button>
-      </span>
-      <button mat-button>SHARE</button>
-      <button mat-button (click)="openCreateDialog()">REPLY
-      </button>
+    <mat-card-actions class="thread-actions">
+        <span class="stretch-badge" matBadge="{{threadObject.likedFrom.length}}" matBadgeSize="small"
+              matBadgePosition="above before" matBadgeColor="primary">
+          <button mat-button (click)="likeThreadButton()">LIKE</button>
+        </span>
+      <button mat-button (click)="openCreateDialog()">REPLY</button>
       <button mat-button>REPORT</button>
     </mat-card-actions>
-    <mat-card-footer class="thread-footer"><a
-      [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.username}}</a></mat-card-footer>
   </mat-card>
   <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
     <app-post [postObject]="post"

@@ -13,6 +13,8 @@ class Post extends Model
     protected $primaryKey = 'post_id';
     protected $connection = 'insecure';
 
+    // TODO: FIX NAMING ETC. ONCE UPDATED IN CONFLUENCE
+
     protected $fillable = [
         'post_id',
         'poster_id',

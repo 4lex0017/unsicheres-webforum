@@ -18,8 +18,8 @@ class SmallUserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'userId' => $this->user_id,
-            'namename' => $this->name,
+            'userId' => $this->id,
+            'name' => $this->name,
         ];
     }
 }

@@ -14,15 +14,6 @@
 
   </mat-form-field>
   <p></p>
-  <mat-form-field appearance="fill" class="user-create-textarea-container">
-    <mat-label>Content</mat-label>
-    <textarea matInput
-              cdkTextareaAutosize
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="10"
-              [(ngModel)]="data.content">
-    </textarea>
-  </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>

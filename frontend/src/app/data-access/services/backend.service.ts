@@ -25,7 +25,6 @@ export class BackendService {
     return this.accessData;
   }
 
-
   getAllUsers(): UserFull[] {
     return [];
   }
@@ -127,6 +126,7 @@ export class BackendService {
       joined: "",
       about: "",
       role: [],
+      birthDate: "01.01.1990",
       comments: [
         {
           id: -2,
@@ -157,12 +157,11 @@ export class BackendService {
     return postObject;
   }
 
-  createThreadObject(userId: number, title: string, content: string,): Thread {
+  createThreadObject(userId: number, title: string): Thread {
 
     let threadObject: Thread = {
       id: this.idThreadTracker,
       title: title,
-      content: content,
       date: this.formatDate(),
       posts: [],
       author: this.getUserFromUsername(userId),
@@ -248,7 +247,7 @@ export class BackendService {
     return -1;
   }
 
-  registerNewUser(userName: string, userPassword: string): void {
+  registerNewUser(userName: string, userPassword: string, date: string): void {
     this.loginData.loginData.push(
       {
         "id": this.idUserRegister,
@@ -260,6 +259,7 @@ export class BackendService {
       "id": this.idUserRegister,
       "username": userName,
       "joined": this.formatDate(),
+      "birthDate": date,
       "about": "",
       "role": [
         "Member"
@@ -617,6 +617,7 @@ export class BackendService {
       {
         "id": 11,
         "username": "TestUsername1",
+        "birthDate": "01.01.1990",
         "joined": "12.01.0003",
         "about": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
         "role": [
@@ -639,6 +640,7 @@ export class BackendService {
       {
         "id": 12,
         "username": "TestUsername2",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean porttitor lobortis magna, mollis maximus nulla. Etiam sit amet feugiat lacus. Aenean ligula urna, malesuada eget libero accumsan, aliquet volutpat massa. Sed leo metus, convallis vel tincidunt sed, dapibus sed lacus. Cras euismod ligula vel ex maximus venenatis. Praesent maximus nisl eget leo finibus aliquam. Nunc vehicula libero sodales, condimentum diam in, placerat neque. Integer pretium eros a lacinia lobortis. Phasellus faucibus sem leo, nec venenatis purus venenatis vitae. Nulla semper massa ut dolor blandit sagittis. ",
         "role": ["User", "Experienced"],
@@ -658,6 +660,7 @@ export class BackendService {
       {
         "id": 135,
         "username": "test_test_testuser",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Maecenas sed nibh sodales, egestas ex ac, ultricies tortor. Sed vitae odio pellentesque sapien pellentesque pellentesque. Mauris ac iaculis felis. Phasellus sed accumsan mauris. Quisque leo mi, luctus sed nulla non, luctus porttitor nunc. Pellentesque sit amet justo quis eros tempus scelerisque. Donec lacinia ut elit non lacinia. Ut ut purus et lectus euismod aliquet. Suspendisse interdum risus nec augue ornare laoreet. Sed pretium odio a nisl aliquet ultricies pulvinar vitae est. Pellentesque lacinia et sem egestas eleifend. Vivamus et tincidunt tortor, sit amet pretium libero. Pellentesque molestie turpis semper eros scelerisque, non sagittis justo ornare. Sed at porttitor diam, sed suscipit nulla. ",
         "role": ["User",],
@@ -677,6 +680,7 @@ export class BackendService {
       {
         "id": 1553,
         "username": "TestUsername553",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
         "role": ["User", "Tester"],
@@ -696,6 +700,7 @@ export class BackendService {
       {
         "id": 14,
         "username": "TestUsername4",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus. Maecenas hendrerit et tortor in euismod. Cras varius ex id lacinia feugiat. Aenean tincidunt odio lorem, ac congue odio convallis nec. Mauris sit amet est euismod, euismod sem ac, imperdiet lacus. Fusce venenatis nisl vel porta ultricies. Praesent sodales sollicitudin nisl, tristique porta eros sagittis sit amet. Curabitur et erat nec dolor vulputate facilisis ac ac leo. Vestibulum a suscipit velit. Fusce imperdiet ac arcu eu faucibus. In molestie mauris a erat sodales eleifend. Nullam ac dui vitae risus egestas pharetra. ",
         "role": ["User", "Developer"],
@@ -715,6 +720,7 @@ export class BackendService {
       {
         "id": 123,
         "username": "TestUsername123",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": "",
         "role": ["User", "Admin"],
@@ -734,6 +740,7 @@ export class BackendService {
       {
         "id": 1882,
         "username": "TestUsername882",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
         "role": ["User", "Tester"],
@@ -753,6 +760,7 @@ export class BackendService {
       {
         "id": 1444,
         "username": "TestUsername444",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": " Fusce semper id mi at feugiat. Cras in consequat metus, eu pulvinar leo. Morbi elementum eget nibh nec bibendum. Integer porttitor tincidunt posuere. Curabitur id vestibulum dolor. Aliquam id orci gravida, auctor nunc sed, consequat nisi. Vestibulum venenatis suscipit nibh, id viverra orci placerat quis. Pellentesque dapibus massa in neque varius lacinia. Quisque hendrerit metus vitae massa hendrerit porttitor. Donec luctus ornare lacus, non venenatis lectus rutrum hendrerit. Aenean imperdiet at nisi non dictum. Nam id turpis id erat cursus luctus sit amet id metus. Integer ut posuere nibh, sed varius ipsum. Cras a ipsum in nisi facilisis congue. Nam pulvinar arcu vel nunc sodales, in egestas magna finibus. Vivamus venenatis, dolor non rhoncus consectetur, lorem sem laoreet libero, ac tristique nisl arcu vitae nisl. ",
         "role": ["Customer", "Member"],
@@ -772,6 +780,7 @@ export class BackendService {
       {
         "id": 1555,
         "username": "TestUsername555",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
         "role": ["Member", "Angular Expert"],
@@ -791,6 +800,7 @@ export class BackendService {
       {
         "id": 131,
         "username": "TestUsername131",
+        "birthDate": "01.01.1990",
         "joined": "15.02.0003",
         "about": "Donec ac gravida tellus. Donec sollicitudin est in lectus ullamcorper, vitae finibus ex bibendum. Suspendisse lacus erat, hendrerit in dolor viverra, efficitur tincidunt nibh. Etiam a tincidunt lacus, vitae sagittis tellus.",
         "role": ["User", "Member"],
@@ -1068,14 +1078,16 @@ export class BackendService {
     {
       "Forms": [
         {
-          "username": "user1",
+          "id": 1,
+          "email": "user1@test.de",
           "topic": "Community",
-          "message": "ligma"
+          "message": "problem123"
         },
         {
-          "username": "user2",
+          "id": 2,
+          "email": "user2@test.de",
           "topic": "Support",
-          "message": "oof"
+          "message": "test12334scfv"
         }
       ]
     }

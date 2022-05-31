@@ -71,7 +71,7 @@ export class BackendCommunicationService {
 
   postPost(categoryId: number, threadId: number, post: Post): Observable<Post> {
     let postPayload = {...post};
-    return this.httpClient.post<Thread>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload);
+    return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload);
   }
 
   createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {

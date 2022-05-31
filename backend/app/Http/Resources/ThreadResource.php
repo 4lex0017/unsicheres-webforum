@@ -10,7 +10,7 @@ class ThreadResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array
      */
 
     public static $wrap = null;
@@ -18,11 +18,11 @@ class ThreadResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'thread_id' => $this->thread_id,
-            'poster_id' => $this->poster_id,
-            'thread_title' => $this->thread_title,
-            'tags' => $this->tags,
-            'thread_prefix' => $this->thread_prefix,
+            'id' => $this->id,
+            'title' => $this->title,
+            'date' => $this->created_at,
+            'likedFrom' => $this->liked_from,
+            'author' => $this->author,
             'posts' => PostResource::collection($this->posts)
         ];
     }

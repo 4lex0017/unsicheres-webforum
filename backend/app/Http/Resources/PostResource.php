@@ -15,6 +15,8 @@ class PostResource extends JsonResource
 
     public static $wrap = null;
 
+    // TODO: FIX ME ONCE UPDATED IN CONFLUENCE
+
     public function toArray($request)
     {
         return [
