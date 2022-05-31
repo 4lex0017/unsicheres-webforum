@@ -13,13 +13,10 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::connection('insecure')->create('threads', function (Blueprint $table) {
+        Schema::connection('insecure')->create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
-            $table->json('liked_from')->default(new Expression('(JSON_ARRAY())'));;
-            $table->unsignedBigInteger('author');
-            $table->foreign('author')->references('id')->on('users');
-            $table->json('posts')->default(new Expression('(JSON_ARRAY())'));
+            $table->json('threads')->default(new Expression('(JSON_ARRAY())'));
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::connection('insecure')->dropIfExists('threads');
+        Schema::dropIfExists('categories');
     }
 };

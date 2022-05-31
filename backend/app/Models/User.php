@@ -10,19 +10,26 @@ class User extends Model
     use HasFactory;
 
     protected $table = 'users';
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = 'id';
     protected $connection = 'insecure';
 
     protected $fillable = [
-        'user_id',
-        'password',
+        'id',
         'name',
-        'score',
-        'message_count',
-        'profile_picture',
-        'description',
+        'password',
         'birth_date',
-        'location'
+        'location',
+        'about',
+        'groups',
+        'endorsements',
+        'profile_picture',
+        'profile_comments',
+    ];
+
+    protected $casts = [
+        'groups' => 'array',
+        'endorsements' => 'array',
+        'profile_comments' => 'array'
     ];
 
     public $incrementing = true;

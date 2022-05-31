@@ -3,9 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Query\Expression;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,15 +14,17 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('insecure')->create('users', function (Blueprint $table) {
-            $table->id('user_id');
+            $table->id();
+            $table->string('name', 15);
             $table->string('password');
-            $table->string('name');
-            $table->integer('score')->default(0);
-            $table->integer('message_count')->default(0);
-            $table->string('profile_picture')->default("");
-            $table->string('description')->default("");
+            $table->string('joined');
             $table->string('birth_date')->default("");
             $table->string('location')->default("");
+            $table->string('about')->default("");
+            $table->json('groups')->default(new Expression('(JSON_ARRAY())'));
+            $table->json('endorsements')->default(new Expression('(JSON_ARRAY())'));
+            $table->string('profile_picture')->default("");
+            $table->json('profile_comments')->default(new Expression('(JSON_ARRAY())'));
             $table->timestamps();
         });
     }
