@@ -15,7 +15,7 @@ return new class extends Migration {
     {
         Schema::connection('insecure')->create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 15);
+            $table->string('name', 15)->unique();
             $table->string('password');
             $table->string('joined');
             $table->string('birth_date')->default("");
