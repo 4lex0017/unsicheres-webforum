@@ -17,7 +17,7 @@ class ThreadController extends Controller
 
     public function getThreadById($thread_id)
     {
-        return ThreadController::injectable('thread_id', $thread_id);
+        return ThreadController::injectebleWhere('thread_id', $thread_id);
         return new ThreadResource(ThreadController::findThread($thread_id));
     }
 
@@ -47,14 +47,27 @@ class ThreadController extends Controller
         return Thread::where('thread_id', $thread_id)->first();
     }
 
-    public function injectable($row, $id)
+    public function getAllPostsOfThread($thread_id)
+    {
+        if (true) {
+            return ThreadController::injectebleWherePost('id', $thread_id);
+        }
+    }
+
+    public static function injectebleWhere($row, $id)
     {
         return DB::connection('insecure')->table('threads')->select(
-            'thread_id',
-            'poster_id',
-            'thread_title',
-            'tags',
-            'thread_prefix',
+            'id',
+            'title',
+            'liked_from',
+            'author',
+            'posts'
+        )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public static function injectebleWherePost($row, $id)
+    {
+        return DB::connection('insecure')->table('threads')->select(
             'posts'
         )->whereRaw($row . " = " . $id)->get();
     }
