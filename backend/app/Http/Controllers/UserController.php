@@ -26,7 +26,9 @@ class UserController extends Controller
 
     public function getUserById($user_id)
     {
-        return new UserResource(UserController::findUser($user_id));
+        return UserResource::collection(UserController::findUser($user_id));
+
+        // return new UserResource(UserController::findUser($user_id));
     }
 
     public function createUser(Request $user)
@@ -52,7 +54,7 @@ class UserController extends Controller
 
     public function findUser($user_id)
     {
-        return User::injectableWhere('id', $user_id)->first();
+        return UserController::injectableWhere('id', $user_id);
     }
 
     public function injectableWhere($row, $id)
