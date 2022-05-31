@@ -52,12 +52,12 @@ class UserController extends Controller
 
     public function findUser($user_id)
     {
-        return User::injectableWhere('user_id', $user_id)->first();
+        return User::injectableWhere('id', $user_id)->first();
     }
 
     public function injectableWhere($row, $id)
     {
-        return DB::table('users')->select(
+        return DB::connection('insecure')->table('users')->select(
             'id',
             'name',
             'password',

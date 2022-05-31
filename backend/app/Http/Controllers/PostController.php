@@ -19,7 +19,7 @@ class PostController extends Controller
 
     public function injectableWhere($row, $id)
     {
-        return DB::table('posts')->select(
+        return DB::connection('insecure')->table('posts')->select(
             'post_id',
             'poster_id',
             'edit_history',
