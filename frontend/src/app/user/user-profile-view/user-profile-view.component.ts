@@ -48,13 +48,15 @@ export class UserProfileViewComponent implements OnInit {
       data: {
         username: this.userFullObject.username,
         about: this.userFullObject.about,
-        image: this.userFullObject.image
+        image: this.userFullObject.image,
+        location: this.userFullObject.location
       },
     });
     dialogRef.afterClosed().subscribe(result => {
       this.userFullObject.username = result.username;
       this.userFullObject.about = result.about;
       this.userFullObject.image = result.image;
+      this.userFullObject.location = result.location;
       if (this.vEnabled) this.injectContentToDom();
     });
   }

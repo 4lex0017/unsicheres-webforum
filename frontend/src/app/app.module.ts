@@ -18,6 +18,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {UserThreadViewModule} from "./user/user-thread-view/user-thread-view.module";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import {UserThreadViewModule} from "./user/user-thread-view/user-thread-view.mod
     UserThreadViewModule,
 
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -4,6 +4,12 @@
     <input matInput [(ngModel)]="this.username" required>
     <!--    <mat-error *ngIf="this.fillError">{{this.usernameErrorMessage}}</mat-error>-->
   </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Choose your Birthdate</mat-label>
+    <input matInput [matDatepicker]="picker" required [formControl]="date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
+  </mat-form-field>
   <p></p>
   <mat-form-field appearance="fill" class="password-register-input-container">
     <mat-label>Enter password</mat-label>
@@ -14,6 +20,7 @@
     </button>
     <!--    <mat-error *ngIf="this.passwordError">{{this.passwordErrorMessage}}</mat-error>-->
   </mat-form-field>
+
 
   <mat-form-field appearance="fill" class="repeatPassword-register-input-container">
     <mat-label>Repeat password</mat-label>

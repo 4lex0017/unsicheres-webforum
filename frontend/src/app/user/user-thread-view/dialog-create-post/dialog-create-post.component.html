@@ -1,5 +1,5 @@
 <div mat-dialog-content>
-  <section>
+  <section *ngIf="data.reply !== ''">
     <mat-checkbox class="reply-button-spacer" disableRipple="true" color="primary" [(ngModel)]="data.showReply">Show
       reply
     </mat-checkbox>

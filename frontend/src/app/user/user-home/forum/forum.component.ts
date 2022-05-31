@@ -72,12 +72,10 @@ export class ForumComponent implements OnInit {
       data: {
         title: "",
         category: selected,
-        content: "",
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      let newThread = this.backEndService.createThreadObject(this.authenticate.currentUserId, result.title, result.content);
+      let newThread = this.backEndService.createThreadObject(this.authenticate.currentUserId, result.title);
       this.addThread(newThread, result.category);
     });
   }
