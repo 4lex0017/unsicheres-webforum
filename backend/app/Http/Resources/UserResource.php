@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
+use ArrayObject;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 
@@ -19,8 +20,16 @@ class UserResource extends JsonResource
 
     public function toArray($request)
     {
-        Log::debug(print_r($this, true));
 
+        if (count($this->resource->all()) == 1) {
+            if (!$this->resource instanceof User) {
+                $data = $this->resource->all();
+                $user = User::find($data[0]->id);
+                $this->resource = $user;
+            }
+        } else {
+            return $this->resource;
+        }
         return [
             'userId' => $this->id,
             'name' => $this->name,

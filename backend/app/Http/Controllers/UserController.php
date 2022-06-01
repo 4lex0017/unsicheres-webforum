@@ -26,9 +26,9 @@ class UserController extends Controller
 
     public function getUserById($user_id)
     {
-        return UserResource::collection(UserController::findUser($user_id));
+        //return UserResource::collection(UserController::findUser($user_id));
 
-        // return new UserResource(UserController::findUser($user_id));
+        return new UserResource(UserController::findUser($user_id));
     }
 
     public function createUser(Request $user)
@@ -60,16 +60,7 @@ class UserController extends Controller
     public function injectableWhere($row, $id)
     {
         return DB::connection('insecure')->table('users')->select(
-            'id',
-            'name',
-            'password',
-            'birth_date',
-            'location',
-            'about',
-            'groups',
-            'endorsements',
-            'profile_picture',
-            'profile_comments',
+            '*'
         )->whereRaw($row . " = " . $id)->get();
     }
 }

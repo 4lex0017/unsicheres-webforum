@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Http\Resources\ThreadResource;
 use Illuminate\Http\Request;
 use App\Models\Thread;
@@ -17,8 +18,7 @@ class ThreadController extends Controller
 
     public function getThreadById($thread_id)
     {
-        return ThreadController::injectebleWhere('thread_id', $thread_id);
-        return new ThreadResource(ThreadController::findThread($thread_id));
+        return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
     }
 
     public function getThreadBySearch(Request $search)
@@ -39,29 +39,23 @@ class ThreadController extends Controller
 
     public function threadOfUser($id)
     {
-        return Thread::where('poster_id', $id)->get();
+        return new ThreadResource(ThreadController::injectebleWhere('poster_id', $id));
     }
 
     public function findThread($thread_id)
     {
-        return Thread::where('thread_id', $thread_id)->first();
+        return ThreadController::injectebleWhere('id', $thread_id);
     }
 
     public function getAllPostsOfThread($thread_id)
     {
-        if (true) {
-            return ThreadController::injectebleWherePost('id', $thread_id);
-        }
+        return PostResource::collection(ThreadController::injectebleWherePost('id', $thread_id));
     }
 
     public static function injectebleWhere($row, $id)
     {
         return DB::connection('insecure')->table('threads')->select(
-            'id',
-            'title',
-            'liked_from',
-            'author',
-            'posts'
+            '*'
         )->whereRaw($row . " = " . $id)->get();
     }
 
