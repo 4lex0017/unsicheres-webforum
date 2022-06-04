@@ -290,7 +290,7 @@ export class BackendService {
     return null;
   }
 
-  getUserPicture(userId: number): HTMLImageElement | undefined {
+  getUserPicture(userId: number): string | undefined {
     for (let i = 0; i < this.userData.length; i++) {
       if (userId == this.userData[i].id) {
         if (this.userData[i].image) return this.userData[i].image;

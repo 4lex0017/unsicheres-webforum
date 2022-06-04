@@ -4,7 +4,7 @@
       <mat-icon class="user-default-img">face</mat-icon>
     </div>
     <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture()">
-      <img src="{{this.getUserPicture()!.src}}" alt="image">
+      <img src="{{this.getUserPicture()}}" alt="image">
     </div>
     <mat-card-title>
       <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.username}}</a> answered

@@ -16,7 +16,7 @@
             <mat-icon class="user-default-img">face</mat-icon>
           </div>
           <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
-            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
+            <img src="{{this.getUserPicture(element.author.id)!}}" alt="image">
           </div>
         </td>
       </ng-container>
@@ -90,7 +90,7 @@
             <mat-icon class="user-default-img">face</mat-icon>
           </div>
           <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
-            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
+            <img src="{{this.getUserPicture(element.author.id)}}" alt="image">
           </div>
         </td>
       </ng-container>

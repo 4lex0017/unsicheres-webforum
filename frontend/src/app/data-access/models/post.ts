@@ -6,6 +6,7 @@ export interface Post {
   content: string;
   date: string;
   author: User;
-  repliedTo?: PostReply;
   likedFrom: number[];
+  repliedTo?: PostReply;
+
 }

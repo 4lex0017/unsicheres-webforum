@@ -51,7 +51,7 @@ export class CategoryComponent implements AfterViewInit {
 
   }
 
-  getUserPicture(userId: number): HTMLImageElement | undefined {
+  getUserPicture(userId: number): string | undefined {
     return this.backend.getUserPicture(userId)
   }
 

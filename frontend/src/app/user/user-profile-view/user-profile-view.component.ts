@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
+import * as Buffer from "buffer";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -56,6 +57,7 @@ export class UserProfileViewComponent implements OnInit {
       this.userFullObject.username = result.username;
       this.userFullObject.about = result.about;
       this.userFullObject.image = result.image;
+
       this.userFullObject.location = result.location;
       if (this.vEnabled) this.injectContentToDom();
     });
@@ -79,6 +81,7 @@ export class UserProfileViewComponent implements OnInit {
       return content
     }
   }
+
 
   canEdit(): boolean {
     return this.userFullObject.id == this.authenticate.currentUserId;

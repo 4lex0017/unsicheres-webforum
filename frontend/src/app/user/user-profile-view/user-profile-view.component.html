@@ -5,7 +5,7 @@
         <mat-icon class="user-default-img">face</mat-icon>
       </div>
       <div mat-card-avatar class="user-image" *ngIf="this.userFullObject.image">
-        <img src="{{this.userFullObject.image.src}}" alt="image">
+        <img src="{{this.userFullObject.image}}" alt="image">
       </div>
       <mat-card-title>
         <span *ngIf="!vEnabled">{{userFullObject.username}}</span>
