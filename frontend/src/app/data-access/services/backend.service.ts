@@ -309,61 +309,104 @@ export class BackendService {
             {
               "id": 21,
               "title": "Community Thread 1",
-              "content": "Hello, I have a question about Angular.",
               "date": "01.01.0001",
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-              "author":
-                {
-                  "id": 11,
-                  "username": "TestUsername1"
-                },
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
+              "author": {
+                "id": 11,
+                "username": "TestUsername1"
+              },
               "posts": [
                 {
                   "id": 31,
                   "content": "this is a test post",
                   "date": "04.01.0001",
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-                  "author":
-                    {
-                      "id": 12,
-                      "username": "TestUsername2"
-                    }
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
+                  "author": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                  }
                 },
                 {
                   "id": 32,
                   "content": "this is a 2nd answer test post",
                   "date": "06.01.0001",
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-                  "author":
-                    {
-                      "id": 135,
-                      "username": "test_test_testuser"
-                    }
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
+                  "author": {
+                    "id": 135,
+                    "username": "test_test_testuser"
+                  }
                 }
               ]
             },
             {
               "id": 22,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Community Thread 2",
               "date": "02.01.0001",
-              "content": "This is the content of the 2nd community thread.",
-              "author":
-                {
-                  "id": 12,
-                  "username": "TestUsername2"
-                },
+              "author": {
+                "id": 12,
+                "username": "TestUsername2"
+              },
               "posts": [
                 {
                   "id": 33,
                   "content": "this is a test post2",
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "date": "07.01.0001",
-                  "author":
-                    {
-                      "id": 13,
-                      "username": "TestUsername3"
-                    }
+                  "author": {
+                    "id": 13,
+                    "username": "TestUsername3"
+                  }
                 }
               ]
             }
@@ -375,52 +418,83 @@ export class BackendService {
           "threads": [
             {
               "id": 25,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "General Thread 1",
-              "content": "This is the content of the first general thread.",
               "date": "06.01.0001",
-              "author":
-                {
-                  "id": 11,
-                  "username": "TestUsername1"
-                },
+              "author": {
+                "id": 11,
+                "username": "TestUsername1"
+              },
               "posts": [
                 {
                   "id": 31,
-                  "likedFrom": [11, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "author":
-                    {
-                      "id": 12,
-                      "username": "TestUsername2"
-                    }
-
+                  "author": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                  }
                 }
               ]
             },
             {
               "id": 27,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "General Thread 2",
-              "content": "This is the content of the 2nd general thread.",
               "date": "14.01.0001",
-              "author":
-                {
-                  "id": 14,
-                  "username": "TestUsername4"
-                },
+              "author": {
+                "id": 14,
+                "username": "TestUsername4"
+              },
               "posts": [
                 {
                   "id": 33,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 }
               ]
             }
@@ -432,181 +506,295 @@ export class BackendService {
           "threads": [
             {
               "id": 29,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Support Thread 1",
-              "content": "This is the content of the first support thread.",
               "date": "12.01.0001",
-              "author":
-                {
-                  "id": 123,
-                  "username": "TestUsername123"
-                },
+              "author": {
+                "id": 123,
+                "username": "TestUsername123"
+              },
               "posts": [
                 {
                   "id": 393,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555
+                  ],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "author":
-                    {
-                      "id": 12,
-                      "username": "TestUsername2"
-                    }
-
+                  "author": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                  }
                 }
               ]
             },
             {
               "id": 27111,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Support Thread 2",
-              "content": "This is the content of the thread.",
               "date": "14.01.0001",
-              "author":
-                {
-                  "id": 1882,
-                  "username": "TestUsername882"
-                },
+              "author": {
+                "id": 1882,
+                "username": "TestUsername882"
+              },
               "posts": [
                 {
                   "id": 337,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 }
               ]
             },
             {
               "id": 21235,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "support Thread 3",
-              "content": "This is the content of the thread.",
               "date": "06.01.0001",
-              "author":
-                {
-                  "id": 131,
-                  "username": "TestUsername131"
-                },
+              "author": {
+                "id": 131,
+                "username": "TestUsername131"
+              },
               "posts": [
                 {
                   "id": 3981,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "author":
-                    {
-                      "id": 12,
-                      "username": "TestUsername2"
-                    }
-
+                  "author": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                  }
                 }
               ]
             },
             {
               "id": 28677,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Support Thread 4",
-              "content": "This is the content of the thread.",
               "date": "14.01.0001",
-              "author":
-                {
-                  "id": 1444,
-                  "username": "TestUsername444"
-                },
+              "author": {
+                "id": 1444,
+                "username": "TestUsername444"
+              },
               "posts": [
                 {
                   "id": 3855363,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post33",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 }
               ]
             },
             {
               "id": 267459,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Support Thread 5",
-              "content": "This is the content of the thread.",
               "date": "06.01.0001",
-              "author":
-                {
-                  "id": 11,
-                  "username": "TestUsername1"
-                },
+              "author": {
+                "id": 11,
+                "username": "TestUsername1"
+              },
               "posts": [
                 {
                   "id": 3098751,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post",
                   "date": "06.02.0001",
-                  "author":
-                    {
-                      "id": 12,
-                      "username": "TestUsername2"
-                    }
-
+                  "author": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                  }
                 }
               ]
             },
             {
               "id": 296417,
-              "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+              "likedFrom": [
+                11,
+                12,
+                135,
+                1553,
+                14,
+                1882,
+                1444,
+                1555,
+                131
+              ],
               "title": "Support Thread 6",
-              "content": "This is the content of the 2nd general thread.",
               "date": "35.01.0001",
-              "author":
-                {
-                  "id": 14,
-                  "username": "TestUsername4"
-                },
+              "author": {
+                "id": 14,
+                "username": "TestUsername4"
+              },
               "posts": [
                 {
                   "id": 3836453,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post3asfdga3",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 },
                 {
                   "id": 3387644,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post33adf",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 },
                 {
                   "id": 30394673,
-                  "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+                  "likedFrom": [
+                    11,
+                    12,
+                    135,
+                    1553,
+                    14,
+                    1882,
+                    1444,
+                    1555,
+                    131
+                  ],
                   "content": "this is a test post3db3",
                   "date": "06.03.0001",
-                  "author":
-                    {
-                      "id": 1553,
-                      "username": "TestUsername553"
-                    }
+                  "author": {
+                    "id": 1553,
+                    "username": "TestUsername553"
+                  }
                 }
               ]
             }
-
-
           ]
         }
       ]
