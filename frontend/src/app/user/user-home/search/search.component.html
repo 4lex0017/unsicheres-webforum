@@ -53,7 +53,7 @@
         <div mat-subheader>Users: Found {{users.length}} results.</div>
         <mat-list-item *ngFor="let user of users">
           <a [routerLink]="['/forum/users', user.id]">
-            <div mat-line>{{user.username}}</div>
+            <div mat-line>{{user.name}}</div>
           </a>
           <mat-divider></mat-divider>
         </mat-list-item>

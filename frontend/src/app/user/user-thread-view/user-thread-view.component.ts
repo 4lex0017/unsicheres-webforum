@@ -27,6 +27,7 @@ export class UserThreadViewComponent implements OnInit {
   // @ViewChild('content', {static: false}) content: ElementRef;
   @ViewChild('title', {static: false}) title: ElementRef;
 
+
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
               private backEndService: BackendService,
@@ -47,7 +48,6 @@ export class UserThreadViewComponent implements OnInit {
           // this.content.nativeElement.replaceChildren();
           // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
           // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
           this.title.nativeElement.replaceChildren();
           this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
         }
@@ -152,10 +152,9 @@ export class UserThreadViewComponent implements OnInit {
     return true;
   }
 
-  getUserPicture(userId: number): HTMLImageElement | undefined {
-    return this.backEndService.getUserPicture(userId);
-  }
+  // getUserPicture(userId: number): string | undefined {
+  //   return this.backEndService.getUserPicture(userId);
+  // }
 
 
 }
-

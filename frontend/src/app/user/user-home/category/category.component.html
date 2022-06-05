@@ -12,11 +12,11 @@
         <th mat-header-cell *matHeaderCellDef>
         </th>
         <td mat-cell *matCellDef="let element">
-          <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(element.author.id)">
+          <div mat-card-avatar class="user-default-img-container" *ngIf="!element.author.profile_picture">
             <mat-icon class="user-default-img">face</mat-icon>
           </div>
-          <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
-            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
+          <div mat-card-avatar class="user-image" *ngIf="element.author.profile_picture">
+            <img src="{{element.author.profile_picture}}" alt="image">
           </div>
         </td>
       </ng-container>
@@ -86,11 +86,11 @@
         <th mat-header-cell *matHeaderCellDef>
         </th>
         <td mat-cell *matCellDef="let element">
-          <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture(element.author.id)">
+          <div mat-card-avatar class="user-default-img-container" *ngIf="!element.author.profile_picture">
             <mat-icon class="user-default-img">face</mat-icon>
           </div>
-          <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(element.author.id)">
-            <img src="{{this.getUserPicture(element.author.id)!.src}}" alt="image">
+          <div mat-card-avatar class="user-image" *ngIf="element.author.profile_picture">
+            <img src="{{element.author.profile_picture}}" alt="image">
           </div>
         </td>
       </ng-container>

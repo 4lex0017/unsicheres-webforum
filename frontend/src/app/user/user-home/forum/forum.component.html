@@ -41,7 +41,7 @@
           <span *ngFor="let user of backEndService.userData; let i = index"
                 [routerLink]="['/forum/users', user.id]"
                 style="word-wrap: break-word">
-            <a [routerLink]="['/forum/users', user.id]"> {{user.username}}</a>
+            <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
             ,
           </span>
           ...
