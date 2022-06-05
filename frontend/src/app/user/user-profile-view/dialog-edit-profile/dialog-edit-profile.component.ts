@@ -33,7 +33,7 @@ export class DialogEditProfileComponent {
         let image = new Image();
         image.src = e.target.result;
         image.onload = (rs) => {
-          this.data.image = e.target.result
+          this.data.profile_picture = e.target.result
         };
       };
       reader.readAsDataURL(imgFile.target.files[0]);

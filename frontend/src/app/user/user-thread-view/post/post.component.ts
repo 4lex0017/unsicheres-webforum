@@ -48,9 +48,9 @@ export class PostComponent implements OnInit {
     }
   }
 
-  getUserPicture(): string | undefined {
-    return this.backEndService.getUserPicture(this.postObject.author.id);
-  }
+  // getUserPicture(): string | undefined {
+  //   return this.backEndService.getUserPicture(this.postObject.author.id);
+  // }
 
   canEditPost(): boolean {
     if (this.postObject.author.id == this.authenticate.currentUserId) return true;

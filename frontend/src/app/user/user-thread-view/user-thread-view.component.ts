@@ -152,9 +152,9 @@ export class UserThreadViewComponent implements OnInit {
     return true;
   }
 
-  getUserPicture(userId: number): string | undefined {
-    return this.backEndService.getUserPicture(userId);
-  }
+  // getUserPicture(userId: number): string | undefined {
+  //   return this.backEndService.getUserPicture(userId);
+  // }
 
 
 }
