@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\ArrayShape;
 
 class SearchController extends Controller
@@ -28,11 +29,15 @@ class SearchController extends Controller
             'title'
         )->whereRaw('title LIKE \'%' . $text . '%\'')->get();
 
-        $posts = DB::connection('insecure')->table('posts')->select(
-            'id',
-            'thread_id',
-            'content'
-        )->whereRaw('content LIKE \'%' . $text . '%\'')->get();
+        $posts = DB::connection('insecure')->select(DB::raw(
+            'SELECT
+                    p.id,
+                    p.content,
+                    t.title
+                   FROM posts as p
+                   INNER JOIN threads t on t.id = p.thread_id
+                   WHERE p.content LIKE \'%' . $text . '%\';'
+        ));
 
         return [
             'users' => $users,
