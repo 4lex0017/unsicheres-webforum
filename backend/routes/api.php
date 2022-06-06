@@ -34,8 +34,6 @@ Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUs
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::get('thread/search', "App\Http\Controllers\ThreadController@getThreadBySearch");
-
 Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
 
 Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
@@ -44,6 +42,9 @@ Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadControlle
 Route::get('post/{id}', 'App\Http\Controllers\PostController@getPostById');
 Route::get('posts', 'App\Http\Controllers\PostController@getAllPosts');
 Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@createPost');
+
+
+Route::get('search/{text}','App\Http\Controllers\SearchController@globalSearch');
 
 
 Route::get('home', function () {
