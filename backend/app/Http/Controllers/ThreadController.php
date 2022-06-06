@@ -39,7 +39,7 @@ class ThreadController extends Controller
 
     public function threadOfUser($id)
     {
-        return Thread::where('poster_id', $id)->get();
+        return Thread::where('author', $id)->get();
     }
 
     public function findThread($thread_id)

@@ -16,14 +16,13 @@ return new class extends Migration
     public function up()
     {
         Schema::connection('insecure')->create('posts', function (Blueprint $table) {
-            $table->id('post_id');
-            $table->unsignedBigInteger('poster_id');
-            $table->foreign('poster_id')->references('user_id')->on('users');
-            $table->json('edit_history')->default(new Expression('(JSON_ARRAY())'));
-            $table->integer('vote_count')->nullable();
-            $table->string('post_title', 100);
-            $table->string('post_text');
-            $table->integer('relative_post_id')->nullable();
+            $table->id();
+            $table->unsignedBigInteger('thread_id');
+            $table->foreign('thread_id')->references('id')->on('threads');
+            $table->unsignedBigInteger('author');
+            $table->foreign('author')->references('id')->on('users');
+            $table->json('liked_from')->default(new Expression('(JSON_ARRAY())'));
+            $table->string('content', 500);
             $table->timestamps();
         });
     }
