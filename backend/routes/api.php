@@ -40,6 +40,12 @@ Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
 
 Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
 
+
+Route::get('post/{id}', 'App\Http\Controllers\PostController@getPostById');
+Route::get('posts', 'App\Http\Controllers\PostController@getAllPosts');
+Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@createPost');
+
+
 Route::get('home', function () {
     return Category::all();
 });
