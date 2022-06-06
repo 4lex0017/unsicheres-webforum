@@ -4,29 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
 class PostController extends Controller
 {
-    public function getAllPostsOfUser($user_id)
+    public function getAllPostsOfUser($author): Collection
     {
         if (true) {
-            return PostController::injectableWhere('user_id', $user_id);
+            return PostController::injectableWhere('author', $author);
         }
-        return PostResource::collection(Post::where('user_id', $user_id));
+        return PostResource::collection(Post::where('author', $author));
     }
 
-    public function injectableWhere($row, $id)
+    public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('posts')->select(
-            'post_id',
-            'poster_id',
-            'edit_history',
-            'vote_count',
-            'post_title',
-            'post_text',
-            'relative_post_id'
+            'id',
+            'user_id',
+            'content',
+            'created_at',
+            'liked_from',
+            'author'
         )->whereRaw($row . " = " . $id)->get();
     }
 }

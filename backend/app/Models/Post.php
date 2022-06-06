@@ -10,23 +10,19 @@ class Post extends Model
     use HasFactory;
 
     protected $table = 'posts';
-    protected $primaryKey = 'post_id';
+    protected $primaryKey = 'id';
     protected $connection = 'insecure';
 
-    // TODO: FIX NAMING ETC. ONCE UPDATED IN CONFLUENCE
-
     protected $fillable = [
-        'post_id',
-        'poster_id',
-        'edit_history',
-        'vote_count',
-        'post_title',
-        'post_text',
-        'relative_post_id'
+        'id',
+        'thread_id',
+        'author',
+        'liked_from',
+        'content'
     ];
 
     protected $casts = [
-        'edit_history' => 'array'
+        'liked_from' => 'array'
     ];
 
     public $incrementing = true;
