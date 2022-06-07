@@ -33,7 +33,7 @@ class ThreadController extends Controller
 
     public function threadOfUser($id)
     {
-        return new ThreadResource(ThreadController::injectebleWhere('poster_id', $id));
+        return new ThreadResource(ThreadController::injectebleWhere('author', $id));
     }
 
     public function findThread($thread_id)
