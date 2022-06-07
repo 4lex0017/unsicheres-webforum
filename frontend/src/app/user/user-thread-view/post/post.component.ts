@@ -30,13 +30,14 @@ export class PostComponent implements OnInit {
               private changeDetectorRef: ChangeDetectorRef) {
   }
 
-
+  // @Input() elementRef: ElementRef;
   @Input() postObject: Post;
   @Output() deletePostEvent = new EventEmitter<number>();
   @Output() createPostEvent = new EventEmitter<Post>();
   @Output() moveToPostEvent = new EventEmitter<number>();
   vEnabled: boolean;
   @ViewChild('content', {static: false}) content: ElementRef;
+
 
   ngOnInit(): void {
     this.vEnabled = this.diffPicker.isEnabledInConfig();
@@ -47,9 +48,9 @@ export class PostComponent implements OnInit {
     }
   }
 
-  getUserPicture(): HTMLImageElement | undefined {
-    return this.backEndService.getUserPicture(this.postObject.author.id);
-  }
+  // getUserPicture(): string | undefined {
+  //   return this.backEndService.getUserPicture(this.postObject.author.id);
+  // }
 
   canEditPost(): boolean {
     if (this.postObject.author.id == this.authenticate.currentUserId) return true;

@@ -21,12 +21,6 @@ class ThreadController extends Controller
         return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
     }
 
-    public function getThreadBySearch(Request $search)
-    {
-        //TODO:
-        return Thread::all($search);
-    }
-
     public function createThread(Request $request)
     {
         return Thread::create($request->all());

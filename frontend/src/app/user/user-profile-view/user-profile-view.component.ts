@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
+import * as Buffer from "buffer";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -46,16 +47,17 @@ export class UserProfileViewComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
       data: {
-        username: this.userFullObject.username,
+        name: this.userFullObject.name,
         about: this.userFullObject.about,
-        image: this.userFullObject.image,
+        profile_picture: this.userFullObject.profile_picture,
         location: this.userFullObject.location
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.userFullObject.username = result.username;
+      this.userFullObject.name = result.name;
       this.userFullObject.about = result.about;
-      this.userFullObject.image = result.image;
+      this.userFullObject.profile_picture = result.profile_picture;
+
       this.userFullObject.location = result.location;
       if (this.vEnabled) this.injectContentToDom();
     });
@@ -67,7 +69,7 @@ export class UserProfileViewComponent implements OnInit {
     this.about.nativeElement.replaceChildren();
     this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
     this.username.nativeElement.replaceChildren();
-    this.username.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.username));
+    this.username.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.name));
   }
 
   cutPostContent(content: string): string {
@@ -79,6 +81,7 @@ export class UserProfileViewComponent implements OnInit {
       return content
     }
   }
+
 
   canEdit(): boolean {
     return this.userFullObject.id == this.authenticate.currentUserId;

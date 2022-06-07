@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profile_comments');
+        Schema::connection('insecure')->dropIfExists('profile_comments');
     }
 };

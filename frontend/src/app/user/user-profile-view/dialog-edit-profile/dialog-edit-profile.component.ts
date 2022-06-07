@@ -1,6 +1,5 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {UserThreadViewComponent} from "../../../user/user-thread-view/user-thread-view.component";
 import {UserFull} from "../../../data-access/models/userFull";
 import {UserProfileViewComponent} from "../user-profile-view.component";
 
@@ -34,9 +33,8 @@ export class DialogEditProfileComponent {
         let image = new Image();
         image.src = e.target.result;
         image.onload = (rs) => {
-          let imgBase64Path = e.target.result;
+          this.data.profile_picture = e.target.result
         };
-        this.data.image = image;
       };
       reader.readAsDataURL(imgFile.target.files[0]);
       this.fileInput.nativeElement.value = '';
