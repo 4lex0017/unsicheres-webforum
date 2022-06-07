@@ -31,6 +31,9 @@ Route::get('user/{id}/thread', 'App\Http\Controllers\ThreadController@getThreadO
 
 Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
+Route::post('register', 'App\Http\Controllers\UserLoginController@register');
+Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
