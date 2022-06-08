@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::connection('secure')->create('attackers', function (Blueprint $table) {
             $table->id('attacker_id');
             $table->string('ip_address')->unique();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
