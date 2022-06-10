@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 class PostSeeder extends Seeder
@@ -16,34 +17,28 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        DB::connection('insecure')->table('posts')->insert([
-            'thread_id' => 5,
-            'author' => 1,
-            'content' => 'softy, no one\'s perfect - Constellation'
-        ]);
+        $json = Storage::disk('local')->get('/defaults/defaultHome.json');
+        $categorys = json_decode($json, true);
 
-        DB::connection('insecure')->table('posts')->insert([
-            'thread_id' => 5,
-            'author' => 2,
-            'content' => 'Rammstein - Mutter'
-        ]);
-
-        DB::connection('insecure')->table('posts')->insert([
-            'thread_id' => 5,
-            'author' => 2,
-            'content' => 'Rammstein - Sonne'
-        ]);
-
-        DB::connection('insecure')->table('posts')->insert([
-            'thread_id' => 4,
-            'author' => 3,
-            'content' => 'Ich mag Ak74s'
-        ]);
-
-        DB::connection('insecure')->table('posts')->insert([
-            'thread_id' => 4,
-            'author' => 4,
-            'content' => 'Schrecklich was da abgeht!!'
-        ]);
+        foreach($categorys as $category)
+        {
+            $threads = $category['threads'];
+        
+            foreach($threads as $thread)
+            {
+                $posts = $thread['posts'];
+                foreach($posts as $post)
+                {
+                    $author = $post['author'];
+                    DB::connection('insecure')->table('posts')->insert([
+                        'thread_id' => $thread['id'],
+                        'content' => $post['content'],
+                        'likedFrom' => json_encode($post['likedFrom']),
+                        'id' => $post['id'],
+                        'author' => $author['id'],
+                    ]);
+                }
+            }
+        }
     }
 }

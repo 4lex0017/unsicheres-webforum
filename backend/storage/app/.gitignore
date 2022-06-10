@@ -1,3 +1,6 @@
 *
+!defaults/
+!defaults/defaultHome.json
+!defaults/defaultUsers.json
 !public/
 !.gitignore

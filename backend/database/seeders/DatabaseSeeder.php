@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             VulnSeeder::class,
             UserSeeder::class,
+            CategorySeeder::class,
             ThreadSeeder::class,
             PostSeeder::class
         ]);

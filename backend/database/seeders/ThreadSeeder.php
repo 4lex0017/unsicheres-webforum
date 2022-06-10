@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ThreadSeeder extends Seeder
 {
@@ -16,29 +17,28 @@ class ThreadSeeder extends Seeder
      */
     public function run()
     {
-        DB::connection('insecure')->table('threads')->insert([
-            'title' => 'Dies ist ein Thread von Daniel',
-            'author' => 1,
-        ]);
-
-        DB::connection('insecure')->table('threads')->insert([
-            'title' => 'Dies ist noch ein Thread von Daniel',
-            'author' => 1,
-        ]);
-
-        DB::connection('insecure')->table('threads')->insert([
-            'title' => 'Warum ist der Himmel Blau?',
-            'author' => 2,
-        ]);
-
-        DB::connection('insecure')->table('threads')->insert([
-            'title' => 'School-Shootings in Amerika - Meinungsthread',
-            'author' => 2,
-        ]);
-
-        DB::connection('insecure')->table('threads')->insert([
-            'title' => 'Eure Lieblingsmusik',
-            'author' => 3,
-        ]);
+        $json = Storage::disk('local')->get('/defaults/defaultHome.json');
+        $categorys = json_decode($json, true);
+        foreach($categorys as $category)
+        {
+            $threads = $category['threads'];
+            foreach($threads as $value)
+            {
+                $author = $value['author'];
+                $posts=$value['posts'];
+                $postids = array();
+                foreach($posts as $post) {
+                    $postids[] = $post['id'];
+                }
+                DB::connection('insecure')->table('threads')->insert([
+                    'title' => $value['title'],
+                    'author' => $author['id'],
+                    'title' => $value['id'],
+                    'date' => $value['date'],
+                    'likedFrom' => json_encode($value['likedFrom']),
+                    'posts' => json_encode($postids),
+                ]);
+            }
+        }
     }
 }
