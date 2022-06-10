@@ -3,13 +3,12 @@ import {ElementRef} from "@angular/core";
 
 export interface UserFull {
   id: number;
-  username: string;
+  name: string;
   joined: string;
   about: string;
-  role: string[];
-  comments: UserComment[];
-  image?: HTMLImageElement;
-
+  groups: string[];
+  profile_comments: UserComment[];
+  profile_picture?: string;
   location?: string;
-  birthDate: string
+  birth_date: string
 }

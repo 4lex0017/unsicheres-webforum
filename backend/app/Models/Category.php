@@ -5,25 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Thread extends Model
+class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'threads';
+    protected $table = 'categories';
     protected $primaryKey = 'id';
     protected $connection = 'insecure';
 
     protected $fillable = [
         'id',
         'title',
-        'liked_from',
-        'author',
-        'posts'
+        'threads',
     ];
 
     protected $casts = [
-        'liked_from' => 'array',
-        'posts' => 'array'
+        'threads' => 'array'
     ];
 
     public $incrementing = true;

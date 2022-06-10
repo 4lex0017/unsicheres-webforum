@@ -4,25 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
     protected $table = 'users';
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = 'id';
     protected $connection = 'insecure';
 
     protected $fillable = [
-        'user_id',
-        'password',
+        'id',
         'name',
-        'score',
-        'message_count',
-        'profile_picture',
-        'description',
+        'password',
         'birth_date',
-        'location'
+        'location',
+        'about',
+        'groups',
+        'endorsements',
+        'profile_picture',
+        'profile_comments',
+    ];
+
+    protected $casts = [
+        'groups' => 'array',
+        'endorsements' => 'array',
+        'profile_comments' => 'array'
     ];
 
     public $incrementing = true;

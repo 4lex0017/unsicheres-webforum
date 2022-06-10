@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::connection('secure')->create('attackers', function (Blueprint $table) {
-            $table->id('attacker_id');
-            $table->string('ip_address')->unique();
-            $table->string('name');
+        Schema::connection('secure')->create('request_times', function (Blueprint $table) {
+            $table->id('request_id');
+            $table->double('time');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('secure')->dropIfExists('attackers');
+        Schema::connection('secure')->dropIfExists('request_times');
     }
 };

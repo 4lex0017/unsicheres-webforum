@@ -31,14 +31,23 @@ Route::get('user/{id}/thread', 'App\Http\Controllers\ThreadController@getThreadO
 
 Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
+Route::post('register', 'App\Http\Controllers\UserLoginController@register');
+Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::get('thread/search', "App\Http\Controllers\ThreadController@getThreadBySearch");
-
 Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
 
-Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\PostController@getAllPostsOfThread');
+Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
+
+
+Route::get('post/{id}', 'App\Http\Controllers\PostController@getPostById');
+Route::get('posts', 'App\Http\Controllers\PostController@getAllPosts');
+Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@createPost');
+
+
+Route::get('search/{text}','App\Http\Controllers\SearchController@globalSearch');
 
 
 Route::get('home', function () {
@@ -47,20 +56,4 @@ Route::get('home', function () {
 
 Route::get('home/{sub_id}', function ($sub_id) {
     return Category::findSubforum($sub_id);
-});
-
-Route::get('admin', function () {
-    return Admin::getConfiguration();
-});
-
-Route::get('admin/scoreboard', function () {
-    return Admin::getScoreboard();
-});
-
-Route::post('admin', function (Request $request) {
-    return Admin::startServerWithConfig($request);
-});
-
-Route::put('admin', function (Request $request) {
-    return Admin::updateConfiguration($request);
 });

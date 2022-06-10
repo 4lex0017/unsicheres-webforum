@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Http\Resources\ThreadResource;
 use Illuminate\Http\Request;
 use App\Models\Thread;
+use Illuminate\Support\Facades\DB;
+
 
 class ThreadController extends Controller
 {
@@ -15,13 +18,7 @@ class ThreadController extends Controller
 
     public function getThreadById($thread_id)
     {
-        return new ThreadResource(ThreadController::findThread($thread_id));
-    }
-
-    public function getThreadBySearch(Request $search)
-    {
-        //TODO:
-        return Thread::all($search);
+        return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
     }
 
     public function createThread(Request $request)
@@ -36,11 +33,30 @@ class ThreadController extends Controller
 
     public function threadOfUser($id)
     {
-        return Thread::where('poster_id', $id)->get();
+        return new ThreadResource(ThreadController::injectebleWhere('author', $id));
     }
 
     public function findThread($thread_id)
     {
-        return Thread::where('thread_id', $thread_id)->first();
+        return ThreadController::injectebleWhere('id', $thread_id);
+    }
+
+    public function getAllPostsOfThread($thread_id)
+    {
+        return PostResource::collection(ThreadController::injectebleWherePost('id', $thread_id));
+    }
+
+    public static function injectebleWhere($row, $id)
+    {
+        return DB::connection('insecure')->table('threads')->select(
+            '*'
+        )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public static function injectebleWherePost($row, $id)
+    {
+        return DB::connection('insecure')->table('threads')->select(
+            'posts'
+        )->whereRaw($row . " = " . $id)->get();
     }
 }

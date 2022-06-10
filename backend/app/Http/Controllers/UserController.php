@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
@@ -24,6 +26,8 @@ class UserController extends Controller
 
     public function getUserById($user_id)
     {
+        //return UserResource::collection(UserController::findUser($user_id));
+
         return new UserResource(UserController::findUser($user_id));
     }
 
@@ -50,6 +54,13 @@ class UserController extends Controller
 
     public function findUser($user_id)
     {
-        return User::where('user_id', $user_id)->first();
+        return UserController::injectableWhere('id', $user_id);
+    }
+
+    public function injectableWhere($row, $id)
+    {
+        return DB::connection('insecure')->table('users')->select(
+            '*'
+        )->whereRaw($row . " = " . $id)->get();
     }
 }
