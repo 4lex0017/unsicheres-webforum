@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'about' => $value['about'],
                 'groups' => json_encode($value['groups']),
                 'profile_picture' => $value['profile_picture'],
-                'joined' => $value['joined'],
+                'created_at' => $value['joined'],
                 'profile_comments' => json_encode($value['profile_comments']),
             ]);
         }
