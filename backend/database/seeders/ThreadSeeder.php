@@ -19,23 +19,24 @@ class ThreadSeeder extends Seeder
     {
         $json = Storage::disk('local')->get('/defaults/defaultHome.json');
         $categorys = json_decode($json, true);
-        foreach($categorys as $category)
-        {
+
+        foreach ($categorys as $category) {
             $threads = $category['threads'];
-            foreach($threads as $value)
-            {
-                $author = $value['author'];
-                $posts=$value['posts'];
+            foreach ($threads as $thread) {
+                $author = $thread['author'];
+                $posts = $thread['posts'];
                 $postids = array();
-                foreach($posts as $post) {
+                foreach ($posts as $post) {
                     $postids[] = $post['id'];
                 }
+
                 DB::connection('insecure')->table('threads')->insert([
-                    'title' => $value['title'],
+                    'id' => $thread['id'],
+                    'category_id' => $category['id'],
+                    'title' => $thread['title'],
+                    'created_at' => $thread['date'],
+                    'liked_from' => json_encode($thread['likedFrom']),
                     'author' => $author['id'],
-                    'title' => $value['id'],
-                    'created_at' => $value['date'],
-                    'liked_from' => json_encode($value['likedFrom']),
                     'posts' => json_encode($postids),
                 ]);
             }

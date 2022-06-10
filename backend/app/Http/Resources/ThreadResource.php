@@ -14,7 +14,7 @@ class ThreadResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
 
@@ -33,6 +33,7 @@ class ThreadResource extends JsonResource
         }
         return [
             'id' => $this->id,
+            'categoryId' => $this->category_id,
             'title' => $this->title,
             'date' => $this->created_at,
             'likedFrom' => $this->liked_from,
