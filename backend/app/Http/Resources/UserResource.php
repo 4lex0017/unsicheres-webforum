@@ -16,6 +16,14 @@ class UserResource extends JsonResource
 
     public static $wrap = null;
 
+    private static function fixArrays($arr)
+    {
+        if (is_array($arr))
+            return $arr;
+
+        return json_decode($arr);
+    }
+
     private static function convertData($data): array
     {
         return [
@@ -25,10 +33,10 @@ class UserResource extends JsonResource
             'birthDate' => $data->birth_date,
             'location' => $data->location,
             'about' => $data->about,
-            'groups' => $data->groups,
-            'endorsements' => $data->endorsements,
+            'groups' => self::fixArrays($data->groups),
+            'endorsements' => self::fixArrays($data->endorsements),
             'profilePicture' => $data->profile_picture,
-            'profileComments' => $data->profile_comments
+            'profileComments' => self::fixArrays($data->profile_comments)
         ];
     }
 
