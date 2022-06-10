@@ -42,10 +42,25 @@
     </mat-card-actions>
   </mat-card>
   <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
-    <app-post [postObject]="post"
+    <app-reactive-post [postObject]="post"
               (createPostEvent)="createPostConsumer($event)"
+              (replyPostEvent)="addReply($event)"
               (deletePostEvent)="openDeletePostConsumer($event)"
-              (moveToPostEvent)="moveToPost($event)"></app-post>
+                       (moveToPostEvent)="moveToPost($event)"></app-reactive-post>
+  </div>
+
+  <div class="thread-newReply">
+    <mat-card *ngIf="checkLoggedIn">
+      <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(this.authenticate.currentUserId)">
+        <img src="{{this.getUserPicture(this.authenticate.currentUserId)!.src}}" alt="image">
+      </div>
+      <div id="replyBox" class ="replyBox" contenteditable="true">
+        <div style="display: block">
+          <br style="display: block">
+        </div>
+      </div>
+      <button mat-raised-button (click)="createPost()">POST</button>
+    </mat-card>
   </div>
 </div>
 <div class="footer-spacer"></div>

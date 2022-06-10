@@ -20,6 +20,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatBadgeModule} from "@angular/material/badge";
+import {ReactivePostComponent} from "./reactive-Post/reactive-post.component";
 
 
 @NgModule({
@@ -29,11 +30,13 @@ import {MatBadgeModule} from "@angular/material/badge";
     DialogEditPostComponent,
     DialogDeletePostComponent,
     DialogDeleteThreadComponent,
-    PostComponent
+    PostComponent,
+    ReactivePostComponent
   ],
-  exports: [
-    PostComponent
-  ],
+    exports: [
+        PostComponent,
+        ReactivePostComponent
+    ],
   imports: [
     CommonModule,
     UserThreadViewRoutingModule,

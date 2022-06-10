@@ -111,3 +111,50 @@ img {
   height: 43px;
   border-radius: 50%;
 }
+
+.thread-newReply{
+  max-width: 58.5%;
+  margin-left: 2.5%;
+  margin-top: 1%;
+  font-size: 20px !important;
+  box-shadow: none !important;
+  background-color: transparent;
+}
+
+.replyPost{
+  font-size: 0.8em;
+  background: #797979;
+}
+
+.replyBox{
+  font-size: 0.8em;
+  border: solid #5c5c5c;
+  border-radius: 1px;
+}
+
+.replyBox blockquote{
+  border-radius: 1px;
+  border: #5c5c5c;
+}
+
+.repBlockquote{
+  border-radius: 1px;
+  border: solid #0643b8;
+  margin-left: 10%;
+  width: 80%;
+  border-left-width: 8px;
+  border-spacing: 10px;
+}
+
+[contenteditable]{
+  outline: 0px solid transparent;
+}
+
+.testrep{
+  margin-top: 1%;
+
+  max-width: 60%;
+  align-self: center;
+}
+
+

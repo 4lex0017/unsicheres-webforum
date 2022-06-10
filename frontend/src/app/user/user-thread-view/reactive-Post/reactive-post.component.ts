@@ -1,34 +1,23 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Thread} from "../../data-access/models/thread";
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Post} from "../../../data-access/models/post";
+import {DialogEditPostComponent} from "../dialog-edit-post/dialog-edit-post.component";
+import {DialogDeletePostComponent} from "../dialog-delete-post/dialog-delete-post.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
-import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
-import {BackendService} from "../../data-access/services/backend.service";
-import {User} from "../../data-access/models/user";
-import {DialogEditPostComponent} from "./dialog-edit-post/dialog-edit-post.component";
-import {Post} from "../../data-access/models/post";
-import {DialogDeletePostComponent} from "./dialog-delete-post/dialog-delete-post.component";
-import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
-import {DataManagementService} from "../../data-access/services/data-management.service";
-import {PostReply} from "../../data-access/models/postReply";
-import {AuthenticationService} from "../../data-access/services/authentication.service";
-import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
-import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
-import {insertAfterLastOccurrence} from "@angular/cdk/schematics";
+import {BackendService} from "../../../data-access/services/backend.service";
+import {DataManagementService} from "../../../data-access/services/data-management.service";
+import {AuthenticationService} from "../../../data-access/services/authentication.service";
+import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
+
+import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-post.component";
+import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
 
 @Component({
-  selector: 'app-user-thread-view',
-  templateUrl: './user-thread-view.component.html',
-  styleUrls: ['./user-thread-view.component.scss']
+  selector: 'app-reactive-post',
+  templateUrl: './reactive-post.component.html',
+  styleUrls: ['./reactive-post.component.scss']
 })
-export class UserThreadViewComponent implements OnInit {
-  threadObject: Thread;
-  vEnabled: boolean
-  content: string = "";
-  testcontent: any[];
-  // @ViewChild('content', {static: false}) content: ElementRef;
-  @ViewChild('title', {static: false}) title: ElementRef;
+export class ReactivePostComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
@@ -40,68 +29,71 @@ export class UserThreadViewComponent implements OnInit {
               private changeDetectorRef: ChangeDetectorRef) {
   }
 
+
+  @Input() postObject: Post;
+  @Output() deletePostEvent = new EventEmitter<number>();
+  @Output() createPostEvent = new EventEmitter<Post>();
+  @Output() moveToPostEvent = new EventEmitter<number>();
+  @Output() replyPostEvent = new EventEmitter<Post>();
+  vEnabled: boolean;
+  editing: boolean = false;
+  contentArray: any[]
+  @ViewChild('content', {static: false}) content: ElementRef;
+
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-        this.threadObject = data.thread;
-        this.vEnabled = this.diffPicker.isEnabledInConfig();
-        if (this.vEnabled) {
-          this.changeDetectorRef.detectChanges();
-
-          // this.content.nativeElement.replaceChildren();
-          // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-          // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
-          this.title.nativeElement.replaceChildren();
-          this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
-        }
-      }
-    );
-    this.deserializePost(this.content);
+    this.vEnabled = this.diffPicker.isEnabledInConfig();
+    console.log("da");
+    this.deserializePost(this.postObject.content);
+    console.log("did it");
+    if (this.vEnabled) {
+      this.changeDetectorRef.detectChanges();
+      this.content.nativeElement.replaceChildren();
+      this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.postObject.content));
+    }
   }
 
-  canEditThread(): boolean {
-    if (this.threadObject.author.id == this.authenticate.currentUserId) return true;
+  getUserPicture(): HTMLImageElement | undefined {
+    return this.backEndService.getUserPicture(this.postObject.author.id);
+  }
+
+  canEditPost(): boolean {
+    if (this.postObject.author.id == this.authenticate.currentUserId) return true;
     return false;
   }
 
-
-  openEditThreadDialog(): void {
-    const dialogRef = this.dialog.open(DialogEditThreadComponent, {
-      width: '65%',
-      data: {
-        title: this.threadObject.title,
-
-      },
+  openDeletePostDialog() {
+    const dialogRef = this.dialog.open(DialogDeletePostComponent, {
+      width: '55%',
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.threadObject.title = result.title;
-      if (this.vEnabled) {
-        this.changeDetectorRef.detectChanges();
-
-        // this.content.nativeElement.replaceChildren();
-        // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-        // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
-        this.title.nativeElement.replaceChildren();
-        this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
+      if (result) {
+        this.deletePostEvent.emit(this.postObject.id);
       }
-
     });
   }
 
-  openCreateDialog(): void {
+  likePostButton(): void {
     if (!this.checkLoggedIn()) return;
-    const dialogRef = this.dialog.open(DialogCreatePostComponent, {
-      width: '65%',
-      data: {
-        reply: "",
-        content: "",
-        showReply: false,
-      },
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content));
-    });
+    let i = this.postObject.likedFrom.indexOf(this.authenticate.currentUserId);
+    if (i != -1) {
+      this.postObject.likedFrom.splice(i, 1)
+    } else {
+      this.postObject.likedFrom.push(this.authenticate.currentUserId);
+    }
+  }
+
+  checkLoggedIn(): boolean {
+    if (!this.authenticate.currentUserId) {
+      const dialogRef = this.dialog.open(DialogLoginComponent, {
+        width: '30%',
+      });
+      return false;
+    }
+    return true;
+  }
+
+  editPost(): void{
+    this.editing = true;
   }
 
   addReply(replyPost: Post): void{
@@ -158,7 +150,7 @@ export class UserThreadViewComponent implements OnInit {
     box!.appendChild(under);
   }
 
-  createPost(): void{
+  editContent(): void{
     let fullReply = document.getElementById('replyBox');
     let replyString : string = "";
     for(let i = 0; i < fullReply!.children.length; i++){
@@ -196,18 +188,11 @@ export class UserThreadViewComponent implements OnInit {
         replyString = replyString + child.textContent + "/b?";
       }
     }
+    this.editing = false;
     console.log(replyString);
-    console.log("pushed stuff");
-    this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, replyString));
-    while(fullReply!.children.length > 0){
-      fullReply!.removeChild(fullReply!.lastChild!);
-    }
-    let newLine = document.createElement("div");
-    let linebreak = document.createElement("br");
-    newLine.appendChild(linebreak);
-    fullReply!.appendChild(newLine);
+    this.postObject.content = replyString;
+    this.deserializePost(replyString);
   }
-
 
   deserializePost(postString: string): void{
     let stringArray = Array.from(postString);
@@ -297,65 +282,27 @@ export class UserThreadViewComponent implements OnInit {
         console.log(content[i].textContent)
       }
     }
-    this.testcontent = content;
+    this.contentArray = content;
   }
 
-  moveToPost(id: number) {
-    window.location.hash = id.toString();
-  }
-
-  openDeletePostConsumer(postObjectId: number) {
-    for (let z = 0; z < this.threadObject.posts.length; z++) {
-      if (this.threadObject.posts[z].id == postObjectId) {
-        this.threadObject.posts.splice(z, 1);
-        break;
-      }
+  isDiv(element: HTMLElement){
+    if(element.nodeName == "DIV"){
+      return true;
     }
+    return false;
   }
 
-  createPostConsumer(post: Post): void {
-    this.threadObject.posts.push(post);
-  }
-
-  openDeleteThreadDialog() {
-    const dialogRef = this.dialog.open(DialogDeleteThreadComponent, {
-      width: '55%',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.dataManagement.notifyRest(this.threadObject.id)
-        this.router.navigate(['/forum/home']);
-      }
-    });
-  }
-
-  likeThreadButton(): void {
-    if (!this.checkLoggedIn()) return;
-    let i = this.threadObject.likedFrom.indexOf(this.authenticate.currentUserId);
-    if (i != -1) {
-      this.threadObject.likedFrom.splice(i, 1)
-    } else {
-      console.log(this.authenticate.currentUserId)
-      this.threadObject.likedFrom.push(this.authenticate.currentUserId);
+  isP(element: HTMLElement){
+    if(element.nodeName == "P"){
+      return true;
     }
+    return false;
   }
 
-
-  checkLoggedIn(): boolean {
-    if (!this.authenticate.currentUserId) {
-      const dialogRef = this.dialog.open(DialogLoginComponent, {
-        width: '30%',
-      });
-      return false;
+  isBlock(element: HTMLElement){
+    if(element.nodeName == "BLOCKQUOTE"){
+      return true;
     }
-    return true;
+    return false;
   }
-
-  getUserPicture(userId: number): HTMLImageElement | undefined {
-    return this.backEndService.getUserPicture(userId);
-  }
-
-
 }
-

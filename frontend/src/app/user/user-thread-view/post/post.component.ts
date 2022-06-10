@@ -35,6 +35,7 @@ export class PostComponent implements OnInit {
   @Output() deletePostEvent = new EventEmitter<number>();
   @Output() createPostEvent = new EventEmitter<Post>();
   @Output() moveToPostEvent = new EventEmitter<number>();
+  @Output() replyPostEvent = new EventEmitter<Post>();
   vEnabled: boolean;
   @ViewChild('content', {static: false}) content: ElementRef;
 

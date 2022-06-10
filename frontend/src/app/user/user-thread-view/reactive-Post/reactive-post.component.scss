@@ -1,0 +1,66 @@
+.post-card {
+  max-width: 60%;
+  align-self: center;
+}
+
+.footer-spacer {
+  padding: 45px
+}
+
+.user-default-img-container {
+  position: relative;
+  left: 15px;
+  top: 11px;
+  transform: scale(1.7);
+
+}
+
+.user-image {
+  position: relative;
+  left: 3px;
+}
+
+img {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+}
+
+.spacer {
+  padding: 0 0 0 10px;
+}
+
+.moveToPost {
+  background: none;
+  border: none;
+}
+
+.mat-badge-content {
+
+  width: auto;
+  display: grid;
+  min-width: 18px;
+  min-height: 18px;
+  text-align: center;
+  align-items: center;
+  padding: 1px;
+}
+
+.stretch-badge > .mat-badge-content {
+  width: auto;
+  border-radius: 14px;
+  right: unset !important;
+}
+
+[contenteditable]{
+  outline: 0px solid transparent;
+}
+
+.repBlockquote{
+  border-radius: 1px;
+  border: solid #0643b8;
+  margin-left: 10%;
+  width: 80%;
+  border-left-width: 8px;
+  border-spacing: 10px;
+}
