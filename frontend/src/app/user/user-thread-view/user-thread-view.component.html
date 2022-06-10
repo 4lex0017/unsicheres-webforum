@@ -51,9 +51,6 @@
 
   <div class="thread-newReply">
     <mat-card *ngIf="checkLoggedIn">
-      <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture(this.authenticate.currentUserId)">
-        <img src="{{this.getUserPicture(this.authenticate.currentUserId)!.src}}" alt="image">
-      </div>
       <div id="replyBox" class ="replyBox" contenteditable="true">
         <div style="display: block">
           <br style="display: block">

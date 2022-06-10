@@ -1,10 +1,10 @@
 <mat-card class="post-card">
   <mat-card-header>
-    <div mat-card-avatar class="user-default-img-container" *ngIf="!this.getUserPicture()">
+    <div mat-card-avatar class="user-default-img-container" *ngIf="!postObject.author.profile_picture">
       <mat-icon class="user-default-img">face</mat-icon>
     </div>
-    <div mat-card-avatar class="user-image" *ngIf="this.getUserPicture()">
-      <img src="{{this.getUserPicture()!.src}}" alt="image">
+    <div mat-card-avatar class="user-image" *ngIf="postObject.author.profile_picture">
+      <img src="{{postObject.author.profile_picture}}" alt="image">
     </div>
     <mat-card-title>
       <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.username}}</a> answered

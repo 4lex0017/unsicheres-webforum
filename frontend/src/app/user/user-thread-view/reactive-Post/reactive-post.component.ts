@@ -52,10 +52,6 @@ export class ReactivePostComponent implements OnInit {
     }
   }
 
-  getUserPicture(): HTMLImageElement | undefined {
-    return this.backEndService.getUserPicture(this.postObject.author.id);
-  }
-
   canEditPost(): boolean {
     if (this.postObject.author.id == this.authenticate.currentUserId) return true;
     return false;
