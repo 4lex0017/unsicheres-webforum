@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Post;
+use App\Models\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -34,7 +36,7 @@ class UserResource extends JsonResource
             'location' => $data->location,
             'about' => $data->about,
             'groups' => self::fixArrays($data->groups),
-            'endorsements' => self::fixArrays($data->endorsements),
+            'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
             'profileComments' => self::fixArrays($data->profile_comments)
         ];
@@ -49,6 +51,19 @@ class UserResource extends JsonResource
                 return [];
 
             $data = $this->resource[0];
+        }
+
+        $data->endorsements = 0;
+
+        $posts = Post::all()->where('author', '=', $data->id)->toArray();
+        $threads = Thread::all()->where('author', '=', $data->id)->toArray();
+
+        foreach ($posts as $post) {
+            $data->endorsements += count($post['liked_from']);
+        }
+
+        foreach ($threads as $thread) {
+            $data->endorsements += count($thread['liked_from']);
         }
 
         return self::convertData($data);

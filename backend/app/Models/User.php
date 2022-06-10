@@ -22,14 +22,12 @@ class User extends Model
         'location',
         'about',
         'groups',
-        'endorsements',
         'profile_picture',
         'profile_comments',
     ];
 
     protected $casts = [
         'groups' => 'array',
-        'endorsements' => 'array',
         'profile_comments' => 'array'
     ];
 

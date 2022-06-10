@@ -63,9 +63,9 @@ class UserController extends Controller
     public function injectableInsert($userdata)
     {
         $user = new User($userdata);
-        return DB::connection('insecure')->insert('insert into users(name, password, birth_date, location, about, groups, endorsements, profile_picture, profile_comments) values ("'
+        return DB::connection('insecure')->insert('insert into users(name, password, birth_date, location, about, groups, profile_picture, profile_comments) values ("'
             . $user->name . '" , "' . $user->password . '" , "' . $user->birth_date . '" , "' . $user->location .
-            '" , "' . $user->about . '" , "' . $user->groups . '" , "' . $user->endorsements . '" , "' . $user->profile_picture .
+            '" , "' . $user->about . '" , "' . $user->groups . '" , "' . $user->profile_picture .
             '" , "' . $user->profile_comments . '" )');
     }
 }
