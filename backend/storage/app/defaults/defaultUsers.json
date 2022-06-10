@@ -16,12 +16,18 @@
             {
                 "id": 1,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 2,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -42,12 +48,18 @@
             {
                 "id": 3,
                 "content": "Nice profile!",
-                "userId": 11
+                "UserSmall": {
+                    "id": 1,
+                    "username": "TestUsername1"
+                }
             },
             {
                 "id": 4,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -67,12 +79,18 @@
             {
                 "id": 5,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 6,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -93,12 +111,18 @@
             {
                 "id": 7,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             },
             {
                 "id": 8,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -119,12 +143,18 @@
             {
                 "id": 9,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 10,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -145,12 +175,18 @@
             {
                 "id": 11,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 12,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -171,12 +207,18 @@
             {
                 "id": 13,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 14,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -197,12 +239,18 @@
             {
                 "id": 15,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 16,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -223,12 +271,18 @@
             {
                 "id": 17,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 18,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     },
@@ -249,12 +303,18 @@
             {
                 "id": 19,
                 "content": "Nice profile!",
-                "userId": 12
+                "UserSmall": {
+                    "id": 12,
+                    "username": "TestUsername2"
+                }
             },
             {
                 "id": 20,
                 "content": "Nice profile test 123!",
-                "userId": 135
+                "UserSmall": {
+                    "id": 135,
+                    "username": "TestUsername135"
+                }
             }
         ]
     }
