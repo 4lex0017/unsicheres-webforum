@@ -34,7 +34,7 @@ class ThreadSeeder extends Seeder
                     'title' => $value['title'],
                     'author' => $author['id'],
                     'title' => $value['id'],
-                    'date' => $value['date'],
+                    'created_at' => $value['date'],
                     'likedFrom' => json_encode($value['likedFrom']),
                     'posts' => json_encode($postids),
                 ]);

@@ -36,6 +36,7 @@ class PostSeeder extends Seeder
                         'likedFrom' => json_encode($post['likedFrom']),
                         'id' => $post['id'],
                         'author' => $author['id'],
+                        'created_at' => $post['date'],
                     ]);
                 }
             }
