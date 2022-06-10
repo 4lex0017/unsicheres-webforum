@@ -28,6 +28,7 @@ class UserController extends Controller
 
     public function createUser(Request $user)
     {
+        // For later return new UserResource(UserController::injectableInsert($user->all()));
         return User::create($user->all());
     }
 
@@ -41,11 +42,11 @@ class UserController extends Controller
         }
     }
 
-    public function authorizeUser($user_id, $password)
-    {
-        //TODO:
-        return User::authUser($user_id, $password->all);
-    }
+    // public function authorizeUser($user_id, $password)
+    // {
+    //     //TODO:
+    //     return User::authUser($user_id, $password->all);
+    // }
 
     public function findUser($id)
     {
@@ -57,5 +58,14 @@ class UserController extends Controller
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public function injectableInsert($userdata)
+    {
+        $user = new User($userdata);
+        return DB::connection('insecure')->insert('insert into users(name, password, birth_date, location, about, groups, endorsements, profile_picture, profile_comments) values ("'
+            . $user->name . '" , "' . $user->password . '" , "' . $user->birth_date . '" , "' . $user->location .
+            '" , "' . $user->about . '" , "' . $user->groups . '" , "' . $user->endorsements . '" , "' . $user->profile_picture .
+            '" , "' . $user->profile_comments . '" )');
     }
 }
