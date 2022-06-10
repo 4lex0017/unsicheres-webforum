@@ -33,7 +33,7 @@ class PostSeeder extends Seeder
                     DB::connection('insecure')->table('posts')->insert([
                         'thread_id' => $thread['id'],
                         'content' => $post['content'],
-                        'likedFrom' => json_encode($post['likedFrom']),
+                        'liked_from' => json_encode($post['likedFrom']),
                         'id' => $post['id'],
                         'author' => $author['id'],
                         'created_at' => $post['date'],
