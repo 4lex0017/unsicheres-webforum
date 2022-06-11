@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SmallUserCollection;
-use App\Http\Resources\SmallUserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,15 +21,14 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($user_id)
+    public function getUserById($id)
     {
-        //return UserResource::collection(UserController::findUser($user_id));
-
-        return new UserResource(UserController::findUser($user_id));
+        return new UserResource(UserController::findUser($id));
     }
 
     public function createUser(Request $user)
     {
+        // For later return new UserResource(UserController::injectableInsert($user->all()));
         return User::create($user->all());
     }
 
@@ -46,15 +42,15 @@ class UserController extends Controller
         }
     }
 
-    public function authorizeUser($user_id, $password)
-    {
-        //TODO:
-        return User::authUser($user_id, $password->all);
-    }
+    // public function authorizeUser($user_id, $password)
+    // {
+    //     //TODO:
+    //     return User::authUser($user_id, $password->all);
+    // }
 
-    public function findUser($user_id)
+    public function findUser($id)
     {
-        return UserController::injectableWhere('id', $user_id);
+        return UserController::injectableWhere('id', $id);
     }
 
     public function injectableWhere($row, $id)
@@ -62,5 +58,14 @@ class UserController extends Controller
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public function injectableInsert($userdata)
+    {
+        $user = new User($userdata);
+        return DB::connection('insecure')->insert('insert into users(name, password, birth_date, location, about, groups, profile_picture, profile_comments) values ("'
+            . $user->name . '" , "' . $user->password . '" , "' . $user->birth_date . '" , "' . $user->location .
+            '" , "' . $user->about . '" , "' . $user->groups . '" , "' . $user->profile_picture .
+            '" , "' . $user->profile_comments . '" )');
     }
 }

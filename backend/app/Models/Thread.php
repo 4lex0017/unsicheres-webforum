@@ -15,6 +15,7 @@ class Thread extends Model
 
     protected $fillable = [
         'id',
+        'category_id',
         'title',
         'liked_from',
         'author',

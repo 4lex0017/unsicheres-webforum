@@ -2,45 +2,70 @@
 
 namespace App\Http\Resources;
 
-use App\Models\User;
-use ArrayObject;
+use App\Models\Post;
+use App\Models\Thread;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
 
     public static $wrap = null;
 
-    public function toArray($request)
+    private static function fixArrays($arr)
     {
+        if (is_array($arr))
+            return $arr;
 
-        if (count($this->resource->all()) == 1) {
-            if (!$this->resource instanceof User) {
-                $data = $this->resource->all();
-                $user = User::find($data[0]->id);
-                $this->resource = $user;
-            }
-        } else {
-            return $this->resource;
-        }
+        return json_decode($arr);
+    }
+
+    private static function convertData($data): array
+    {
         return [
-            'userId' => $this->id,
-            'name' => $this->name,
-            'password' => $this->password,
-            'birth_date' => $this->birth_date,
-            'location' => $this->location,
-            'about' => $this->about,
-            'groups' => $this->groups,
-            'endorsements' => $this->endorsements,
-            'profile_picture' => $this->profile_picture,
-            'profile_comments' => $this->profile_comments
+            'userId' => $data->id,
+            'username' => $data->name,
+            'joined' => $data->created_at,
+            'birthDate' => $data->birth_date,
+            'location' => $data->location,
+            'about' => $data->about,
+            'groups' => self::fixArrays($data->groups),
+            'endorsements' => $data->endorsements,
+            'profilePicture' => $data->profile_picture,
+            'profileComments' => self::fixArrays($data->profile_comments)
         ];
+    }
+
+    public function toArray($request): array
+    {
+        if (!is_a($this->resource, 'Illuminate\Support\Collection')) {
+            $data = $this;
+        } else {
+            if (count($this->resource) === 0)
+                return [];
+
+            $data = $this->resource[0];
+        }
+
+        $data->endorsements = 0;
+
+        $posts = Post::all()->where('author', '=', $data->id)->toArray();
+        $threads = Thread::all()->where('author', '=', $data->id)->toArray();
+
+        foreach ($posts as $post) {
+            $data->endorsements += count($post['liked_from']);
+        }
+
+        foreach ($threads as $thread) {
+            $data->endorsements += count($thread['liked_from']);
+        }
+
+        return self::convertData($data);
     }
 }

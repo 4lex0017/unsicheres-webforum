@@ -15,6 +15,8 @@ return new class extends Migration {
     {
         Schema::connection('insecure')->create('threads', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories');
             $table->string('title', 100);
             $table->json('liked_from')->default(new Expression('(JSON_ARRAY())'));;
             $table->unsignedBigInteger('author');

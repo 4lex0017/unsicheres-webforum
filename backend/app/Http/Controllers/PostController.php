@@ -34,10 +34,7 @@ class PostController extends Controller
 
     public function getAllPostsOfUser($author): Collection
     {
-        if (true) {
-            return PostController::injectableWhere('author', $author);
-        }
-        return PostResource::collection(Post::where('author', $author));
+        return PostController::injectableWhere('author', $author);
     }
 
     public function injectableWhere($row, $id): Collection
