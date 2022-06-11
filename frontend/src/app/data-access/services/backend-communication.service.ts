@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Thread} from "../models/thread";
 import {Post} from "../models/post";
-import {Observable} from "rxjs";
+import {firstValueFrom, Observable} from "rxjs";
 import {UserFull} from "../models/userFull";
 import {PostReply} from "../models/postReply";
 import {User} from "../models/user";
@@ -9,14 +9,39 @@ import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficulty
 import {Category} from "../models/category";
 import {HttpClient} from "@angular/common/http";
 import {Scoreboard} from "../models/scoreboard";
+import {isObservable} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+declare const Zone: any;
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class BackendCommunicationService {
-  readonly url: string = 'http://localhost:4200';
+  readonly url: string = 'http://localhost:80';
+
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  async waitFor<T>(prom: Promise<T> | Observable<T>): Promise<T> {
+    if (isObservable(prom)) {
+      prom = firstValueFrom(prom);
+    }
+    const macroTask = Zone.current
+      .scheduleMacroTask(
+        `WAITFOR-${Math.random()}`,
+        () => {
+        },
+        {},
+        () => {
+        }
+      );
+    return prom.then((p: T) => {
+      macroTask.invoke();
+      return p;
+    });
   }
 
   //For home
@@ -31,11 +56,11 @@ export class BackendCommunicationService {
 
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/user/' + userId + '/threads');
+    return this.httpClient.get<Thread[]>(this.url + '/user/' + userId + '/thread');
   }
 
   getPostsFromUser(userId: number): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/posts');
+    return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/post');
   }
 
   getUser(userId: number): Observable<UserFull> {
@@ -53,6 +78,7 @@ export class BackendCommunicationService {
 
   putUser(user: UserFull): Observable<UserFull> {
     let userPayload = {...user};
+    console.log(user);
     return this.httpClient.put<UserFull>(this.url + '/user/' + user.id, userPayload);
   }
 

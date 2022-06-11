@@ -17,10 +17,6 @@ export class DialogCreatePostComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  test(): void {
-    console.log("workks");
-  }
 }
 
 export interface CreatePostData {

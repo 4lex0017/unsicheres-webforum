@@ -9,11 +9,13 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {DialogCreateCommentComponent} from './dialog-create-comment/dialog-create-comment.component';
 
 
 @NgModule({
   declarations: [
-    DialogEditProfileComponent
+    DialogEditProfileComponent,
+    DialogCreateCommentComponent
   ],
   imports: [
     CommonModule,

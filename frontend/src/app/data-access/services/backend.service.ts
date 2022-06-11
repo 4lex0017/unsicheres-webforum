@@ -131,7 +131,10 @@ export class BackendService {
         {
           id: -2,
           content: "",
-          userId: -1
+          UserSmall: {
+            "id": -1,
+            "username": "test"
+          }
         }
       ],
     }
@@ -842,12 +845,18 @@ export class BackendService {
           {
             "id": 1,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 2,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -867,12 +876,18 @@ export class BackendService {
           {
             "id": 3,
             "content": "Nice profile!",
-            "userId": 11
+            "UserSmall": {
+              "id": 1,
+              "username": "TestUsername1"
+            }
           },
           {
             "id": 4,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -891,12 +906,18 @@ export class BackendService {
           {
             "id": 5,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 6,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -916,12 +937,18 @@ export class BackendService {
           {
             "id": 7,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           },
           {
             "id": 8,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -941,12 +968,18 @@ export class BackendService {
           {
             "id": 9,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 10,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -966,12 +999,18 @@ export class BackendService {
           {
             "id": 11,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 12,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -991,12 +1030,18 @@ export class BackendService {
           {
             "id": 13,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 14,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -1016,12 +1061,18 @@ export class BackendService {
           {
             "id": 15,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 16,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -1041,12 +1092,18 @@ export class BackendService {
           {
             "id": 17,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 18,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       },
@@ -1066,12 +1123,18 @@ export class BackendService {
           {
             "id": 19,
             "content": "Nice profile!",
-            "userId": 12
+            "UserSmall": {
+              "id": 12,
+              "username": "TestUsername2"
+            }
           },
           {
             "id": 20,
             "content": "Nice profile test 123!",
-            "userId": 135
+            "UserSmall": {
+              "id": 135,
+              "username": "TestUsername135"
+            }
           }
         ]
       }

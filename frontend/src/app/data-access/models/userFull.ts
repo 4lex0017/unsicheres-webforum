@@ -5,10 +5,12 @@ export interface UserFull {
   id: number;
   name: string;
   joined: string;
+  birth_date: string
   about: string;
   groups: string[];
   profile_comments: UserComment[];
   profile_picture?: string;
   location?: string;
-  birth_date: string
+  endorsements?: number;
+
 }

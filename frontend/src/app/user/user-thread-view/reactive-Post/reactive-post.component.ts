@@ -42,9 +42,7 @@ export class ReactivePostComponent implements OnInit {
 
   ngOnInit(): void {
     this.vEnabled = this.diffPicker.isEnabledInConfig();
-    console.log("da");
     this.deserializePost(this.postObject.content);
-    console.log("did it");
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();
       this.content.nativeElement.replaceChildren();
@@ -136,7 +134,6 @@ export class ReactivePostComponent implements OnInit {
     under.appendChild(linebreak2);
     console.log(box!.children[0].textContent);
     if(box!.children[0].textContent == "" ){
-      console.log("did it");
       box!.appendChild(reply)
     }else {
       tag.parentNode!.insertBefore(reply, tag.nextSibling);

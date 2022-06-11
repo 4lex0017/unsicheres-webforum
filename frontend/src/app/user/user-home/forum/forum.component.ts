@@ -28,6 +28,7 @@ export class ForumComponent implements OnInit {
               public authenticate: AuthenticationService
   ) {
   }
+  
 
   accessData: Access;
   currentCategoryObject: Category;

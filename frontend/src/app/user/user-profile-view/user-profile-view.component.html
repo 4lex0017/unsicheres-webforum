@@ -1,5 +1,7 @@
 <div class="user-container">
   <mat-card class="user-card">
+    <!--    <div *ngIf="routeData$ | async as data; else loading">-->
+
     <mat-card-header>
       <div mat-card-avatar class="user-default-img-container" *ngIf="!this.userFullObject.profile_picture">
         <mat-icon class="user-default-img">face</mat-icon>
@@ -8,7 +10,7 @@
         <img src="{{this.userFullObject.profile_picture}}" alt="image">
       </div>
       <mat-card-title>
-        <span *ngIf="!vEnabled">{{userFullObject.name}}</span>
+        <span *ngIf="!vEnabled">{{this.userFullObject.name}}</span>
         <span *ngIf="vEnabled" #username></span>
         <span class="spacer"></span>
         <button mat-mini-fab color="primary" *ngIf="canEdit()"
@@ -17,38 +19,50 @@
                 [matTooltipShowDelay]="500">
           <mat-icon>edit</mat-icon>
         </button>
+
       </mat-card-title>
       <mat-card-subtitle>
-        <div> Joined: {{userFullObject.joined}} </div>
-        <div>Born: {{userFullObject.birth_date}} </div>
-        <div *ngIf="userFullObject.location">From: {{userFullObject.location}} </div>
+        <div> Joined: {{this.userFullObject.joined}} </div>
+        <div>Born: {{this.userFullObject.birth_date}} </div>
+        <div *ngIf="this.userFullObject.location">From: {{this.userFullObject.location}} </div>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <h2>About: </h2>
-      <p *ngIf="!vEnabled">{{userFullObject.about}}</p>
+      <p *ngIf="!vEnabled">{{this.userFullObject.about}}</p>
       <p *ngIf="vEnabled" #about></p>
 
       <mat-chip-list>
         <mat-chip class="user-badge" color="primary" selected
-                  *ngFor="let role of userFullObject.groups">{{role}}</mat-chip>
+                  *ngFor="let role of this.userFullObject.groups">{{role}}</mat-chip>
+        <mat-chip class="endorsements-container">
+          <mat-chip-avatar>
+            <mat-icon>star</mat-icon>
+          </mat-chip-avatar>
+          {{this.userFullObject.endorsements}} Endorsements
+        </mat-chip>
       </mat-chip-list>
     </mat-card-content>
 
     <mat-tab-group>
-      <mat-tab label="Comments:  {{userFullObject.profile_comments.length}}">
+      <mat-tab label="Comments:  {{this.userFullObject.profile_comments.length}}">
         <mat-list>
-          <mat-list-item *ngFor="let comment of userFullObject.profile_comments">
+          <mat-list-item *ngFor="let comment of this.userFullObject.profile_comments">
             <div mat-line>{{comment.content}}</div>
             <div mat-line>
               By:
-              <a [routerLink]="['/forum/users', comment.userId]">
-                {{getFullUserFromUserId(comment.userId).name}}
+              <a [routerLink]="['/forum/users', comment.UserSmall.id]">
+                {{comment.UserSmall.username}}
               </a>
             </div>
             <mat-divider></mat-divider>
           </mat-list-item>
+          <button color="primary" mat-mini-fab matTooltip="Add a comment" (click)="openCreateComment()">
+            <mat-icon>library_add</mat-icon>
+          </button>
+
         </mat-list>
+        <!--        <button color="primary" mat-flat-button>Comment</button>-->
       </mat-tab>
 
 
@@ -77,7 +91,15 @@
       </mat-tab>
 
     </mat-tab-group>
-
+    <!--    <mat-card-actions class="thread-actions">-->
+    <!--      <button color="primary" mat-flat-button>Comment</button>-->
+    <!--    </mat-card-actions>-->
     <mat-card-footer class="user-footer"></mat-card-footer>
+    <!--    </div>-->
+    <!--    <ng-template #loading>-->
+    <!--      <div class="loading-container">-->
+    <!--        <h3>Loading User ...</h3>-->
+    <!--      </div>-->
+    <!--    </ng-template>-->
   </mat-card>
 </div>

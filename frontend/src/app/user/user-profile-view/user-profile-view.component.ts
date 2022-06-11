@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Data} from "@angular/router";
 import {UserFull} from "../../data-access/models/userFull";
 import {Thread} from "../../data-access/models/thread";
 import {Post} from "../../data-access/models/post";
@@ -9,6 +9,10 @@ import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-prof
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import * as Buffer from "buffer";
+import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
+import {firstValueFrom, Observable} from "rxjs";
+import {UserComment} from "../../data-access/models/comment";
+import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -17,8 +21,8 @@ import * as Buffer from "buffer";
 })
 export class UserProfileViewComponent implements OnInit {
   userFullObject: UserFull;
-  userThreads: Thread[];
-  userPosts: Post[];
+  userThreads: Thread[] = [];
+  userPosts: Post[] = [];
   vEnabled: boolean;
 
   @ViewChild('about', {static: false}) about: ElementRef;
@@ -26,6 +30,7 @@ export class UserProfileViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private backendService: BackendService,
+              private backendServiceCom: BackendCommunicationService,
               private dialog: MatDialog,
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
@@ -33,13 +38,40 @@ export class UserProfileViewComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-      this.userFullObject = data.user;
-      this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
-      this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
-      this.vEnabled = this.diffPicker.isEnabledInConfig();
-      if (this.vEnabled) this.injectContentToDom();
+  ngOnInit() {
+    this.startUp();
+    // this.userFullObject$ = this.route.data.pipe();
+    // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
+    // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
+    // this.routeData$ = this.route.data;
+
+    //  this.route.data.subscribe((data: any) => {
+    //   this.userFullObject = data.user;
+    //   this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
+    //   this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
+    //   this.vEnabled = this.diffPicker.isEnabledInConfig();
+    //   if (this.vEnabled) this.injectContentToDom();
+    // });
+
+
+  }
+
+  //Geht gerade nicht weil array format im backend nicht passt, kann auch wieder in onInit
+  async startUp() {
+    await firstValueFrom(this.route.data).then((data: any) => {
+      this.userFullObject = {
+        id: data.user.userId,
+        name: data.user.username,
+        joined: data.user.joined,
+        birth_date: data.user.birthDate,
+        about: data.user.about,
+        groups: data.user.groups,
+        profile_comments: data.user.profileComments,
+        profile_picture: data.user.profilePicture,
+        location: data.user.location,
+        endorsements: data.user.endorsements
+      }
+
     });
   }
 
@@ -57,10 +89,25 @@ export class UserProfileViewComponent implements OnInit {
       this.userFullObject.name = result.name;
       this.userFullObject.about = result.about;
       this.userFullObject.profile_picture = result.profile_picture;
-
       this.userFullObject.location = result.location;
+      this.backendServiceCom.putUser(this.userFullObject);
       if (this.vEnabled) this.injectContentToDom();
     });
+  }
+
+  openCreateComment(): void {
+    const dialogRef = this.dialog.open(DialogCreateCommentComponent, {
+      width: '65%',
+      data: ""
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.createComment(result);
+    });
+  }
+
+  createComment(content: string): void {
+    this.authenticate.currentUserId;
+    //  BACKEND POST /user/userView/comments -> enthält curUserId + content
   }
 
   injectContentToDom(): void {
@@ -85,11 +132,10 @@ export class UserProfileViewComponent implements OnInit {
 
   canEdit(): boolean {
     return this.userFullObject.id == this.authenticate.currentUserId;
-
   }
 
   getSlugFromTitle(title: string): string {
-    return this.backendService.getSlugFromTitle(title);
+    return title.replace(/\s+/g, '-').toLowerCase();
   }
 
   getCategoryFromThread(id: number): string {
