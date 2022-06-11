@@ -47,13 +47,10 @@ class UserResource extends JsonResource
         if (!is_a($this->resource, 'Illuminate\Support\Collection')) {
             $data = $this;
         } else {
-            if (count($this->resource) === 0)
-                return [];
-
             $data = $this->resource[0];
         }
 
-        $data->endorsements = 0;
+        $data->endorsements = 0; // doesn't exist in DB, so create it here
 
         $posts = Post::all()->where('author', '=', $data->id)->toArray();
         $threads = Thread::all()->where('author', '=', $data->id)->toArray();

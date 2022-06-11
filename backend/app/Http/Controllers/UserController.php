@@ -2,71 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SmallUserCollection;
+use App\Http\Resources\SmallUserResource;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
 class UserController extends Controller
 {
-    public function getSmallUsers()
-    {
-        return new SmallUserCollection(User::all());
-    }
-
     public function getAllUsers(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($id): UserResource
+    public function getUserById($id): UserResource|Response|Application|ResponseFactory
     {
-        return new UserResource(UserController::findUser($id));
+        $user = UserController::findUser($id);
+        if (!$user)
+            return response('', 404);
+
+        return new UserResource($user);
     }
 
-    public function createUser(Request $user)
+    public function getSmallUserById($id): Response|SmallUserResource|Application|ResponseFactory
     {
-        // For later return new UserResource(UserController::injectableInsert($user->all()));
-        return User::create($user->all());
+        $user = UserController::findUser($id);
+        if (!$user)
+            return response('', 404);
+
+        return new SmallUserResource($user);
     }
 
-    public function updateUser($user_id, Request $userinput)
+    public function createUser(Request $user): UserResource|Response|Application|ResponseFactory
     {
-        $user = User::find($user_id);
-        if ($user->user_id == $user_id) {
-            $user->update($userinput->all());
+        $model = (new User)->create($user->all());
+
+        return $this->getUserById($model['id']);
+    }
+
+    public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
+    {
+        $user = (new User)->find($id);
+        if (!$user)
+            return response('', 404);
+
+        if ($user->id == $id) {
+            $user->update($request->all());
             $user->save();
             return new UserResource($user);
         }
+
+        return response('', 404);
     }
 
-    // public function authorizeUser($user_id, $password)
-    // {
-    //     //TODO:
-    //     return User::authUser($user_id, $password->all);
-    // }
-
-    public function findUser($id)
+    public function findUser($id): ?Collection
     {
-        return UserController::injectableWhere('id', $id);
+        $user = UserController::injectableWhere('id', $id);
+        if (count($user) === 0)
+            return null;
+
+        return $user;
     }
 
-    public function injectableWhere($row, $id)
+    public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
-    }
-
-    public function injectableInsert($userdata)
-    {
-        $user = new User($userdata);
-        return DB::connection('insecure')->insert('insert into users(name, password, birth_date, location, about, groups, profile_picture, profile_comments) values ("'
-            . $user->name . '" , "' . $user->password . '" , "' . $user->birth_date . '" , "' . $user->location .
-            '" , "' . $user->about . '" , "' . $user->groups . '" , "' . $user->profile_picture .
-            '" , "' . $user->profile_comments . '" )');
     }
 }

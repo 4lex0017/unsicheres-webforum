@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('user/small', 'App\Http\Controllers\UserController@getSmallUsers');
-
 /**
  * @uses App\Http\Controllers\UserController::getAllUsers()
  */
@@ -26,16 +23,21 @@ Route::get('user', 'App\Http\Controllers\UserController@getAllUsers');
  */
 Route::get('user/{id}', 'App\Http\Controllers\UserController@getUserById');
 
-
+/**
+ * @uses App\Http\Controllers\UserController::createUser()
+ */
 Route::post('user', 'App\Http\Controllers\UserController@createUser');
 
+/**
+ * @uses App\Http\Controllers\UserController::updateUser()
+ */
 Route::put('user/{id}', 'App\Http\Controllers\UserController@updateUser');
-Route::get('user/{id}/post', 'App\Http\Controllers\PostController@getPostsOfUser');
 
-Route::get('user/{id}/thread', 'App\Http\Controllers\ThreadController@getThreadOfUser');
+/**
+ * @uses App\Http\Controllers\UserController::getSmallUserById()
+ */
+Route::get('user/{id}/small', 'App\Http\Controllers\UserController@getSmallUserById');
 
-
-Route::get('user/{id}/session', 'App\Http\Controllers\UserController@authorizeUser');
 
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 Route::post('login', 'App\Http\Controllers\UserLoginController@login');
