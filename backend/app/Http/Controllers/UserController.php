@@ -6,6 +6,7 @@ use App\Http\Resources\SmallUserCollection;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,12 +17,12 @@ class UserController extends Controller
         return new SmallUserCollection(User::all());
     }
 
-    public function getAllUsers()
+    public function getAllUsers(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($id)
+    public function getUserById($id): UserResource
     {
         return new UserResource(UserController::findUser($id));
     }

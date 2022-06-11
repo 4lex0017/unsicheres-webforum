@@ -16,8 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('user/small', 'App\Http\Controllers\UserController@getSmallUsers');
 
+/**
+ * @uses App\Http\Controllers\UserController::getAllUsers()
+ */
 Route::get('user', 'App\Http\Controllers\UserController@getAllUsers');
 
+/**
+ * @uses App\Http\Controllers\UserController::getUserById()
+ */
 Route::get('user/{id}', 'App\Http\Controllers\UserController@getUserById');
 
 
@@ -47,7 +53,7 @@ Route::get('posts', 'App\Http\Controllers\PostController@getAllPosts');
 Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@createPost');
 
 
-Route::get('search/{text}','App\Http\Controllers\SearchController@globalSearch');
+Route::get('search/{text}', 'App\Http\Controllers\SearchController@globalSearch');
 
 
 Route::get('home', function () {
