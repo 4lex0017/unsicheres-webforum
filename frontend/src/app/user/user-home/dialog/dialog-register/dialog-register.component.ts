@@ -97,6 +97,6 @@ export class DialogRegisterComponent {
   }
 
   formatDate(data: Date): string {
-    return this.datePipe.transform(data, 'dd/MM/yyyy')!;
+    return this.datePipe.transform(data, 'dd.MM.yyyy')!;
   }
 }

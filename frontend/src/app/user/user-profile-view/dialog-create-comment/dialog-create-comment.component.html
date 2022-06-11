@@ -1,0 +1,17 @@
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="user-create-textarea-container">
+    <mat-label>Your Comment</mat-label>
+    <textarea matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="10"
+              [(ngModel)]="data">
+
+    </textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Post comment
+  </button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
+</div>
