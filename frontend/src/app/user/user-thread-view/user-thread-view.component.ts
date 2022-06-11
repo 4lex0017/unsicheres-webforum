@@ -197,7 +197,6 @@ export class UserThreadViewComponent implements OnInit {
       }
     }
     console.log(replyString);
-    console.log("pushed stuff");
     this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, replyString));
     while(fullReply!.children.length > 0){
       fullReply!.removeChild(fullReply!.lastChild!);
