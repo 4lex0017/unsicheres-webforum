@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::connection('secure')->create('vulnerabilities', function (Blueprint $table) {
             $table->id('vulnerability_id');
-            $table->string('uri');
+            $table->string('uri')->unique();
             $table->integer('sxss_difficulty');
             $table->integer('rxss_difficulty');
             $table->integer('sqli_difficulty');
