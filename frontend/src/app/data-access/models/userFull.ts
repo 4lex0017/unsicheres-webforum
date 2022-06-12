@@ -12,5 +12,6 @@ export interface UserFull {
   profile_picture?: string;
   location?: string;
   endorsements?: number;
+  password?: string;
 
 }
