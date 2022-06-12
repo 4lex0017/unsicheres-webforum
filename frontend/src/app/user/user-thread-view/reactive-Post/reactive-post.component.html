@@ -7,7 +7,7 @@
       <img src="{{postObject.author.profile_picture}}" alt="image">
     </div>
     <mat-card-title>
-      <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.username}}</a> answered
+      <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.name}}</a> answered
       on {{postObject.date}}
       <span class="spacer"></span>
       <button mat-mini-fab color="primary" *ngIf="canEditPost()"
@@ -42,7 +42,7 @@
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing" id="replyBox" class ="replyBox" contenteditable="true">
+    <div *ngIf="editing" id="replyBox" class="replyBox" contenteditable="true">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>

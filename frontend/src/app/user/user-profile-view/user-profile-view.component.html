@@ -1,7 +1,5 @@
 <div class="user-container">
   <mat-card class="user-card">
-    <!--    <div *ngIf="routeData$ | async as data; else loading">-->
-
     <mat-card-header>
       <div mat-card-avatar class="user-default-img-container" *ngIf="!this.userFullObject.profile_picture">
         <mat-icon class="user-default-img">face</mat-icon>
@@ -19,7 +17,6 @@
                 [matTooltipShowDelay]="500">
           <mat-icon>edit</mat-icon>
         </button>
-
       </mat-card-title>
       <mat-card-subtitle>
         <div> Joined: {{this.userFullObject.joined}} </div>
@@ -52,7 +49,7 @@
             <div mat-line>
               By:
               <a [routerLink]="['/forum/users', comment.UserSmall.id]">
-                {{comment.UserSmall.username}}
+                {{comment.UserSmall.name}}
               </a>
             </div>
             <mat-divider></mat-divider>
@@ -60,46 +57,49 @@
           <button color="primary" mat-mini-fab matTooltip="Add a comment" (click)="openCreateComment()">
             <mat-icon>library_add</mat-icon>
           </button>
-
-        </mat-list>
-        <!--        <button color="primary" mat-flat-button>Comment</button>-->
-      </mat-tab>
-
-
-      <mat-tab label="Threads: {{userThreads.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let thread of userThreads">
-            <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
-              <div mat-line>{{thread.title}}</div>
-              <div mat-line>Date: {{thread.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
         </mat-list>
       </mat-tab>
 
-      <mat-tab label="Posts: {{userPosts.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let post of userPosts">
-            <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
-              <div mat-line>{{cutPostContent(post.content)}}</div>
-              <div mat-line>Date: {{post.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-tab>
+      <div *ngIf="this.userThreads | async as userThreadsObj; else loadingThreads">
+        <mat-tab label="Threads: {{userThreadsObj.length}}">
+          <mat-list>
+            <mat-list-item *ngFor="let thread of userThreadsObj">
+              <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
+                <div mat-line>{{thread.title}}</div>
+                <div mat-line>Date: {{thread.date}}</div>
+              </a>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-tab>
+      </div>
+      <ng-template #loadingThreads>
+        <mat-tab label="Threads: 0">
+          <mat-list>
+          </mat-list>
+        </mat-tab>
+      </ng-template>
 
+      <div *ngIf="this.userPosts | async as userPostsObj; else loadingPosts">
+        <mat-tab label="Posts: {{userPostsObj.length}}">
+          <mat-list>
+            <mat-list-item *ngFor="let post of userPostsObj">
+              <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
+                <div mat-line>{{cutPostContent(post.content)}}</div>
+                <div mat-line>Date: {{post.date}}</div>
+              </a>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-tab>
+      </div>
+      <ng-template #loadingPosts>
+        <mat-tab label="Posts: 0">
+          <mat-list>
+          </mat-list>
+        </mat-tab>
+      </ng-template>
     </mat-tab-group>
-    <!--    <mat-card-actions class="thread-actions">-->
-    <!--      <button color="primary" mat-flat-button>Comment</button>-->
-    <!--    </mat-card-actions>-->
     <mat-card-footer class="user-footer"></mat-card-footer>
-    <!--    </div>-->
-    <!--    <ng-template #loading>-->
-    <!--      <div class="loading-container">-->
-    <!--        <h3>Loading User ...</h3>-->
-    <!--      </div>-->
-    <!--    </ng-template>-->
   </mat-card>
 </div>

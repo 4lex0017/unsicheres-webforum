@@ -15,7 +15,6 @@ import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {VulnerabilitiesComponent} from "./vulnerabilities/vulnerabilities.component";
-import {DashboardComponent} from "./dashboard/dashboard.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {ScoreboardComponent} from "./scoreboard/scoreboard.component";
 import {SidenavComponent} from "./sidenav/sidenav.component";
@@ -26,13 +25,12 @@ import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { VulnerabilityPickerComponent } from './vulnerability-picker/vulnerability-picker.component';
+import {VulnerabilityPickerComponent} from './vulnerability-picker/vulnerability-picker.component';
 
 
 @NgModule({
   declarations: [
     VulnerabilitiesComponent,
-    DashboardComponent,
     SettingsComponent,
     ScoreboardComponent,
     SidenavComponent,

@@ -21,8 +21,8 @@ import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-creat
 })
 export class UserProfileViewComponent implements OnInit {
   userFullObject: UserFull;
-  userThreads: Thread[] = [];
-  userPosts: Post[] = [];
+  userThreads: Observable<Thread[]>;
+  userPosts: Observable<Post[]>;
   vEnabled: boolean;
 
   @ViewChild('about', {static: false}) about: ElementRef;
@@ -40,6 +40,8 @@ export class UserProfileViewComponent implements OnInit {
 
   ngOnInit() {
     this.startUp();
+    this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
+    this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
     // this.userFullObject$ = this.route.data.pipe();
     // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
     // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
@@ -90,7 +92,7 @@ export class UserProfileViewComponent implements OnInit {
       this.userFullObject.about = result.about;
       this.userFullObject.profile_picture = result.profile_picture;
       this.userFullObject.location = result.location;
-      this.backendServiceCom.putUser(this.userFullObject);
+      this.backendServiceCom.putUser(this.userFullObject).subscribe();
       if (this.vEnabled) this.injectContentToDom();
     });
   }
@@ -148,5 +150,19 @@ export class UserProfileViewComponent implements OnInit {
 
   getFullUserFromUserId(id: number): UserFull {
     return this.backendService.getFullUserFromUserId(id);
+  }
+
+  parseDate(date: string): string {
+    let dateObj: Date = new Date(date);
+    return (
+      [
+        this.padTo2Digits(dateObj.getDate()),
+        this.padTo2Digits(dateObj.getMonth() + 1),
+        dateObj.getFullYear(),
+      ].join('.'));
+  }
+
+  padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
   }
 }

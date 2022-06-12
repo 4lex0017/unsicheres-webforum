@@ -56,11 +56,11 @@ export class BackendCommunicationService {
 
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/user/' + userId + '/thread');
+    return this.httpClient.get<Thread[]>(this.url + '/user/' + userId + '/threads');
   }
 
   getPostsFromUser(userId: number): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/post');
+    return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/posts');
   }
 
   getUser(userId: number): Observable<UserFull> {
@@ -71,15 +71,36 @@ export class BackendCommunicationService {
     return this.httpClient.get<UserFull[]>(this.url + '/user');
   }
 
-  postUser(user: UserFull): Observable<UserFull> {
-    let userPayload = {...user};
+  postUser(user: any): Observable<any> {
+    // let userPayload = {
+    //   "name": user.name,
+    //   "password": user.password,
+    //   "birth_date": user.birth_date,
+    //   "location": user.location,
+    //   "about": user.about,
+    //   "groups": user.groups,
+    //   "profile_picture": user.profile_picture,
+    //   "profile_comments": user.profile_comments
+    // };
+    let userPayload = {...user}
+    // ...user
     return this.httpClient.post<UserFull>(this.url + '/user', userPayload);
   }
 
   putUser(user: UserFull): Observable<UserFull> {
-    let userPayload = {...user};
-    console.log(user);
-    return this.httpClient.put<UserFull>(this.url + '/user/' + user.id, userPayload);
+    let userPayload =
+      {
+        "id": user.id,
+        "name": user.name,
+        "birth_date": user.birth_date,
+        "location": user.location,
+        "about": user.about,
+        "groups": user.groups,
+        "profile_picture": user.profile_picture,
+        "profile_comments": user.profile_comments
+      };
+    // ...user
+    return this.httpClient.put<any>(this.url + '/user/' + user.id, userPayload);
   }
 
   //authenticateUser(password: string):cookie{}
@@ -138,7 +159,7 @@ export class BackendCommunicationService {
   //Backend
   getUserFromUsername(id: number): User {
     let username = "";
-    return {id: id, username: username};
+    return {id: id, name: username};
   }
 
   padTo2Digits(num: number) {
