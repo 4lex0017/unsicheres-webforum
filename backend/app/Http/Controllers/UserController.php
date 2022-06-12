@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SmallUserResource;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
@@ -46,6 +45,7 @@ class UserController extends Controller
         if ($user->id == $id) {
             $user->update($request->all());
             $user->save();
+
             return new UserResource($user);
         }
 
