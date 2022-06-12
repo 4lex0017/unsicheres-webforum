@@ -58,10 +58,7 @@ Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@c
 Route::get('search/{text}', 'App\Http\Controllers\SearchController@globalSearch');
 
 
-Route::get('home', function () {
-    return Category::all();
-});
+Route::get('category', 'App\Http\Controllers\CategroyController@getCategorys');
 
-Route::get('home/{sub_id}', function ($sub_id) {
-    return Category::findSubforum($sub_id);
-});
+Route::get('category/{category_id}', 'App\Http\Controllers\CategroyController@getCategoryById');
+Route::get('category/{category_id}/threads', 'App\Http\Controllers\CategroyController@getThreadsOfCategory');
