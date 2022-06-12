@@ -105,9 +105,9 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(replyPost: Post): void{
-    let sel = window.getSelection();
-    let ran = sel!.getRangeAt(0);
-    let tag = ran.commonAncestorContainer;
+    let selected = window.getSelection();
+    let range = selected!.getRangeAt(0);
+    let tag = range.commonAncestorContainer;
     console.log(tag.parentNode)
     const box = document.getElementById('replyBox')
     let inBox = false;
@@ -135,11 +135,30 @@ export class UserThreadViewComponent implements OnInit {
     reply.setAttribute('replyUserId', replyPost.author.id.toString());
     reply.setAttribute('replyUserName', replyPost.author.username);
     const replyHeader = document.createElement("p");
-    const replyBody = document.createElement("div");
     replyHeader.textContent = replyPost.author.username + ":";
-    replyBody.textContent = replyPost.content;
     reply.appendChild(replyHeader);
-    reply.appendChild(replyBody);
+    let stringArray = Array.from(replyPost.content);
+    let start = 0;
+    for(let i = 0; i < replyPost.content.length; i++ ) {
+      if (stringArray[i] == "/") {
+        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
+          let replyLine = document.createElement("div");
+          replyLine.textContent = replyPost.content.substring(start, i);
+          console.log("Linezeug" + replyLine.textContent)
+          reply.appendChild(replyLine)
+          i = i + 3;
+          start = i;
+        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
+          for(let j = i + 3; j < replyPost.content.length; j++){
+            if(stringArray[j] == "/" && stringArray[j+1] == "r"){
+              i = j + 1;
+              start = i + 1;
+              break;
+            }
+          }
+        }
+      }
+    }
     const above = document.createElement("div");
     const under = document.createElement("div");
     const linebreak = document.createElement("br");
@@ -148,7 +167,6 @@ export class UserThreadViewComponent implements OnInit {
     under.appendChild(linebreak2);
     console.log(box!.children[0].textContent);
     if(box!.children[0].textContent == "" ){
-      console.log("did it");
       box!.appendChild(reply)
     }else {
       tag.parentNode!.insertBefore(reply, tag.nextSibling);
@@ -219,8 +237,8 @@ export class UserThreadViewComponent implements OnInit {
           let replyLine = document.createElement("div");
           replyLine.textContent = postString.substring(start,i);
           content.push(replyLine);
-          i = i + 3;
-          start = i;
+          i = i + 2;
+          start = i + 1;
         }else if(stringArray[i + 1] == "r" && stringArray[i + 2] == "?"){
           let replyFull = document.createElement("blockquote")
           replyFull.className = "testReply";

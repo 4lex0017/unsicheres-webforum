@@ -42,9 +42,7 @@ export class ReactivePostComponent implements OnInit {
 
   ngOnInit(): void {
     this.vEnabled = this.diffPicker.isEnabledInConfig();
-    console.log("da");
     this.deserializePost(this.postObject.content);
-    console.log("did it");
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();
       this.content.nativeElement.replaceChildren();
@@ -151,12 +149,14 @@ export class ReactivePostComponent implements OnInit {
     let replyString : string = "";
     for(let i = 0; i < fullReply!.children.length; i++){
       let child = fullReply!.children[i];
-      if(child.children.length != 0 && child.tagName != "BLOCKQUOTE"){
+      console.log(child.tagName + " | " + child.children.length);
+      if((child.children.length != 1 && child.tagName != "BLOCKQUOTE") || child.children[0].tagName == "BLOCKQUOTE"){
         let rest = "";
         for(let k = 0; k < child.children.length; k++){
           rest = rest + child.children[k].textContent;
         }
         let test = child.textContent!.replace(rest,"");
+        console.log(test);
         replyString = replyString + test + "/b?";
         for(let j = 0; j < child.children.length; j++) {
           if(child.children[j].tagName == "BLOCKQUOTE") {
@@ -182,6 +182,8 @@ export class ReactivePostComponent implements OnInit {
         replyString = replyString + "/r?" + infos + header + body + "/r";
       }else{
         replyString = replyString + child.textContent + "/b?";
+        console.log("after");
+        console.log(child.textContent);
       }
     }
     this.editing = false;
@@ -200,8 +202,8 @@ export class ReactivePostComponent implements OnInit {
           let replyLine = document.createElement("div");
           replyLine.textContent = postString.substring(start,i);
           content.push(replyLine);
-          i = i + 3;
-          start = i;
+          i = i + 2;
+          start = i + 1;
         }else if(stringArray[i + 1] == "r" && stringArray[i + 2] == "?"){
           let replyFull = document.createElement("blockquote")
           replyFull.className = "testReply";
