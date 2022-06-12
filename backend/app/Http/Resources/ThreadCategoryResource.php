@@ -9,7 +9,7 @@ use App\Models\Thread;
 use Illuminate\Support\Facades\Log;
 
 
-class ThreadResource extends JsonResource
+class ThreadCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,23 +22,13 @@ class ThreadResource extends JsonResource
 
     public function toArray($request)
     {
-        if (count($this->resource->all()) == 1) {
-            if (!$this->resource instanceof Thread) {
-                $data = $this->resource->all();
-                $thread = Thread::find($data[0]->id);
-                $this->resource = $thread;
-            }
-        } else {
-            return $this->resource;
-        }
         return [
             'id' => $this->id,
-            'categoryId' => $this->category_id,
             'title' => $this->title,
+            'endorsements' => $this->endorsments,
             'date' => $this->created_at,
             'likedFrom' => $this->liked_from,
             'author' => $this->author,
-            //'posts' => PostResource::collection($this->posts)
         ];
     }
 }

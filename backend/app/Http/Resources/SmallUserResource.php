@@ -2,23 +2,24 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JetBrains\PhpStorm\ArrayShape;
 
 class SmallUserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
 
-    public static $wrap = null;
-
-    public function toArray($request)
+    #[ArrayShape(['id' => "mixed", 'name' => "mixed"])]
+    public function toArray($request): array
     {
         return [
-            'userId' => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
         ];
     }

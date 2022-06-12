@@ -7,7 +7,7 @@
       <img src="{{postObject.author.profile_picture}}" alt="image">
     </div>
     <mat-card-title>
-      <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.username}}</a> answered
+      <a [routerLink]="['/forum/users', postObject.author.id]">{{postObject.author.name}}</a> answered
       on {{postObject.date}}
       <span class="spacer"></span>
       <button mat-mini-fab color="primary" *ngIf="canEditPost()"
@@ -28,35 +28,29 @@
   <mat-card-content class="replyBox">
     <div *ngIf="!editing">
       <div *ngFor="let element of contentArray">
-        <div *ngIf="isDiv(element)">
-          {{element.textContent}}
+        <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
         <blockquote class="repBlockquote" *ngIf="isBlock(element)">
           <div *ngFor="let subelement of element.children">
             <a [routerLink]="['/forum/users', subelement.getAttribute('replyUserId')]">
-              <p *ngIf="isP(subelement)">
-                {{subelement.textContent}}
+              <p *ngIf="isP(subelement)" [textContent]="subelement.textContent">
               </p>
             </a>
-            <div *ngIf="isDiv(subelement)">
-              {{subelement.textContent}}
+            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent">
             </div>
           </div>
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing" id="replyBox" class ="replyBox" contenteditable="true">
+    <div *ngIf="editing" id="replyBox" class="replyBox" contenteditable="true">
       <div *ngFor="let element of contentArray">
-        <div *ngIf="isDiv(element)">
-          {{element.textContent}}
+        <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
         <blockquote class="repBlockquote" *ngIf="isBlock(element)">
           <div *ngFor="let subelement of element.children">
-            <p *ngIf="isP(subelement)">
-              {{subelement.textContent}}
+            <p *ngIf="isP(subelement)" [textContent]="subelement.textContent">
             </p>
-            <div *ngIf="isDiv(subelement)">
-              {{subelement.textContent}}
+            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent">
             </div>
           </div>
         </blockquote>

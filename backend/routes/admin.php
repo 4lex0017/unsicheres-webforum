@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,18 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('config', function () {
-    return Admin::getConfiguration();
-});
+/**
+ * @uses App\Http\Controllers\AdminController::getSupportedVulnerabilities()
+ */
+Route::get('', 'App\Http\Controllers\AdminController@getSupportedVulnerabilities');
 
-Route::get('scoreboard', function () {
-    return Admin::getScoreboard();
-});
+/**
+ * @uses App\Http\Controllers\AdminController::getConfiguration()
+ */
+Route::get('config', 'App\Http\Controllers\AdminController@getConfiguration');
 
-Route::post('config', function (Request $request) {
-    return Admin::startServerWithConfig($request);
-});
+/**
+ * @uses App\Http\Controllers\AdminController::getScoreboard()
+ */
+Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
 
-Route::put('config', function (Request $request) {
-    return Admin::updateConfiguration($request);
-});
+/**
+ * @uses App\Http\Controllers\AdminController::updateConfiguration()
+ */
+Route::put('config', 'App\Http\Controllers\AdminController@updateConfiguration');

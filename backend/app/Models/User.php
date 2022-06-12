@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @mixin Builder
+ */
 class User extends Model
 {
     use HasFactory, HasApiTokens;
@@ -22,14 +26,12 @@ class User extends Model
         'location',
         'about',
         'groups',
-        'endorsements',
         'profile_picture',
         'profile_comments',
     ];
 
     protected $casts = [
         'groups' => 'array',
-        'endorsements' => 'array',
         'profile_comments' => 'array'
     ];
 

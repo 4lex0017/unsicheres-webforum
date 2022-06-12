@@ -11,6 +11,8 @@ import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
 import {ToolbarComponent} from "../../sidenav/toolbar/toolbar.component";
 import {DatePipe} from "@angular/common";
 import {FormControl, Validators} from "@angular/forms";
+import {UserFull} from "../../../../data-access/models/userFull";
+import {BackendCommunicationService} from "../../../../data-access/services/backend-communication.service";
 
 @Component({
   selector: 'app-dialog-register',
@@ -40,7 +42,8 @@ export class DialogRegisterComponent {
     private _snackBar: MatSnackBar,
     private authenticate: AuthenticationService,
     private dialog: MatDialog,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe,
+    private backendCom: BackendCommunicationService) {
   }
 
   registerUser(): void {
@@ -60,10 +63,7 @@ export class DialogRegisterComponent {
           this.authenticate.login(this.username, this.password);
           this.dialogref.close();
         }
-
       } else {
-        // this.passwordErrorMessage = "Passwords do not match";
-        // this.passwordError = true;
         this.password = "";
         this.passwordRepeat = "";
         this._snackBar.openFromComponent(SnackBarNotificationComponent, {
@@ -72,8 +72,6 @@ export class DialogRegisterComponent {
         })
       }
     } else {
-      // this.fillError = true;
-      // this.usernameErrorMessage = "Please fill out all fields";
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         data: "Please fill out all fields",
@@ -82,7 +80,20 @@ export class DialogRegisterComponent {
   }
 
   createNewUser(userName, userPassword, date) {
-    this.backend.registerNewUser(userName, userPassword, date);
+    this.backend.registerNewUser(userName, userPassword, date);  //DELETE later
+    let user = {
+      "name": userName,
+      "password": userPassword,
+      "birth_date": date,
+      "about": "",
+      "groups": [
+        "Member"
+      ],
+      "profile_comments": []
+    }
+    this.backendCom.postUser(user).subscribe(response => {
+      this.authenticate.currentUserId = response.data.id;
+    });
   }
 
   close(): void {
@@ -97,6 +108,6 @@ export class DialogRegisterComponent {
   }
 
   formatDate(data: Date): string {
-    return this.datePipe.transform(data, 'dd/MM/yyyy')!;
+    return this.datePipe.transform(data, 'dd.MM.yyyy')!;
   }
 }

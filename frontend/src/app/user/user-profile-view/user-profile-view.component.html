@@ -8,7 +8,7 @@
         <img src="{{this.userFullObject.profile_picture}}" alt="image">
       </div>
       <mat-card-title>
-        <span *ngIf="!vEnabled">{{userFullObject.name}}</span>
+        <span *ngIf="!vEnabled">{{this.userFullObject.name}}</span>
         <span *ngIf="vEnabled" #username></span>
         <span class="spacer"></span>
         <button mat-mini-fab color="primary" *ngIf="canEdit()"
@@ -19,65 +19,87 @@
         </button>
       </mat-card-title>
       <mat-card-subtitle>
-        <div> Joined: {{userFullObject.joined}} </div>
-        <div>Born: {{userFullObject.birth_date}} </div>
-        <div *ngIf="userFullObject.location">From: {{userFullObject.location}} </div>
+        <div> Joined: {{this.userFullObject.joined}} </div>
+        <div>Born: {{this.userFullObject.birth_date}} </div>
+        <div *ngIf="this.userFullObject.location">From: {{this.userFullObject.location}} </div>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <h2>About: </h2>
-      <p *ngIf="!vEnabled">{{userFullObject.about}}</p>
+      <p *ngIf="!vEnabled">{{this.userFullObject.about}}</p>
       <p *ngIf="vEnabled" #about></p>
 
       <mat-chip-list>
         <mat-chip class="user-badge" color="primary" selected
-                  *ngFor="let role of userFullObject.groups">{{role}}</mat-chip>
+                  *ngFor="let role of this.userFullObject.groups">{{role}}</mat-chip>
+        <mat-chip class="endorsements-container">
+          <mat-chip-avatar>
+            <mat-icon>star</mat-icon>
+          </mat-chip-avatar>
+          {{this.userFullObject.endorsements}} Endorsements
+        </mat-chip>
       </mat-chip-list>
     </mat-card-content>
 
     <mat-tab-group>
-      <mat-tab label="Comments:  {{userFullObject.profile_comments.length}}">
+      <mat-tab label="Comments:  {{this.userFullObject.profile_comments.length}}">
         <mat-list>
-          <mat-list-item *ngFor="let comment of userFullObject.profile_comments">
+          <mat-list-item *ngFor="let comment of this.userFullObject.profile_comments">
             <div mat-line>{{comment.content}}</div>
             <div mat-line>
               By:
-              <a [routerLink]="['/forum/users', comment.userId]">
-                {{getFullUserFromUserId(comment.userId).name}}
+              <a [routerLink]="['/forum/users', comment.UserSmall.id]">
+                {{comment.UserSmall.name}}
               </a>
             </div>
             <mat-divider></mat-divider>
           </mat-list-item>
+          <button color="primary" mat-mini-fab matTooltip="Add a comment" (click)="openCreateComment()">
+            <mat-icon>library_add</mat-icon>
+          </button>
         </mat-list>
       </mat-tab>
 
+      <div *ngIf="this.userThreads | async as userThreadsObj; else loadingThreads">
+        <mat-tab label="Threads: {{userThreadsObj.length}}">
+          <mat-list>
+            <mat-list-item *ngFor="let thread of userThreadsObj">
+              <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
+                <div mat-line>{{thread.title}}</div>
+                <div mat-line>Date: {{thread.date}}</div>
+              </a>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-tab>
+      </div>
+      <ng-template #loadingThreads>
+        <mat-tab label="Threads: 0">
+          <mat-list>
+          </mat-list>
+        </mat-tab>
+      </ng-template>
 
-      <mat-tab label="Threads: {{userThreads.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let thread of userThreads">
-            <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
-              <div mat-line>{{thread.title}}</div>
-              <div mat-line>Date: {{thread.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-tab>
-
-      <mat-tab label="Posts: {{userPosts.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let post of userPosts">
-            <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
-              <div mat-line>{{cutPostContent(post.content)}}</div>
-              <div mat-line>Date: {{post.date}}</div>
-            </a>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
-      </mat-tab>
-
+      <div *ngIf="this.userPosts | async as userPostsObj; else loadingPosts">
+        <mat-tab label="Posts: {{userPostsObj.length}}">
+          <mat-list>
+            <mat-list-item *ngFor="let post of userPostsObj">
+              <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
+                <div mat-line>{{cutPostContent(post.content)}}</div>
+                <div mat-line>Date: {{post.date}}</div>
+              </a>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
+        </mat-tab>
+      </div>
+      <ng-template #loadingPosts>
+        <mat-tab label="Posts: 0">
+          <mat-list>
+          </mat-list>
+        </mat-tab>
+      </ng-template>
     </mat-tab-group>
-
     <mat-card-footer class="user-footer"></mat-card-footer>
   </mat-card>
 </div>

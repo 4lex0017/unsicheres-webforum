@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Thread} from "../models/thread";
 import {Post} from "../models/post";
-import {Observable} from "rxjs";
+import {firstValueFrom, Observable} from "rxjs";
 import {UserFull} from "../models/userFull";
 import {PostReply} from "../models/postReply";
 import {User} from "../models/user";
@@ -9,14 +9,39 @@ import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficulty
 import {Category} from "../models/category";
 import {HttpClient} from "@angular/common/http";
 import {Scoreboard} from "../models/scoreboard";
+import {isObservable} from 'rxjs';
+import {take} from 'rxjs/operators';
+
+declare const Zone: any;
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class BackendCommunicationService {
-  readonly url: string = 'http://localhost:4200';
+  readonly url: string = 'http://localhost:80';
+
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  async waitFor<T>(prom: Promise<T> | Observable<T>): Promise<T> {
+    if (isObservable(prom)) {
+      prom = firstValueFrom(prom);
+    }
+    const macroTask = Zone.current
+      .scheduleMacroTask(
+        `WAITFOR-${Math.random()}`,
+        () => {
+        },
+        {},
+        () => {
+        }
+      );
+    return prom.then((p: T) => {
+      macroTask.invoke();
+      return p;
+    });
   }
 
   //For home
@@ -46,14 +71,36 @@ export class BackendCommunicationService {
     return this.httpClient.get<UserFull[]>(this.url + '/user');
   }
 
-  postUser(user: UserFull): Observable<UserFull> {
-    let userPayload = {...user};
+  postUser(user: any): Observable<any> {
+    // let userPayload = {
+    //   "name": user.name,
+    //   "password": user.password,
+    //   "birth_date": user.birth_date,
+    //   "location": user.location,
+    //   "about": user.about,
+    //   "groups": user.groups,
+    //   "profile_picture": user.profile_picture,
+    //   "profile_comments": user.profile_comments
+    // };
+    let userPayload = {...user}
+    // ...user
     return this.httpClient.post<UserFull>(this.url + '/user', userPayload);
   }
 
   putUser(user: UserFull): Observable<UserFull> {
-    let userPayload = {...user};
-    return this.httpClient.put<UserFull>(this.url + '/user/' + user.id, userPayload);
+    let userPayload =
+      {
+        "id": user.id,
+        "name": user.name,
+        "birth_date": user.birth_date,
+        "location": user.location,
+        "about": user.about,
+        "groups": user.groups,
+        "profile_picture": user.profile_picture,
+        "profile_comments": user.profile_comments
+      };
+    // ...user
+    return this.httpClient.put<any>(this.url + '/user/' + user.id, userPayload);
   }
 
   //authenticateUser(password: string):cookie{}
@@ -112,7 +159,7 @@ export class BackendCommunicationService {
   //Backend
   getUserFromUsername(id: number): User {
     let username = "";
-    return {id: id, username: username};
+    return {id: id, name: username};
   }
 
   padTo2Digits(num: number) {

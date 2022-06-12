@@ -2,64 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SmallUserCollection;
-use App\Http\Resources\SmallUserResource;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 
 class UserController extends Controller
 {
-    public function getSmallUsers()
-    {
-        return new SmallUserCollection(User::all());
-    }
-
-    public function getAllUsers()
+    public function getAllUsers(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($user_id)
+    public function getUserById($id): UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
     {
-        //return UserResource::collection(UserController::findUser($user_id));
+        $user = UserController::findUser($id);
+        if (!$user)
+            return response('', 404);
 
-        return new UserResource(UserController::findUser($user_id));
+        if (count($user) >= 2)
+            $resp = UserResource::collection($user);
+        else
+            $resp = new UserResource($user);
+
+        return $resp;
     }
 
-    public function createUser(Request $user)
+    public function createUser(Request $user): JsonResponse
     {
-        return User::create($user->all());
+        $model = (new User)->create($user->all());
+
+        return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
     }
 
-    public function updateUser($user_id, Request $userinput)
+    public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
     {
-        $user = User::find($user_id);
-        if ($user->user_id == $user_id) {
-            $user->update($userinput->all());
+        $user = (new User)->find($id);
+        if (!$user)
+            return response('', 404);
+
+        if ($user->id == $id) {
+            $user->update($request->all());
             $user->save();
+
             return new UserResource($user);
         }
+
+        return response('', 404);
     }
 
-    public function authorizeUser($user_id, $password)
+    public function findUser($id): ?Collection
     {
-        //TODO:
-        return User::authUser($user_id, $password->all);
+        $user = self::injectableWhere('id', $id);
+        if (count($user) === 0)
+            return null;
+
+        return $user;
     }
 
-    public function findUser($user_id)
+    public function injectableWhere($row, $id): Collection
     {
-        return UserController::injectableWhere('id', $user_id);
-    }
-
-    public function injectableWhere($row, $id)
-    {
-        return DB::connection('insecure')->table('users')->select(
+        return (new User)->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
     }

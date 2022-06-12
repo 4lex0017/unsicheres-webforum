@@ -21,7 +21,6 @@ return new class extends Migration {
             $table->string('location')->default("");
             $table->string('about')->default("");
             $table->json('groups')->default(new Expression('(JSON_ARRAY())'));
-            $table->json('endorsements')->default(new Expression('(JSON_ARRAY())'));
             $table->string('profile_picture')->default("");
             $table->json('profile_comments')->default(new Expression('(JSON_ARRAY())'));
             $table->timestamps();
