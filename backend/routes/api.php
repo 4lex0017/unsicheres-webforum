@@ -44,8 +44,9 @@ Route::post('login', 'App\Http\Controllers\UserLoginController@login');
 
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
+Route::get('thread', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
+Route::post('thread', 'App\Http\Controllers\ThreadController@getAllTrheads');
 
 Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
 
@@ -58,10 +59,7 @@ Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@c
 Route::get('search/{text}', 'App\Http\Controllers\SearchController@globalSearch');
 
 
-Route::get('home', function () {
-    return Category::all();
-});
+Route::get('category', 'App\Http\Controllers\CategroyController@getCategorys');
 
-Route::get('home/{sub_id}', function ($sub_id) {
-    return Category::findSubforum($sub_id);
-});
+Route::get('category/{category_id}', 'App\Http\Controllers\CategroyController@getCategoryById');
+Route::get('category/{category_id}/threads', 'App\Http\Controllers\CategroyController@getThreadsOfCategory');

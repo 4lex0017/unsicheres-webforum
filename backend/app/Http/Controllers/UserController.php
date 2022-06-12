@@ -20,13 +20,18 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($id): UserResource|Response
+    public function getUserById($id): UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
     {
         $user = UserController::findUser($id);
         if (!$user)
             return response('', 404);
 
-        return new UserResource($user);
+        if (count($user) >= 2)
+            $resp = UserResource::collection($user);
+        else
+            $resp = new UserResource($user);
+
+        return $resp;
     }
 
     public function createUser(Request $user): JsonResponse
@@ -55,7 +60,6 @@ class UserController extends Controller
     public function findUser($id): ?Collection
     {
         $user = self::injectableWhere('id', $id);
-
         if (count($user) === 0)
             return null;
 

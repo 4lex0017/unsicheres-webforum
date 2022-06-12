@@ -61,17 +61,18 @@ export class UserProfileViewComponent implements OnInit {
   //Geht gerade nicht weil array format im backend nicht passt, kann auch wieder in onInit
   async startUp() {
     await firstValueFrom(this.route.data).then((data: any) => {
+      console.log(data) //drinnen lassen um kurz daten zu checken
       this.userFullObject = {
-        id: data.user.userId,
-        name: data.user.username,
-        joined: data.user.joined,
-        birth_date: data.user.birthDate,
-        about: data.user.about,
-        groups: data.user.groups,
-        profile_comments: data.user.profileComments,
-        profile_picture: data.user.profilePicture,
-        location: data.user.location,
-        endorsements: data.user.endorsements
+        id: data.user.data.id,
+        name: data.user.data.name,
+        joined: data.user.data.joined,
+        birth_date: data.user.data.birthDate,
+        about: data.user.data.about,
+        groups: data.user.data.groups,
+        profile_comments: data.user.data.profileComments, // Wird vl nicht richtig angezeigt weil model nicht übereinstimmt
+        profile_picture: data.user.data.profilePicture,
+        location: data.user.data.location,
+        endorsements: data.user.data.endorsements
       }
 
     });
