@@ -30,15 +30,6 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function getSmallUserById($id): Response|SmallUserResource|Application|ResponseFactory
-    {
-        $user = UserController::findUser($id);
-        if (!$user)
-            return response('', 404);
-
-        return new SmallUserResource($user);
-    }
-
     public function createUser(Request $user): JsonResponse
     {
         $model = (new User)->create($user->all());
