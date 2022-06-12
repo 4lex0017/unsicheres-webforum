@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SmallUserResource;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
@@ -30,15 +29,6 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function getSmallUserById($id): Response|SmallUserResource|Application|ResponseFactory
-    {
-        $user = UserController::findUser($id);
-        if (!$user)
-            return response('', 404);
-
-        return new SmallUserResource($user);
-    }
-
     public function createUser(Request $user): JsonResponse
     {
         $model = (new User)->create($user->all());
@@ -55,6 +45,7 @@ class UserController extends Controller
         if ($user->id == $id) {
             $user->update($request->all());
             $user->save();
+
             return new UserResource($user);
         }
 

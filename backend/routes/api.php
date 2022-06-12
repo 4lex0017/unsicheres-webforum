@@ -34,9 +34,9 @@ Route::post('user', 'App\Http\Controllers\UserController@createUser');
 Route::put('user/{id}', 'App\Http\Controllers\UserController@updateUser');
 
 /**
- * @uses App\Http\Controllers\UserController::getSmallUserById()
+ * @uses App\Http\Controllers\SiteController::getSmallUsers()
  */
-Route::get('user/{id}/small', 'App\Http\Controllers\UserController@getSmallUserById');
+Route::get('/sitecontent/users', 'App\Http\Controllers\SiteController@getSmallUsers');
 
 
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');

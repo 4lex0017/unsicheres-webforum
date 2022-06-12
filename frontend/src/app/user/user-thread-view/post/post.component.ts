@@ -79,7 +79,7 @@ export class PostComponent implements OnInit {
     if (!this.checkLoggedIn()) return;
     let repliedTo: PostReply = {
       repliedToId: this.postObject.id,
-      repliedToContent: this.postObject.author.username + " wrote '" + this.postObject.content + "'."
+      repliedToContent: this.postObject.author.name + " wrote '" + this.postObject.content + "'."
     };
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',

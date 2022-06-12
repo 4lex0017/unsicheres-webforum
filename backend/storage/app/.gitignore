@@ -3,4 +3,6 @@
 !defaults/defaultHome.json
 !defaults/defaultUsers.json
 !public/
+!config/
+!config/smallUsers.json
 !.gitignore

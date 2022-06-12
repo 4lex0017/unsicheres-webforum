@@ -15,14 +15,12 @@ class SmallUserResource extends JsonResource
      * @return array
      */
 
-    public static $wrap = null;
-
-    #[ArrayShape(['userId' => "mixed", 'username' => "mixed"])]
+    #[ArrayShape(['id' => "mixed", 'name' => "mixed"])]
     public function toArray($request): array
     {
         return [
-            'userId' => $this->resource[0]->id,
-            'username' => $this->resource[0]->name,
+            'id' => $this->id,
+            'name' => $this->name,
         ];
     }
 }
