@@ -4,41 +4,23 @@ namespace App\Http\Resources;
 
 use App\Models\Post;
 use App\Models\Thread;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param Request $request
-     * @return array
-     */
-
-    public static $wrap = null;
-
-    private static function fixArrays($arr)
-    {
-        if (is_array($arr))
-            return $arr;
-
-        return json_decode($arr);
-    }
-
     private static function convertData($data): array
     {
         return [
-            'userId' => $data->id,
-            'username' => $data->name,
+            'id' => $data->id,
+            'name' => $data->name,
             'joined' => $data->created_at,
             'birthDate' => $data->birth_date,
             'location' => $data->location,
             'about' => $data->about,
-            'groups' => self::fixArrays($data->groups),
+            'groups' => $data->groups,
             'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
-            'profileComments' => self::fixArrays($data->profile_comments)
+            'profileComments' => $data->profile_comments
         ];
     }
 

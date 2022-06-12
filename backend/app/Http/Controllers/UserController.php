@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SmallUserResource;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 
 class UserController extends Controller
@@ -21,7 +21,7 @@ class UserController extends Controller
         return UserResource::collection(User::all());
     }
 
-    public function getUserById($id): UserResource|Response|Application|ResponseFactory
+    public function getUserById($id): UserResource|Response
     {
         $user = UserController::findUser($id);
         if (!$user)
@@ -39,11 +39,11 @@ class UserController extends Controller
         return new SmallUserResource($user);
     }
 
-    public function createUser(Request $user): UserResource|Response|Application|ResponseFactory
+    public function createUser(Request $user): JsonResponse
     {
         $model = (new User)->create($user->all());
 
-        return $this->getUserById($model['id']);
+        return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
     }
 
     public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
@@ -63,7 +63,8 @@ class UserController extends Controller
 
     public function findUser($id): ?Collection
     {
-        $user = UserController::injectableWhere('id', $id);
+        $user = self::injectableWhere('id', $id);
+
         if (count($user) === 0)
             return null;
 
@@ -72,7 +73,7 @@ class UserController extends Controller
 
     public function injectableWhere($row, $id): Collection
     {
-        return DB::connection('insecure')->table('users')->select(
+        return (new User)->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
     }
