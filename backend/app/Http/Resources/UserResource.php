@@ -4,7 +4,9 @@ namespace App\Http\Resources;
 
 use App\Models\Post;
 use App\Models\Thread;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
 class UserResource extends JsonResource
 {
@@ -24,9 +26,9 @@ class UserResource extends JsonResource
         ];
     }
 
-    public function toArray($request): array
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
-        if (!is_a($this->resource, 'Illuminate\Support\Collection')) {
+        if (is_a($this->resource, 'App\Models\User')) {
             $data = $this;
         } else {
             $data = $this->resource[0];

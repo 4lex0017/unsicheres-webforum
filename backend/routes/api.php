@@ -44,8 +44,9 @@ Route::post('login', 'App\Http\Controllers\UserLoginController@login');
 
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
+Route::get('thread', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::post('thread', 'App\Http\Controllers\ThreadController@createThread');
+Route::post('thread', 'App\Http\Controllers\ThreadController@getAllTrheads');
 
 Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
 
