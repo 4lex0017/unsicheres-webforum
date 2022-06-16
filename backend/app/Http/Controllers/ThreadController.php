@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class ThreadController extends Controller
 {
+    public function getAllSmallThreads(): array
+    {
+        return self::buildSmallThreadArray(self::queryAllSmallThreads());
+    }
+
     public function getAllTrheads()
     {
         return ThreadResource::collection(Thread::all());
@@ -58,5 +63,41 @@ class ThreadController extends Controller
         return DB::connection('insecure')->table('threads')->select(
             'posts'
         )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public static function queryAllSmallThreads(): array
+    {
+        return DB::connection('insecure')
+            ->table('threads')
+            ->join('users', 'users.id', '=', 'threads.author')
+            ->select('threads.id', 'threads.title', 'threads.liked_from',
+                'threads.posts', 'threads.author', 'users.profile_picture', 'users.name')
+            ->orderBy('threads.updated_at')
+            ->get()->toArray();
+    }
+
+    public static function buildSmallThreadArray($threads): array
+    {
+        $thread_array = array();
+
+        foreach ($threads as $thread) {
+            $tmp_author = [
+                'id' => $thread->author,
+                'profilePicture' => $thread->profile_picture,
+                'name' => $thread->name,
+            ];
+
+            $tmp_thread = [
+                'id' => $thread->id,
+                'title' => $thread->title,
+                'endorsements' => json_decode($thread->liked_from),
+                'numberOfPosts' => count(json_decode($thread->posts)),
+                'author' => $tmp_author,
+            ];
+
+            $thread_array[] = $tmp_thread;
+        }
+
+        return $thread_array;
     }
 }

@@ -2,42 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ThreadResource;
-use App\Models\Category;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 
 class CategoryController extends Controller
 {
-    public function getAllCategorys()
+    public function getAllCategories(): array
     {
-        return CategoryResource::collection(Category::all());
+        $categories = DB::connection('insecure')
+            ->table('categories')
+            ->select('categories.id', 'categories.title', 'categories.threads')
+            ->get()->toArray();
+
+        $category_array = array();
+
+        foreach ($categories as $category) {
+            $category_threads = json_decode($category->threads);
+
+            $threads = DB::connection('insecure')
+                ->table('threads')
+                ->join('users', 'users.id', '=', 'threads.author')
+                ->select('threads.id', 'threads.title', 'threads.liked_from', 'threads.posts', 'threads.author',
+                    'users.profile_picture', 'users.name')
+                ->whereIn('threads.id', $category_threads)
+                ->get()->toArray();
+
+            $thread_array = ThreadController::buildSmallThreadArray($threads);
+
+            $tmp_category = [
+                'id' => $category->id,
+                'title' => $category->title,
+                'threads' => $thread_array
+            ];
+
+            $category_array[] = $tmp_category;
+        }
+
+        return $category_array;
     }
 
-    public function getCategoryById($category_id)
+    public function getThreadsOfCategory($id): array
     {
-        return CategoryController::injectableWhere('id', $category_id);
-    }
+        $threads = DB::connection('insecure')
+            ->table('threads')
+            ->join('users', 'users.id', '=', 'threads.author')
+            ->select('threads.id', 'threads.title', 'threads.liked_from',
+                'threads.posts', 'threads.author', 'users.profile_picture', 'users.name')
+            ->where('threads.category_id', '=', $id)
+            ->get()->toArray();
 
-    public function getThreadsOfCategory($category_id)
-    {
-        return ThreadResource::collection(ThreadController::injectebleWhere('category_id', $category_id));
-    }
-
-    public function createCategory(Request $request)
-    {
-        return Category::create($request->all());
-    }
-
-    public function injectableWhere($row, $id): Collection
-    {
-        return DB::connection('insecure')->table('categorys')->select(
-            '*'
-        )->whereRaw($row . " = " . $id)->get();
+        return ThreadController::buildSmallThreadArray($threads);
     }
 }

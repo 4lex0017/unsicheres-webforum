@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\ArrayShape;
 
 class SearchController extends Controller
