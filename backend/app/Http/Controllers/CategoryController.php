@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 
 class CategoryController extends Controller
 {
-    public function getAllCategories(): array
+    public function getAllCategories(): JsonResponse
     {
         $categories = DB::connection('insecure')
             ->table('categories')
@@ -39,10 +40,10 @@ class CategoryController extends Controller
             $category_array[] = $tmp_category;
         }
 
-        return $category_array;
+        return response()->json(['categories' => $category_array])->setStatusCode(200);
     }
 
-    public function getThreadsOfCategory($id): array|Response
+    public function getThreadsOfCategory($id): JsonResponse
     {
         $threads = DB::connection('insecure')
             ->table('threads')
@@ -53,8 +54,9 @@ class CategoryController extends Controller
             ->get()->toArray();
 
         if (count($threads) === 0)
-            return response('', 404);
+            return response()->json()->setStatusCode(404);
 
-        return ThreadController::buildSmallThreadArray($threads);
+        return response()->json(['threads' => ThreadController::buildSmallThreadArray($threads)])
+            ->setStatusCode(404);
     }
 }

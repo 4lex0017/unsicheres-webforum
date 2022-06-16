@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Http\Resources\ThreadResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Thread;
 use Illuminate\Support\Facades\DB;
@@ -11,9 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class ThreadController extends Controller
 {
-    public function getAllSmallThreads(): array
+    public function getAllSmallThreads(): JsonResponse
     {
-        return self::buildSmallThreadArray(self::queryAllSmallThreads());
+        $data = self::buildSmallThreadArray(self::queryAllSmallThreads());
+
+        return response()->json(['threads' => $data])->setStatusCode(200);
     }
 
     public function getAllTrheads()
