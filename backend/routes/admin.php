@@ -24,11 +24,6 @@ Route::get('', 'App\Http\Controllers\AdminController@getSupportedVulnerabilities
 Route::get('config', 'App\Http\Controllers\AdminController@getConfiguration');
 
 /**
- * @uses App\Http\Controllers\AdminController::getScoreboard()
- */
-Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
-
-/**
  * @uses App\Http\Controllers\AdminController::updateConfiguration()
  */
 Route::put('config', 'App\Http\Controllers\AdminController@updateConfiguration');
@@ -41,4 +36,9 @@ Route::post('/reset/db', 'App\Http\Controllers\AdminController@resetDatabase');
 /**
  * @uses App\Http\Controllers\AdminController::resetScoreboard()
  */
-Route::post('/reset', 'App\Http\Controllers\AdminController@resetScoreboard');
+Route::post('/reset/board', 'App\Http\Controllers\AdminController@resetScoreboard');
+
+/**
+ * @uses App\Http\Controllers\AdminController::getScoreboard()
+ */
+Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
