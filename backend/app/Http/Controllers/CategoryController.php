@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 
@@ -57,6 +56,6 @@ class CategoryController extends Controller
             return response()->json()->setStatusCode(404);
 
         return response()->json(['threads' => ThreadController::buildSmallThreadArray($threads)])
-            ->setStatusCode(404);
+            ->setStatusCode(200);
     }
 }
