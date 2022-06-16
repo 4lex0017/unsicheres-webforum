@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 
@@ -41,7 +42,7 @@ class CategoryController extends Controller
         return $category_array;
     }
 
-    public function getThreadsOfCategory($id): array
+    public function getThreadsOfCategory($id): array|Response
     {
         $threads = DB::connection('insecure')
             ->table('threads')
@@ -50,6 +51,9 @@ class CategoryController extends Controller
                 'threads.posts', 'threads.author', 'users.profile_picture', 'users.name')
             ->where('threads.category_id', '=', $id)
             ->get()->toArray();
+
+        if (count($threads) === 0)
+            return response('', 404);
 
         return ThreadController::buildSmallThreadArray($threads);
     }
