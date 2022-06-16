@@ -59,7 +59,7 @@ Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@c
 Route::get('search/{text}', 'App\Http\Controllers\SearchController@globalSearch');
 
 
-Route::get('category', 'App\Http\Controllers\CategroyController@getCategorys');
+Route::get('category', 'App\Http\Controllers\CategoryController@getCategorys');
 
-Route::get('category/{category_id}', 'App\Http\Controllers\CategroyController@getCategoryById');
-Route::get('category/{category_id}/threads', 'App\Http\Controllers\CategroyController@getThreadsOfCategory');
+Route::get('category/{category_id}', 'App\Http\Controllers\CategoryController@getCategoryById');
+Route::get('category/{category_id}/threads', 'App\Http\Controllers\CategoryController@getThreadsOfCategory');
