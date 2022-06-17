@@ -31,12 +31,12 @@ Route::put('config', 'App\Http\Controllers\AdminController@updateConfiguration')
 /**
  * @uses App\Http\Controllers\AdminController::resetDatabase()
  */
-Route::post('/reset/db', 'App\Http\Controllers\AdminController@resetDatabase');
+Route::post('reset/db', 'App\Http\Controllers\AdminController@resetDatabase');
 
 /**
  * @uses App\Http\Controllers\AdminController::resetScoreboard()
  */
-Route::post('/reset/board', 'App\Http\Controllers\AdminController@resetScoreboard');
+Route::post('reset/scoreboard', 'App\Http\Controllers\AdminController@resetScoreboard');
 
 /**
  * @uses App\Http\Controllers\AdminController::getScoreboard()
