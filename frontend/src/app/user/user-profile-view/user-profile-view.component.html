@@ -19,7 +19,7 @@
         </button>
       </mat-card-title>
       <mat-card-subtitle>
-        <div> Joined: {{this.userFullObject.joined}} </div>
+        <div> Joined: {{parseDate(this.userFullObject.joined)}} </div>
         <div>Born: {{this.userFullObject.birth_date}} </div>
         <div *ngIf="this.userFullObject.location">From: {{this.userFullObject.location}} </div>
       </mat-card-subtitle>
@@ -48,8 +48,8 @@
             <div mat-line>{{comment.content}}</div>
             <div mat-line>
               By:
-              <a [routerLink]="['/forum/users', comment.UserSmall.id]">
-                {{comment.UserSmall.name}}
+              <a [routerLink]="['/forum/users', comment.userSmall.id]">
+                {{comment.userSmall.name}}
               </a>
             </div>
             <mat-divider></mat-divider>

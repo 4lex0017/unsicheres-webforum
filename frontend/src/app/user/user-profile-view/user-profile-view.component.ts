@@ -58,7 +58,6 @@ export class UserProfileViewComponent implements OnInit {
 
   }
 
-  //Geht gerade nicht weil array format im backend nicht passt, kann auch wieder in onInit
   async startUp() {
     await firstValueFrom(this.route.data).then((data: any) => {
       console.log(data) //drinnen lassen um kurz daten zu checken
@@ -69,7 +68,7 @@ export class UserProfileViewComponent implements OnInit {
         birth_date: data.user.data.birthDate,
         about: data.user.data.about,
         groups: data.user.data.groups,
-        profile_comments: data.user.data.profileComments, // Wird vl nicht richtig angezeigt weil model nicht übereinstimmt
+        profile_comments: data.user.data.profileComments,
         profile_picture: data.user.data.profilePicture,
         location: data.user.data.location,
         endorsements: data.user.data.endorsements
