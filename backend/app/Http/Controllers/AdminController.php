@@ -31,31 +31,17 @@ class AdminController extends Controller
 
     public function getScoreboard()
     {
-        $attackers = DB::connection('secure')->table('attackers')
-            ->select(['ip_address', 'name', 'attacker_id'])
-            ->get();
+        $attackers = $this->getAllAttackers();
         $attackers_with_values = array();
+
         foreach ($attackers as $attacker) {
-            $found_vulns = DB::connection('secure')->table('found_vulnerabilities')
-                ->where('attacker_id', '=', $attacker->attacker_id)
-                ->select(['vulnerability_id', 'vuln_type'])
-                ->get();
+            $found_vulns = $this->getFoundVulnsOfAttacker($attacker);
             $vulns_of_attacker = array();
+
             foreach ($found_vulns as $vuln) {
-                $type = 'sqli_difficulty';
-                switch ($vuln->vuln_type) {
-                    case 'rxss':
-                        $type = 'rxss_difficulty';
-                        break;
-                    case 'sxss':
-                        $type = 'sxss_difficulty';
-                        break;
-                    default:
-                        break;
-                }
-                $difficulty = DB::connection('secure')->table('vulnerabilities')
-                    ->where('vulnerability_id', '=', $vuln->vulnerability_id)
-                    ->value($type);
+                $type = $this->getVulnTypeFromVuln($vuln);
+                $difficulty = $this->getDifficultyOfVuln($vuln, $type);
+
                 $vulns_of_attacker[] = [
                     'vulName' => $vuln->vuln_type,
                     'vulLevel' => $difficulty,
@@ -89,5 +75,62 @@ class AdminController extends Controller
             '--path' => '/database/migrations/insecure',
             '--seed' => true,
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllAttackers(): \Illuminate\Support\Collection
+    {
+        $attackers = DB::connection('secure')->table('attackers')
+            ->select(['ip_address', 'name', 'attacker_id'])
+            ->get();
+        return $attackers;
+    }
+
+    /**
+     * @param mixed $attacker
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFoundVulnsOfAttacker(mixed $attacker): \Illuminate\Support\Collection
+    {
+        $found_vulns = DB::connection('secure')->table('found_vulnerabilities')
+            ->where('attacker_id', '=', $attacker->attacker_id)
+            ->select(['vulnerability_id', 'vuln_type'])
+            ->get();
+        return $found_vulns;
+    }
+
+    /**
+     * @param mixed $vuln
+     * @return string
+     */
+    public function getVulnTypeFromVuln(mixed $vuln): string
+    {
+        $type = 'sqli_difficulty';
+        switch ($vuln->vuln_type) {
+            case 'rxss':
+                $type = 'rxss_difficulty';
+                break;
+            case 'sxss':
+                $type = 'sxss_difficulty';
+                break;
+            default:
+                break;
+        }
+        return $type;
+    }
+
+    /**
+     * @param mixed $vuln
+     * @param string $type
+     * @return mixed|null
+     */
+    public function getDifficultyOfVuln(mixed $vuln, string $type): mixed
+    {
+        $difficulty = DB::connection('secure')->table('vulnerabilities')
+            ->where('vulnerability_id', '=', $vuln->vulnerability_id)
+            ->value($type);
+        return $difficulty;
     }
 }
