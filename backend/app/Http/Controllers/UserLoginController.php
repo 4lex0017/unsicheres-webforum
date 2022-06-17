@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class UserLoginController extends Controller
 {
@@ -39,14 +40,14 @@ class UserLoginController extends Controller
 
     public function login(Request $request)
     {
-        if(!Auth::attempt($request->only('name', 'password')))
+        if(!Auth::attempt(['name'=> $request->username , 'password' => $request->password]))
         {
             return response()->json([
                 'message' => 'Invalid login details'
             ], 401);
         }
 
-        $user = User::where('name', $request['name'])->firstOrFail();
+        $user = DB::connection('insecure')->table('users')->where('name', $request['name'])->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
