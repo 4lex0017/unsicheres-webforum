@@ -16,17 +16,17 @@
             {
                 "id": 1,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 2,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -48,17 +48,17 @@
             {
                 "id": 3,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 1,
-                    "username": "TestUsername1"
+                    "name": "TestUsername1"
                 }
             },
             {
                 "id": 4,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -79,17 +79,17 @@
             {
                 "id": 5,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 6,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -111,17 +111,17 @@
             {
                 "id": 7,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             },
             {
                 "id": 8,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -143,17 +143,17 @@
             {
                 "id": 9,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 10,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -175,17 +175,17 @@
             {
                 "id": 11,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 12,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -207,17 +207,17 @@
             {
                 "id": 13,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 14,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -239,17 +239,17 @@
             {
                 "id": 15,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 16,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -271,17 +271,17 @@
             {
                 "id": 17,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 18,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
@@ -303,17 +303,17 @@
             {
                 "id": 19,
                 "content": "Nice profile!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 12,
-                    "username": "TestUsername2"
+                    "name": "TestUsername2"
                 }
             },
             {
                 "id": 20,
                 "content": "Nice profile test 123!",
-                "UserSmall": {
+                "userSmall": {
                     "id": 135,
-                    "username": "TestUsername135"
+                    "name": "TestUsername135"
                 }
             }
         ]
