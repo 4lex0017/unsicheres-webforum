@@ -51,7 +51,12 @@ Route::get('threads/small', 'App\Http\Controllers\ThreadController@getAllSmallTh
 /**
  * @uses App\Http\Controllers\CategoryController::getAllCategories()
  */
-Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategories');
+Route::get('categories/', 'App\Http\Controllers\CategoryController@getAllCategories');
+
+/**
+ * @uses App\Http\Controllers\CategoryController::getCategoryById()
+ */
+Route::get('categories/{id}', 'App\Http\Controllers\CategoryController@getCategoryById');
 
 /**
  * @uses App\Http\Controllers\CategoryController::getThreadsOfCategory()

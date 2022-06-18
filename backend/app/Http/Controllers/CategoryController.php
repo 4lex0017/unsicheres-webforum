@@ -15,6 +15,25 @@ class CategoryController extends Controller
             ->select('categories.id', 'categories.title', 'categories.threads')
             ->get()->toArray();
 
+        return $this->returnCategoryResponse($categories);
+    }
+
+    public function getCategoryById($id): JsonResponse
+    {
+        $categories = DB::connection('insecure')
+            ->table('categories')
+            ->select('categories.id', 'categories.title', 'categories.threads')
+            ->where('categories.id', '=', $id)
+            ->get()->toArray();
+
+        if (count($categories) === 0)
+            return response()->json()->setStatusCode(404);
+
+        return $this->returnCategoryResponse($categories);
+    }
+
+    public function returnCategoryResponse(array $categories): JsonResponse
+    {
         $category_array = array();
 
         foreach ($categories as $category) {
@@ -40,22 +59,5 @@ class CategoryController extends Controller
         }
 
         return response()->json(['categories' => $category_array])->setStatusCode(200);
-    }
-
-    public function getThreadsOfCategory($id): JsonResponse
-    {
-        $threads = DB::connection('insecure')
-            ->table('threads')
-            ->join('users', 'users.id', '=', 'threads.author')
-            ->select('threads.id', 'threads.title', 'threads.liked_from',
-                'threads.posts', 'threads.author', 'users.profile_picture', 'users.name')
-            ->where('threads.category_id', '=', $id)
-            ->get()->toArray();
-
-        if (count($threads) === 0)
-            return response()->json()->setStatusCode(404);
-
-        return response()->json(['threads' => ThreadController::buildSmallThreadArray($threads)])
-            ->setStatusCode(200);
     }
 }
