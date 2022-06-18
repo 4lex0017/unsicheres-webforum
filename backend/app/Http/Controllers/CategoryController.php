@@ -15,7 +15,7 @@ class CategoryController extends Controller
             ->select('categories.id', 'categories.title', 'categories.threads')
             ->get()->toArray();
 
-        return $this->returnCategoryResponse($categories);
+        return $this->returnCategoryResponse($categories, true);
     }
 
     public function getCategoryById($id): JsonResponse
@@ -32,7 +32,7 @@ class CategoryController extends Controller
         return $this->returnCategoryResponse($categories);
     }
 
-    public function returnCategoryResponse(array $categories): JsonResponse
+    public function returnCategoryResponse(array $categories, bool $firstFour = false): JsonResponse
     {
         $category_array = array();
 
@@ -45,9 +45,10 @@ class CategoryController extends Controller
                 ->select('threads.id', 'threads.title', 'threads.liked_from', 'threads.posts', 'threads.author',
                     'users.profile_picture', 'users.name')
                 ->whereIn('threads.id', $category_threads)
+                ->orderBy('threads.updated_at')
                 ->get()->toArray();
 
-            $thread_array = ThreadController::buildSmallThreadArray($threads);
+            $thread_array = ThreadController::buildSmallThreadArray($threads, $firstFour);
 
             $tmp_category = [
                 'id' => $category->id,

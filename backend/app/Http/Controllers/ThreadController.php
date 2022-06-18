@@ -79,11 +79,14 @@ class ThreadController extends Controller
             ->get()->toArray();
     }
 
-    public static function buildSmallThreadArray($threads): array
+    public static function buildSmallThreadArray($threads, bool $firstFour = false): array
     {
         $thread_array = array();
 
         foreach ($threads as $thread) {
+            if ($firstFour && count($thread_array) === 4)
+                break;
+
             $tmp_author = [
                 'id' => $thread->author,
                 'profile_picture' => $thread->profile_picture,
