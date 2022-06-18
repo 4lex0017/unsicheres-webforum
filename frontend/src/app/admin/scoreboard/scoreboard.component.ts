@@ -1,10 +1,12 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {AdminUser, AdminVulnerability} from "../../data-access/models/scoreboard";
+import {Observable} from "rxjs";
+import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 
 // export interface AdminUser {
 //   ipaddress: string;
@@ -21,365 +23,365 @@ import {AdminUser, AdminVulnerability} from "../../data-access/models/scoreboard
 //   vulLevel: string
 // }
 
-const ELEMENT_DATA: AdminUser[] = [
-  {
-    ipaddress: '192.168 l78 2.1', username: 'Daniel', vulnerabilities: [
-      {
-        vulId: 1,
-        vulName: 'XSS reflected',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 5,
-        vulName: 'XSS stored',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 8,
-        vulName: 'Insecure Password Handling',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.6', username: 'Peter', vulnerabilities: [
-      {
-        vulId: 3,
-        vulName: 'XSS reflected',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 4,
-        vulName: 'XSS stored',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 8,
-        vulName: 'Insecure Password Handling',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.2', username: 'Lukas', vulnerabilities: [
-      {
-        vulId: 8,
-        vulName: 'Insecure Password Handling',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 10,
-        vulName: 'Insecure File Upload',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 11,
-        vulName: 'Insecure File Upload',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.15', username: 'Tom', vulnerabilities: [
-      {
-        vulId: 2,
-        vulName: 'XSS reflected',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 3,
-        vulName: 'XSS reflected',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 4,
-        vulName: 'XSS stored',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 5,
-        vulName: 'XSS stored',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 6,
-        vulName: 'XSS stored',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 7,
-        vulName: 'User authentication: Brute Force',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.12', username: 'Doniel', vulnerabilities: [{
-      vulId: 6,
-      vulName: 'XSS stored',
-      vulPoints: 15,
-      vulLevel: 'hard'
-    },
-      {
-        vulId: 7,
-        vulName: 'User authentication: Brute Force',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.7', username: 'Tim', vulnerabilities: [
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 10,
-        vulName: 'Insecure File Upload',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 11,
-        vulName: 'Insecure File Upload',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.22', username: 'Felix', vulnerabilities: [{
-      vulId: 8,
-      vulName: 'Insecure Password Handling',
-      vulPoints: 5,
-      vulLevel: 'easy'
-    },
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.13', username: 'Test1', vulnerabilities: [
-      {
-        vulId: 2,
-        vulName: 'XSS reflected',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 3,
-        vulName: 'XSS reflected',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 4,
-        vulName: 'XSS stored',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 5,
-        vulName: 'XSS stored',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 6,
-        vulName: 'XSS stored',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 7,
-        vulName: 'User authentication: Brute Force',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.22', username: 'Test2', vulnerabilities: [
-      {
-        vulId: 1,
-        vulName: 'XSS reflected',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 2,
-        vulName: 'XSS reflected',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 3,
-        vulName: 'XSS reflected',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 4,
-        vulName: 'XSS stored',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 5,
-        vulName: 'XSS stored',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.60', username: 'Test3', vulnerabilities: [{
-      vulId: 8,
-      vulName: 'Insecure Password Handling',
-      vulPoints: 5,
-      vulLevel: 'easy'
-    },
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.114', username: 'Test4', vulnerabilities: [
-      {
-        vulId: 1,
-        vulName: 'XSS reflected',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.123', username: 'Test5', vulnerabilities: [{
-      vulId: 5,
-      vulName: 'XSS stored',
-      vulPoints: 10,
-      vulLevel: 'medium'
-    },
-      {
-        vulId: 6,
-        vulName: 'XSS stored',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 7,
-        vulName: 'User authentication: Brute Force',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.76', username: 'Test6', vulnerabilities: [
-      {
-        vulId: 9,
-        vulName: 'Command Injection',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 10,
-        vulName: 'Insecure File Upload',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 11,
-        vulName: 'Insecure File Upload',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-    ], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.87', username: 'Test7', vulnerabilities: [{
-      vulId: 6,
-      vulName: 'XSS stored',
-      vulPoints: 15,
-      vulLevel: 'hard'
-    },
-      {
-        vulId: 7,
-        vulName: 'User authentication: Brute Force',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },], expanded: false
-  },
-  {
-    ipaddress: '192.168 l78 2.123', username: 'Oxygen', vulnerabilities: [
-      {
-        vulId: 1,
-        vulName: 'XSS reflected',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 2,
-        vulName: 'XSS reflected',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-      {
-        vulId: 3,
-        vulName: 'XSS reflected',
-        vulPoints: 15,
-        vulLevel: 'hard'
-      },
-      {
-        vulId: 4,
-        vulName: 'XSS stored',
-        vulPoints: 5,
-        vulLevel: 'easy'
-      },
-      {
-        vulId: 5,
-        vulName: 'XSS stored',
-        vulPoints: 10,
-        vulLevel: 'medium'
-      },
-    ], expanded: false
-  }
-];
+// const ELEMENT_DATA: AdminUser[] = [
+//   {
+//     ipaddress: '192.168 l78 2.1', username: 'Daniel', vulnerabilities: [
+//       {
+//         vulId: 1,
+//         vulName: 'XSS reflected',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 5,
+//         vulName: 'XSS stored',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 8,
+//         vulName: 'Insecure Password Handling',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.6', username: 'Peter', vulnerabilities: [
+//       {
+//         vulId: 3,
+//         vulName: 'XSS reflected',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 4,
+//         vulName: 'XSS stored',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 8,
+//         vulName: 'Insecure Password Handling',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.2', username: 'Lukas', vulnerabilities: [
+//       {
+//         vulId: 8,
+//         vulName: 'Insecure Password Handling',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 10,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 11,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.15', username: 'Tom', vulnerabilities: [
+//       {
+//         vulId: 2,
+//         vulName: 'XSS reflected',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 3,
+//         vulName: 'XSS reflected',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 4,
+//         vulName: 'XSS stored',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 5,
+//         vulName: 'XSS stored',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 6,
+//         vulName: 'XSS stored',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 7,
+//         vulName: 'User authentication: Brute Force',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.12', username: 'Doniel', vulnerabilities: [{
+//       vulId: 6,
+//       vulName: 'XSS stored',
+//       vulPoints: 15,
+//       vulLevel: 'hard'
+//     },
+//       {
+//         vulId: 7,
+//         vulName: 'User authentication: Brute Force',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.7', username: 'Tim', vulnerabilities: [
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 10,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 11,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.22', username: 'Felix', vulnerabilities: [{
+//       vulId: 8,
+//       vulName: 'Insecure Password Handling',
+//       vulPoints: 5,
+//       vulLevel: 'easy'
+//     },
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.13', username: 'Test1', vulnerabilities: [
+//       {
+//         vulId: 2,
+//         vulName: 'XSS reflected',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 3,
+//         vulName: 'XSS reflected',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 4,
+//         vulName: 'XSS stored',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 5,
+//         vulName: 'XSS stored',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 6,
+//         vulName: 'XSS stored',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 7,
+//         vulName: 'User authentication: Brute Force',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.22', username: 'Test2', vulnerabilities: [
+//       {
+//         vulId: 1,
+//         vulName: 'XSS reflected',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 2,
+//         vulName: 'XSS reflected',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 3,
+//         vulName: 'XSS reflected',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 4,
+//         vulName: 'XSS stored',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 5,
+//         vulName: 'XSS stored',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.60', username: 'Test3', vulnerabilities: [{
+//       vulId: 8,
+//       vulName: 'Insecure Password Handling',
+//       vulPoints: 5,
+//       vulLevel: 'easy'
+//     },
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.114', username: 'Test4', vulnerabilities: [
+//       {
+//         vulId: 1,
+//         vulName: 'XSS reflected',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.123', username: 'Test5', vulnerabilities: [{
+//       vulId: 5,
+//       vulName: 'XSS stored',
+//       vulPoints: 10,
+//       vulLevel: 'medium'
+//     },
+//       {
+//         vulId: 6,
+//         vulName: 'XSS stored',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 7,
+//         vulName: 'User authentication: Brute Force',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.76', username: 'Test6', vulnerabilities: [
+//       {
+//         vulId: 9,
+//         vulName: 'Command Injection',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 10,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 11,
+//         vulName: 'Insecure File Upload',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//     ], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.87', username: 'Test7', vulnerabilities: [{
+//       vulId: 6,
+//       vulName: 'XSS stored',
+//       vulPoints: 15,
+//       vulLevel: 'hard'
+//     },
+//       {
+//         vulId: 7,
+//         vulName: 'User authentication: Brute Force',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },], expanded: false
+//   },
+//   {
+//     ipaddress: '192.168 l78 2.123', username: 'Oxygen', vulnerabilities: [
+//       {
+//         vulId: 1,
+//         vulName: 'XSS reflected',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 2,
+//         vulName: 'XSS reflected',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//       {
+//         vulId: 3,
+//         vulName: 'XSS reflected',
+//         vulPoints: 15,
+//         vulLevel: 'hard'
+//       },
+//       {
+//         vulId: 4,
+//         vulName: 'XSS stored',
+//         vulPoints: 5,
+//         vulLevel: 'easy'
+//       },
+//       {
+//         vulId: 5,
+//         vulName: 'XSS stored',
+//         vulPoints: 10,
+//         vulLevel: 'medium'
+//       },
+//     ], expanded: false
+//   }
+// ];
 
 @Component({
   selector: 'app-scoreboard',
@@ -393,14 +395,28 @@ const ELEMENT_DATA: AdminUser[] = [
     ]),
   ],
 })
-export class ScoreboardComponent implements AfterViewInit {
+export class ScoreboardComponent implements AfterViewInit, OnInit {
   allRowToggle = false;
   displayedColumns: string[] = ['score', 'ipaddress', 'username', 'vulnFound'];
   displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource;
+  // = new MatTableDataSource(ELEMENT_DATA);
+  scoreboard: AdminUser[];
+
+  constructor(private _liveAnnouncer: LiveAnnouncer, private backendCom: BackendCommunicationService) {
+  }
+
+  ngOnInit(): void {
+    this.backendCom.getScoreboard().subscribe((data: AdminUser[]) => {
+
+      this.scoreboard = data;
+      for (let i = 0; i < this.scoreboard.length; i++) {
+        if (this.scoreboard[i].expanded == undefined) this.scoreboard[i].expanded = false;
+      }
+      this.dataSource = new MatTableDataSource(this.scoreboard);
+    })
 
 
-  constructor(private _liveAnnouncer: LiveAnnouncer) {
   }
 
   quickSort(vulnerabilities: AdminVulnerability[]): AdminVulnerability[] {
@@ -420,7 +436,7 @@ export class ScoreboardComponent implements AfterViewInit {
 
   manageAllRows() {
     this.allRowToggle = !this.allRowToggle
-    ELEMENT_DATA.forEach(row => {
+    this.scoreboard.forEach(row => {
       row.expanded = this.allRowToggle;
     })
   }
@@ -428,7 +444,7 @@ export class ScoreboardComponent implements AfterViewInit {
   getPoints(vulnerabilities: AdminVulnerability[]): number {
     let result = 0;
     for (let z = 0; z < vulnerabilities.length; z++) {
-      result += vulnerabilities[z].vulPoints;
+      result += vulnerabilities[z].vulLevel;
     }
     return result;
   }
@@ -465,4 +481,11 @@ export class ScoreboardComponent implements AfterViewInit {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
+
+  getUsername(name: string): string {
+    if (name == null) return "N/A"
+    return name;
+  }
+
+
 }

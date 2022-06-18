@@ -8,7 +8,7 @@ import {User} from "../models/user";
 import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficultyOverview";
 import {Category} from "../models/category";
 import {HttpClient} from "@angular/common/http";
-import {Scoreboard} from "../models/scoreboard";
+import {AdminUser, Scoreboard} from "../models/scoreboard";
 import {isObservable} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {Access} from "../models/access";
@@ -153,8 +153,8 @@ export class BackendCommunicationService {
     return this.httpClient.get<VulnerabilityDifficultyOverview[]>(this.url + '/admin');
   }
 
-  getScoreboard(): Observable<Scoreboard> {
-    return this.httpClient.get<Scoreboard>(this.url + '/admin/scoreboard');
+  getScoreboard(): Observable<AdminUser[]> {
+    return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard');
   }
 
 
