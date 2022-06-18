@@ -10,6 +10,7 @@ import {Thread} from "../../../data-access/models/thread";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
 import {Router} from "@angular/router";
 import {BackendService} from "../../../data-access/services/backend.service";
+import {CategoryBackend} from "../../../data-access/models/accessBackend";
 
 
 @Component({
@@ -19,7 +20,7 @@ import {BackendService} from "../../../data-access/services/backend.service";
 })
 export class CategoryComponent implements AfterViewInit {
   @Input()
-  categoryObject: Category;
+  categoryObject: CategoryBackend;
   @Input()
   showFull: boolean;
 
@@ -50,9 +51,5 @@ export class CategoryComponent implements AfterViewInit {
     this.router.navigate(['forum/home'], {queryParams: {view: category}});
 
   }
-
-  // getUserPicture(userId: number): string | undefined {
-  //   return this.backend.getUserPicture(userId)
-  // }
 
 }

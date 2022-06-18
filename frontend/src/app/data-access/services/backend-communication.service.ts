@@ -11,6 +11,8 @@ import {HttpClient} from "@angular/common/http";
 import {Scoreboard} from "../models/scoreboard";
 import {isObservable} from 'rxjs';
 import {take} from 'rxjs/operators';
+import {Access} from "../models/access";
+import {AccessBackend} from "../models/accessBackend";
 
 declare const Zone: any;
 
@@ -45,12 +47,12 @@ export class BackendCommunicationService {
   }
 
   //For home
-  getCategories(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(this.url + '/home');
+  getCategories(): Observable<AccessBackend> {
+    return this.httpClient.get<AccessBackend>(this.url + '/categories');
   }
 
-  getCategory(categoryId: number): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/home/' + categoryId);
+  getCategory(categoryId: number): Observable<AccessBackend> {
+    return this.httpClient.get<AccessBackend>(this.url + '/categories/' + categoryId);
   }
 
 

@@ -11,6 +11,10 @@
   padding: 0 0 0 20px;
 }
 
+.padding {
+  margin-bottom: 60px;
+}
+
 .spacer-form-field {
   padding: 0 0 0 10px;
 }
@@ -26,4 +30,23 @@
 
 .sidecontent-users {
   font-size: 25px;
+}
+
+.loading-container {
+  padding: 150px 0 5px 20px;
+  min-width: 100%;
+}
+
+loading-spinner-container {
+  margin: 0 auto;
+}
+
+h2.loading-text {
+  text-align: center;
+}
+
+
+.loading-spinner {
+  margin: 0 auto;
+  margin-bottom: 25px;
 }

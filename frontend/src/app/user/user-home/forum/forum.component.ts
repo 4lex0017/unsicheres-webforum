@@ -13,6 +13,11 @@ import {
   DialogSearchErrorMessageComponent
 } from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
 import {DialogLoginComponent} from "../dialog/dialog-login/dialog-login.component";
+import {Observable} from "rxjs";
+import {Post} from "../../../data-access/models/post";
+import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {AccessBackend, CategoryBackend} from "../../../data-access/models/accessBackend";
+
 
 @Component({
   selector: 'app-forum',
@@ -22,13 +27,17 @@ import {DialogLoginComponent} from "../dialog/dialog-login/dialog-login.componen
 export class ForumComponent implements OnInit {
 
   constructor(public backEndService: BackendService,
+              private backendComService: BackendCommunicationService,
               private dialog: MatDialog,
               private router: Router,
               private activeRoute: ActivatedRoute,
               public authenticate: AuthenticationService
   ) {
   }
-  
+
+  loadingData = [];
+  accessBackend: Observable<AccessBackend>;
+
 
   accessData: Access;
   currentCategoryObject: Category;
@@ -40,18 +49,31 @@ export class ForumComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.accessBackend = this.backendComService.getCategories();
     this.accessData = this.backEndService.loadData();
     this.activeRoute.queryParamMap.subscribe((params) => {
-      if (params.get('view') == "community") {
-        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Community")!;
+      if (params.get('view') != "all" && params.get('view') != null) {
+        let para = params.get('view');
         this.showFull = true;
-      } else if (params.get('view') == "support") {
-        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Support")!;
-        this.showFull = true;
-      } else if (params.get('view') == "general") {
-        this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "General")!;
-        this.showFull = true;
+        console.log(para);
+
+        this.accessBackend.subscribe(data => {
+          let cat = data.categories.find(cat => cat.title.toLowerCase() == para);
+          this.accessBackend = this.backendComService.getCategory(cat!.id);
+
+        });
+        // this.accessBackend = this.backendComService.getCategory(1);
+        // this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Community")!;
+        // this.showFull = true;
+        // } else if (params.get('view') == "support") {
+        //   this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Support")!;
+        //   this.showFull = true;
+        // } else if (params.get('view') == "general") {
+        //   this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "General")!;
+        //   this.showFull = true;
       } else {
+        this.accessBackend = this.backendComService.getCategories();
+
         this.showFull = false;
       }
     });
