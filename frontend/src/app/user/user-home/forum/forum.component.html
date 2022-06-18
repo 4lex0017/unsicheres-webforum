@@ -2,17 +2,22 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-11 col-md-10 col-lg-9">
-        <div *ngIf="!showFull" class="categories">
-          <app-category *ngFor="let category of accessData.categories"
+        <div *ngIf="this.accessBackend | async as access; else loadingAccess">
+
+          <app-category *ngFor="let category of access.categories"
                         [categoryObject]="category"
                         [showFull]="showFull"
           ></app-category>
+          <div class="padding"></div>
         </div>
-        <div *ngIf="showFull" class="categories">
-          <app-category [categoryObject]="currentCategoryObject"
-                        [showFull]="showFull"
-          ></app-category>
-        </div>
+        <ng-template #loadingAccess>
+          <div class="loading-container">
+            <div class="loading-spinner-container">
+              <mat-spinner class="loading-spinner"></mat-spinner>
+              <h2 class="loading-text">Loading ...</h2>
+            </div>
+          </div>
+        </ng-template>
       </div>
       <div class="col-xs-1 col-md-2 col-lg-3">
         <div class="side-content-container">

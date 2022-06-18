@@ -38,6 +38,7 @@ import {DialogRegisterComponent} from "./dialog/dialog-register/dialog-register.
 import {DialogContactFormComponent} from './dialog/dialog-contact-form/dialog-contact-form.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     ReactiveFormsModule,
     MatProgressBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatProgressSpinnerModule
 
   ]
 })
