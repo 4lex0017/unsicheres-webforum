@@ -86,14 +86,14 @@ class ThreadController extends Controller
         foreach ($threads as $thread) {
             $tmp_author = [
                 'id' => $thread->author,
-                'profilePicture' => $thread->profile_picture,
+                'profile_picture' => $thread->profile_picture,
                 'name' => $thread->name,
             ];
 
             $tmp_thread = [
                 'id' => $thread->id,
                 'title' => $thread->title,
-                'endorsements' => json_decode($thread->liked_from),
+                'likedFrom' => json_decode($thread->liked_from),
                 'numberOfPosts' => count(json_decode($thread->posts)),
                 'author' => $tmp_author,
             ];
