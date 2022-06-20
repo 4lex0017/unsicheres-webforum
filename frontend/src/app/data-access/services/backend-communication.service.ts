@@ -1,20 +1,18 @@
 import {Injectable} from '@angular/core';
 import {Thread} from "../models/thread";
 import {Post} from "../models/post";
-import {firstValueFrom, Observable} from "rxjs";
+import {catchError, firstValueFrom, map, NotFoundError, Observable, of, retry, throwError} from "rxjs";
 import {UserFull} from "../models/userFull";
 import {PostReply} from "../models/postReply";
 import {User} from "../models/user";
 import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficultyOverview";
-import {Category} from "../models/category";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {AdminUser, Scoreboard} from "../models/scoreboard";
-import {isObservable} from 'rxjs';
-import {take} from 'rxjs/operators';
-import {Access} from "../models/access";
 import {AccessBackend} from "../models/accessBackend";
+import {Router} from "@angular/router";
+import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
-declare const Zone: any;
 
 @Injectable({
   providedIn: 'root'
@@ -24,26 +22,15 @@ export class BackendCommunicationService {
   readonly url: string = 'http://localhost:80';
 
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
   }
 
-  async waitFor<T>(prom: Promise<T> | Observable<T>): Promise<T> {
-    if (isObservable(prom)) {
-      prom = firstValueFrom(prom);
-    }
-    const macroTask = Zone.current
-      .scheduleMacroTask(
-        `WAITFOR-${Math.random()}`,
-        () => {
-        },
-        {},
-        () => {
-        }
-      );
-    return prom.then((p: T) => {
-      macroTask.invoke();
-      return p;
-    });
+  errorBreadCrumb(text: string): void {
+    this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+      duration: 5000,
+      data: "Sorry, something went wrong. " + text + " Error",
+    })
+    this.router.navigate(['/forum/home']);
   }
 
   //For home
@@ -52,7 +39,13 @@ export class BackendCommunicationService {
   }
 
   getCategory(categoryId: number): Observable<AccessBackend> {
-    return this.httpClient.get<AccessBackend>(this.url + '/categories/' + categoryId);
+    return this.httpClient.get<AccessBackend>(this.url + '/categories/' + categoryId)
+      .pipe(catchError((error: Response) => {
+          this.errorBreadCrumb(error.status.toString())
+          this.router.navigate(['/forum/home']);
+          throw {message: 'Bad response', value: error.status}
+        })
+      );
   }
 
 
@@ -65,12 +58,16 @@ export class BackendCommunicationService {
     return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/posts');
   }
 
-  getUser(userId: number): Observable<UserFull> {
-    return this.httpClient.get<UserFull>(this.url + '/user/' + userId);
+  getUser(userId: number): Observable<HttpResponse<UserFull>> {
+    return this.httpClient.get<UserFull>(this.url + '/user/' + userId, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorBreadCrumb(error.status.toString())
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getUsers(): Observable<UserFull[]> {
-    return this.httpClient.get<UserFull[]>(this.url + '/user');
+    return this.httpClient.get<UserFull[]>(this.url + '/user')
   }
 
   postUser(user: any): Observable<any> {
@@ -110,7 +107,13 @@ export class BackendCommunicationService {
 
   // For Thread view
   getThread(categoryId: number, threadId: number): Observable<Thread> {
-    return this.httpClient.get<Thread>(this.url + '/thread/' + categoryId + '/' + threadId);
+    return this.httpClient.get<Thread>(this.url + '/thread/' + categoryId + '/' + threadId)
+      .pipe(catchError((error: Response) => {
+        this.errorBreadCrumb(error.status.toString())
+        this.router.navigate(['/forum/home']);
+        throw {message: 'Bad response', value: error.status}
+        // throwError(() => new Error(error.statusText))
+      }));
   }
 
   postThread(categoryId: number, thread: Thread): Observable<Thread> {

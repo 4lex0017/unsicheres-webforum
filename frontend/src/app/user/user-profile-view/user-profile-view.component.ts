@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Data} from "@angular/router";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 import {UserFull} from "../../data-access/models/userFull";
 import {Thread} from "../../data-access/models/thread";
 import {Post} from "../../data-access/models/post";
@@ -10,9 +10,11 @@ import {AuthenticationService} from "../../data-access/services/authentication.s
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import * as Buffer from "buffer";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {firstValueFrom, Observable} from "rxjs";
+import {firstValueFrom, NotFoundError, Observable} from "rxjs";
 import {UserComment} from "../../data-access/models/comment";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
+import {catchError} from 'rxjs/operators';
+import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -29,19 +31,46 @@ export class UserProfileViewComponent implements OnInit {
   @ViewChild('username', {static: false}) username: ElementRef;
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private backendService: BackendService,
               private backendServiceCom: BackendCommunicationService,
               private dialog: MatDialog,
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private changeDetectorRef: ChangeDetectorRef,
+              private didAThing: DidAThingServiceService) {
   }
 
 
   ngOnInit() {
-    this.startUp();
-    this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
-    this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
+    // this.startUp();
+    // this.backendServiceCom.getUserOld(12);
+
+    this.route.data.subscribe((resp: Data) => {
+      console.log(resp) //drinnen lassen um kurz daten zu checken
+      this.userFullObject = {
+        id: resp["user"].body.data.id,
+        name: resp["user"].body.data.name,
+        joined: resp["user"].body.data.joined,
+        birth_date: resp["user"].body.data.birthDate,
+        about: resp["user"].body.data.about,
+        groups: resp["user"].body.data.groups,
+        profile_comments: resp["user"].body.data.profileComments,
+        profile_picture: resp["user"].body.data.profilePicture,
+        location: resp["user"].body.data.location,
+        endorsements: resp["user"].body.data.endorsements
+      }
+      if (!resp["user"]["headers"].get('VulnFound')) {
+        console.log("found vuln in userprofile")
+        this.didAThing.sendMessage();
+      }
+    });
+
+
+    // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
+    // this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
+
+
     // this.userFullObject$ = this.route.data.pipe();
     // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
     // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
@@ -58,21 +87,25 @@ export class UserProfileViewComponent implements OnInit {
 
   }
 
-  async startUp() {
-    await firstValueFrom(this.route.data).then((data: any) => {
-      console.log(data) //drinnen lassen um kurz daten zu checken
+  startUp() {
+    firstValueFrom(this.route.data).then((resp: any) => {
+      console.log(resp) //drinnen lassen um kurz daten zu checken
       this.userFullObject = {
-        id: data.user.data.id,
-        name: data.user.data.name,
-        joined: data.user.data.joined,
-        birth_date: data.user.data.birthDate,
-        about: data.user.data.about,
-        groups: data.user.data.groups,
-        profile_comments: data.user.data.profileComments,
-        profile_picture: data.user.data.profilePicture,
-        location: data.user.data.location,
-        endorsements: data.user.data.endorsements
+        id: resp.user.body.data.id,
+        name: resp.user.body.data.name,
+        joined: resp.user.body.data.joined,
+        birth_date: resp.user.body.data.birthDate,
+        about: resp.user.body.data.about,
+        groups: resp.user.body.data.groups,
+        profile_comments: resp.user.body.data.profileComments,
+        profile_picture: resp.user.body.data.profilePicture,
+        location: resp.user.body.data.location,
+        endorsements: resp.user.body.data.endorsements
       }
+      const keys = resp.headers.keys();
+      let headers = keys.map(key =>
+        `${key}: ${resp.headers.get(key)}`);
+      console.log(headers)
 
     });
   }
