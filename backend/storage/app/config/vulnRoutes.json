@@ -14,7 +14,7 @@
         {"route": "/threads/{int}"}
     ],
     "rxss": [
-        {"route": "/search/text"}
+        {"route": "/search"}
     ],
     "sxss": [
         {"route": "/user"},
