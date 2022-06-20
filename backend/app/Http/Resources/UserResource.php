@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'about' => $data->about,
             'groups' => $data->groups,
             'endorsements' => $data->endorsements,
-            'profilePicture' => $data->profile_picture,
+            'profilePicture' => "ads", //$data->profile_picture,
             'profileComments' => $data->profile_comments
         ];
     }

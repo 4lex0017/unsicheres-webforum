@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Http\Resources\ThreadResource;
+use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Thread;
@@ -36,6 +37,12 @@ class ThreadController extends Controller
         $thread = $request->all();
         $thread['category_id'] = $category_id;
         $model = (new Thread)->create($thread);
+
+        $category = (new Category)->where('id', $category_id)->first();
+
+        $category->threads[] = $model->id;
+
+        $category->update();
 
         return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
     }

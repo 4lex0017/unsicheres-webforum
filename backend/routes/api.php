@@ -66,9 +66,9 @@ Route::get('categories/{id}/threads', 'App\Http\Controllers\CategoryController@g
 Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
 
 
-Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
+Route::get('threads/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::put('thread/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
+Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
 
 
 Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
