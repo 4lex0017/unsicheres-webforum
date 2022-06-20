@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 
 class SearchController extends Controller
 {
-    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection",
-        'posts' => "\Illuminate\Support\Collection"])]
-    public function globalSearch($text): array
+    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection", 'posts' => "array"])]
+    public function globalSearch(Request $request): JsonResponse|array
     {
-        return self::injectableSelectWhere($text);
+        $q = $request->query('q');
+        if (!$q)
+            return response()->json()->setStatusCode(404);
+
+        return self::injectableSelectWhere($q);
     }
 
-    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection",
-        'posts' => "\Illuminate\Support\Collection"])]
+    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection", 'posts' => "array"])]
     public static function injectableSelectWhere($text): array
     {
         $users = DB::connection('insecure')->table('users')->select(
