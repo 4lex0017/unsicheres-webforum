@@ -6,4 +6,5 @@
 !config/
 !config/smallUsers.json
 !config/vulnerabilities.json
+!config/vulnRoutes.json
 !.gitignore
