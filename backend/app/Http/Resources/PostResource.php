@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
+use Illuminate\Contracts\Support\Arrayable;
 
 use App\Models\Post;
 
@@ -20,25 +22,25 @@ class PostResource extends JsonResource
 
     public static $wrap = null;
 
-    public function toArray($request)
+    private static function convertData($data): array
     {
-        Log::debug(print_r($this, true));
-        if (count($this->resource->all()) == 1) {
-            if (!$this->resource instanceof Post) {
-                $data = $this->resource->all();
-                $post = Post::find($data[0]->id);
-                $this->resource = $post;
-            }
-        } else {
-            return $this->resource;
-        }
         return [
-            'id' => $this->id,
-            'threadId' => $this->thread_id,
-            'content' => $this->content,
-            'date' => $this->created_at,
-            'likedFrom' => PostResource::collection($this->liked_from),
-            'author' => $this->author,
+            'id' => $data->id,
+            'threadId' => $data->thread_id,
+            'content' => $data->content,
+            'date' => $data->created_at,
+            'likedFrom' => $data->liked_from,
+            'author' => $data->author,
         ];
+    }
+
+    public function toArray($request): array|JsonSerializable|Arrayable
+    {
+        if (is_a($this->resource, 'App\Models\Post')) {
+            $data = $this;
+        } else {
+            $data = $this->resource[0];
+        }
+        return self::convertData($data);
     }
 }

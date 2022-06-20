@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Post;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Models\Thread;
@@ -20,25 +22,29 @@ class ThreadResource extends JsonResource
 
     public static $wrap = null;
 
+    private static function convertData($data): array
+    {
+        return [
+            'id' => $data->id,
+            'categoryId' => $data->category_id,
+            'title' => $data->title,
+            'date' => $data->created_at,
+            'likedFrom' => $data->liked_from,
+            'author' => $data->author,
+            'posts' => $data->posts,
+        ];
+    }
+
+
     public function toArray($request)
     {
-        if (count($this->resource->all()) == 1) {
-            if (!$this->resource instanceof Thread) {
-                $data = $this->resource->all();
-                $thread = Thread::find($data[0]->id);
-                $this->resource = $thread;
-            }
+        if (is_a($this->resource, 'App\Models\Thread')) {
+            $data = $this;
         } else {
-            return $this->resource;
+            $data = $this->resource[0];
         }
-        return [
-            'id' => $this->id,
-            'categoryId' => $this->category_id,
-            'title' => $this->title,
-            'date' => $this->created_at,
-            'likedFrom' => $this->liked_from,
-            'author' => $this->author,
-            //'posts' => PostResource::collection($this->posts)
-        ];
+        $data->posts = Post::all()->where('thread_id', '=', $data->id);
+
+        return self::convertData($data);
     }
 }

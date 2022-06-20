@@ -63,23 +63,20 @@ Route::get('categories/{id}', 'App\Http\Controllers\CategoryController@getCatego
  */
 Route::get('categories/{id}/threads', 'App\Http\Controllers\CategoryController@getThreadsOfCategory');
 
-
-Route::post('register', 'App\Http\Controllers\UserLoginController@register');
-Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
 
 
 Route::get('thread/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
-Route::get('thread', 'App\Http\Controllers\ThreadController@getThreadById');
 
-Route::post('thread', 'App\Http\Controllers\ThreadController@getAllTrheads');
-
-Route::post('thread/{sub_id}/{thread_id}', 'App\Http\Controllers\ThreadController@getAllPostsOfThread');
+Route::put('thread/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
 
 
-Route::get('post/{id}', 'App\Http\Controllers\PostController@getPostById');
-Route::get('posts', 'App\Http\Controllers\PostController@getAllPosts');
-Route::post('/posts/threads/{thread_id}', 'App\Http\Controllers\PostController@createPost');
+Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
+
+Route::put('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@updatePost');
 
 
 
+Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
+Route::post('login', 'App\Http\Controllers\UserLoginController@login');

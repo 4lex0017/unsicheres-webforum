@@ -23,7 +23,7 @@ class CategoryController extends Controller
         $categories = DB::connection('insecure')
             ->table('categories')
             ->select('categories.id', 'categories.title', 'categories.threads')
-            ->where('categories.id', '=', $id)
+            ->whereRaw('categories.id = ' . $id)
             ->get()->toArray();
 
         if (count($categories) === 0)
@@ -42,8 +42,15 @@ class CategoryController extends Controller
             $threads = DB::connection('insecure')
                 ->table('threads')
                 ->join('users', 'users.id', '=', 'threads.author')
-                ->select('threads.id', 'threads.title', 'threads.liked_from', 'threads.posts', 'threads.author',
-                    'users.profile_picture', 'users.name')
+                ->select(
+                    'threads.id',
+                    'threads.title',
+                    'threads.liked_from',
+                    'threads.posts',
+                    'threads.author',
+                    'users.profile_picture',
+                    'users.name'
+                )
                 ->whereIn('threads.id', $category_threads)
                 ->orderBy('threads.updated_at')
                 ->get()->toArray();
