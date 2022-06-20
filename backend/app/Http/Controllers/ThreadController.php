@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Thread;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 
 class ThreadController extends Controller
@@ -29,9 +31,28 @@ class ThreadController extends Controller
         return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
     }
 
-    public function createThread(Request $request)
+    public function postThreadToCategory(Request $request, $category_id)
     {
-        return Thread::create($request->all());
+        $thread = $request->all();
+        $thread['category_id'] = $category_id;
+        $model = (new Thread)->create($thread);
+
+        return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
+    }
+
+    public function updateThread(Request $request, $thread_id)
+    {
+        $thread = self::injectebleWhere('thread_id', $thread_id);
+        if (!$thread)
+            return response('', 404);
+
+        if ($thread->id == $thread_id) {
+            $thread->update($request->all());
+            $thread->save();
+
+            return new PostResource($thread);
+        }
+        return response('', 404);
     }
 
     public function getThreadOfUser($id)
@@ -73,8 +94,15 @@ class ThreadController extends Controller
         return DB::connection('insecure')
             ->table('threads')
             ->join('users', 'users.id', '=', 'threads.author')
-            ->select('threads.id', 'threads.title', 'threads.liked_from',
-                'threads.posts', 'threads.author', 'users.profile_picture', 'users.name')
+            ->select(
+                'threads.id',
+                'threads.title',
+                'threads.liked_from',
+                'threads.posts',
+                'threads.author',
+                'users.profile_picture',
+                'users.name'
+            )
             ->orderBy('threads.updated_at')
             ->get()->toArray();
     }

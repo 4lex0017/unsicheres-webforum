@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,15 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    public function getAllPosts()
-    {
-        return PostResource::collection(Post::all());
-    }
-
-    public function getPostById($id)
-    {
-        return PostController::injectableWhere('id', $id);
-    }
 
     public function createPost(Request $request, $thread_id)
     {
@@ -32,20 +24,25 @@ class PostController extends Controller
         return Post::create($request->all());
     }
 
-    public function getAllPostsOfUser($author): Collection
+    public function updatePost(Request $request, $thread_id, $post_id)
     {
-        return PostController::injectableWhere('author', $author);
+        $post = self::injectableWhere('id', $post_id, 'thread_id', $thread_id);
+        if (!$post)
+            return response('', 404);
+
+        if ($post->id == $post_id && $post->thread_id == $thread_id) {
+            $post->update($request->all());
+            $post->save();
+
+            return new PostResource($post);
+        }
+        return response('', 404);
     }
 
-    public function injectableWhere($row, $id): Collection
+    public function injectableWhere($row, $id, $row2, $id2): Collection
     {
-        return DB::connection('insecure')->table('posts')->select(
-            'id',
-            'user_id',
-            'content',
-            'created_at',
-            'liked_from',
-            'author'
-        )->whereRaw($row . " = " . $id)->get();
+        return (new Post)->select(
+            '*'
+        )->whereRaw($row . " = " . $id . " and " . $row2 . " = " . $id2)->get();
     }
 }
