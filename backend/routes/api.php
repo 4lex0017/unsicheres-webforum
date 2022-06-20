@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * @uses App\Http\Controllers\SearchController::globalSearch()
  */
-Route::get('search/{text}', 'App\Http\Controllers\SearchController@globalSearch');
+Route::get('search', 'App\Http\Controllers\SearchController@globalSearch');
 
 /**
  * @uses App\Http\Controllers\UserController::getAllUsers()
