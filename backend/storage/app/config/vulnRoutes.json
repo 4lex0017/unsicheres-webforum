@@ -1,0 +1,26 @@
+{
+    "sqli": [
+        {"route": "/search"},
+        {"route": "/user"},
+        {"route": "/categories/{int}/threads"},
+        {"route": "/threads/{int}"},
+        {"route": "/threads/{int}/posts"},
+        {"route": "/threads/{int}/posts/{int}"}
+    ],
+    "qsqli": [
+        {"route": "/user/{int}"},
+        {"route": "/categories/{int}"},
+        {"route": "/categories/{int}/threads"},
+        {"route": "/threads/{int}"}
+    ],
+    "rxss": [
+        {"route": "/search"}
+    ],
+    "sxss": [
+        {"route": "/user"},
+        {"route": "/categories/{int}/threads"},
+        {"route": "/threads/{int}"},
+        {"route": "/threads/{int}/posts"},
+        {"route": "/threads/{int}/posts/{int}"}
+    ]
+}

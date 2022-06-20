@@ -40,20 +40,20 @@ class UserLoginController extends Controller
 
     public function login(Request $request)
     {
-        if(!Auth::attempt(['name'=> $request->username , 'password' => $request->password]))
-        {
+        if(Auth::attempt(['name' => $request->name, 'password' => $request->password])){ 
+            $user = User::where('name', $request->name)->first(); 
+            $success['token'] =  $user->createToken('auth_token')->plainTextToken; 
+            $success['name'] =  $user->name;
+   
             return response()->json([
-                'message' => 'Invalid login details'
+                'access_token' =>  $user->createToken('auth_token')->plainTextToken,
+                'token_type' => 'Bearer',
+            ], 200);
+        } 
+        else{ 
+            return response()->json([
+                'error'=>'Login failed',
             ], 401);
-        }
-
-        $user = DB::connection('insecure')->table('users')->where('name', $request['name'])->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+        } 
     }
 }
