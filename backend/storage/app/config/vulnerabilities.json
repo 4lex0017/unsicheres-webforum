@@ -8,7 +8,7 @@
                 {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
                 {"id":  2, "state":  "Medium", "description": "Escape string '); is filtered out once", "checked":  false},
                 {"id":  3, "state":  "Hard", "description": "Escape string filtered out repeatedly, SQLite keywords in URL filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "Escape string and keywords filtered out repeatedly"}
+                {"id":  4, "state":  "Impossible", "description": "Escape string and keywords filtered out repeatedly", "checked": false}
             ]
         },
         {
@@ -19,7 +19,7 @@
                 {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
                 {"id":  2, "state":  "Medium", "description": "<script> tags are filtered out once", "checked":  false},
                 {"id":  3, "state":  "Hard", "description": "<script> tags filtered out repeatedly, '<'/'>' characters in URL filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly"}
+                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly", "checked": false}
             ]
         },
         {
@@ -30,7 +30,7 @@
                 {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
                 {"id":  2, "state":  "Medium", "description": "<script> tags are filtered out once", "checked":  false},
                 {"id":  3, "state":  "Hard", "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly"}
+                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly", "checked": false}
             ]
         }
     ]
