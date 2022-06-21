@@ -16,19 +16,20 @@ class AdminController extends Controller
     {
         $json = Storage::disk('local')->get('/config/vulnerabilities.json');
         $content = json_decode($json, true);
-        $used_sqli = json_decode(DB::connection('secure')->table('vulnerabilities')->select('sqli_difficulty')->distinct()->get(), true);
-        foreach ($used_sqli as $used) {
-            $content['vulnerabilities'][0]['subtasks'][$used['sqli_difficulty']-1]['checked'] = true;
-        }
-        $used_rxss = json_decode(DB::connection('secure')->table('vulnerabilities')->select('rxss_difficulty')->distinct()->get(), true);
-        foreach ($used_rxss as $used) {
-            $content['vulnerabilities'][1]['subtasks'][$used['rxss_difficulty']-1]['checked'] = true;
-        }
-        $used_sxss = json_decode(DB::connection('secure')->table('vulnerabilities')->select('sxss_difficulty')->distinct()->get(), true);
-        foreach ($used_sxss as $used) {
-            $content['vulnerabilities'][2]['subtasks'][$used['sxss_difficulty']-1]['checked'] = true;
-        }
+
+        $this->updateChecked($content, 'sqli', 0);
+        $this->updateChecked($content, 'rxss', 1);
+        $this->updateChecked($content, 'sxss', 2);
+
         return response()->json($content);
+    }
+
+    private function updateChecked(array &$content, string $type, int $id) {
+        $used_vulns = json_decode(DB::connection('secure')->table('vulnerabilities')->select($type . '_difficulty')->distinct()->get(), true);
+        foreach ($used_vulns as $used) {
+            $index = $used[$type . '_difficulty']-1;
+            $content['vulnerabilities'][$id]['subtasks'][$index]['checked'] = true;
+        }
     }
 
     public function updateConfiguration(Request $request)
