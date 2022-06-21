@@ -32,6 +32,22 @@ class ThreadController extends Controller
         return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
     }
 
+    public function deleteThread($thread_id)
+    {
+        $thread = Thread::find($thread_id)->first();
+
+        $category_id = $thread->category_id;
+
+        $category = (new Category)->where('id', $category_id)->first();
+
+        $key = array_search($thread_id, $category->threads);
+        $threads = $category->threads;
+        unset($threads[$key]);
+        $category->threads = $threads;
+        $category->update();
+        return DB::connection('insecure')->table('threads')->whereRaw('id = ' . $thread_id)->delete();
+    }
+
     public function postThreadToCategory(Request $request, $category_id)
     {
         $thread = $request->all();
