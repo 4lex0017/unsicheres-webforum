@@ -6,6 +6,7 @@ use App\Models\Vulnerability;
 use Illuminate\Http\Request;
 use App\Http\Resources\ConfigResource;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,20 @@ class AdminController extends Controller
     {
         $json = Storage::disk('local')->get('/config/vulnerabilities.json');
         $content = json_decode($json, true);
+
+        $this->updateChecked($content, 'sqli', 0);
+        $this->updateChecked($content, 'rxss', 1);
+        $this->updateChecked($content, 'sxss', 2);
+
         return response()->json($content);
+    }
+
+    private function updateChecked(array &$content, string $type, int $id) {
+        $used_vulns = json_decode(DB::connection('secure')->table('vulnerabilities')->select($type . '_difficulty')->distinct()->get(), true);
+        foreach ($used_vulns as $used) {
+            $index = $used[$type . '_difficulty']-1;
+            $content['vulnerabilities'][$id]['subtasks'][$index]['checked'] = true;
+        }
     }
 
     public function updateConfiguration(Request $request)
