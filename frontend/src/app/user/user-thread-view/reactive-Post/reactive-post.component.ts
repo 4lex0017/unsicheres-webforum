@@ -41,7 +41,7 @@ export class ReactivePostComponent implements OnInit {
   @ViewChild('content', {static: false}) content: ElementRef;
 
   ngOnInit(): void {
-    this.vEnabled = this.diffPicker.isEnabledInConfig();
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
     this.deserializePost(this.postObject.content);
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();

@@ -24,7 +24,7 @@ export class DialogContactFormDismissComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.vEnabled = this.diffPicker.isEnabledInConfig();
+    this.vEnabled = this.diffPicker.isEnabledInConfig("add later");
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();
       this.content.nativeElement.replaceChildren();

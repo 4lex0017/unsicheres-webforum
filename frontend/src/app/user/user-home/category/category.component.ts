@@ -11,6 +11,7 @@ import {DataManagementService} from "../../../data-access/services/data-manageme
 import {Router} from "@angular/router";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {CategoryBackend} from "../../../data-access/models/accessBackend";
+import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class CategoryComponent implements AfterViewInit {
   @Input()
   showFull: boolean;
 
-  constructor(private dataManagement: DataManagementService, private router: Router, private backend: BackendService) {
+  constructor(private dataManagement: DataManagementService, private router: Router, private backend: BackendService, private backendCom: BackendCommunicationService) {
   }
 
 
@@ -37,6 +38,7 @@ export class CategoryComponent implements AfterViewInit {
       for (let z = 0; z < this.categoryObject.threads.length; z++) {
         if (this.categoryObject.threads[z].id == id) {
           this.categoryObject.threads.splice(z, 1);
+          this.backendCom.deleteThread(id);
           break;
         }
       }

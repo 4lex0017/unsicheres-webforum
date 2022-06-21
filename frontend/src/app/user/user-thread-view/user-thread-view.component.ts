@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
 import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
@@ -16,6 +16,8 @@ import {AuthenticationService} from "../../data-access/services/authentication.s
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
 import {insertAfterLastOccurrence} from "@angular/cdk/schematics";
+import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
+import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -27,30 +29,32 @@ export class UserThreadViewComponent implements OnInit {
   vEnabled: boolean
   content: string = "";
   testcontent: any[];
-  // @ViewChild('content', {static: false}) content: ElementRef;
   @ViewChild('title', {static: false}) title: ElementRef;
 
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
               private backEndService: BackendService,
+              private backendServiceCom: BackendCommunicationService,
               private router: Router,
               private dataManagement: DataManagementService,
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private changeDetectorRef: ChangeDetectorRef,
+              private didAThing: DidAThingServiceService) {
+  }
+
+  async setVuln() {
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/categories/{int}/threads");
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-        this.threadObject = data.thread;
-        this.vEnabled = this.diffPicker.isEnabledInConfig();
+    this.setVuln();
+    this.route.data.subscribe((resp: Data) => {
+        console.log(resp)
+        this.threadObject = resp["thread"].body;
         if (this.vEnabled) {
           this.changeDetectorRef.detectChanges();
-
-          // this.content.nativeElement.replaceChildren();
-          // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-          // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
           this.title.nativeElement.replaceChildren();
           this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
         }
@@ -75,13 +79,15 @@ export class UserThreadViewComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
+      this.backendServiceCom.putThread(this.threadObject).subscribe(
+        (resp: Data) => {
+          if (!resp["user"]["headers"].get('VulnFound')) {
+            console.log("found vuln in userprofile")
+            this.didAThing.sendMessage();
+          }
+        });
       if (this.vEnabled) {
         this.changeDetectorRef.detectChanges();
-
-        // this.content.nativeElement.replaceChildren();
-        // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-        // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
         this.title.nativeElement.replaceChildren();
         this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
       }

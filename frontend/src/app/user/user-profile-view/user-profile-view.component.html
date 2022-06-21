@@ -64,7 +64,7 @@
         <mat-tab label="Threads: {{userThreadsObj.length}}">
           <mat-list>
             <mat-list-item *ngFor="let thread of userThreadsObj">
-              <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
+              <a [routerLink]="['/forum/threads',thread.id]">
                 <div mat-line>{{thread.title}}</div>
                 <div mat-line>Date: {{thread.date}}</div>
               </a>
@@ -84,7 +84,7 @@
         <mat-tab label="Posts: {{userPostsObj.length}}">
           <mat-list>
             <mat-list-item *ngFor="let post of userPostsObj">
-              <a [routerLink]="['/forum/thread', getThreadFromPost(post.id)]">
+              <a [routerLink]="['/forum/threads', getThreadFromPost(post.id)]">
                 <div mat-line>{{cutPostContent(post.content)}}</div>
                 <div mat-line>Date: {{post.date}}</div>
               </a>

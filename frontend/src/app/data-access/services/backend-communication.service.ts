@@ -5,13 +5,24 @@ import {catchError, firstValueFrom, map, NotFoundError, Observable, of, retry, t
 import {UserFull} from "../models/userFull";
 import {PostReply} from "../models/postReply";
 import {User} from "../models/user";
-import {VulnerabilityDifficultyOverview} from "../models/vulnerabilityDifficultyOverview";
-import {HttpClient, HttpResponse} from "@angular/common/http";
-import {AdminUser, Scoreboard} from "../models/scoreboard";
+import {
+
+  VulnerabilityDifficultyOverviewPackage
+} from "../models/vulnerabilityDifficultyOverview";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {AdminUser} from "../models/scoreboard";
 import {AccessBackend} from "../models/accessBackend";
 import {Router} from "@angular/router";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {
+  PutConfig,
+  PutConfigStates,
+  PutConfigStatesDifficulty,
+  VulnerabilitiesConfig
+} from "../models/vulnerabilitiesConfig";
+import {VulnerabilityDifficultyPicker} from "../models/vulnerabilityDifficultyPicker";
+import {Search} from "../models/search";
 
 
 @Injectable({
@@ -106,25 +117,56 @@ export class BackendCommunicationService {
 
 
   // For Thread view
-  getThread(categoryId: number, threadId: number): Observable<Thread> {
-    return this.httpClient.get<Thread>(this.url + '/thread/' + categoryId + '/' + threadId)
+  getThread(threadId: number): Observable<HttpResponse<Thread>> {
+    return this.httpClient.get<Thread>(this.url + '/threads/' + threadId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
         this.errorBreadCrumb(error.status.toString())
-        this.router.navigate(['/forum/home']);
         throw {message: 'Bad response', value: error.status}
-        // throwError(() => new Error(error.statusText))
       }));
   }
 
+  // getUser(userId: number): Observable<HttpResponse<UserFull>> {
+  //   return this.httpClient.get<UserFull>(this.url + '/user/' + userId, {observe: 'response'})
+  //     .pipe(catchError((error: Response) => {
+  //       this.errorBreadCrumb(error.status.toString())
+  //       throw {message: 'Bad response', value: error.status}
+  //     }));
+  // }
   postThread(categoryId: number, thread: Thread): Observable<Thread> {
-    let threadPayload = {...thread};
-    return this.httpClient.post<Thread>(this.url + '/thread/' + categoryId, threadPayload);
+    let threadPayload = {
+      "title": thread.title,
+      "date": thread.date,
+      "author": thread.author,
+      "likedFrom": thread.likedFrom,
+      "posts": thread.posts,
+    };
+    return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload);
+  }
+
+  deleteThread(threadId: number): Observable<Thread> {
+    return this.httpClient.delete<Thread>(this.url + '/threads/' + threadId);
+  }
+
+  putThread(thread: Thread): Observable<Thread> {
+
+    let threadPayload =
+      {
+        "id": thread.id,
+        "title": thread.title,
+        "date": thread.date,
+        "author": thread.author,
+        "likedFrom": thread.likedFrom,
+        "posts": thread.posts,
+      };
+    // let threadPayload = {...thread};
+    return this.httpClient.post<Thread>(this.url + '/threads/' + thread.id, threadPayload);
   }
 
   postPost(categoryId: number, threadId: number, post: Post): Observable<Post> {
     let postPayload = {...post};
     return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload);
   }
+
 
   createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {
     throw new Error();
@@ -142,19 +184,32 @@ export class BackendCommunicationService {
 
 
   //For Admin
-  putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverview[]): Observable<VulnerabilityDifficultyOverview[]> {
-    let vulnerabilityPayload = {...vulnerabilities};
-    return this.httpClient.post<VulnerabilityDifficultyOverview[]>(this.url + '/admin', vulnerabilityPayload);
+
+  getVulnerabilities(): Observable<VulnerabilityDifficultyOverviewPackage> {
+    return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin');
   }
 
-  postVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverview[]): Observable<VulnerabilityDifficultyOverview[]> {
-    let vulnerabilityPayload = {...vulnerabilities};
-    return this.httpClient.post<VulnerabilityDifficultyOverview[]>(this.url + '/admin', vulnerabilityPayload);
+  getVulnerabilitiesConfig(): Observable<VulnerabilitiesConfig> {
+    return this.httpClient.get<VulnerabilitiesConfig>(this.url + '/admin/config');
   }
 
-  getVulnerabilitiesConfig(): Observable<VulnerabilityDifficultyOverview[]> {
-    return this.httpClient.get<VulnerabilityDifficultyOverview[]>(this.url + '/admin');
+  putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverviewPackage): Observable<VulnerabilitiesConfig> {
+    let vulnerabilityPayload: PutConfig = {data: []};
+    console.log(vulnerabilities.vulnerabilities)
+    for (let i = 0; i < vulnerabilities.vulnerabilities.length; i++) {
+      let curStateDiff: PutConfigStatesDifficulty = {
+        1: vulnerabilities.vulnerabilities[i].subtasks[0].checked,
+        2: vulnerabilities.vulnerabilities[i].subtasks[1].checked,
+        3: vulnerabilities.vulnerabilities[i].subtasks[2].checked,
+        4: vulnerabilities.vulnerabilities[i].subtasks[3].checked,
+      }
+      let curState: PutConfigStates = {id: vulnerabilities.vulnerabilities[i].id, difficulty: curStateDiff};
+      vulnerabilityPayload.data.push(curState);
+    }
+    console.log(vulnerabilityPayload)
+    return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload);
   }
+
 
   getScoreboard(): Observable<AdminUser[]> {
     return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard');
@@ -185,7 +240,6 @@ export class BackendCommunicationService {
 
   //For search & Userprofile view
   getCategoryStrFromThreadId(id: number): string {
-
     return "";
   }
 
@@ -199,18 +253,24 @@ export class BackendCommunicationService {
 
 
   //Fake search result
-  getRandomUsers(): UserFull[] {
-    let users: UserFull[] = [];
-    return users;
+
+  search(search: string): Observable<Search> {
+    let params = new HttpParams().set('q', search)
+    return this.httpClient.get<Search>(this.url + '/search', {params: params});
   }
 
-  getRandomPosts(): Post[] {
-    return [];
-  }
-
-  getRandomThreads(): Thread[] {
-    return []
-  }
+  // getRandomUsers(): UserFull[] {
+  //   let users: UserFull[] = [];
+  //   return users;
+  // }
+  //
+  // getRandomPosts(): Post[] {
+  //   return [];
+  // }
+  //
+  // getRandomThreads(): Thread[] {
+  //   return []
+  // }
 
 
   //Fake authentication

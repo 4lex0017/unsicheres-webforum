@@ -13,7 +13,7 @@ const routes: Routes = [
       {path: 'search', component: SearchComponent},
       {path: '', redirectTo: 'home', pathMatch: 'full'},
       {
-        path: 'thread',
+        path: 'threads',
         loadChildren: () => import('../user-thread-view/user-thread-view.module').then(m => m.UserThreadViewModule)
       },
       {

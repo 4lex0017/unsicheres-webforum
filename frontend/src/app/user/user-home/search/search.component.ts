@@ -11,6 +11,9 @@ import {DifficultyPickerService} from "../../../data-access/services/difficulty-
 import {
   DialogSearchErrorMessageComponent
 } from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
+import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {Observable} from "rxjs";
+import {Search} from "../../../data-access/models/search";
 
 declare var jQuery: any;
 
@@ -22,6 +25,7 @@ declare var jQuery: any;
 export class SearchComponent implements OnInit {
 
   constructor(private backendService: BackendService,
+              private backendCom: BackendCommunicationService,
               private router: Router,
               private dialog: MatDialog,
               private route: ActivatedRoute,
@@ -31,23 +35,22 @@ export class SearchComponent implements OnInit {
   ) {
   }
 
-  threads: Thread[] = [];
-  posts: Post[] = [];
-  users: UserFull[] = [];
+  search: Search = {users: [], posts: [], threads: []};
   currentSearchQuery: string;
   newSearchQuery: string = "";
-  // queryDiff: boolean;
   vEnabled: boolean;
   @ViewChild('search', {static: false}) content: ElementRef;
 
-  ngOnInit(): void {
-    this.threads = this.backendService.getRandomThreads();
-    this.posts = this.backendService.getRandomPosts();
-    this.users = this.backendService.getRandomUsers();
-    this.vEnabled = this.diffPicker.isEnabledInConfig();
 
+  async setVuln() {
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/search");
+  }
+
+  ngOnInit(): void {
+    this.setVuln();
     this.route.queryParamMap.subscribe((params) => {
-      this.currentSearchQuery = this.format(params.get('filter') || "");
+      this.currentSearchQuery = this.format(params.get('q') || "");
+      this.backendCom.search(this.currentSearchQuery).subscribe(data => this.search = data);
       if (this.vEnabled) {
         this.changeDetectorRef.detectChanges();
         this.content.nativeElement.replaceChildren();
@@ -66,16 +69,8 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  getCategoryFromThread(id): string {
-    return this.backendService.getCategoryStrFromThreadId(id);
-  }
-
-  getThreadSlugFromPostId(id) {
-    return this.backendService.getThreadSlugFromPostId(id);
-  }
-
   getSlugFromTitle(title: string): string {
-    return this.backendService.getSlugFromTitle(title);
+    return this.backendCom.getSlugFromTitle(title);
   }
 
   format(filter: string): string {
@@ -96,7 +91,7 @@ export class SearchComponent implements OnInit {
         },
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {filter: this.newSearchQuery.replace(/ /g, "_")}});
+      this.router.navigate(['forum/search'], {queryParams: {q: this.newSearchQuery.replace(/ /g, "_")}});
     }
 
   }

@@ -1,19 +1,19 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {UserThreadViewComponent} from "./user-thread-view.component";
 import {UserThreadViewService} from "./user-thread-view.service";
 
 
 const routes: Routes = [
   {
-    path: ':slug',
+    path: ':id',
     component: UserThreadViewComponent,
     resolve: {
       thread: UserThreadViewService
     }
-   },
-  { path: 'users/*',   redirectTo: '/forum/users', pathMatch: 'full' },
-  { path: '**',   redirectTo: '/forum/home', pathMatch: 'full' },
+  },
+  {path: 'users/*', redirectTo: '/forum/users', pathMatch: 'full'},
+  {path: '**', redirectTo: '/forum/home', pathMatch: 'full'},
 
 ];
 
@@ -21,4 +21,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class UserThreadViewRoutingModule { }
+export class UserThreadViewRoutingModule {
+}
