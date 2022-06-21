@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\Post;
+use App\Models\User;
+
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -43,7 +45,18 @@ class ThreadResource extends JsonResource
         } else {
             $data = $this->resource[0];
         }
-        $data->posts = Post::all()->where('thread_id', '=', $data->id);
+
+        $author = User::find($data->author);
+
+        $tmp_author = [
+            'id' => $data->author,
+            'profile_picture' => $author->profile_picture,
+            'name' => $author->name,
+        ];
+
+        $data->author = $tmp_author;
+
+        $data->posts = PostResource::collection(Post::all()->where('thread_id', '=', $data->id));
 
         return self::convertData($data);
     }

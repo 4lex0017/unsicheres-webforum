@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 use Illuminate\Contracts\Support\Arrayable;
 
-use App\Models\Post;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Log;
 
@@ -41,6 +41,15 @@ class PostResource extends JsonResource
         } else {
             $data = $this->resource[0];
         }
+        $author = User::find($data->author);
+
+        $tmp_author = [
+            'id' => $data->author,
+            'profile_picture' => $author->profile_picture,
+            'name' => $author->name,
+        ];
+
+        $data->author = $tmp_author;
         return self::convertData($data);
     }
 }
