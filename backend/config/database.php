@@ -38,7 +38,7 @@ return [
         'secure' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => '/var/www/html/database/secure.sqlite', // url in the docker container
+            'database' => env('DATABASE_FILE_SECURE'), // url in the docker container
             'prefix' => '',
             'foreign_key_constraints' => true,
         ],
@@ -46,7 +46,7 @@ return [
         'insecure' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => '/var/www/html/database/insecure.sqlite', // url in the docker container
+            'database' => env('DATABASE_FILE_INSECURE'), // url in the docker container
             'prefix' => '',
             'foreign_key_constraints' => true,
         ],

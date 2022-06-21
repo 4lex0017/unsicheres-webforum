@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,17 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /**
-         * Create databases.
-         */
-        if (!file_exists('/var/www/html/database/secure.sqlite')) {
+        $secure = DB::connection('secure')->getDatabaseName();
+        $insecure = DB::connection('insecure')->getDatabaseName();
+
+        if (!file_exists($secure)) {
             info('secure.sqlite created.');
-            file_put_contents('/var/www/html/database/secure.sqlite', '');
+            file_put_contents($secure, '');
         }
 
-        if (!file_exists('/var/www/html/database/insecure.sqlite')) {
+        if (!file_exists($insecure)) {
             info('insecure.sqlite created.');
-            file_put_contents('/var/www/html/database/insecure.sqlite', '');
+            file_put_contents($insecure, '');
         }
     }
 }
