@@ -45,7 +45,8 @@ class ThreadController extends Controller
         unset($threads[$key]);
         $category->threads = $threads;
         $category->update();
-        return DB::connection('insecure')->table('threads')->whereRaw('id = ' . $thread_id)->delete();
+        DB::connection('insecure')->table('threads')->whereRaw('id = ' . $thread_id)->delete();
+        return response("", 204);
     }
 
     public function postThreadToCategory(Request $request, $category_id)

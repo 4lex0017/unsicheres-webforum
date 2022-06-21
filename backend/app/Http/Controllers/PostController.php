@@ -26,7 +26,8 @@ class PostController extends Controller
 
     public function deletePost($thread_id, $post_id)
     {
-        return DB::connection('insecure')->table('posts')->whereRaw('id = ' . $post_id . ' and thread_id = ' . $thread_id)->delete();
+        DB::connection('insecure')->table('posts')->whereRaw('id = ' . $post_id . ' and thread_id = ' . $thread_id)->delete();
+        return response("", 204);
     }
 
     public function updatePost(Request $request, $thread_id, $post_id)
