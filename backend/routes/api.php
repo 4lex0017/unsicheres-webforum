@@ -14,9 +14,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * @uses App\Http\Controllers\SearchController::globalSearch()
+ * @uses App\Http\Controllers\SearchController::searchUsers()
  */
-Route::get('search', 'App\Http\Controllers\SearchController@globalSearch');
+Route::get('search/users', 'App\Http\Controllers\SearchController@searchUsers');
+
+/**
+ * @uses App\Http\Controllers\SearchController::searchPosts()
+ */
+Route::get('search/posts', 'App\Http\Controllers\SearchController@searchPosts');
+
+/**
+ * @uses App\Http\Controllers\SearchController::searchThreads()
+ */
+Route::get('search/threads', 'App\Http\Controllers\SearchController@searchThreads');
 
 /**
  * @uses App\Http\Controllers\UserController::getAllUsers()
@@ -78,7 +88,6 @@ Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@c
 Route::put('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@updatePost');
 
 Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
-
 
 
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');
