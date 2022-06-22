@@ -35,7 +35,6 @@ class UserLoginController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer',
             ]);
-        
     }
 
     public function login(Request $request)
@@ -55,5 +54,14 @@ class UserLoginController extends Controller
                 'error'=>'Login failed',
             ], 401);
         } 
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return [
+            'message' => 'Logged out'
+        ];
     }
 }

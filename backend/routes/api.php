@@ -84,3 +84,10 @@ Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\Post
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
 Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+
+// Routegruppe für nur authenticated state
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    Route::post('logout', 'App\Http\Controllers\UserLoginController@logout');
+
+});
