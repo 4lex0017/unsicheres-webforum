@@ -51,5 +51,4 @@ Route::post('login', 'App\Http\Controllers\AdminLoginController@login');
 Route::middleware(['auth:sanctum','ability:isAdmin'])->group(function () {
 
     Route::post('logout', 'App\Http\Controllers\AdminLoginController@logout');
-    
 });
