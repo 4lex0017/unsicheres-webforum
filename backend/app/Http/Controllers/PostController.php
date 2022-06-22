@@ -33,12 +33,13 @@ class PostController extends Controller
     public function updatePost(Request $request, $thread_id, $post_id)
     {
         $post = self::injectableWhere('id', $post_id, 'thread_id', $thread_id);
+        Log::debug(print_r($post, true));
         if (!$post)
             return response('', 404);
-
-        if ($post->id == $post_id && $post->thread_id == $thread_id) {
-            $post->update($request->all());
-            $post->save();
+        $postw = $post->first();
+        if ($postw->id == $post_id && $postw->thread_id == $thread_id) {
+            $postw->update($request->all());
+            $postw->save();
 
             return new PostResource($post);
         }

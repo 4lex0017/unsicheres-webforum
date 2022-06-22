@@ -40,11 +40,11 @@ class ThreadController extends Controller
 
         $category = (new Category)->where('id', $category_id)->first();
 
-        $key = array_search($thread_id, $category->threads);
         $threads = $category->threads;
-        unset($threads[$key]);
+        $key = array_search($thread_id, $threads);
+        array_splice($threads, 1, $key);
         $category->threads = $threads;
-        $category->update();
+        $category->save();
         DB::connection('insecure')->table('threads')->whereRaw('id = ' . $thread_id)->delete();
         return response("", 204);
     }
