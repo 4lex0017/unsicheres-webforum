@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             ThreadSeeder::class,
-            PostSeeder::class
+            PostSeeder::class,
+            AdminSeeder::class
         ]);
     }
 }

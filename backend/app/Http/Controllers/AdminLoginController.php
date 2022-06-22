@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-class UserLoginController extends Controller
+class AdminLoginController extends Controller
 {
     public function register(Request $request) 
     {
@@ -25,27 +24,26 @@ class UserLoginController extends Controller
             ], 400);
         }
 
-        $user = User::create([
+        $admin = Admin::create([
              'name' => $request->name,
              'password' => Hash::make($request->password)
         ]);
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $admin->createToken('adminToken', ['isAdmin'])->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'user_id' => $user->id,
             ]);
     }
 
     public function login(Request $request)
-    {
-        if(Auth::attempt(['name' => $request->name, 'password' => $request->password])){ 
-            $user = User::where('name', $request->name)->first(); 
+    { 
+        $admin = DB::connection('secure')->table('admins')->where('name', $request->name)->first();  
+        $model = Admin::where('name', $request->name)->first();
+            if($admin->password == $request->password){
             return response()->json([
-                'access_token' =>  $user->createToken('auth_token', ['isUser'])->plainTextToken,
+                'access_token' =>  $model->createToken('adminToken', ['isAdmin'])->plainTextToken,
                 'token_type' => 'Bearer',
-                'user_id' => $user->id,
             ], 200);
         } 
         else{ 
@@ -55,12 +53,14 @@ class UserLoginController extends Controller
         } 
     }
 
+    
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->admin()->currentAccessToken()->delete();
 
         return [
             'message' => 'Logged out'
         ];
     }
+
 }
