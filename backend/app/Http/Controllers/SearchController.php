@@ -48,4 +48,49 @@ class SearchController extends Controller
             'posts' => $posts
         ];
     }
+
+    #[ArrayShape(['users' => "\Illuminate\Support\Collection" ])]
+    public static function injectableSelectUsers($text): array
+    {
+        $users = DB::connection('insecure')->table('users')->select(
+            'id',
+            'name'
+        )->whereRaw('name LIKE \'%' . $text . '%\'')->get();
+
+        return [
+            'users' => $users,
+        ];
+    }
+
+    #[ArrayShape(['threads' => "\Illuminate\Support\Collection" ])]
+    public static function injectableSelectThreads($text): array
+    {
+        $threads = DB::connection('insecure')->table('threads')->select(
+            'id',
+            'title'
+        )->whereRaw('title LIKE \'%' . $text . '%\'')->get();
+
+        return [
+            'threads' => $threads,
+        ];
+    }
+
+    #[ArrayShape(['posts' => 'array'])]
+    public static function injectableSelectPosts($text): array
+    {
+        $posts = DB::connection('insecure')->select(DB::raw(
+            'SELECT
+                    p.id,
+                    p.content,
+                    t.title
+                   FROM posts as p
+                   INNER JOIN threads t on t.id = p.thread_id
+                   WHERE p.content LIKE \'%' . $text . '%\';'
+        ));
+
+
+        return [
+            'posts' => $posts,
+        ];
+    }
 }
