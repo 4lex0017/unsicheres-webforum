@@ -46,7 +46,8 @@
                        (createPostEvent)="createPostConsumer($event)"
                        (replyPostEvent)="addReply($event)"
                        (deletePostEvent)="openDeletePostConsumer($event)"
-                       (moveToPostEvent)="moveToPost($event)"></app-reactive-post>
+                       (moveToPostEvent)="moveToPost($event)"
+                       (editPostEvent)="currentEdit($event)"></app-reactive-post>
   </div>
 
   <div class="thread-newReply">
