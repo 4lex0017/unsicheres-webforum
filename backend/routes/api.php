@@ -70,13 +70,24 @@ Route::get('threads/{thread_id}', 'App\Http\Controllers\ThreadController@getThre
 
 Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
 
+Route::delete('threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
+
 
 Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
 
 Route::put('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@updatePost');
+
+Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
 
 
 
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
 Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+
+// Routegruppe für nur authenticated state
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    Route::post('logout', 'App\Http\Controllers\UserLoginController@logout');
+
+});

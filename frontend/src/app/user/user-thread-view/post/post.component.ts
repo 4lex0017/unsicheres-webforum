@@ -41,7 +41,7 @@ export class PostComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.vEnabled = this.diffPicker.isEnabledInConfig();
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();
       this.content.nativeElement.replaceChildren();

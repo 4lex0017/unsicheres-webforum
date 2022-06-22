@@ -26,7 +26,7 @@
                 "posts": [
                     {
                         "id": 31,
-                        "content": "this is a test post",
+                        "content": "/b?this is a test post/b?",
                         "date": "04.01.0001",
                         "likedFrom": [
                             11,
@@ -70,7 +70,7 @@
                 "posts": [
                     {
                         "id": 33,
-                        "content": "this is a test post2",
+                        "content": "/b?this is a test post2/b?",
                         "likedFrom": [
                             11,
                             12,
@@ -129,7 +129,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post",
+                        "content": "/b?this is a test post/b?",
                         "date": "06.02.0001",
                         "author": {
                             "id": 12,
@@ -173,7 +173,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post33",
+                        "content": "/b?this is a test post33/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,
@@ -222,7 +222,7 @@
                             1444,
                             1555
                         ],
-                        "content": "this is a test post",
+                        "content": "/b?this is a test post/b?",
                         "date": "06.02.0001",
                         "author": {
                             "id": 12,
@@ -266,7 +266,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post33",
+                        "content": "/b?this is a test post33/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,
@@ -310,7 +310,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post",
+                        "content": "/b?this is a test post/b?",
                         "date": "06.02.0001",
                         "author": {
                             "id": 12,
@@ -354,7 +354,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post33",
+                        "content": "/b?this is a test post33/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,
@@ -398,7 +398,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post",
+                        "content": "/b?this is a test post/b?",
                         "date": "06.02.0001",
                         "author": {
                             "id": 12,
@@ -442,7 +442,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post3asfdga3",
+                        "content": "/b?this is a test post3asfdga3/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,
@@ -463,7 +463,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post33adf",
+                        "content": "/b?this is a test post33adf/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,
@@ -484,7 +484,7 @@
                             1555,
                             131
                         ],
-                        "content": "this is a test post3db3",
+                        "content": "/b?this is a test post3db3/b?",
                         "date": "06.03.0001",
                         "author": {
                             "id": 1553,

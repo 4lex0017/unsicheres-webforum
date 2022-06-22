@@ -35,11 +35,10 @@ export class ForumComponent implements OnInit {
   ) {
   }
 
-  loadingData = [];
+  // loadingData = [];
+  // accessData: Access;
+  curId: number = -1;
   accessBackend: Observable<AccessBackend>;
-
-
-  accessData: Access;
   currentCategoryObject: Category;
   showFull = false;
   searchQuery: string = "";
@@ -50,7 +49,7 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessBackend = this.backendComService.getCategories();
-    this.accessData = this.backEndService.loadData();
+    // this.accessData = this.backEndService.loadData();
     this.activeRoute.queryParamMap.subscribe((params) => {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');
@@ -60,7 +59,7 @@ export class ForumComponent implements OnInit {
         this.accessBackend.subscribe(data => {
           let cat = data.categories.find(cat => cat.title.toLowerCase() == para);
           this.accessBackend = this.backendComService.getCategory(cat!.id);
-
+          this.curId = cat!.id;
         });
         // this.accessBackend = this.backendComService.getCategory(1);
         // this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Community")!;
@@ -73,7 +72,7 @@ export class ForumComponent implements OnInit {
         //   this.showFull = true;
       } else {
         this.accessBackend = this.backendComService.getCategories();
-
+        this.curId = -1;
         this.showFull = false;
       }
     });
@@ -103,12 +102,14 @@ export class ForumComponent implements OnInit {
     });
   }
 
-  addThread(threadObject: Thread, category: string): void {
-    for (let z = 0; z < this.accessData.categories.length; z++) {
-      if (this.accessData.categories[z].title == category) {
-        this.accessData.categories[z].threads.push(threadObject);
-      }
-    }
+  addThread(threadObject: Thread, categoryId: number): void {
+    this.backendComService.postThread(categoryId, threadObject)
+    // for (let z = 0; z < this.accessData.categories.length; z++) {
+    //   if (this.accessData.categories[z].title == category) {
+    //     this.accessData.categories[z].threads.push(threadObject);
+    //
+    //   }
+    // }
 
   }
 
@@ -127,7 +128,7 @@ export class ForumComponent implements OnInit {
 
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {filter: this.searchQuery.replace(/ /g, "_")}});
+      this.router.navigate(['forum/search'], {queryParams: {q: this.searchQuery.replace(/ /g, "_")}});
     }
 
   }

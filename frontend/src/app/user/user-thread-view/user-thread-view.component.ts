@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
 import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
@@ -16,6 +16,8 @@ import {AuthenticationService} from "../../data-access/services/authentication.s
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
 import {insertAfterLastOccurrence} from "@angular/cdk/schematics";
+import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
+import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -27,6 +29,7 @@ export class UserThreadViewComponent implements OnInit {
   vEnabled: boolean
   content: string = "";
   testcontent: any[];
+  editId: number;
   // @ViewChild('content', {static: false}) content: ElementRef;
   @ViewChild('title', {static: false}) title: ElementRef;
 
@@ -34,23 +37,26 @@ export class UserThreadViewComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
               private backEndService: BackendService,
+              private backendServiceCom: BackendCommunicationService,
               private router: Router,
               private dataManagement: DataManagementService,
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private changeDetectorRef: ChangeDetectorRef,
+              private didAThing: DidAThingServiceService) {
+  }
+
+  async setVuln() {
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/categories/{int}/threads");
   }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data: any) => {
-        this.threadObject = data.thread;
-        this.vEnabled = this.diffPicker.isEnabledInConfig();
+    this.setVuln();
+    this.route.data.subscribe((resp: Data) => {
+        console.log(resp)
+        this.threadObject = resp["thread"].body;
         if (this.vEnabled) {
           this.changeDetectorRef.detectChanges();
-
-          // this.content.nativeElement.replaceChildren();
-          // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-          // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
           this.title.nativeElement.replaceChildren();
           this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
         }
@@ -75,13 +81,15 @@ export class UserThreadViewComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.threadObject.title = result.title;
+      this.backendServiceCom.putThread(this.threadObject).subscribe(
+        (resp: Data) => {
+          if (!resp["user"]["headers"].get('VulnFound')) {
+            console.log("found vuln in userprofile")
+            this.didAThing.sendMessage();
+          }
+        });
       if (this.vEnabled) {
         this.changeDetectorRef.detectChanges();
-
-        // this.content.nativeElement.replaceChildren();
-        // this.threadObject.content = this.diffPicker.filterTagsEasy(this.threadObject.content);
-        // this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.content));
-
         this.title.nativeElement.replaceChildren();
         this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
       }
@@ -112,13 +120,19 @@ export class UserThreadViewComponent implements OnInit {
     const box = document.getElementById('replyBox')
     let inBox = false;
 
-    for (let i = 0; i < box!.children.length; i++) {
-      if (tag.parentNode == box?.children[i] || tag.parentNode == box) {
+
+    for(let i = 0; i < box!.children.length; i++)
+    {
+      if(tag.parentNode == box?.children[i] || tag.parentNode == box) {
         inBox = true;
       }
     }
 
-    if (!inBox) {
+    if(!inBox && this.editId != null){
+
+    }
+
+    if(!inBox){
       return;
     }
 
@@ -130,7 +144,7 @@ export class UserThreadViewComponent implements OnInit {
     reply.style.width = '80%';
     reply.style.borderLeftWidth = '8px';
     reply.style.borderSpacing = '10px';
-    reply.setAttribute('replyPostId', replyPost.id.toString());
+    reply.setAttribute('replyPostId',replyPost.id.toString());
     reply.setAttribute('replyUserId', replyPost.author.id.toString());
     reply.setAttribute('replyUserName', replyPost.author.name);
     const replyHeader = document.createElement("p");
@@ -138,7 +152,7 @@ export class UserThreadViewComponent implements OnInit {
     reply.appendChild(replyHeader);
     let stringArray = Array.from(replyPost.content);
     let start = 0;
-    for (let i = 0; i < replyPost.content.length; i++) {
+    for(let i = 0; i < replyPost.content.length; i++ ) {
       if (stringArray[i] == "/") {
         if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
           let replyLine = document.createElement("div");
@@ -148,8 +162,8 @@ export class UserThreadViewComponent implements OnInit {
           i = i + 3;
           start = i;
         } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
-          for (let j = i + 3; j < replyPost.content.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "r") {
+          for(let j = i + 3; j < replyPost.content.length; j++){
+            if(stringArray[j] == "/" && stringArray[j+1] == "r"){
               i = j + 1;
               start = i + 1;
               break;
@@ -165,9 +179,9 @@ export class UserThreadViewComponent implements OnInit {
     above.appendChild(linebreak);
     under.appendChild(linebreak2);
     console.log(box!.children[0].textContent);
-    if (box!.children[0].textContent == "") {
+    if(box!.children[0].textContent == "" ){
       box!.appendChild(reply)
-    } else {
+    }else {
       tag.parentNode!.insertBefore(reply, tag.nextSibling);
       reply.parentNode!.insertBefore(above, reply);
     }
@@ -175,24 +189,24 @@ export class UserThreadViewComponent implements OnInit {
     box!.appendChild(under);
   }
 
-  createPost(): void {
+  createPost(): void{
     let fullReply = document.getElementById('replyBox');
-    let replyString: string = "";
-    for (let i = 0; i < fullReply!.children.length; i++) {
+    let replyString : string = "";
+    for(let i = 0; i < fullReply!.children.length; i++){
       let child = fullReply!.children[i];
-      if (child.children.length != 0 && child.tagName != "BLOCKQUOTE") {
+      if(child.children.length != 0 && child.tagName != "BLOCKQUOTE"){
         let rest = "";
-        for (let k = 0; k < child.children.length; k++) {
+        for(let k = 0; k < child.children.length; k++){
           rest = rest + child.children[k].textContent;
         }
-        let test = child.textContent!.replace(rest, "");
+        let test = child.textContent!.replace(rest,"");
         replyString = replyString + test + "/b?";
-        for (let j = 0; j < child.children.length; j++) {
-          if (child.children[j].tagName == "BLOCKQUOTE") {
+        for(let j = 0; j < child.children.length; j++) {
+          if(child.children[j].tagName == "BLOCKQUOTE") {
             let infos: string = "/a?postId=" + child.children[j].getAttribute('replyPostId')! + "&userId=" + child.children[j].getAttribute('replyUserId') + "&userName=" + child.children[j].getAttribute('replyUserName') + "/a";
             let header: string = child.children[j].children[0].textContent! + "/b?"
             let body: string = "";
-            for (let k = 1; k < child.children[j].children.length; k++) {
+            for(let k = 1; k < child.children[j].children.length; k++) {
               body = body + child.children[j].children[k].textContent! + "/b?"
             }
             replyString = replyString + "/r?" + infos + header + body + "/r";
@@ -200,23 +214,23 @@ export class UserThreadViewComponent implements OnInit {
             replyString = replyString + child.children[j].textContent + "/b?";
           }
         }
-      } else if (child.tagName == "BLOCKQUOTE") {
+      }else if(child.tagName == "BLOCKQUOTE"){
         console.log("extra")
         let infos: string = "/a?postId=" + child.getAttribute('replyPostId')! + "&userId=" + child.getAttribute('replyUserId') + "&userName=" + child.getAttribute('replyUserName') + "/a";
         let header: string = child.children[0].textContent! + "/b?"
         let body: string = "";
-        for (let k = 1; k < child.children.length; k++) {
+        for(let k = 1; k < child.children.length; k++) {
           body = body + child.children[k].textContent! + "/b?"
         }
         replyString = replyString + "/r?" + infos + header + body + "/r";
-      } else {
+      }else{
         replyString = replyString + child.textContent + "/b?";
       }
     }
     console.log(replyString);
     console.log("pushed stuff");
     this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.currentUserId, replyString));
-    while (fullReply!.children.length > 0) {
+    while(fullReply!.children.length > 0){
       fullReply!.removeChild(fullReply!.lastChild!);
     }
     let newLine = document.createElement("div");
@@ -226,19 +240,19 @@ export class UserThreadViewComponent implements OnInit {
   }
 
 
-  deserializePost(postString: string): void {
+  deserializePost(postString: string): void{
     let stringArray = Array.from(postString);
     let start = 0;
     let content: any[] = new Array(0);
-    for (let i = 0; i < stringArray.length; i++) {
-      if (stringArray[i] == "/") {
-        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
+    for(let i = 0; i < stringArray.length; i++){
+      if(stringArray[i] == "/"){
+        if(stringArray[i+1] == "b" && stringArray[i + 2] == "?"){
           let replyLine = document.createElement("div");
-          replyLine.textContent = postString.substring(start, i);
+          replyLine.textContent = postString.substring(start,i);
           content.push(replyLine);
           i = i + 2;
           start = i + 1;
-        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
+        }else if(stringArray[i + 1] == "r" && stringArray[i + 2] == "?"){
           let replyFull = document.createElement("blockquote")
           replyFull.className = "testReply";
           replyFull.style.borderRadius = '1px';
@@ -249,32 +263,32 @@ export class UserThreadViewComponent implements OnInit {
           replyFull.style.borderSpacing = '10px';
           i = i + 13;
           start = i;
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
+          for(let j = i; j < stringArray.length; j++){
+            if(stringArray[j] == "&"){
               replyFull.setAttribute("replyPostId", postString.substring(start, j));
               start = j + 8;
               i = start - 1;
               break;
             }
           }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
-              replyFull.setAttribute("replyUserId", postString.substring(start, j))
+          for(let j = i; j < stringArray.length; j++) {
+            if(stringArray[j] == "&"){
+              replyFull.setAttribute("replyUserId", postString.substring(start,j))
               start = j + 10;
               i = start
               break;
             }
           }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "a") {
+          for(let j = i; j < stringArray.length; j++) {
+            if(stringArray[j] == "/" && stringArray[j + 1] == "a"){
               replyFull.setAttribute("replyUserName", postString.substring(start, j))
               start = j + 2;
               i = start - 1;
               break;
             }
           }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "b") {
+          for(let j = i; j < stringArray.length; j++){
+            if(stringArray[j] == "/" && stringArray[j + 1] == "b"){
               let header = document.createElement("p");
               header.textContent = postString.substring(start, j);
               replyFull.appendChild(header);
@@ -283,15 +297,15 @@ export class UserThreadViewComponent implements OnInit {
               break;
             }
           }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/") {
-              if (stringArray[j + 1] == "b") {
+          for(let j = i; j < stringArray.length; j++){
+            if(stringArray[j] == "/"){
+              if(stringArray[j+1] == "b" ){
                 let line = document.createElement("div");
-                line.textContent = postString.substring(start, j);
+                line.textContent = postString.substring(start,j);
                 replyFull.appendChild(line);
                 start = j + 3;
                 i = start - 1;
-              } else if (stringArray[j + 1] == "r") {
+              }else if(stringArray[j + 1] == "r"){
                 start = j + 2;
                 i = start - 1;
                 break;
@@ -302,20 +316,28 @@ export class UserThreadViewComponent implements OnInit {
         }
       }
     }
-    for (let i = 0; i < content.length; i++) {
-      if (content[i].children.length != 0) {
+    for(let i = 0; i < content.length; i++){
+      if(content[i].children.length != 0){
         console.log(content[i].nodeName);
-        for (let j = 0; j < content[i].children.length; j++) {
+        for(let j = 0; j < content[i].children.length; j++){
           console.log(content[i].children[j].nodeName);
           console.log(content[i].children[j].textContent)
         }
-      } else {
+      }else{
         console.log(content[i].nodeName)
         console.log(content[i].textContent)
       }
     }
     this.testcontent = content;
   }
+
+  currentEdit(post: Post){
+    if(this.editId == post.id){
+      this.editId == null;
+    }else{
+      this.editId = post.id;
+    }
+}
 
   moveToPost(id: number) {
     window.location.hash = id.toString();

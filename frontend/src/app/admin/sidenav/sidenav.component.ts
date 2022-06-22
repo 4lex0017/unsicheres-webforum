@@ -8,7 +8,7 @@ import {ThemeService} from "../../theme.service";
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent {
-  title = 'Prototype';
+  title = 'Admin';
   sideNavigationMaximized = true;
   contentMargin = 240;
 

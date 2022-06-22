@@ -8,12 +8,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
-import * as Buffer from "buffer";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {firstValueFrom, NotFoundError, Observable} from "rxjs";
-import {UserComment} from "../../data-access/models/comment";
+import {NotFoundError, Observable} from "rxjs";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
-import {catchError} from 'rxjs/operators';
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 @Component({
@@ -42,12 +39,16 @@ export class UserProfileViewComponent implements OnInit {
   }
 
 
-  ngOnInit() {
-    // this.startUp();
-    // this.backendServiceCom.getUserOld(12);
+  async setVuln() {
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/user/{int}");
+  }
 
+  ngOnInit() {
+    this.setVuln()
     this.route.data.subscribe((resp: Data) => {
       console.log(resp) //drinnen lassen um kurz daten zu checken
+      //
+      // this.vEnabled = false;
       this.userFullObject = {
         id: resp["user"].body.data.id,
         name: resp["user"].body.data.name,
@@ -60,56 +61,54 @@ export class UserProfileViewComponent implements OnInit {
         location: resp["user"].body.data.location,
         endorsements: resp["user"].body.data.endorsements
       }
+      if (this.vEnabled) this.injectContentToDom();
       if (!resp["user"]["headers"].get('VulnFound')) {
         console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
     });
-
-
-    // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
-    // this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
-
-
-    // this.userFullObject$ = this.route.data.pipe();
-    // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
-    // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
-    // this.routeData$ = this.route.data;
-
-    //  this.route.data.subscribe((data: any) => {
-    //   this.userFullObject = data.user;
-    //   this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
-    //   this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
-    //   this.vEnabled = this.diffPicker.isEnabledInConfig();
-    //   if (this.vEnabled) this.injectContentToDom();
-    // });
-
-
   }
 
-  startUp() {
-    firstValueFrom(this.route.data).then((resp: any) => {
-      console.log(resp) //drinnen lassen um kurz daten zu checken
-      this.userFullObject = {
-        id: resp.user.body.data.id,
-        name: resp.user.body.data.name,
-        joined: resp.user.body.data.joined,
-        birth_date: resp.user.body.data.birthDate,
-        about: resp.user.body.data.about,
-        groups: resp.user.body.data.groups,
-        profile_comments: resp.user.body.data.profileComments,
-        profile_picture: resp.user.body.data.profilePicture,
-        location: resp.user.body.data.location,
-        endorsements: resp.user.body.data.endorsements
-      }
-      const keys = resp.headers.keys();
-      let headers = keys.map(key =>
-        `${key}: ${resp.headers.get(key)}`);
-      console.log(headers)
+  // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
+  // this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
 
-    });
-  }
 
+  // this.userFullObject$ = this.route.data.pipe();
+  // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
+  // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
+  // this.routeData$ = this.route.data;
+
+  //  this.route.data.subscribe((data: any) => {
+  //   this.userFullObject = data.user;
+  //   this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
+  //   this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
+  //   this.vEnabled = this.diffPicker.isEnabledInConfig();
+  //   if (this.vEnabled) this.injectContentToDom();
+  // });
+
+
+  // startUp() {
+  //   firstValueFrom(this.route.data).then((resp: any) => {
+  //     console.log(resp) //drinnen lassen um kurz daten zu checken
+  //     this.userFullObject = {
+  //       id: resp.user.body.data.id,
+  //       name: resp.user.body.data.name,
+  //       joined: resp.user.body.data.joined,
+  //       birth_date: resp.user.body.data.birthDate,
+  //       about: resp.user.body.data.about,
+  //       groups: resp.user.body.data.groups,
+  //       profile_comments: resp.user.body.data.profileComments,
+  //       profile_picture: resp.user.body.data.profilePicture,
+  //       location: resp.user.body.data.location,
+  //       endorsements: resp.user.body.data.endorsements
+  //     }
+  //     const keys = resp.headers.keys();
+  //     let headers = keys.map(key =>
+  //       `${key}: ${resp.headers.get(key)}`);
+  //     console.log(headers)
+  //
+  //   });
+  // }
   openEditProfileDialog(): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
@@ -125,7 +124,13 @@ export class UserProfileViewComponent implements OnInit {
       this.userFullObject.about = result.about;
       this.userFullObject.profile_picture = result.profile_picture;
       this.userFullObject.location = result.location;
-      this.backendServiceCom.putUser(this.userFullObject).subscribe();
+      this.backendServiceCom.putUser(this.userFullObject).subscribe(
+        (resp: Data) => {
+          if (!resp["user"]["headers"].get('VulnFound')) {
+            console.log("found vuln in userprofile")
+            this.didAThing.sendMessage();
+          }
+        });
       if (this.vEnabled) this.injectContentToDom();
     });
   }

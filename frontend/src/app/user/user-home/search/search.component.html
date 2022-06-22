@@ -1,5 +1,4 @@
 <div class="outer-container">
-  <script>  alert("Test");  </script>
   <mat-card class="search-card">
     <mat-card-header>
       <mat-card-title>
@@ -24,11 +23,11 @@
       </mat-card-title>
     </mat-card-header>
 
-    <div *ngIf="this.threads.length>0">
+    <div *ngIf="search.threads.length>0">
       <mat-list>
-        <div mat-subheader>Threads: Found {{threads.length}} results.</div>
-        <mat-list-item *ngFor="let thread of threads">
-          <a [routerLink]="['/forum/thread',getSlugFromTitle(thread.title)]">
+        <div mat-subheader>Threads: Found {{search.threads.length}} results.</div>
+        <mat-list-item *ngFor="let thread of search.threads">
+          <a [routerLink]="['/forum/threads',thread.id]">
             <div mat-line>{{thread.title}}</div>
           </a>
           <mat-divider></mat-divider>
@@ -36,11 +35,11 @@
       </mat-list>
     </div>
 
-    <div *ngIf="this.posts.length>0">
+    <div *ngIf="search.posts.length>0">
       <mat-list>
-        <div mat-subheader>Posts: Found {{posts.length}} results.</div>
-        <mat-list-item *ngFor="let post of posts">
-          <a [routerLink]="['/forum/thread', getThreadSlugFromPostId(post.id)]">
+        <div mat-subheader>Posts: Found {{search.posts.length}} results.</div>
+        <mat-list-item *ngFor="let post of search.posts">
+          <a [routerLink]="['/forum/threads', getSlugFromTitle(post.title)]">
             <div mat-line>{{cutPostContent(post.content)}}</div>
           </a>
           <mat-divider></mat-divider>
@@ -48,10 +47,10 @@
       </mat-list>
     </div>
 
-    <div *ngIf="this.users.length>0">
+    <div *ngIf="search.users.length>0">
       <mat-list>
-        <div mat-subheader>Users: Found {{users.length}} results.</div>
-        <mat-list-item *ngFor="let user of users">
+        <div mat-subheader>Users: Found {{search.users.length}} results.</div>
+        <mat-list-item *ngFor="let user of search.users">
           <a [routerLink]="['/forum/users', user.id]">
             <div mat-line>{{user.name}}</div>
           </a>

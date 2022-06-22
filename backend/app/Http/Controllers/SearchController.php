@@ -36,7 +36,7 @@ class SearchController extends Controller
             'SELECT
                     p.id,
                     p.content,
-                    t.title
+                    t.id as threadId
                    FROM posts as p
                    INNER JOIN threads t on t.id = p.thread_id
                    WHERE p.content LIKE \'%' . $text . '%\';'

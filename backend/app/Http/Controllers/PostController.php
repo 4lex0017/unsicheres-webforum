@@ -24,6 +24,12 @@ class PostController extends Controller
         return Post::create($request->all());
     }
 
+    public function deletePost($thread_id, $post_id)
+    {
+        DB::connection('insecure')->table('posts')->whereRaw('id = ' . $post_id . ' and thread_id = ' . $thread_id)->delete();
+        return response("", 204);
+    }
+
     public function updatePost(Request $request, $thread_id, $post_id)
     {
         $post = self::injectableWhere('id', $post_id, 'thread_id', $thread_id);

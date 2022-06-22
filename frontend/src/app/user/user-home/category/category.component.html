@@ -23,7 +23,7 @@
           <div class="category-replies">Threads: {{categoryObject.threads.length}}</div>
         </th>
         <td mat-cell *matCellDef="let element">
-          <a [routerLink]="['/forum/thread', getSLugFromTitle(element.title)]">
+          <a [routerLink]="['/forum/threads', element.id]">
             <div class="thread-title"> {{element.title}} </div>
           </a>
           <div class="thread-author"> Author: <a
