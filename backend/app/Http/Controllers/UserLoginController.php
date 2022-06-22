@@ -34,8 +34,8 @@ class UserLoginController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user_id' => $user->id,
             ]);
-        
     }
 
     public function login(Request $request)
@@ -44,10 +44,10 @@ class UserLoginController extends Controller
             $user = User::where('name', $request->name)->first(); 
             $success['token'] =  $user->createToken('auth_token')->plainTextToken; 
             $success['name'] =  $user->name;
-   
             return response()->json([
                 'access_token' =>  $user->createToken('auth_token')->plainTextToken,
                 'token_type' => 'Bearer',
+                'user_id' => $user->id,
             ], 200);
         } 
         else{ 
@@ -55,5 +55,14 @@ class UserLoginController extends Controller
                 'error'=>'Login failed',
             ], 401);
         } 
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return [
+            'message' => 'Logged out'
+        ];
     }
 }
