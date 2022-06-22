@@ -60,6 +60,7 @@ class CategoryController extends Controller
             $tmp_category = [
                 'id' => $category->id,
                 'title' => $category->title,
+                'numberOfThreads' => count($category_threads),
                 'threads' => $thread_array
             ];
 
