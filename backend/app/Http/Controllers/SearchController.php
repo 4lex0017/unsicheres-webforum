@@ -5,32 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use JetBrains\PhpStorm\ArrayShape;
 
 class SearchController extends Controller
 {
-    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection", 'posts' => "array"])]
-    public function globalSearch(Request $request): JsonResponse|array
+    public function searchUsers(Request $request): JsonResponse|array
     {
         $q = $request->query('q');
         if (!$q)
             return response()->json()->setStatusCode(404);
 
-        return self::injectableSelectWhere($q);
-    }
-
-    #[ArrayShape(['users' => "\Illuminate\Support\Collection", 'threads' => "\Illuminate\Support\Collection", 'posts' => "array"])]
-    public static function injectableSelectWhere($text): array
-    {
         $users = DB::connection('insecure')->table('users')->select(
             'id',
             'name'
-        )->whereRaw('name LIKE \'%' . $text . '%\'')->get();
+        )->whereRaw('name LIKE \'%' . $q . '%\'')->get();
 
-        $threads = DB::connection('insecure')->table('threads')->select(
-            'id',
-            'title'
-        )->whereRaw('title LIKE \'%' . $text . '%\'')->get();
+        return [
+            'users' => $users
+        ];
+    }
+
+    public function searchPosts(Request $request): JsonResponse|array
+    {
+        $q = $request->query('q');
+        if (!$q)
+            return response()->json()->setStatusCode(404);
 
         $posts = DB::connection('insecure')->select(DB::raw(
             'SELECT
@@ -39,13 +37,27 @@ class SearchController extends Controller
                     t.id as threadId
                    FROM posts as p
                    INNER JOIN threads t on t.id = p.thread_id
-                   WHERE p.content LIKE \'%' . $text . '%\';'
+                   WHERE p.content LIKE \'%' . $q . '%\';'
         ));
 
         return [
-            'users' => $users,
-            'threads' => $threads,
             'posts' => $posts
+        ];
+    }
+
+    public static function searchThreads(Request $request): JsonResponse|array
+    {
+        $q = $request->query('q');
+        if (!$q)
+            return response()->json()->setStatusCode(404);
+
+        $threads = DB::connection('insecure')->table('threads')->select(
+            'id',
+            'title'
+        )->whereRaw('title LIKE \'%' . $q . '%\'')->get();
+
+        return [
+            'threads' => $threads,
         ];
     }
 }
