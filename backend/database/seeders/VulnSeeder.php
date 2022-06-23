@@ -41,13 +41,13 @@ class VulnSeeder extends Seeder
                 'sqli_difficulty' => 4,
             ],
             [
-                'uri' => '/user',
+                'uri' => '/users',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
             ],
             [
-                'uri' => '/user/{int}',
+                'uri' => '/users/{int}',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
