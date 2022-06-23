@@ -44,16 +44,6 @@ Route::get('users', 'App\Http\Controllers\UserController@getAllUsers');
 Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');
 
 /**
- * @uses App\Http\Controllers\UserController::createUser()
- */
-Route::post('users', 'App\Http\Controllers\UserController@createUser');
-
-/**
- * @uses App\Http\Controllers\UserController::updateUser()
- */
-Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
-
-/**
  * @uses App\Http\Controllers\ThreadController::getAllThreadsOfUser()
  */
 Route::get('users/{id}/threads', 'App\Http\Controllers\ThreadController@getAllThreadsOfUser');
@@ -88,34 +78,65 @@ Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategori
  */
 Route::get('categories/{id}', 'App\Http\Controllers\CategoryController@getCategoryById');
 
-
-Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
-
-
-Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
-
-Route::delete('threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
-
-
-Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
-
-Route::put('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@updatePost');
-
-Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
-
-
-Route::post('register', 'App\Http\Controllers\UserLoginController@register');
-
-Route::post('login', ['as' => 'login','uses' =>'App\Http\Controllers\UserLoginController@login']);
-
-/**
- * @uses App\Http\Controllers\AdminController::putAttackerName()
- */
-Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
-
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
-
+    /**
+     * @uses App\Http\Controllers\UserLoginController::logout()
+     */
     Route::post('logout', 'App\Http\Controllers\UserLoginController@logout');
 
+    /**
+     * @uses App\Http\Controllers\UserController::createUser()
+     */
+    Route::post('users', 'App\Http\Controllers\UserController@createUser');
+
+    /**
+     * @uses App\Http\Controllers\UserController::updateUser()
+     */
+    Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
+
+    /**
+     * @uses App\Http\Controllers\ThreadController::postThreadToCategory()
+     */
+    Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
+
+    /**
+     * @uses App\Http\Controllers\ThreadController::updateThread()
+     */
+    Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
+
+    /**
+     * @uses App\Http\Controllers\ThreadController::deleteThread()
+     */
+    Route::delete('threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
+
+    /**
+     * @uses App\Http\Controllers\PostController::createPost()
+     */
+    Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
+
+    /**
+     * @uses App\Http\Controllers\PostController::updatePost()
+     */
+    Route::put('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@updatePost');
+
+    /**
+     * @uses App\Http\Controllers\PostController::deletePost()
+     */
+    Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
+
+    /**
+     * @uses App\Http\Controllers\UserLoginController::register()
+     */
+    Route::post('register', 'App\Http\Controllers\UserLoginController@register');
+
+    /**
+     * @uses App\Http\Controllers\UserLoginController::login()
+     */
+    Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLoginController@login']);
+
+    /**
+     * @uses App\Http\Controllers\AdminController::putAttackerName()
+     */
+    Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
 });
