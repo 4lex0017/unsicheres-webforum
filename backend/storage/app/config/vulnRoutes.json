@@ -24,7 +24,7 @@
     ],
     "sxss": [
         {"route": "/user"},
-        {"route": "/user/int"},
+        {"route": "/user/{int}"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"},
         {"route": "/threads/{int}/posts"},
