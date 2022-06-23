@@ -106,19 +106,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
 
     /**
-     * @uses App\Http\Controllers\ThreadController::postThreadToCategory()
+     * @uses App\Http\Controllers\ThreadController::createThread()
      */
-    Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
+    Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@createThread');
 
     /**
      * @uses App\Http\Controllers\ThreadController::updateThread()
      */
-    Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
+    Route::put('categories/{cat_id}/threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
 
     /**
      * @uses App\Http\Controllers\ThreadController::deleteThread()
      */
-    Route::delete('threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
+    Route::delete('categories/{cat_id}/threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
 
     /**
      * @uses App\Http\Controllers\LikeController::likeThread()
