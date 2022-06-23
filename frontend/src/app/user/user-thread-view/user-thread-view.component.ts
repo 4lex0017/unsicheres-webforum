@@ -43,14 +43,14 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   async setVuln() {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/categories/{int}/threads");
+    this.vEnabled = false;
   }
 
   ngOnInit(): void {
     this.setVuln();
     this.route.data.subscribe((resp: Data) => {
-        console.log(resp)
-        this.threadObject = resp["thread"].body;
+        console.log(resp["thread"].body.data)
+        this.threadObject = resp["thread"].body.data[0];
         if (this.vEnabled) {
           this.changeDetectorRef.detectChanges();
           this.title.nativeElement.replaceChildren();

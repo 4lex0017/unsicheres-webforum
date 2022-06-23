@@ -3,6 +3,7 @@ import {User} from "./user";
 
 export interface Thread {
   id: number;
+  categoryId?: number;
   title: string;
   author: User;
   likedFrom: number[];
