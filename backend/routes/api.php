@@ -59,6 +59,11 @@ Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
 Route::get('users/{id}/threads', 'App\Http\Controllers\ThreadController@getAllThreadsOfUser');
 
 /**
+ * @uses App\Http\Controllers\PostController::getAllPostsOfUser()
+ */
+Route::get('users/{id}/posts', 'App\Http\Controllers\PostController@getAllPostsOfUser');
+
+/**
  * @uses App\Http\Controllers\SiteController::getSmallUsers()
  */
 Route::get('sitecontent/users', 'App\Http\Controllers\SiteController@getSmallUsers');
