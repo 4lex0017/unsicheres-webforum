@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PostResource;
 use App\Http\Resources\SmallThreadResource;
 use App\Http\Resources\ThreadResource;
 use App\Models\Category;
@@ -42,59 +41,66 @@ class ThreadController extends Controller
         return SmallThreadResource::collection($threads);
     }
 
-    public function deleteThread($thread_id)
+    public function createThread(Request $request, $category_id): ThreadResource
     {
-        $thread = Thread::find($thread_id)->first();
+        $json = $request->json();
+        $json->add(['category_id' => $category_id]);
 
-        $category_id = $thread->category_id;
+        $request->setJson($json);
 
-        $category = (new Category)->where('id', $category_id)->first();
+        // need to add the thread to the categories' table thread-array
+        $category = (new Category())->find($category_id);
+        $thread_array = $category['threads'];
 
-        $threads = $category->threads;
-        $key = array_search($thread_id, $threads);
-        array_splice($threads, 1, $key);
-        $category->threads = $threads;
+        $new_thread = (new Thread)->create($request->all());
+
+        $thread_array[] = $new_thread->id;
+
+        $category['threads'] = $thread_array;
         $category->save();
-        DB::connection('insecure')->table('threads')->whereRaw('id = ' . $thread_id)->delete();
+
+        $new_thread->liked_from = "[]"; // fix for null, frontend needs an empty array
+
+        return new ThreadResource($new_thread);
+    }
+
+    public function deleteThread($cat_id, $thread_id): Response|Application|ResponseFactory
+    {
+        // need to remove the thread from the categories' table thread-array
+        $category = (new Category())->find($cat_id);
+        $thread_array = $category['threads'];
+
+        if (($key = array_search($thread_id, $thread_array)) !== false) {
+            unset($thread_array[$key]); // find the thread_id value and unset it
+        }
+
+        $category['threads'] = $thread_array;
+        $category->save();
+
+        DB::connection('insecure')
+            ->table('threads')
+            ->whereRaw('id = ' . $thread_id . ' and category_id = ' . $cat_id)
+            ->delete();
+
         return response("", 204);
     }
 
-    public function postThreadToCategory(Request $request, $category_id)
+    public function updateThread(Request $request, $cat_id, $thread_id): Response|array|Application|ResponseFactory
     {
-        $thread = $request->all();
-        $thread['category_id'] = $category_id;
-        $model = (new Thread)->create($thread);
+        $thread = (new Thread)->where('id', '=', $thread_id, 'and')
+            ->where('category_id', '=', $cat_id)->first();
 
-        $category = (new Category)->where('id', $category_id)->first();
-
-        $category->threads[] = $model->id;
-
-        $category->update();
-
-        return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
-    }
-
-    public function updateThread(Request $request, $thread_id)
-    {
-        $thread = self::injectableWhereModel('id', $thread_id);
-        if (count($thread) === 0) {
+        if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             return response('', 404);
-        }
-        $threadw = $thread->first();
-        if ($threadw->id == $thread_id) {
-            $threadw->update($request->all());
-            $threadw->save();
 
-            return new PostResource($thread);
-        }
-        return response('', 404);
-    }
+        $new_title = $request->json('title');
+        $thread['title'] = $new_title;
 
-    public static function injectableWhereModel($row, $id): Collection
-    {
-        return (new Thread)->select(
-            '*'
-        )->whereRaw($row . " = " . $id)->get();
+        $thread->save();
+
+        return [
+            "title" => $thread->title // this is all the frontend needs
+        ];
     }
 
     public static function injectableWhere($row, $id): Collection
