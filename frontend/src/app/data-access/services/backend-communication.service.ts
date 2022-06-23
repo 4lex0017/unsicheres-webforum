@@ -23,6 +23,8 @@ import {
 } from "../models/vulnerabilitiesConfig";
 import {VulnerabilityDifficultyPicker} from "../models/vulnerabilityDifficultyPicker";
 import {Search} from "../models/search";
+import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
+import {UserFullBackend} from "../models/userFullBackendModel";
 
 
 @Injectable({
@@ -61,16 +63,16 @@ export class BackendCommunicationService {
 
 
   //For Userprofile view
-  getThreadsFromUser(userId: number): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/user/' + userId + '/threads');
+  getThreadsFromUser(userId: number): Observable<ThreadsSmallBackendModel> {
+    return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
   }
 
   getPostsFromUser(userId: number): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.url + '/user/' + userId + '/posts');
+    return this.httpClient.get<Post[]>(this.url + '/users/' + userId + '/posts');
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
-    return this.httpClient.get<UserFull>(this.url + '/user/' + userId, {observe: 'response'})
+    return this.httpClient.get<UserFull>(this.url + '/users/' + userId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
         this.errorBreadCrumb(error.status.toString())
         throw {message: 'Bad response', value: error.status}
@@ -78,7 +80,7 @@ export class BackendCommunicationService {
   }
 
   getUsers(): Observable<UserFull[]> {
-    return this.httpClient.get<UserFull[]>(this.url + '/user')
+    return this.httpClient.get<UserFull[]>(this.url + '/users')
   }
 
   postUser(user: any): Observable<any> {
@@ -94,23 +96,23 @@ export class BackendCommunicationService {
     // };
     let userPayload = {...user}
     // ...user
-    return this.httpClient.post<UserFull>(this.url + '/user', userPayload);
+    return this.httpClient.post<UserFull>(this.url + '/users', userPayload);
   }
 
-  putUser(user: UserFull): Observable<UserFull> {
+  putUser(user: UserFullBackend): Observable<HttpResponse<UserFull>> {
     let userPayload =
       {
         "id": user.id,
         "name": user.name,
-        "birth_date": user.birth_date,
+        "birth_date": user.birthDate,
         "location": user.location,
         "about": user.about,
         "groups": user.groups,
-        "profile_picture": user.profile_picture,
-        "profile_comments": user.profile_comments
+        "profile_picture": user.profilePicture,
+        "profile_comments": user.profileComments
       };
     // ...user
-    return this.httpClient.put<any>(this.url + '/user/' + user.id, userPayload);
+    return this.httpClient.put<any>(this.url + '/users/' + user.id, userPayload, {observe: 'response'});
   }
 
   //authenticateUser(password: string):cookie{}
@@ -126,7 +128,7 @@ export class BackendCommunicationService {
   }
 
   // getUser(userId: number): Observable<HttpResponse<UserFull>> {
-  //   return this.httpClient.get<UserFull>(this.url + '/user/' + userId, {observe: 'response'})
+  //   return this.httpClient.get<UserFull>(this.url + '/users/' + userId, {observe: 'response'})
   //     .pipe(catchError((error: Response) => {
   //       this.errorBreadCrumb(error.status.toString())
   //       throw {message: 'Bad response', value: error.status}
@@ -147,7 +149,7 @@ export class BackendCommunicationService {
     return this.httpClient.delete<Thread>(this.url + '/threads/' + threadId);
   }
 
-  putThread(thread: Thread): Observable<Thread> {
+  putThread(thread: Thread): Observable<HttpResponse<Thread>> {
 
     let threadPayload =
       {
@@ -156,10 +158,10 @@ export class BackendCommunicationService {
         "date": thread.date,
         "author": thread.author,
         "likedFrom": thread.likedFrom,
-        "posts": thread.posts,
+        "posts": thread.posts
       };
     // let threadPayload = {...thread};
-    return this.httpClient.post<Thread>(this.url + '/threads/' + thread.id, threadPayload);
+    return this.httpClient.post<Thread>(this.url + '/threads/' + thread.id, threadPayload, {observe: 'response'});
   }
 
   postPost(categoryId: number, threadId: number, post: Post): Observable<Post> {
@@ -167,6 +169,14 @@ export class BackendCommunicationService {
     return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload);
   }
 
+  deletePost(threadId: number, postId: number): Observable<Post> {
+    return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId);
+  }
+
+  putPost(threadId: number, post: Post): Observable<Post> {
+    let postPayload = {...post};
+    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + post.id, postPayload);
+  }
 
   createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {
     throw new Error();
@@ -254,9 +264,9 @@ export class BackendCommunicationService {
 
   //Fake search result
 
-  search(search: string): Observable<Search> {
+  search(search: string): Observable<HttpResponse<Search>> {
     let params = new HttpParams().set('q', search)
-    return this.httpClient.get<Search>(this.url + '/search', {params: params});
+    return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
   }
 
   // getRandomUsers(): UserFull[] {

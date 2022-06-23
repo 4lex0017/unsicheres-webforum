@@ -76,7 +76,7 @@ class ThreadController extends Controller
 
     public function updateThread(Request $request, $thread_id)
     {
-        $thread = self::injectableWhere('id', $thread_id);
+        $thread = self::injectableWhereModel('id', $thread_id);
         if (count($thread) === 0) {
             return response('', 404);
         }
@@ -90,9 +90,16 @@ class ThreadController extends Controller
         return response('', 404);
     }
 
-    public static function injectableWhere($row, $id): Collection
+    public static function injectableWhereModel($row, $id): Collection
     {
         return (new Thread)->select(
+            '*'
+        )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public static function injectableWhere($row, $id): Collection
+    {
+        return DB::connection('insecure')->table('threads')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
     }

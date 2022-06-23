@@ -49,20 +49,35 @@ export class DialogRegisterComponent {
   registerUser(): void {
     if (this.username && this.password && this.passwordRepeat && this.date.value) {
       if (this.password == this.passwordRepeat) {
-        if (this.backend.checkRegisterUserExists(this.username)) {
+        // if (this.backend.checkRegisterUserExists(this.username)) {
+        //   this.username = "";
+        //   this.password = "";
+        //   this.passwordRepeat = "";
+        //   this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        //     duration: 5000,
+        //     data: "User already exists.",
+        //   });
+        // } else {
+        // this.createNewUser(this.username, this.password, this.formatDate(this.date.value))
+        // sessionStorage.setItem("user", this.username)
+        this.authenticate.registerJwt(this.username, this.password, this.date.value).subscribe(d => this.dialogref.close(), error => {
+          console.log(error)
+          console.log(error.status)
+          let errorMsg = "Bad request.";
+          if (error.status == 500) {
+            errorMsg = "User already exists.";
+          }
           this.username = "";
           this.password = "";
           this.passwordRepeat = "";
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,
-            data: "User already exists.",
+            data: errorMsg,
           });
-        } else {
-          this.createNewUser(this.username, this.password, this.formatDate(this.date.value))
-          sessionStorage.setItem("user", this.username)
-          this.authenticate.login(this.username, this.password);
-          this.dialogref.close();
-        }
+
+        });
+
+        // }
       } else {
         this.password = "";
         this.passwordRepeat = "";
@@ -92,7 +107,7 @@ export class DialogRegisterComponent {
       "profile_comments": []
     }
     this.backendCom.postUser(user).subscribe(response => {
-      this.authenticate.currentUserId = response.data.id;
+      // this.authenticate.currentUserId = response.data.id;
     });
   }
 

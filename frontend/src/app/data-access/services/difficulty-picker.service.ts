@@ -26,13 +26,13 @@ export class DifficultyPickerService {
   }
 
   updateConfig(): void {
-    if (!DifficultyPickerService.curConfig) {
-      this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
-        DifficultyPickerService.curConfig = data
-        console.log(DifficultyPickerService.curConfig)
-      });
 
-    }
+    this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
+      DifficultyPickerService.curConfig = data
+      console.log(DifficultyPickerService.curConfig)
+    });
+
+
   }
 
   isEnabledInConfig(str: string): boolean {

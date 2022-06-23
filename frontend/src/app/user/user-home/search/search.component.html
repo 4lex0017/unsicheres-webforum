@@ -39,7 +39,7 @@
       <mat-list>
         <div mat-subheader>Posts: Found {{search.posts.length}} results.</div>
         <mat-list-item *ngFor="let post of search.posts">
-          <a [routerLink]="['/forum/threads', getSlugFromTitle(post.title)]">
+          <a [routerLink]="['/forum/threads', post.threadId]">
             <div mat-line>{{cutPostContent(post.content)}}</div>
           </a>
           <mat-divider></mat-divider>

@@ -41,8 +41,14 @@ export class ReactivePostComponent implements OnInit {
   contentArray: any[]
   @ViewChild('content', {static: false}) content: ElementRef;
 
-  ngOnInit(): void {
+
+  async setVuln() {
     this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
+  }
+
+  ngOnInit(): void {
+    this.setVuln();
+    // this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
     this.deserializePost(this.postObject.content);
     if (this.vEnabled) {
       this.changeDetectorRef.detectChanges();
@@ -51,8 +57,22 @@ export class ReactivePostComponent implements OnInit {
     }
   }
 
+  parseDate(date: string): string {
+    let dateObj: Date = new Date(date);
+    return (
+      [
+        this.padTo2Digits(dateObj.getDate()),
+        this.padTo2Digits(dateObj.getMonth() + 1),
+        dateObj.getFullYear(),
+      ].join('.'));
+  }
+
+  padTo2Digits(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
   canEditPost(): boolean {
-    if (this.postObject.author.id == this.authenticate.currentUserId) return true;
+    if (this.postObject.author.id == this.authenticate.getCurrentUserId()) return true;
     return false;
   }
 
@@ -69,16 +89,16 @@ export class ReactivePostComponent implements OnInit {
 
   likePostButton(): void {
     if (!this.checkLoggedIn()) return;
-    let i = this.postObject.likedFrom.indexOf(this.authenticate.currentUserId);
+    let i = this.postObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
     if (i != -1) {
       this.postObject.likedFrom.splice(i, 1)
     } else {
-      this.postObject.likedFrom.push(this.authenticate.currentUserId);
+      this.postObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
   }
 
   checkLoggedIn(): boolean {
-    if (!this.authenticate.currentUserId) {
+    if (!this.authenticate.isLoggedIn()) {
       const dialogRef = this.dialog.open(DialogLoginComponent, {
         width: '30%',
       });
@@ -87,12 +107,12 @@ export class ReactivePostComponent implements OnInit {
     return true;
   }
 
-  editPost(): void{
+  editPost(): void {
     this.editing = true;
     this.editPostEvent.emit(this.postObject);
   }
 
-  addReply(replyPost: Post): void{
+  addReply(replyPost: Post): void {
     let sel = window.getSelection();
     let ran = sel!.getRangeAt(0);
     let tag = ran.commonAncestorContainer;
@@ -100,14 +120,13 @@ export class ReactivePostComponent implements OnInit {
     const box = document.getElementById('replyBox')
     let inBox = false;
 
-    for(let i = 0; i < box!.children.length; i++)
-    {
-      if(tag.parentNode == box?.children[i] || tag.parentNode == box) {
+    for (let i = 0; i < box!.children.length; i++) {
+      if (tag.parentNode == box?.children[i] || tag.parentNode == box) {
         inBox = true;
       }
     }
 
-    if(!inBox){
+    if (!inBox) {
       return;
     }
 
@@ -119,7 +138,7 @@ export class ReactivePostComponent implements OnInit {
     reply.style.width = '80%';
     reply.style.borderLeftWidth = '8px';
     reply.style.borderSpacing = '10px';
-    reply.setAttribute('replyPostId',replyPost.id.toString());
+    reply.setAttribute('replyPostId', replyPost.id.toString());
     reply.setAttribute('replyUserId', replyPost.author.id.toString());
     reply.setAttribute('replyUserName', replyPost.author.name);
     const replyHeader = document.createElement("p");
@@ -135,10 +154,10 @@ export class ReactivePostComponent implements OnInit {
     above.appendChild(linebreak);
     under.appendChild(linebreak2);
     console.log(box!.children[0].textContent);
-    if(box!.children[0].textContent == "" ){
+    if (box!.children[0].textContent == "") {
       console.log("did it");
       box!.appendChild(reply)
-    }else {
+    } else {
       tag.parentNode!.insertBefore(reply, tag.nextSibling);
       reply.parentNode!.insertBefore(above, reply);
     }
@@ -146,27 +165,27 @@ export class ReactivePostComponent implements OnInit {
     box!.appendChild(under);
   }
 
-  editContent(): void{
+  editContent(): void {
     console.log("edit");
     this.editPostEvent.emit(this.postObject);
     let fullReply = document.getElementById('replyBox');
-    let replyString : string = "";
-    for(let i = 0; i < fullReply!.children.length; i++){
+    let replyString: string = "";
+    for (let i = 0; i < fullReply!.children.length; i++) {
       let child = fullReply!.children[i];
-      if((child.children.length != 1 && child.tagName != "BLOCKQUOTE") || child.children[0].tagName == "BLOCKQUOTE"){
+      if ((child.children.length != 1 && child.tagName != "BLOCKQUOTE") || child.children[0].tagName == "BLOCKQUOTE") {
         let rest = "";
-        for(let k = 0; k < child.children.length; k++){
+        for (let k = 0; k < child.children.length; k++) {
           rest = rest + child.children[k].textContent;
         }
-        let test = child.textContent!.replace(rest,"");
+        let test = child.textContent!.replace(rest, "");
         replyString = replyString + test + "/b?";
-        for(let j = 0; j < child.children.length; j++) {
-          if(child.children[j].tagName == "BLOCKQUOTE") {
+        for (let j = 0; j < child.children.length; j++) {
+          if (child.children[j].tagName == "BLOCKQUOTE") {
             console.log("idAfterEdit: " + child.children[j].id);
             let infos: string = "/a?postId=" + child.children[j].id + "&userId=" + child.children[j].getAttribute('replyUserId') + "&userName=" + child.children[j].getAttribute('replyUserName') + "/a";
             let header: string = child.children[j].children[0].textContent! + "/b?"
             let body: string = "";
-            for(let k = 1; k < child.children[j].children.length; k++) {
+            for (let k = 1; k < child.children[j].children.length; k++) {
               body = body + child.children[j].children[k].textContent! + "/b?"
             }
             replyString = replyString + "/r?" + infos + header + body + "/r";
@@ -174,15 +193,15 @@ export class ReactivePostComponent implements OnInit {
             replyString = replyString + child.children[j].textContent + "/b?";
           }
         }
-      }else if(child.tagName == "BLOCKQUOTE"){
+      } else if (child.tagName == "BLOCKQUOTE") {
         let infos: string = "/a?postId=" + child.getAttribute('replyPostId')! + "&userId=" + child.getAttribute('replyUserId') + "&userName=" + child.getAttribute('replyUserName') + "/a";
         let header: string = child.children[0].textContent! + "/b?"
         let body: string = "";
-        for(let k = 1; k < child.children.length; k++) {
+        for (let k = 1; k < child.children.length; k++) {
           body = body + child.children[k].textContent! + "/b?"
         }
         replyString = replyString + "/r?" + infos + header + body + "/r";
-      }else{
+      } else {
         replyString = replyString + child.textContent + "/b?";
       }
     }
@@ -193,20 +212,20 @@ export class ReactivePostComponent implements OnInit {
     this.deserializePost(replyString);
   }
 
-  deserializePost(postString: string): void{
+  deserializePost(postString: string): void {
     console.log("Message: " + postString)   //schaun ob Attribute noch da sin
     let stringArray = Array.from(postString);
     let start = 0;
     let content: any[] = new Array(0);
-    for(let i = 0; i < stringArray.length; i++){
-      if(stringArray[i] == "/"){
-        if(stringArray[i+1] == "b" && stringArray[i + 2] == "?"){
+    for (let i = 0; i < stringArray.length; i++) {
+      if (stringArray[i] == "/") {
+        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
           let replyLine = document.createElement("div");
-          replyLine.textContent = postString.substring(start,i);
+          replyLine.textContent = postString.substring(start, i);
           content.push(replyLine);
           i = i + 2;
           start = i + 1;
-        }else if(stringArray[i + 1] == "r" && stringArray[i + 2] == "?"){
+        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
           let replyFull = document.createElement("blockquote")
           replyFull.className = "testReply";
           replyFull.style.borderRadius = '1px';
@@ -217,8 +236,8 @@ export class ReactivePostComponent implements OnInit {
           replyFull.style.borderSpacing = '10px';
           i = i + 13;
           start = i;
-          for(let j = i; j < stringArray.length; j++){
-            if(stringArray[j] == "&"){
+          for (let j = i; j < stringArray.length; j++) {
+            if (stringArray[j] == "&") {
               replyFull.setAttribute("replyPostId", postString.substring(start, j));
               replyFull.id = replyFull.getAttribute("replyPostId")!;
               start = j + 8;
@@ -226,24 +245,24 @@ export class ReactivePostComponent implements OnInit {
               break;
             }
           }
-          for(let j = i; j < stringArray.length; j++) {
-            if(stringArray[j] == "&"){
-              replyFull.setAttribute("replyUserId", postString.substring(start,j))
+          for (let j = i; j < stringArray.length; j++) {
+            if (stringArray[j] == "&") {
+              replyFull.setAttribute("replyUserId", postString.substring(start, j))
               start = j + 10;
               i = start
               break;
             }
           }
-          for(let j = i; j < stringArray.length; j++) {
-            if(stringArray[j] == "/" && stringArray[j + 1] == "a"){
+          for (let j = i; j < stringArray.length; j++) {
+            if (stringArray[j] == "/" && stringArray[j + 1] == "a") {
               replyFull.setAttribute("replyUserName", postString.substring(start, j))
               start = j + 2;
               i = start - 1;
               break;
             }
           }
-          for(let j = i; j < stringArray.length; j++){
-            if(stringArray[j] == "/" && stringArray[j + 1] == "b"){
+          for (let j = i; j < stringArray.length; j++) {
+            if (stringArray[j] == "/" && stringArray[j + 1] == "b") {
               let header = document.createElement("p");
               header.textContent = postString.substring(start, j);
               replyFull.appendChild(header);
@@ -252,15 +271,15 @@ export class ReactivePostComponent implements OnInit {
               break;
             }
           }
-          for(let j = i; j < stringArray.length; j++){
-            if(stringArray[j] == "/"){
-              if(stringArray[j+1] == "b" ){
+          for (let j = i; j < stringArray.length; j++) {
+            if (stringArray[j] == "/") {
+              if (stringArray[j + 1] == "b") {
                 let line = document.createElement("div");
-                line.textContent = postString.substring(start,j);
+                line.textContent = postString.substring(start, j);
                 replyFull.appendChild(line);
                 start = j + 3;
                 i = start - 1;
-              }else if(stringArray[j + 1] == "r"){
+              } else if (stringArray[j + 1] == "r") {
                 start = j + 2;
                 i = start - 1;
                 break;
@@ -271,14 +290,14 @@ export class ReactivePostComponent implements OnInit {
         }
       }
     }
-    for(let i = 0; i < content.length; i++){
-      if(content[i].children.length != 0){
+    for (let i = 0; i < content.length; i++) {
+      if (content[i].children.length != 0) {
         console.log(content[i].nodeName);
-        for(let j = 0; j < content[i].children.length; j++){
+        for (let j = 0; j < content[i].children.length; j++) {
           console.log(content[i].children[j].nodeName);
           console.log(content[i].children[j].textContent)
         }
-      }else{
+      } else {
         console.log(content[i].nodeName)
         console.log(content[i].textContent)
       }
@@ -286,22 +305,22 @@ export class ReactivePostComponent implements OnInit {
     this.contentArray = content;
   }
 
-  isDiv(element: HTMLElement){
-    if(element.nodeName == "DIV"){
+  isDiv(element: HTMLElement) {
+    if (element.nodeName == "DIV") {
       return true;
     }
     return false;
   }
 
-  isP(element: HTMLElement){
-    if(element.nodeName == "P"){
+  isP(element: HTMLElement) {
+    if (element.nodeName == "P") {
       return true;
     }
     return false;
   }
 
-  isBlock(element: HTMLElement){
-    if(element.nodeName == "BLOCKQUOTE"){
+  isBlock(element: HTMLElement) {
+    if (element.nodeName == "BLOCKQUOTE") {
       return true;
     }
     return false;

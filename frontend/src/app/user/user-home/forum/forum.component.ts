@@ -35,21 +35,20 @@ export class ForumComponent implements OnInit {
   ) {
   }
 
-  // loadingData = [];
-  // accessData: Access;
   curId: number = -1;
+  curTitle: string = "";
   accessBackend: Observable<AccessBackend>;
-  currentCategoryObject: Category;
   showFull = false;
   searchQuery: string = "";
+  categoryMap = new Map<string, number>().set("support", 53).set("community", 51).set("general", 52)
+
 
   canCreate(): boolean {
-    return this.authenticate.currentUserId;
+    return this.authenticate.isLoggedIn();
   }
 
   ngOnInit(): void {
     this.accessBackend = this.backendComService.getCategories();
-    // this.accessData = this.backEndService.loadData();
     this.activeRoute.queryParamMap.subscribe((params) => {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');
@@ -60,58 +59,37 @@ export class ForumComponent implements OnInit {
           let cat = data.categories.find(cat => cat.title.toLowerCase() == para);
           this.accessBackend = this.backendComService.getCategory(cat!.id);
           this.curId = cat!.id;
+          this.curTitle = cat!.title;
         });
-        // this.accessBackend = this.backendComService.getCategory(1);
-        // this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Community")!;
-        // this.showFull = true;
-        // } else if (params.get('view') == "support") {
-        //   this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "Support")!;
-        //   this.showFull = true;
-        // } else if (params.get('view') == "general") {
-        //   this.currentCategoryObject = this.accessData.categories.find(cat => cat.title == "General")!;
-        //   this.showFull = true;
       } else {
         this.accessBackend = this.backendComService.getCategories();
         this.curId = -1;
+        this.curTitle = "";
         this.showFull = false;
       }
     });
   }
 
   openCreateThreadDialog(): void {
-    if (!this.authenticate.currentUserId) {
+    if (!this.authenticate.isLoggedIn()) {
       const dialogRef = this.dialog.open(DialogLoginComponent, {
         width: '30%',
       });
       return;
     }
-    let selected = "";
-    if (this.showFull) {
-      selected = this.currentCategoryObject.title;
-    }
     const dialogRef = this.dialog.open(DialogCreateThreadComponent, {
       width: '65%',
       data: {
         title: "",
-        category: selected,
+        category: this.curTitle,
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      let newThread = this.backEndService.createThreadObject(this.authenticate.currentUserId, result.title);
-      this.addThread(newThread, result.category);
+      let newThread = this.backEndService.createThreadObject(this.authenticate.getCurrentUserId(), this.authenticate.getCurrentUsername(), result.title);
+      this.backendComService.postThread(this.categoryMap.get(result.title)!, newThread);
     });
   }
 
-  addThread(threadObject: Thread, categoryId: number): void {
-    this.backendComService.postThread(categoryId, threadObject)
-    // for (let z = 0; z < this.accessData.categories.length; z++) {
-    //   if (this.accessData.categories[z].title == category) {
-    //     this.accessData.categories[z].threads.push(threadObject);
-    //
-    //   }
-    // }
-
-  }
 
   clickSearch() {
     if (this.searchQuery == "") {
@@ -128,8 +106,8 @@ export class ForumComponent implements OnInit {
 
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {q: this.searchQuery.replace(/ /g, "_")}});
+      this.router.navigate(['forum/search'], {queryParams: {q: this.searchQuery}});
+      // .replace(/ /g, "_")
     }
-
   }
 }

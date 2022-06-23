@@ -37,7 +37,7 @@
               matBadgePosition="above before" matBadgeColor="primary">
           <button mat-button (click)="likeThreadButton()">LIKE</button>
         </span>
-      <button mat-button (click)="openCreateDialog()">REPLY</button>
+      <button mat-button (click)="moveToReply()">REPLY</button>
       <button mat-button>REPORT</button>
     </mat-card-actions>
   </mat-card>
@@ -51,8 +51,8 @@
   </div>
 
   <div class="thread-newReply">
-    <mat-card *ngIf="checkLoggedIn">
-      <div id="replyBox" class="replyBox" contenteditable="true">
+    <mat-card>
+      <div id="replyBox" class="replyBox" contenteditable="true" #replyBox>
         <div style="display: block">
           <br style="display: block">
         </div>
