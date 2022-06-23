@@ -78,6 +78,16 @@ Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategori
  */
 Route::get('categories/{id}', 'App\Http\Controllers\CategoryController@getCategoryById');
 
+/**
+ * @uses App\Http\Controllers\UserLoginController::register()
+ */
+Route::post('register', 'App\Http\Controllers\UserLoginController@register');
+
+/**
+ * @uses App\Http\Controllers\UserLoginController::login()
+ */
+Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLoginController@login']);
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /**
@@ -124,16 +134,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      * @uses App\Http\Controllers\PostController::deletePost()
      */
     Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
-
-    /**
-     * @uses App\Http\Controllers\UserLoginController::register()
-     */
-    Route::post('register', 'App\Http\Controllers\UserLoginController@register');
-
-    /**
-     * @uses App\Http\Controllers\UserLoginController::login()
-     */
-    Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLoginController@login']);
 
     /**
      * @uses App\Http\Controllers\AdminController::putAttackerName()
