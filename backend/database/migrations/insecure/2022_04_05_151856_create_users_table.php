@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 15)->unique();
             $table->string('password');
-            $table->string('birth_date')->default("");
+            $table->string('birth_date')->nullable(false);
             $table->string('location')->default("");
             $table->string('about')->default("");
             $table->json('groups')->default(new Expression('(JSON_ARRAY())'));
