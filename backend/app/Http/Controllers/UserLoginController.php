@@ -16,6 +16,7 @@ class UserLoginController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'password' => 'required',
+            'birthDate' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -27,7 +28,8 @@ class UserLoginController extends Controller
 
         $user = User::create([
              'name' => $request->name,
-             'password' => Hash::make($request->password)
+             'password' => Hash::make($request->password),
+             'birth_date' => $request->birthDate,
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
