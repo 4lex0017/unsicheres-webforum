@@ -43,7 +43,8 @@ export class ReactivePostComponent implements OnInit {
 
 
   async setVuln() {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
+    this.vEnabled = false;
+    // = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
   }
 
   ngOnInit(): void {

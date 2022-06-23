@@ -13,6 +13,7 @@ import {DifficultyPickerService} from "../../data-access/services/difficulty-pic
 import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-login.component";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
+import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -20,14 +21,15 @@ import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-serv
   styleUrls: ['./user-thread-view.component.scss']
 })
 export class UserThreadViewComponent implements OnInit {
-  threadObject: Thread;
+  // threadObject: Thread;
+  threadObjectArrayModel: ThreadArrayModel;
   vEnabled: boolean
   content: string = "";
   testcontent: any[];
   editId: number;
   // @ViewChild('content', {static: false}) content: ElementRef;
-  @ViewChild('title', {static: false}) title: ElementRef;
-  @ViewChild('replyBox') replyBox: ElementRef;
+  // @ViewChild('title', {static: false}) title: ElementRef;
+  // @ViewChild('replyBox') replyBox: ElementRef;
 
 
   constructor(private route: ActivatedRoute,
@@ -43,61 +45,77 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   async setVuln() {
-    this.vEnabled = false;
+    this.vEnabled = true;
+  }
+
+  injectContentToDomStartup() {
+    for (let i = 0; i < this.threadObjectArrayModel.data.length; i++) {
+      this.changeDetectorRef.detectChanges();
+      let title = document.getElementById("title" + this.threadObjectArrayModel.data[i].id);
+      title!.replaceChildren();
+      title!.appendChild(document.createRange().createContextualFragment(this.threadObjectArrayModel.data[i].title));
+    }
+  }
+
+  injectContentToDom(thread: Thread) {
+    this.changeDetectorRef.detectChanges();
+    let title = document.getElementById("title" + thread.id);
+    title!.replaceChildren();
+    title!.appendChild(document.createRange().createContextualFragment(thread.title));
   }
 
   ngOnInit(): void {
     this.setVuln();
     this.route.data.subscribe((resp: Data) => {
-        console.log(resp["thread"].body.data)
-        this.threadObject = resp["thread"].body.data[0];
-        if (this.vEnabled) {
-          this.changeDetectorRef.detectChanges();
-          this.title.nativeElement.replaceChildren();
-          this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
-        }
+        console.log(resp["thread"].body)
+        this.threadObjectArrayModel = resp["thread"].body;
+        console.log(this.threadObjectArrayModel)
+        if (this.vEnabled) this.injectContentToDomStartup()
       }
     );
-    this.deserializePost(this.content);
+    // this.deserializePost(this.content);
   }
 
-  canEditThread(): boolean {
-    if (this.threadObject.author.id == this.authenticate.getCurrentUserId()) return true;
+  canEditThread(id: number): boolean {
+    if (id == this.authenticate.getCurrentUserId()) return true;
     return false;
   }
 
 
-  openEditThreadDialog(): void {
+  openEditThreadDialog(threadObject: Thread): void {
     const dialogRef = this.dialog.open(DialogEditThreadComponent, {
       width: '65%',
       data: {
-        title: this.threadObject.title,
+        title: threadObject.title,
 
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.threadObject.title = result.title;
-      this.backendServiceCom.putThread(this.threadObject).subscribe(
+      threadObject.title = result.title;
+      this.backendServiceCom.putThread(threadObject).subscribe(
         (resp: Data) => {
           if (!resp["user"]["headers"].get('VulnFound')) {
             console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
-      if (this.vEnabled) {
-        this.changeDetectorRef.detectChanges();
-        this.title.nativeElement.replaceChildren();
-        this.title.nativeElement.appendChild(document.createRange().createContextualFragment(this.threadObject.title));
-      }
+      if (this.vEnabled) this.injectContentToDom(threadObject)
+      // {
+      //   this.changeDetectorRef.detectChanges();
+      //   this.title.nativeElement.replaceChildren();
+      //   this.title.nativeElement.appendChild(document.createRange().createContextualFragment(threadObject.title));
+      // }
 
     });
   }
 
-  moveToReply(): void {
-    this.replyBox.nativeElement.focus();
+  moveToReply(id: number): void {
+    // this.replyBox.nativeElement.focus();
+    this.changeDetectorRef.detectChanges();
+    document.getElementById("replyBox" + id)!.focus();
   }
 
-  openCreateDialog(): void {
+  openCreateDialog(threadObject: Thread): void {
     if (!this.checkLoggedIn()) return;
     const dialogRef = this.dialog.open(DialogCreatePostComponent, {
       width: '65%',
@@ -108,16 +126,16 @@ export class UserThreadViewComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), result.content));
+      threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), result.content));
     });
   }
 
-  addReply(replyPost: Post): void {
+  addReply(threadObject: Thread, replyPost: Post): void {
     let selected = window.getSelection();
     let range = selected!.getRangeAt(0);
     let tag = range.commonAncestorContainer;
     console.log(tag.parentNode)
-    const box = document.getElementById('replyBox')
+    const box = document.getElementById('replyBox' + threadObject.id)
     let inBox = false;
 
 
@@ -188,7 +206,7 @@ export class UserThreadViewComponent implements OnInit {
     box!.appendChild(under);
   }
 
-  createPost(): void {
+  createPost(threadObject: Thread): void {
     if (!this.checkLoggedIn()) return;
     let fullReply = document.getElementById('replyBox');
     let replyString: string = "";
@@ -229,7 +247,7 @@ export class UserThreadViewComponent implements OnInit {
     }
     console.log(replyString);
     console.log("pushed stuff");
-    this.threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
+    threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
     while (fullReply!.children.length > 0) {
       fullReply!.removeChild(fullReply!.lastChild!);
     }
@@ -343,42 +361,42 @@ export class UserThreadViewComponent implements OnInit {
     window.location.hash = id.toString();
   }
 
-  openDeletePostConsumer(postObjectId: number) {
+  openDeletePostConsumer(threadObject: Thread, postObjectId: number) {
     console.log(postObjectId)
-    for (let z = 0; z < this.threadObject.posts.length; z++) {
-      if (this.threadObject.posts[z].id == postObjectId) {
-        this.threadObject.posts.splice(z, 1);
-        this.backendServiceCom.deletePost(this.threadObject.id, postObjectId).subscribe()
+    for (let z = 0; z < threadObject.posts.length; z++) {
+      if (threadObject.posts[z].id == postObjectId) {
+        threadObject.posts.splice(z, 1);
+        this.backendServiceCom.deletePost(threadObject.id, postObjectId).subscribe()
         break;
       }
     }
   }
 
-  createPostConsumer(post: Post): void {
-    this.threadObject.posts.push(post);
+  createPostConsumer(threadObject: Thread, post: Post): void {
+    threadObject.posts.push(post);
   }
 
-  openDeleteThreadDialog() {
+  openDeleteThreadDialog(threadObject: Thread) {
     const dialogRef = this.dialog.open(DialogDeleteThreadComponent, {
       width: '55%',
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataManagement.notifyRest(this.threadObject.id)
+        this.dataManagement.notifyRest(threadObject.id)
         this.router.navigate(['/forum/home']);
       }
     });
   }
 
-  likeThreadButton(): void {
+  likeThreadButton(threadObject: Thread): void {
     if (!this.checkLoggedIn()) return;
-    let i = this.threadObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
+    let i = threadObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
     if (i != -1) {
-      this.threadObject.likedFrom.splice(i, 1)
+      threadObject.likedFrom.splice(i, 1)
     } else {
       console.log(this.authenticate.getCurrentUserId())
-      this.threadObject.likedFrom.push(this.authenticate.getCurrentUserId());
+      threadObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
   }
 

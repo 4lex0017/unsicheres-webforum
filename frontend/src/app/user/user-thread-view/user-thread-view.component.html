@@ -1,64 +1,68 @@
-<div class="thread-container" id="{{threadObject.id}}">
-  <mat-card class="thread-card">
-    <mat-card-header>
-      <button mat-mini-fab color="primary" *ngIf="canEditThread()"
-              (click)="openEditThreadDialog()"
-              class="thread-buttons"
-              matTooltip="Edit Thread"
-              [matTooltipShowDelay]="500">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <span class="spacer"></span>
-      <button mat-mini-fab color="warn" *ngIf="canEditThread()"
-              (click)="openDeleteThreadDialog()"
-              class="thread-buttons"
-              matTooltip="Delete Thread"
-              [matTooltipShowDelay]="500">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <mat-card-title>
-        <div>
-          <span class="title" #title *ngIf="vEnabled"></span>
-          <span class="title" *ngIf="!vEnabled">{{threadObject.title}}</span>
-          <span class="spacer"></span>
+<div *ngFor="let threadObject of threadObjectArrayModel.data">
 
-        </div>
-      </mat-card-title>
-      <mat-card-subtitle>
-        <mat-icon class="thread-user-icon">supervised_user_circle</mat-icon>
-        <span class="spacer"> <a
-          [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.name}}</a></span>
-        <mat-icon class="thread-date-icon">access_time</mat-icon>
-        <span> {{threadObject.date}}</span>
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-actions class="thread-actions">
+
+  <div class="thread-container">
+    <mat-card class="thread-card">
+      <mat-card-header>
+        <button mat-mini-fab color="primary" *ngIf="canEditThread(threadObject.id)"
+                (click)="openEditThreadDialog(threadObject)"
+                class="thread-buttons"
+                matTooltip="Edit Thread"
+                [matTooltipShowDelay]="500">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <span class="spacer"></span>
+        <button mat-mini-fab color="warn" *ngIf="canEditThread(threadObject.id)"
+                (click)="openDeleteThreadDialog(threadObject)"
+                class="thread-buttons"
+                matTooltip="Delete Thread"
+                [matTooltipShowDelay]="500">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <mat-card-title>
+          <div>
+            <span class="title" *ngIf="vEnabled" #title id="title{{threadObject.id}}"></span>
+            <span class="title" *ngIf="!vEnabled">{{threadObject.title}}</span>
+            <span class="spacer"></span>
+
+          </div>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <mat-icon class="thread-user-icon">supervised_user_circle</mat-icon>
+          <span class="spacer"> <a
+            [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.name}}</a></span>
+          <mat-icon class="thread-date-icon">access_time</mat-icon>
+          <span> {{threadObject.date}}</span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions class="thread-actions">
         <span class="stretch-badge" matBadge="{{threadObject.likedFrom.length}}" matBadgeSize="small"
               matBadgePosition="above before" matBadgeColor="primary">
-          <button mat-button (click)="likeThreadButton()">LIKE</button>
+          <button mat-button (click)="likeThreadButton(threadObject)">LIKE</button>
         </span>
-      <button mat-button (click)="moveToReply()">REPLY</button>
-      <button mat-button>REPORT</button>
-    </mat-card-actions>
-  </mat-card>
-  <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
-    <app-reactive-post [postObject]="post"
-                       (createPostEvent)="createPostConsumer($event)"
-                       (replyPostEvent)="addReply($event)"
-                       (deletePostEvent)="openDeletePostConsumer($event)"
-                       (moveToPostEvent)="moveToPost($event)"
-                       (editPostEvent)="currentEdit($event)"></app-reactive-post>
-  </div>
-
-  <div class="thread-newReply">
-    <mat-card>
-      <div id="replyBox" class="replyBox" contenteditable="true" #replyBox>
-        <div style="display: block">
-          <br style="display: block">
-        </div>
-      </div>
-      <button mat-raised-button (click)="createPost()">POST</button>
+        <button mat-button (click)="moveToReply(threadObject.id)">REPLY</button>
+        <button mat-button>REPORT</button>
+      </mat-card-actions>
     </mat-card>
+    <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
+      <app-reactive-post [postObject]="post"
+                         (createPostEvent)="createPostConsumer(threadObject, $event)"
+                         (replyPostEvent)="addReply(threadObject, $event)"
+                         (deletePostEvent)="openDeletePostConsumer(threadObject, $event)"
+                         (moveToPostEvent)="moveToPost($event)"
+                         (editPostEvent)="currentEdit($event)"></app-reactive-post>
+    </div>
+
+    <div class="thread-newReply">
+      <mat-card>
+        <div id="replyBox{{threadObject.id}}" class="replyBox" contenteditable="true" #replyBox>
+          <div style="display: block">
+            <br style="display: block">
+          </div>
+        </div>
+        <button mat-raised-button (click)="createPost(threadObject)">POST</button>
+      </mat-card>
+    </div>
   </div>
+  <div class="footer-spacer"></div>
 </div>
-<div class="footer-spacer"></div>
