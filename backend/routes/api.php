@@ -88,10 +88,6 @@ Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategori
  */
 Route::get('categories/{id}', 'App\Http\Controllers\CategoryController@getCategoryById');
 
-/**
- * @uses App\Http\Controllers\CategoryController::getThreadsOfCategory()
- */
-Route::get('categories/{id}/threads', 'App\Http\Controllers\CategoryController@getThreadsOfCategory');
 
 Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
 
