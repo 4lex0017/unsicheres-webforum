@@ -1,7 +1,6 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from "@angular/router";
 import {UserFull} from "../../data-access/models/userFull";
-import {Thread} from "../../data-access/models/thread";
 import {Post} from "../../data-access/models/post";
 import {BackendService} from "../../data-access/services/backend.service";
 import {MatDialog} from "@angular/material/dialog";

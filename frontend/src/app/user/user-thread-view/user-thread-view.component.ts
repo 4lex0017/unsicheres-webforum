@@ -45,7 +45,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   async setVuln() {
-    this.vEnabled = true;
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}");
   }
 
   injectContentToDomStartup() {
@@ -208,7 +208,7 @@ export class UserThreadViewComponent implements OnInit {
 
   createPost(threadObject: Thread): void {
     if (!this.checkLoggedIn()) return;
-    let fullReply = document.getElementById('replyBox');
+    let fullReply = document.getElementById('replyBox' + threadObject.id);
     let replyString: string = "";
     for (let i = 0; i < fullReply!.children.length; i++) {
       let child = fullReply!.children[i];
