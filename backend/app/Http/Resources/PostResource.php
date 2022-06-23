@@ -51,7 +51,7 @@ class PostResource extends JsonResource
 
         $this->author = [
             'id' => $this->author,
-            'profilePicture' => $author->profile_picture,
+            'profile_picture' => $author->profile_picture,
             'name' => $author->name,
         ];
 
