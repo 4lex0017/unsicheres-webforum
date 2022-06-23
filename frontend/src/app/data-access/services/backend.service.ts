@@ -160,17 +160,16 @@ export class BackendService {
     return postObject;
   }
 
-  createThreadObject(userId: number, title: string): Thread {
+  createThreadObject(userId: number, username: string, title: string): Thread {
 
     let threadObject: Thread = {
-      id: this.idThreadTracker,
+      id: -1,
       title: title,
       date: this.formatDate(),
       posts: [],
-      author: this.getUserFromUsername(userId),
+      author: {id: userId, name: username},
       likedFrom: []
     }
-    this.idThreadTracker++;
     return threadObject;
   }
 

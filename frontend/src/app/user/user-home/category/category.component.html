@@ -20,7 +20,7 @@
       <ng-container matColumnDef="general-information">
         <th mat-header-cell *matHeaderCellDef>
           <div class="category-title">{{categoryObject.title}} </div>
-          <div class="category-replies">Threads: {{categoryObject.threads.length}}</div>
+          <div class="category-replies">Threads: {{categoryObject.numberOfThreads}}</div>
         </th>
         <td mat-cell *matCellDef="let element">
           <a [routerLink]="['/forum/threads', element.id]">

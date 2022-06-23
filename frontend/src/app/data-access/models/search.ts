@@ -18,5 +18,5 @@ export interface SearchThreads {
 export interface SearchPosts {
   id: number
   content: string
-  title: string
+  threadId: number
 }

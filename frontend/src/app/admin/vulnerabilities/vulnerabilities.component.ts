@@ -25,14 +25,21 @@ import {VulnerabilitiesConfig} from "../../data-access/models/vulnerabilitiesCon
 export class VulnerabilitiesComponent implements OnInit {
   vulnerabilities$: Observable<VulnerabilityDifficultyOverviewPackage>;
   currentConfig: VulnerabilitiesConfig;
-  curVulnerabilities: VulnerabilityDifficultyOverviewPackage;
+  curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
 
   constructor(private dialog: MatDialog, private backend: BackendService, private router: Router, private backendCom: BackendCommunicationService, private diffPicker: DifficultyPickerService) {
   }
 
+
+  async setVuln() {
+    this.backendCom.getVulnerabilities().subscribe((data) => this.curVulnerabilities = data);
+  }
+
   ngOnInit(): void {
-    this.vulnerabilities$ = this.backendCom.getVulnerabilities();
-    this.backendCom.getVulnerabilities().subscribe(data => this.curVulnerabilities = data)
+    this.setVuln()
+    this.backendCom.getVulnerabilities().subscribe((data) => this.curVulnerabilities = data);
+    // this.vulnerabilities$ = this.backendCom.getVulnerabilities();
+    // this.backendCom.getVulnerabilities().subscribe(data => this.curVulnerabilities = data)
     this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
       this.currentConfig = data;
     })

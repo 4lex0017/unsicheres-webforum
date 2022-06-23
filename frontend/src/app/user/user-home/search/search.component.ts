@@ -14,6 +14,8 @@ import {
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 import {Observable} from "rxjs";
 import {Search} from "../../../data-access/models/search";
+import {DidAThingComponent} from "../../../shared/did-a-thing/did-a-thing.component";
+import {DidAThingServiceService} from "../../../shared/did-a-thing/did-a-thing-service.service";
 
 declare var jQuery: any;
 
@@ -31,7 +33,8 @@ export class SearchComponent implements OnInit {
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer,
               private diffPicker: DifficultyPickerService,
-              private changeDetectorRef: ChangeDetectorRef
+              private changeDetectorRef: ChangeDetectorRef,
+              private didAThing: DidAThingServiceService
   ) {
   }
 
@@ -44,19 +47,35 @@ export class SearchComponent implements OnInit {
 
   async setVuln() {
     this.vEnabled = this.diffPicker.isEnabledInConfig("/search");
+    console.log(this.vEnabled)
   }
 
   ngOnInit(): void {
     this.setVuln();
     this.route.queryParamMap.subscribe((params) => {
-      this.currentSearchQuery = this.format(params.get('q') || "");
-      this.backendCom.search(this.currentSearchQuery).subscribe(data => this.search = data);
-      if (this.vEnabled) {
-        this.changeDetectorRef.detectChanges();
-        this.content.nativeElement.replaceChildren();
-        this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
-      }
+      this.currentSearchQuery = "";
+      this.backendCom.search(params.get('q') || "").subscribe(data => {
+        this.currentSearchQuery = decodeURIComponent(this.getParaFromResponseUrl(data["headers"].get("self")!))
+        console.log("cur query" + this.currentSearchQuery);
+        console.log("is vuln enabled?: " + this.vEnabled);
+        this.search = data["body"]!
+        if (this.vEnabled) {
+          this.changeDetectorRef.detectChanges();
+          this.content.nativeElement.replaceChildren();
+          this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
+        }
+        console.log(data);
+        console.log(data["headers"].get('VulnFound') == "true")
+        if (data["headers"].get('VulnFound') == "true") {
+          console.log("found vuln in userprofile")
+          this.didAThing.sendMessage();
+        }
+      });
     });
+  }
+
+  getParaFromResponseUrl(url: string) {
+    return url.replace("/search?q=", "");
   }
 
   cutPostContent(content: string): string {
@@ -91,8 +110,8 @@ export class SearchComponent implements OnInit {
         },
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {q: this.newSearchQuery.replace(/ /g, "_")}});
+      this.router.navigate(['forum/search'], {queryParams: {q: this.newSearchQuery}});
     }
-
+    //.replace(/ /g, "_")
   }
 }

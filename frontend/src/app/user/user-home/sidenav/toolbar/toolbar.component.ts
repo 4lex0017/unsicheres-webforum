@@ -23,12 +23,11 @@ export class ToolbarComponent {
   darkMode: boolean;
 
   logout(): void {
-    sessionStorage.removeItem("user");
     this.authenticate.logout();
   }
 
   navigateProfile(): void {
-    this.router.navigate(['/forum/users', this.authenticate.currentUserId]);
+    this.router.navigate(['/forum/users', this.authenticate.getCurrentUserId().toString()]);
   }
 
   openLogin(): void {

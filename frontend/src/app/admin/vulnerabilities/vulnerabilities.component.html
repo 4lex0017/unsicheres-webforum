@@ -16,32 +16,32 @@
       Go to Forum
     </button>
   </h1>
-  <div *ngIf="this.vulnerabilities$ | async as vulnerabilities; else loadingAccess">
-    <mat-card>
-      <mat-tab-group mat-align-tabs="start">
-        <mat-tab *ngFor="let vulnerability of vulnerabilities.vulnerabilities" label="{{vulnerability.name}}">
-          <div class="inner-container">
-            <div class="container">
-              <div class="row">
-                <div class="col-xs-12 col-md-12 col-lg-12">
-                  <app-vulnerability-picker
-                    [task]="vulnerability"
-                    (sendVulnerability)="updateVulnerability($event)">
-                  </app-vulnerability-picker>
-                </div>
+  <!--  <div *ngIf="this.vulnerabilities$ | async as vulnerabilities; else loadingAccess">-->
+  <mat-card>
+    <mat-tab-group mat-align-tabs="start">
+      <mat-tab *ngFor="let vulnerability of this.curVulnerabilities.vulnerabilities" label="{{vulnerability.name}}">
+        <div class="inner-container">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <app-vulnerability-picker
+                  [task]="vulnerability"
+                  (sendVulnerability)="updateVulnerability($event)">
+                </app-vulnerability-picker>
               </div>
             </div>
           </div>
-        </mat-tab>
-      </mat-tab-group>
-    </mat-card>
-  </div>
-  <ng-template #loadingAccess>
-    <div class="loading-container">
-      <div class="loading-spinner-container">
-        <mat-spinner class="loading-spinner"></mat-spinner>
-        <h2 class="loading-text">Loading ...</h2>
-      </div>
-    </div>
-  </ng-template>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+  <!--  </div>-->
+  <!--  <ng-template #loadingAccess>-->
+  <!--    <div class="loading-container">-->
+  <!--      <div class="loading-spinner-container">-->
+  <!--        <mat-spinner class="loading-spinner"></mat-spinner>-->
+  <!--        <h2 class="loading-text">Loading ...</h2>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </ng-template>-->
 </div>

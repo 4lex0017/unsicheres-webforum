@@ -7,6 +7,7 @@ export interface AccessBackend {
 export interface CategoryBackend {
   id: number;
   title: string;
+  numberOfThreads: number;
   threads: ThreadCategory[];
 }
 

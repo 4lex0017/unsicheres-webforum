@@ -11,9 +11,10 @@ import {BackendService} from "./data-access/services/backend.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Prototype';
+  title = 'Forum';
 
-  constructor(private themeService: ThemeService) {
+  constructor(private themeService: ThemeService, private diffPicker: DifficultyPickerService) {
     this.themeService.initTheme();
+    this.diffPicker.updateConfig();
   }
 }

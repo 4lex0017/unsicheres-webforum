@@ -54,7 +54,7 @@ export class PostComponent implements OnInit {
   // }
 
   canEditPost(): boolean {
-    if (this.postObject.author.id == this.authenticate.currentUserId) return true;
+    if (this.postObject.author.id == this.authenticate.getCurrentUserId()) return true;
     return false;
   }
 
@@ -91,9 +91,9 @@ export class PostComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (!result.showReply) {
-        this.createPostEvent.emit(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content))
+        this.createPostEvent.emit(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), result.content))
       } else {
-        this.createPostEvent.emit(this.backEndService.createPostObject(this.authenticate.currentUserId, result.content, repliedTo))
+        this.createPostEvent.emit(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), result.content, repliedTo))
       }
     });
   }
@@ -115,16 +115,16 @@ export class PostComponent implements OnInit {
 
   likePostButton(): void {
     if (!this.checkLoggedIn()) return;
-    let i = this.postObject.likedFrom.indexOf(this.authenticate.currentUserId);
+    let i = this.postObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
     if (i != -1) {
       this.postObject.likedFrom.splice(i, 1)
     } else {
-      this.postObject.likedFrom.push(this.authenticate.currentUserId);
+      this.postObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
   }
 
   checkLoggedIn(): boolean {
-    if (!this.authenticate.currentUserId) {
+    if (!this.authenticate.isLoggedIn()) {
       const dialogRef = this.dialog.open(DialogLoginComponent, {
         width: '30%',
       });

@@ -42,7 +42,7 @@ export class DialogLoginComponent {
 
   checkLogin(): void {
     if (this.username && this.password) {
-      this.authenticateUser(this.username, this.password);
+      this.authenticateUserNew(this.username, this.password);
     } else if (this.username && !this.password) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
@@ -56,30 +56,53 @@ export class DialogLoginComponent {
     }
   }
 
-  authenticateUser(userName, password) {
-    let response = this.backend.checkLoginData(userName, password);
-    if (response == 1) {
-      sessionStorage.setItem("user", userName);
-      this.authenticate.login(userName, password);
+  // authenticateUser(userName, password) {
+  //   let response = this.backend.checkLoginData(userName, password);
+  //   if (response == 1) {
+  //     sessionStorage.setItem("user", userName);
+  //     this.authenticate.loginJwt(userName, password);
+  //     this.dialogRef.close();
+  //   } else if (response == -1) {
+  //     let responseMessage = "User doesn't exist.";
+  //     if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) responseMessage = "Invalid data.";
+  //     this.username = "";
+  //     this.password = "";
+  //     this._snackBar.openFromComponent(SnackBarNotificationComponent, {duration: 5000, data: responseMessage});
+  //   } else {
+  //     let responseMessage = "Wrong password.";
+  //     if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) {
+  //       responseMessage = "Invalid data.";
+  //       this.username = "";
+  //     }
+  //     this.password = "";
+  //     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+  //       duration: 5000,
+  //       data: responseMessage
+  //     });
+  //   }
+  // }
+
+  authenticateUserNew(userName, password) {
+    this.authenticate.loginJwt(userName, password).subscribe(data => {
+      console.log(data)
       this.dialogRef.close();
-    } else if (response == -1) {
-      let responseMessage = "User doesn't exist.";
-      if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) responseMessage = "Invalid data.";
+    }, error => {
       this.username = "";
-      this.password = "";
-      this._snackBar.openFromComponent(SnackBarNotificationComponent, {duration: 5000, data: responseMessage});
-    } else {
-      let responseMessage = "Wrong password.";
-      if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) {
-        responseMessage = "Invalid data.";
-        this.username = "";
-      }
       this.password = "";
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
-        data: responseMessage
+        data: "Invalid data."
       });
-    }
+    });
+
+
+    // this.username = "";
+    // this.password = "";
+    // this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+    //   duration: 5000,
+    //   data: "Invalid data."
+    // });
+
   }
 
 

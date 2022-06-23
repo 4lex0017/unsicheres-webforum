@@ -13,19 +13,24 @@ import {NotFoundError, Observable} from "rxjs";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
+import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBackendModel";
+import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
+
 @Component({
   selector: 'app-user-profile-view',
   templateUrl: './user-profile-view.component.html',
   styleUrls: ['./user-profile-view.component.scss']
 })
 export class UserProfileViewComponent implements OnInit {
-  userFullObject: UserFull;
-  userThreads: Observable<Thread[]>;
+  // userFullObject: UserFull;
+  userFullArrayModel: UserFullBackendModel = {data: []};
+  userThreads: Observable<ThreadsSmallBackendModel>;
   userPosts: Observable<Post[]>;
   vEnabled: boolean;
 
-  @ViewChild('about', {static: false}) about: ElementRef;
-  @ViewChild('username', {static: false}) username: ElementRef;
+  // @ViewChild('about', {static: false}) about: ElementRef;
+  // @ViewChild('username', {static: false}) username: ElementRef;
+  // @ViewChild('location', {static: false}) location: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -40,7 +45,9 @@ export class UserProfileViewComponent implements OnInit {
 
 
   async setVuln() {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/user/{int}");
+
+    this.vEnabled = this.diffPicker.isEnabledInConfig("/users/{int}");
+    // this.vEnabled = true;
   }
 
   ngOnInit() {
@@ -49,23 +56,26 @@ export class UserProfileViewComponent implements OnInit {
       console.log(resp) //drinnen lassen um kurz daten zu checken
       //
       // this.vEnabled = false;
-      this.userFullObject = {
-        id: resp["user"].body.data.id,
-        name: resp["user"].body.data.name,
-        joined: resp["user"].body.data.joined,
-        birth_date: resp["user"].body.data.birthDate,
-        about: resp["user"].body.data.about,
-        groups: resp["user"].body.data.groups,
-        profile_comments: resp["user"].body.data.profileComments,
-        profile_picture: resp["user"].body.data.profilePicture,
-        location: resp["user"].body.data.location,
-        endorsements: resp["user"].body.data.endorsements
-      }
+      this.userFullArrayModel = resp["user"].body;
+      console.log(this.userFullArrayModel)
+      // this.userFullObject = {
+      //   id: resp["user"].body.data.id,
+      //   name: resp["user"].body.data.name,
+      //   joined: resp["user"].body.data.joined,
+      //   birth_date: resp["user"].body.data.birthDate,
+      //   about: resp["user"].body.data.about,
+      //   groups: resp["user"].body.data.groups,
+      //   profile_comments: resp["user"].body.data.profileComments,
+      //   profile_picture: resp["user"].body.data.profilePicture,
+      //   location: resp["user"].body.data.location,
+      //   endorsements: resp["user"].body.data.endorsements
+      // }
       if (this.vEnabled) this.injectContentToDom();
-      if (!resp["user"]["headers"].get('VulnFound')) {
+      if (resp["user"]["headers"].get('VulnFound') == "true") {
         console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
+      // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id)
     });
   }
 
@@ -109,29 +119,33 @@ export class UserProfileViewComponent implements OnInit {
   //
   //   });
   // }
-  openEditProfileDialog(): void {
+  openEditProfileDialog(userFullObject: UserFullBackend): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
       data: {
-        name: this.userFullObject.name,
-        about: this.userFullObject.about,
-        profile_picture: this.userFullObject.profile_picture,
-        location: this.userFullObject.location
+        name: userFullObject.name,
+        about: userFullObject.about,
+        profile_picture: userFullObject.profilePicture,
+        location: userFullObject.location
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.userFullObject.name = result.name;
-      this.userFullObject.about = result.about;
-      this.userFullObject.profile_picture = result.profile_picture;
-      this.userFullObject.location = result.location;
-      this.backendServiceCom.putUser(this.userFullObject).subscribe(
+      userFullObject.name = result.name;
+      userFullObject.about = result.about;
+      userFullObject.profilePicture = result.profile_picture;
+      userFullObject.location = result.location;
+      this.backendServiceCom.putUser(userFullObject).subscribe(
         (resp: Data) => {
-          if (!resp["user"]["headers"].get('VulnFound')) {
+
+          userFullObject = resp["body"];
+          if (this.vEnabled) this.injectContentToDom();
+          console.log(resp["headers"].get('VulnFound'))
+          if (resp["headers"].get('VulnFound') == "true") {
             console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
-      if (this.vEnabled) this.injectContentToDom();
+      // if (this.vEnabled) this.injectContentToDom();
     });
   }
 
@@ -146,17 +160,26 @@ export class UserProfileViewComponent implements OnInit {
   }
 
   createComment(content: string): void {
-    this.authenticate.currentUserId;
+    this.authenticate.getCurrentUserId();
     //  BACKEND POST /user/userView/comments -> enthält curUserId + content
   }
 
   injectContentToDom(): void {
-    this.changeDetectorRef.detectChanges();
-    // this.userFullObject.about = this.diffPicker.filterTagsHard(this.userFullObject.about); to be done in backend
-    this.about.nativeElement.replaceChildren();
-    this.about.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.about));
-    this.username.nativeElement.replaceChildren();
-    this.username.nativeElement.appendChild(document.createRange().createContextualFragment(this.userFullObject.name));
+
+    for (let i = 0; i < this.userFullArrayModel.data.length; i++) {
+      this.changeDetectorRef.detectChanges();
+      let content = document.getElementById("content" + this.userFullArrayModel.data[i].id);
+      content!.replaceChildren();
+      content!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].about));
+
+      let name = document.getElementById("name" + this.userFullArrayModel.data[i].id);
+      name!.replaceChildren();
+      name!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].name));
+
+      let location = document.getElementById("location" + this.userFullArrayModel.data[i].id);
+      location!.replaceChildren();
+      location!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].location));
+    }
   }
 
   cutPostContent(content: string): string {
@@ -170,8 +193,8 @@ export class UserProfileViewComponent implements OnInit {
   }
 
 
-  canEdit(): boolean {
-    return this.userFullObject.id == this.authenticate.currentUserId;
+  canEdit(id: number): boolean {
+    return id == this.authenticate.getCurrentUserId();
   }
 
   getSlugFromTitle(title: string): string {
