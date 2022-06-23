@@ -70,7 +70,7 @@ export class UserProfileViewComponent implements OnInit {
       //   location: resp["user"].body.data.location,
       //   endorsements: resp["user"].body.data.endorsements
       // }
-      if (this.vEnabled) this.injectContentToDom();
+      if (this.vEnabled) this.injectContentToDomStartup();
       if (resp["user"]["headers"].get('VulnFound') == "true") {
         console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
@@ -81,13 +81,13 @@ export class UserProfileViewComponent implements OnInit {
 
   // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
   // this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
-
-
+  //
+  //
   // this.userFullObject$ = this.route.data.pipe();
   // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
   // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
   // this.routeData$ = this.route.data;
-
+  //
   //  this.route.data.subscribe((data: any) => {
   //   this.userFullObject = data.user;
   //   this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
@@ -95,8 +95,8 @@ export class UserProfileViewComponent implements OnInit {
   //   this.vEnabled = this.diffPicker.isEnabledInConfig();
   //   if (this.vEnabled) this.injectContentToDom();
   // });
-
-
+  //
+  //
   // startUp() {
   //   firstValueFrom(this.route.data).then((resp: any) => {
   //     console.log(resp) //drinnen lassen um kurz daten zu checken
@@ -136,9 +136,9 @@ export class UserProfileViewComponent implements OnInit {
       userFullObject.location = result.location;
       this.backendServiceCom.putUser(userFullObject).subscribe(
         (resp: Data) => {
-
-          userFullObject = resp["body"];
-          if (this.vEnabled) this.injectContentToDom();
+          console.log(resp)
+          userFullObject = resp["body"].data;
+          if (this.vEnabled) this.injectContentToDom(userFullObject);
           console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
             console.log("found vuln in userprofile")
@@ -164,8 +164,7 @@ export class UserProfileViewComponent implements OnInit {
     //  BACKEND POST /user/userView/comments -> enthält curUserId + content
   }
 
-  injectContentToDom(): void {
-
+  injectContentToDomStartup(): void {
     for (let i = 0; i < this.userFullArrayModel.data.length; i++) {
       this.changeDetectorRef.detectChanges();
       let content = document.getElementById("content" + this.userFullArrayModel.data[i].id);
@@ -180,6 +179,22 @@ export class UserProfileViewComponent implements OnInit {
       location!.replaceChildren();
       location!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].location));
     }
+  }
+
+  injectContentToDom(user: UserFullBackend): void {
+    this.changeDetectorRef.detectChanges();
+    console.log("content" + user.id.toString())
+    let content = document.getElementById("content" + user.id);
+    content!.replaceChildren();
+    content!.appendChild(document.createRange().createContextualFragment(user.about));
+
+    let name = document.getElementById("name" + user.id);
+    name!.replaceChildren();
+    name!.appendChild(document.createRange().createContextualFragment(user.name));
+
+    let location = document.getElementById("location" + user.id);
+    location!.replaceChildren();
+    location!.appendChild(document.createRange().createContextualFragment(user.location));
   }
 
   cutPostContent(content: string): string {
