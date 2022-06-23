@@ -24,10 +24,11 @@ class AdminController extends Controller
         return response()->json($content);
     }
 
-    private function updateChecked(array &$content, string $type, int $id) {
+    private function updateChecked(array &$content, string $type, int $id)
+    {
         $used_vulns = json_decode(DB::connection('secure')->table('vulnerabilities')->select($type . '_difficulty')->distinct()->get(), true);
         foreach ($used_vulns as $used) {
-            $index = $used[$type . '_difficulty']-1;
+            $index = $used[$type . '_difficulty'] - 1;
             $content['vulnerabilities'][$id]['subtasks'][$index]['checked'] = true;
         }
     }
@@ -85,6 +86,16 @@ class AdminController extends Controller
     {
         $this->resetDB();
         return response()->noContent();
+    }
+
+    public function putAttackerName(Request $request)
+    {
+        DB::connection('secure')
+            ->table('attackers')
+            ->updateOrInsert(
+                ['ip_address' => $request->ip()],
+                ['name' => $request->json()->get('name')]
+            );
     }
 
     function resetDB(): void

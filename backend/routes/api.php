@@ -99,6 +99,11 @@ Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
 Route::post('login', 'App\Http\Controllers\UserLoginController@login');
 
+/**
+ * @uses App\Http\Controllers\AdminController::putAttackerName()
+ */
+Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
