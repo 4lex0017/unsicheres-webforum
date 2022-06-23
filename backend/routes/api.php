@@ -36,22 +36,27 @@ Route::get('search', 'App\Http\Controllers\SearchController@globalSearch');
 /**
  * @uses App\Http\Controllers\UserController::getAllUsers()
  */
-Route::get('user', 'App\Http\Controllers\UserController@getAllUsers');
+Route::get('users', 'App\Http\Controllers\UserController@getAllUsers');
 
 /**
  * @uses App\Http\Controllers\UserController::getUserById()
  */
-Route::get('user/{id}', 'App\Http\Controllers\UserController@getUserById');
+Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');
 
 /**
  * @uses App\Http\Controllers\UserController::createUser()
  */
-Route::post('user', 'App\Http\Controllers\UserController@createUser');
+Route::post('users', 'App\Http\Controllers\UserController@createUser');
 
 /**
  * @uses App\Http\Controllers\UserController::updateUser()
  */
-Route::put('user/{id}', 'App\Http\Controllers\UserController@updateUser');
+Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
+
+/**
+ * @uses App\Http\Controllers\ThreadController::getAllThreadsOfUser()
+ */
+Route::get('users/{id}/threads', 'App\Http\Controllers\ThreadController@getAllThreadsOfUser');
 
 /**
  * @uses App\Http\Controllers\SiteController::getSmallUsers()
@@ -64,9 +69,14 @@ Route::get('sitecontent/users', 'App\Http\Controllers\SiteController@getSmallUse
 Route::get('threads/small', 'App\Http\Controllers\ThreadController@getAllSmallThreads');
 
 /**
+ * @uses App\Http\Controllers\ThreadController::getThreadById()
+ */
+Route::get('threads/{id}', 'App\Http\Controllers\ThreadController@getThreadById');
+
+/**
  * @uses App\Http\Controllers\CategoryController::getAllCategories()
  */
-Route::get('categories/', 'App\Http\Controllers\CategoryController@getAllCategories');
+Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategories');
 
 /**
  * @uses App\Http\Controllers\CategoryController::getCategoryById()
@@ -80,8 +90,6 @@ Route::get('categories/{id}/threads', 'App\Http\Controllers\CategoryController@g
 
 Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@postThreadToCategory');
 
-
-Route::get('threads/{thread_id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
 Route::put('threads/{thread_id}', 'App\Http\Controllers\ThreadController@updateThread');
 

@@ -26,12 +26,7 @@ class UserController extends Controller
         if (!$user)
             return response('', 404);
 
-        if (count($user) >= 2)
-            $resp = UserResource::collection($user);
-        else
-            $resp = new UserResource($user);
-
-        return $resp;
+        return UserResource::collection($user);
     }
 
     public function createUser(Request $user): JsonResponse
