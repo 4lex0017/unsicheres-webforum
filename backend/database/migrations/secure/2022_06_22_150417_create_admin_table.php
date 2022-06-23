@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::connection('secure')->dropIfExists('admin');
+        Schema::connection('secure')->dropIfExists('admins');
     }
 };
