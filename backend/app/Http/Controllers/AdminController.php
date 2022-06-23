@@ -40,6 +40,9 @@ class AdminController extends Controller
 
         $this->doUpdateConfiguration($data, $config);
 
+        // Generate new users that are displayed on the top right.
+        SiteController::generateNewSmallUserConfig();
+
         return $this->getConfiguration();
     }
 
