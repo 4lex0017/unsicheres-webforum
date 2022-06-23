@@ -16,18 +16,30 @@ class UserLoginController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'password' => 'required',
+            'birthDate' => 'required',
         ]);
 
         if($validator->fails()) {
             $errors = $validator->errors();
             return response()->json([
                 'error' => $errors
-            ], 400);
+            ], 422);
         }
+
+        //TODO
+        /*
+        if(User::where('name', $request->name)->first() != null)
+        {
+            return [
+                'message' => 'User already exists'
+            ];
+        }
+        */
 
         $user = User::create([
              'name' => $request->name,
-             'password' => Hash::make($request->password)
+             'password' => Hash::make($request->password),
+             'birth_date' => $request->birthDate,
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -40,6 +52,18 @@ class UserLoginController extends Controller
 
     public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'error' => $errors
+            ], 422);
+        }
+
         if(Auth::attempt(['name' => $request->name, 'password' => $request->password])){ 
             $user = User::where('name', $request->name)->first(); 
             return response()->json([
