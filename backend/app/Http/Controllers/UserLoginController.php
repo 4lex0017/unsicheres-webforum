@@ -52,6 +52,18 @@ class UserLoginController extends Controller
 
     public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'error' => $errors
+            ], 422);
+        }
+
         if(Auth::attempt(['name' => $request->name, 'password' => $request->password])){ 
             $user = User::where('name', $request->name)->first(); 
             return response()->json([

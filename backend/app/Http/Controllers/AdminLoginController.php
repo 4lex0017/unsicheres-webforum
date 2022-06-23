@@ -21,7 +21,7 @@ class AdminLoginController extends Controller
             $errors = $validator->errors();
             return response()->json([
                 'error' => $errors
-            ], 400);
+            ], 422);
         }
 
         $admin = Admin::create([
@@ -38,9 +38,22 @@ class AdminLoginController extends Controller
 
     public function login(Request $request)
     { 
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'error' => $errors
+            ], 422);
+        }
+        
         $admin = DB::connection('secure')->table('admins')->where('name', $request->name)->first();  
         $model = Admin::where('name', $request->name)->first();
-            if($admin->password == $request->password){
+            if(Hash::check($request->password, $admin->password)){
             return response()->json([
                 'access_token' =>  $model->createToken('adminToken', ['isAdmin'])->plainTextToken,
                 'token_type' => 'Bearer',
