@@ -43,8 +43,9 @@ class PostController extends Controller
     {
         $post = self::injectableWhere('id', $post_id, 'thread_id', $thread_id);
         Log::debug(print_r($post, true));
-        if (!$post)
+        if (count($post) === 0) {
             return response('', 404);
+        }
         $postw = $post->first();
         if ($postw->id == $post_id && $postw->thread_id == $thread_id) {
             $postw->update($request->all());

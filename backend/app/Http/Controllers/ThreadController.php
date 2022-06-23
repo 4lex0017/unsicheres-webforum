@@ -77,12 +77,13 @@ class ThreadController extends Controller
     public function updateThread(Request $request, $thread_id)
     {
         $thread = self::injectableWhere('thread_id', $thread_id);
-        if (!$thread)
+        if (count($thread) === 0) {
             return response('', 404);
-
-        if ($thread->id == $thread_id) {
-            $thread->update($request->all());
-            $thread->save();
+        }
+        $threadw = $thread->first();
+        if ($threadw->id == $thread_id) {
+            $threadw->update($request->all());
+            $threadw->save();
 
             return new PostResource($thread);
         }
