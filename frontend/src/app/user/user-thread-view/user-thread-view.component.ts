@@ -94,18 +94,18 @@ export class UserThreadViewComponent implements OnInit {
       threadObject.title = result.title;
       this.backendServiceCom.putThread(threadObject).subscribe(
         (resp: Data) => {
-          if (!resp["user"]["headers"].get('VulnFound')) {
+          let title = resp["body"].title;
+          this.threadObjectArrayModel.data.forEach((thread, index) => {
+            if (thread.id === threadObject.id) {
+              this.threadObjectArrayModel.data[index].title = title;
+            }
+          });
+          if (this.vEnabled) this.injectContentToDom(threadObject)
+          if (resp["headers"].get('VulnFound') == "true") {
             console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
-      if (this.vEnabled) this.injectContentToDom(threadObject)
-      // {
-      //   this.changeDetectorRef.detectChanges();
-      //   this.title.nativeElement.replaceChildren();
-      //   this.title.nativeElement.appendChild(document.createRange().createContextualFragment(threadObject.title));
-      // }
-
     });
   }
 

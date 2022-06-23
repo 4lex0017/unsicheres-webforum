@@ -142,7 +142,7 @@ export class UserProfileViewComponent implements OnInit {
               this.userFullArrayModel.data[index] = userFullObject;
             }
           });
-          ;
+
           if (this.vEnabled) this.injectContentToDom(userFullObject);
           console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {

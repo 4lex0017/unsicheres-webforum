@@ -37,8 +37,8 @@ export class CategoryComponent implements AfterViewInit {
     this.dataManagement.notifyOthersObservable$.subscribe((id) => {
       for (let z = 0; z < this.categoryObject.threads.length; z++) {
         if (this.categoryObject.threads[z].id == id) {
+          this.backendCom.deleteThread(this.categoryObject.id, id).subscribe();
           this.categoryObject.threads.splice(z, 1);
-          this.backendCom.deleteThread(id);
           break;
         }
       }

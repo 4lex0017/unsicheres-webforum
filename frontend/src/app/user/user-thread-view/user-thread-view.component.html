@@ -4,7 +4,7 @@
   <div class="thread-container">
     <mat-card class="thread-card">
       <mat-card-header>
-        <button mat-mini-fab color="primary" *ngIf="canEditThread(threadObject.id)"
+        <button mat-mini-fab color="primary" *ngIf="canEditThread(threadObject.author.id)"
                 (click)="openEditThreadDialog(threadObject)"
                 class="thread-buttons"
                 matTooltip="Edit Thread"
@@ -12,7 +12,7 @@
           <mat-icon>edit</mat-icon>
         </button>
         <span class="spacer"></span>
-        <button mat-mini-fab color="warn" *ngIf="canEditThread(threadObject.id)"
+        <button mat-mini-fab color="warn" *ngIf="canEditThread(threadObject.author.id)"
                 (click)="openDeleteThreadDialog(threadObject)"
                 class="thread-buttons"
                 matTooltip="Delete Thread"
