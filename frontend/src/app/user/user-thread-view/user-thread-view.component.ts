@@ -130,12 +130,12 @@ export class UserThreadViewComponent implements OnInit {
     });
   }
 
-  addReply(replyPost: Post): void {
+  addReply(threadObject: Thread, replyPost: Post): void {
     let selected = window.getSelection();
     let range = selected!.getRangeAt(0);
     let tag = range.commonAncestorContainer;
     console.log(tag.parentNode)
-    const box = document.getElementById('replyBox')
+    const box = document.getElementById('replyBox' + threadObject.id)
     let inBox = false;
 
 

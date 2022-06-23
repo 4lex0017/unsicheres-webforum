@@ -47,7 +47,7 @@
     <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
       <app-reactive-post [postObject]="post"
                          (createPostEvent)="createPostConsumer(threadObject, $event)"
-                         (replyPostEvent)="addReply($event)"
+                         (replyPostEvent)="addReply(threadObject, $event)"
                          (deletePostEvent)="openDeletePostConsumer(threadObject, $event)"
                          (moveToPostEvent)="moveToPost($event)"
                          (editPostEvent)="currentEdit($event)"></app-reactive-post>
