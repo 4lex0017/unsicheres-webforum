@@ -2,31 +2,35 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use Illuminate\Contracts\Support\Arrayable;
-
 use App\Models\User;
-
-use Illuminate\Support\Facades\Log;
-
 
 class PostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param Request $request
+     * @return array|Arrayable|JsonSerializable
      */
 
     public static $wrap = null;
 
+    #[ArrayShape([
+        'id' => "mixed",
+        'content' => "mixed",
+        'date' => "mixed",
+        'likedFrom' => "mixed",
+        'author' => "mixed"
+    ])]
     private static function convertData($data): array
     {
         return [
             'id' => $data->id,
-            'threadId' => $data->thread_id,
             'content' => $data->content,
             'date' => $data->created_at,
             'likedFrom' => $data->liked_from,
@@ -34,22 +38,23 @@ class PostResource extends JsonResource
         ];
     }
 
+    #[ArrayShape([
+        'id' => "mixed",
+        'content' => "mixed",
+        'date' => "mixed",
+        'likedFrom' => "mixed",
+        'author' => "mixed"
+    ])]
     public function toArray($request): array|JsonSerializable|Arrayable
     {
-        if (is_a($this->resource, 'App\Models\Post')) {
-            $data = $this;
-        } else {
-            $data = $this->resource[0];
-        }
-        $author = User::find($data->author);
+        $author = (new User)->find($this->author);
 
-        $tmp_author = [
-            'id' => $data->author,
-            'profile_picture' => $author->profile_picture,
+        $this->author = [
+            'id' => $this->author,
+            'profilePicture' => $author->profile_picture,
             'name' => $author->name,
         ];
 
-        $data->author = $tmp_author;
-        return self::convertData($data);
+        return self::convertData($this);
     }
 }
