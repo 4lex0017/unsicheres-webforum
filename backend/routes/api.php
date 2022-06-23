@@ -105,7 +105,7 @@ Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\Post
 
 Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
-Route::post('login', 'App\Http\Controllers\UserLoginController@login');
+Route::post('login', ['as' => 'login','uses' =>'App\Http\Controllers\UserLoginController@login']);
 
 /**
  * @uses App\Http\Controllers\AdminController::putAttackerName()
