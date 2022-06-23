@@ -137,6 +137,12 @@ export class UserProfileViewComponent implements OnInit {
         (resp: Data) => {
           console.log(resp)
           userFullObject = resp["body"].data;
+          this.userFullArrayModel.data.forEach((user, index) => {
+            if (user.id === userFullObject.id) {
+              this.userFullArrayModel.data[index] = userFullObject;
+            }
+          });
+          ;
           if (this.vEnabled) this.injectContentToDom(userFullObject);
           console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
