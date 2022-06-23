@@ -23,8 +23,18 @@ class UserLoginController extends Controller
             $errors = $validator->errors();
             return response()->json([
                 'error' => $errors
-            ], 400);
+            ], 422);
         }
+
+        //TODO
+        /*
+        if(User::where('name', $request->name)->first() != null)
+        {
+            return [
+                'message' => 'User already exists'
+            ];
+        }
+        */
 
         $user = User::create([
              'name' => $request->name,
