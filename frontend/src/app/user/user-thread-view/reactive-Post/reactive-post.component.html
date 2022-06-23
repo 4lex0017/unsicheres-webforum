@@ -41,7 +41,7 @@
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing" id="replyBox" class="replyBox" contenteditable="true">
+    <div *ngIf="editing" class="replyBox" id="replyBox" contenteditable="true">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
@@ -65,7 +65,7 @@
           <button mat-button (click)="likePostButton()">LIKE</button>
         </span>
     <button mat-button>SHARE</button>
-    <button mat-button (click)="replyPostEvent.emit(postObject)">REPLY</button>
+    <button mat-button (click)="replyPostEvent.emit(postObject);moveToReplyBoxEvent.emit()">REPLY</button>
     <button mat-button>REPORT</button>
   </mat-card-actions>
 </mat-card>

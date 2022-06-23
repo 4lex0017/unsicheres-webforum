@@ -145,9 +145,7 @@ export class UserThreadViewComponent implements OnInit {
       }
     }
 
-    if (!inBox && this.editId != null) {
 
-    }
 
     if (!inBox) {
       return;

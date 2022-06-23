@@ -50,7 +50,8 @@
                          (replyPostEvent)="addReply(threadObject, $event)"
                          (deletePostEvent)="openDeletePostConsumer(threadObject, $event)"
                          (moveToPostEvent)="moveToPost($event)"
-                         (editPostEvent)="currentEdit($event)"></app-reactive-post>
+                         (editPostEvent)="currentEdit($event)"
+                         (moveToReplyBoxEvent)="moveToReply(threadObject.id)"></app-reactive-post>
     </div>
 
     <div class="thread-newReply">
