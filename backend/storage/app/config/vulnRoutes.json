@@ -4,14 +4,14 @@
         {"route": "/search/users"},
         {"route": "/search/posts"},
         {"route": "/search/threads"},
-        {"route": "/user"},
+        {"route": "/users"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"},
         {"route": "/threads/{int}/posts"},
         {"route": "/threads/{int}/posts/{int}"}
     ],
     "qsqli": [
-        {"route": "/user/{int}"},
+        {"route": "/users/{int}"},
         {"route": "/categories/{int}"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"}
@@ -23,8 +23,8 @@
         {"route": "/search/threads"}
     ],
     "sxss": [
-        {"route": "/user"},
-        {"route": "/user/{int}"},
+        {"route": "/users"},
+        {"route": "/users/{int}"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"},
         {"route": "/threads/{int}/posts"},
