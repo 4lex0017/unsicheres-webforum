@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Http\Resources\SmallPostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,14 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
+    public function getAllPostsOfUser($id): AnonymousResourceCollection
+    {
+        $posts = DB::connection('insecure')->table('posts')->select(
+            '*'
+        )->whereRaw("author = " . $id)->get();
+
+        return SmallPostResource::collection($posts);
+    }
 
     public function createPost(Request $request, $thread_id)
     {
