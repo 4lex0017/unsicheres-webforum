@@ -363,13 +363,19 @@ export class UserThreadViewComponent implements OnInit {
 
   openDeletePostConsumer(threadObject: Thread, postObjectId: number) {
     console.log(postObjectId)
-    for (let z = 0; z < threadObject.posts.length; z++) {
-      if (threadObject.posts[z].id == postObjectId) {
-        threadObject.posts.splice(z, 1);
-        this.backendServiceCom.deletePost(threadObject.id, postObjectId).subscribe()
-        break;
+    this.threadObjectArrayModel.data.forEach((thread, index) => {
+      if (thread.id == threadObject.id) {
+        for (let z = 0; z < threadObject.posts.length; z++) {
+          if (threadObject.posts[z].id == postObjectId) {
+            threadObject.posts.splice(z, 1);
+            this.threadObjectArrayModel.data[index] = threadObject;
+            this.backendServiceCom.deletePost(threadObject.id, postObjectId).subscribe()
+            break;
+          }
+        }
       }
-    }
+    })
+
   }
 
   createPostConsumer(threadObject: Thread, post: Post): void {
