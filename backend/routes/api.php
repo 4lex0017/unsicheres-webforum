@@ -99,7 +99,7 @@ Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 
 Route::post('login', 'App\Http\Controllers\UserLoginController@login');
 
-// Routegruppe für nur authenticated state
+// Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('logout', 'App\Http\Controllers\UserLoginController@logout');

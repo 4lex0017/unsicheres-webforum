@@ -42,3 +42,13 @@ Route::post('reset/scoreboard', 'App\Http\Controllers\AdminController@resetScore
  * @uses App\Http\Controllers\AdminController::getScoreboard()
  */
 Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
+
+
+Route::post('register', 'App\Http\Controllers\AdminLoginController@register');
+
+Route::post('login', 'App\Http\Controllers\AdminLoginController@login');
+
+Route::middleware(['auth:sanctum','ability:isAdmin'])->group(function () {
+
+    Route::post('logout', 'App\Http\Controllers\AdminLoginController@logout');
+});
