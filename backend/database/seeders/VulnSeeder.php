@@ -23,6 +23,24 @@ class VulnSeeder extends Seeder
                 'sqli_difficulty' => 4,
             ],
             [
+                'uri' => '/search/users',
+                'sxss_difficulty' => 4,
+                'rxss_difficulty' => 4,
+                'sqli_difficulty' => 4,
+            ],
+            [
+                'uri' => '/search/threads',
+                'sxss_difficulty' => 4,
+                'rxss_difficulty' => 4,
+                'sqli_difficulty' => 4,
+            ],
+            [
+                'uri' => '/search/posts',
+                'sxss_difficulty' => 4,
+                'rxss_difficulty' => 4,
+                'sqli_difficulty' => 4,
+            ],
+            [
                 'uri' => '/user',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,

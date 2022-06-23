@@ -1,6 +1,9 @@
 {
     "sqli": [
         {"route": "/search"},
+        {"route": "/search/users"},
+        {"route": "/search/posts"},
+        {"route": "/search/threads"},
         {"route": "/user"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"},
@@ -14,10 +17,14 @@
         {"route": "/threads/{int}"}
     ],
     "rxss": [
-        {"route": "/search"}
+        {"route": "/search"},
+        {"route": "/search/users"},
+        {"route": "/search/posts"},
+        {"route": "/search/threads"}
     ],
     "sxss": [
         {"route": "/user"},
+        {"route": "/user/int"},
         {"route": "/categories/{int}/threads"},
         {"route": "/threads/{int}"},
         {"route": "/threads/{int}/posts"},
