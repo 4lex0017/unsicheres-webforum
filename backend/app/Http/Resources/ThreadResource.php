@@ -37,7 +37,7 @@ class ThreadResource extends JsonResource
             'categoryId' => $data->category_id,
             'title' => $data->title,
             'date' => $data->created_at,
-            'likedFrom' => json_decode($data->liked_from),
+            'likedFrom' => is_array($data->liked_from) ? $data->liked_from : json_decode($data->liked_from),
             'author' => $data->author,
             'posts' => $data->posts,
         ];
