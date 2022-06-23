@@ -15,21 +15,38 @@ class AdminController extends Controller
     public function getSupportedVulnerabilities()
     {
         $json = Storage::disk('local')->get('/config/vulnerabilities.json');
+        $config = json_decode(Storage::disk('local')->get('/config/vulnRoutes.json'), true);
         $content = json_decode($json, true);
 
-        $this->updateChecked($content, 'sqli', 0);
-        $this->updateChecked($content, 'rxss', 1);
-        $this->updateChecked($content, 'sxss', 2);
+        $this->updateChecked($content, 'sqli', 0, $config);
+        $this->updateChecked($content, 'rxss', 1, $config);
+        $this->updateChecked($content, 'sxss', 2, $config);
 
         return response()->json($content);
     }
 
-    private function updateChecked(array &$content, string $type, int $id)
+    private function updateChecked(array &$content, string $type, int $id, array $config)
     {
+        /*
         $used_vulns = json_decode(DB::connection('secure')->table('vulnerabilities')->select($type . '_difficulty')->distinct()->get(), true);
         foreach ($used_vulns as $used) {
             $index = $used[$type . '_difficulty'] - 1;
             $content['vulnerabilities'][$id]['subtasks'][$index]['checked'] = true;
+        }
+        */
+        $routes = $this->getRoutes($config, $type);
+        $used_difficulties = array();
+        foreach($routes as $route) {
+            $difficulty = DB::connection('secure')
+                ->table('vulnerabilities')
+                ->where('uri', $route)
+                ->value($type . '_difficulty');
+            if(in_array($difficulty, $used_difficulties) == false) {
+                $used_difficulties[] = $difficulty;
+            }
+        }
+        foreach($used_difficulties as $difficulty) {
+            $content['vulnerabilities'][$id]['subtasks'][$difficulty-1]['checked'] = true;
         }
     }
 
