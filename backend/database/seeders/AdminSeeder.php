@@ -16,9 +16,9 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        DB::connection('secure')->table('admins')->insert([
+        DB::connection('secure')->table('admins')->insertOrIgnore([
             'name' => 'admin',
-            'password' => Hash::make('123'), 
+            'password' => Hash::make('123'),
         ]);
     }
 }
