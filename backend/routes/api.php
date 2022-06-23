@@ -121,6 +121,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('threads/{thread_id}', 'App\Http\Controllers\ThreadController@deleteThread');
 
     /**
+     * @uses App\Http\Controllers\LikeController::likeThread()
+     */
+    Route::put('threads/{thread_id}/like', 'App\Http\Controllers\LikeController@likeThread');
+
+    /**
      * @uses App\Http\Controllers\PostController::createPost()
      */
     Route::post('/threads/{thread_id}/posts', 'App\Http\Controllers\PostController@createPost');
@@ -134,6 +139,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      * @uses App\Http\Controllers\PostController::deletePost()
      */
     Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
+
+    /**
+     * @uses App\Http\Controllers\LikeController::likeThread()
+     */
+    Route::put('threads/{thread_id}/posts/{post_id}/like', 'App\Http\Controllers\LikeController@likePost');
 
     /**
      * @uses App\Http\Controllers\AdminController::putAttackerName()
