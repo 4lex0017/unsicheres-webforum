@@ -43,12 +43,22 @@ Route::post('reset/scoreboard', 'App\Http\Controllers\AdminController@resetScore
  */
 Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
 
-
+/**
+ * @uses App\Http\Controllers\AdminLoginController::register()
+ */
 Route::post('register', 'App\Http\Controllers\AdminLoginController@register');
 
+/**
+ * @uses App\Http\Controllers\AdminLoginController::login()
+ */
 Route::post('login', 'App\Http\Controllers\AdminLoginController@login');
 
+
+//Gruppe für nur Admin authenticated Routen
 Route::middleware(['auth:sanctum','ability:isAdmin'])->group(function () {
 
+    /**
+    * @uses App\Http\Controllers\AdminLoginController::logout()
+    */
     Route::post('logout', 'App\Http\Controllers\AdminLoginController@logout');
 });

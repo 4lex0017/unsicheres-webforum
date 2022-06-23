@@ -4,26 +4,32 @@ namespace App\Http\Resources;
 
 use App\Models\Post;
 use App\Models\User;
-
-
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
-use App\Models\Thread;
-
-use Illuminate\Support\Facades\Log;
-
+use JetBrains\PhpStorm\ArrayShape;
+use JsonSerializable;
 
 class ThreadResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
 
     public static $wrap = null;
 
+    #[ArrayShape([
+        'id' => "mixed",
+        'categoryId' => "mixed",
+        'title' => "mixed",
+        'date' => "mixed",
+        'likedFrom' => "mixed",
+        'author' => "mixed",
+        'posts' => "mixed"
+    ])]
     private static function convertData($data): array
     {
         return [
@@ -37,26 +43,28 @@ class ThreadResource extends JsonResource
         ];
     }
 
-
-    public function toArray($request)
+    #[ArrayShape([
+        'id' => "mixed",
+        'categoryId' => "mixed",
+        'title' => "mixed",
+        'date' => "mixed",
+        'likedFrom' => "mixed",
+        'author' => "mixed",
+        'posts' => "mixed"
+    ])]
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
-        if (is_a($this->resource, 'App\Models\Thread')) {
-            $data = $this;
-        } else {
-            $data = $this->resource[0];
-        }
+        $data = $this; // we only put a Collection in here, so no need to check what type $this is.
 
-        $author = User::find($data->author);
-
-        $tmp_author = [
+        $author = (new User)->find($data->author);
+        $data->author = [
             'id' => $data->author,
             'profile_picture' => $author->profile_picture,
             'name' => $author->name,
         ];
 
-        $data->author = $tmp_author;
-
-        $data->posts = PostResource::collection(Post::all()->where('thread_id', '=', $data->id));
+        $posts = Post::all()->where('thread_id', '=', $data->id);
+        $data->posts = PostResource::collection($posts);
 
         return self::convertData($data);
     }

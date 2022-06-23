@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Http\Resources\SmallThreadResource;
 use App\Http\Resources\ThreadResource;
 use App\Models\Category;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Thread;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
 
 
 class ThreadController extends Controller
@@ -22,14 +26,20 @@ class ThreadController extends Controller
         return response()->json(['threads' => $data])->setStatusCode(200);
     }
 
-    public function getAllTrheads()
+    public function getThreadById($id): Response|AnonymousResourceCollection|Application|ResponseFactory
     {
-        return ThreadResource::collection(Thread::all());
+        $thread = ThreadController::injectableWhere('id', $id);
+        if (count($thread) === 0)
+            return response('', 404);
+
+        return ThreadResource::collection($thread);
     }
 
-    public function getThreadById($thread_id)
+    public function getAllThreadsOfUser($id): AnonymousResourceCollection
     {
-        return new ThreadResource(ThreadController::injectebleWhere('id', $thread_id));
+        $threads = ThreadController::injectableWhere('author', $id);
+
+        return SmallThreadResource::collection($threads);
     }
 
     public function deleteThread($thread_id)
@@ -66,7 +76,7 @@ class ThreadController extends Controller
 
     public function updateThread(Request $request, $thread_id)
     {
-        $thread = self::injectebleWhere('thread_id', $thread_id);
+        $thread = self::injectableWhere('thread_id', $thread_id);
         if (!$thread)
             return response('', 404);
 
@@ -79,37 +89,10 @@ class ThreadController extends Controller
         return response('', 404);
     }
 
-    public function getThreadOfUser($id)
-    {
-        return ThreadResource::collection(ThreadController::threadOfUser($id));
-    }
-
-    public function threadOfUser($id)
-    {
-        return new ThreadResource(ThreadController::injectebleWhere('author', $id));
-    }
-
-    public function findThread($thread_id)
-    {
-        return ThreadController::injectebleWhere('id', $thread_id);
-    }
-
-    public function getAllPostsOfThread($thread_id)
-    {
-        return PostResource::collection(ThreadController::injectebleWherePost('id', $thread_id));
-    }
-
-    public static function injectebleWhere($row, $id)
+    public static function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('threads')->select(
             '*'
-        )->whereRaw($row . " = " . $id)->get();
-    }
-
-    public static function injectebleWherePost($row, $id)
-    {
-        return DB::connection('insecure')->table('threads')->select(
-            'posts'
         )->whereRaw($row . " = " . $id)->get();
     }
 
