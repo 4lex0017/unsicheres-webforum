@@ -96,11 +96,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('logout', 'App\Http\Controllers\UserLoginController@logout');
 
     /**
-     * @uses App\Http\Controllers\UserController::createUser()
-     */
-    Route::post('users', 'App\Http\Controllers\UserController@createUser');
-
-    /**
      * @uses App\Http\Controllers\UserController::updateUser()
      */
     Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
@@ -141,7 +136,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/threads/{thread_id}/posts/{post_id}', 'App\Http\Controllers\PostController@deletePost');
 
     /**
-     * @uses App\Http\Controllers\LikeController::likeThread()
+     * @uses App\Http\Controllers\LikeController::likePost()
      */
     Route::put('threads/{thread_id}/posts/{post_id}/like', 'App\Http\Controllers\LikeController@likePost');
 

@@ -36,13 +36,6 @@ class UserController extends Controller
         return UserResource::collection($user);
     }
 
-    public function createUser(Request $user): JsonResponse
-    {
-        $model = (new User)->create($user->all());
-
-        return response()->json(['data' => ['id' => $model->id]])->setStatusCode(201);
-    }
-
     public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
     {
 
