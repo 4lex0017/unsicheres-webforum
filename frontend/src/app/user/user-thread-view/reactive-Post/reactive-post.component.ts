@@ -11,6 +11,7 @@ import {DifficultyPickerService} from "../../../data-access/services/difficulty-
 
 import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-post.component";
 import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
+import {AllowEditService} from "../../../data-access/services/allowEdit.service";
 
 @Component({
   selector: 'app-reactive-post',
@@ -22,6 +23,7 @@ export class ReactivePostComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
               private backEndService: BackendService,
+              private allowEditService: AllowEditService,
               private router: Router,
               private dataManagement: DataManagementService,
               public authenticate: AuthenticationService,
@@ -36,6 +38,7 @@ export class ReactivePostComponent implements OnInit {
   @Output() moveToPostEvent = new EventEmitter<number>();
   @Output() replyPostEvent = new EventEmitter<Post>();
   @Output() editPostEvent = new EventEmitter<Post>();
+  @Output() moveToReplyBoxEvent = new EventEmitter;
   vEnabled: boolean;
   editing: boolean = false;
   contentArray: any[]
@@ -109,8 +112,10 @@ export class ReactivePostComponent implements OnInit {
   }
 
   editPost(): void {
-    this.editing = true;
-    this.editPostEvent.emit(this.postObject);
+    if(this.allowEditService.askForEdit()){
+      this.editing = true;
+      this.editPostEvent.emit(this.postObject);
+    }
   }
 
   addReply(replyPost: Post): void {
@@ -210,6 +215,7 @@ export class ReactivePostComponent implements OnInit {
     console.log("string")
     console.log(replyString);
     this.postObject.content = replyString;
+    this.allowEditService.finishEdit();
     this.deserializePost(replyString);
   }
 
