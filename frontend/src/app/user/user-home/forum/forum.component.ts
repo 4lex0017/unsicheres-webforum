@@ -5,7 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Thread} from "../../../data-access/models/thread";
 
 import {Category} from "../../../data-access/models/category";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 
 import {AuthenticationService} from "../../../data-access/services/authentication.service";
 import {DialogCreateThreadComponent} from "../dialog/dialog-create-thread/dialog-create-thread.component";
@@ -86,7 +86,9 @@ export class ForumComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       let newThread = this.backEndService.createThreadObject(this.authenticate.getCurrentUserId(), this.authenticate.getCurrentUsername(), result.title);
-      this.backendComService.postThread(this.categoryMap.get(result.title)!, newThread);
+      this.backendComService.postThread(this.categoryMap.get(result.category.toLowerCase())!, newThread).subscribe((resp: Data) => {
+        this.router.navigate(['forum/home'], {queryParams: {view: result.category.toLowerCase()}});
+      });
     });
   }
 

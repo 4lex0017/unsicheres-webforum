@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {CategoryBackend} from "../../../data-access/models/accessBackend";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {shareReplay} from "rxjs";
 
 
 @Component({
@@ -34,15 +35,17 @@ export class CategoryComponent implements AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    this.dataManagement.notifyOthersObservable$.subscribe((id) => {
-      for (let z = 0; z < this.categoryObject.threads.length; z++) {
-        if (this.categoryObject.threads[z].id == id) {
-          this.categoryObject.threads.splice(z, 1);
-          this.backendCom.deleteThread(id);
-          break;
+    this.dataManagement.notifyOthersObservable$.subscribe(({catId, threadId}) => {
+      if (catId == this.categoryObject.id) {
+        for (let z = 0; z < this.categoryObject.threads.length; z++) {
+          if (this.categoryObject.threads[z].id == threadId) {
+            this.categoryObject.threads.splice(z, 1);
+            break;
+          }
         }
       }
     })
+
   }
 
   getSLugFromTitle(title: string): string {

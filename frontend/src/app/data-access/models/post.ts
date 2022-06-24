@@ -8,5 +8,4 @@ export interface Post {
   author: User;
   likedFrom: number[];
   repliedTo?: PostReply;
-
 }

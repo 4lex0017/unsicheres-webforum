@@ -12,7 +12,7 @@ import {
 import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {AdminUser} from "../models/scoreboard";
 import {AccessBackend} from "../models/accessBackend";
-import {Router} from "@angular/router";
+import {Data, Router} from "@angular/router";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {
@@ -134,39 +134,31 @@ export class BackendCommunicationService {
   //       throw {message: 'Bad response', value: error.status}
   //     }));
   // }
-  postThread(categoryId: number, thread: Thread): Observable<Thread> {
+  postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
     let threadPayload = {
       "title": thread.title,
-      "date": thread.date,
-      "author": thread.author,
-      "likedFrom": thread.likedFrom,
-      "posts": thread.posts,
+      "author": thread.author.id
     };
-    return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload);
+    return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'});
   }
 
-  deleteThread(threadId: number): Observable<Thread> {
-    return this.httpClient.delete<Thread>(this.url + '/threads/' + threadId);
+  deleteThread(categoryId: number, threadId: number): Observable<Thread> {
+    return this.httpClient.delete<Thread>(this.url + '/categories/' + categoryId + '/threads/' + threadId);
   }
 
   putThread(thread: Thread): Observable<HttpResponse<Thread>> {
-
     let threadPayload =
       {
         "id": thread.id,
-        "title": thread.title,
-        "date": thread.date,
-        "author": thread.author,
-        "likedFrom": thread.likedFrom,
-        "posts": thread.posts
+        "title": thread.title
       };
     // let threadPayload = {...thread};
-    return this.httpClient.post<Thread>(this.url + '/threads/' + thread.id, threadPayload, {observe: 'response'});
+    return this.httpClient.put<Thread>(this.url + '/categories/' + thread.categoryId + '/threads/' + thread.id, threadPayload, {observe: 'response'});
   }
 
-  postPost(categoryId: number, threadId: number, post: Post): Observable<Post> {
+  postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
     let postPayload = {...post};
-    return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload);
+    return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
