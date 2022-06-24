@@ -21,7 +21,7 @@
       </mat-card-title>
       <mat-card-subtitle>
         <div> Joined: {{parseDate(userFullObject.joined)}} </div>
-        <div>Born: {{userFullObject.birthDate}} </div>
+        <div>Born: {{parseDate(userFullObject.birthDate)}} </div>
         <div *ngIf="userFullObject.location">
           From:
           <span *ngIf="!vEnabled">{{userFullObject.location}}</span>
