@@ -17,7 +17,12 @@ class SiteController extends Controller
 
     public static function generateNewSmallUserConfig()
     {
-        $users = User::all('id')->random(10);
+        $users = User::all('id');
+
+        $user_amount = count($users);
+        $count = min($user_amount, 10);
+
+        $users = $users->random($count);
 
         $ret_arr = array();
         foreach ($users as $user) {
