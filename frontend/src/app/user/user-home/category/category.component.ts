@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {CategoryBackend} from "../../../data-access/models/accessBackend";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {shareReplay} from "rxjs";
 
 
 @Component({
@@ -38,7 +39,6 @@ export class CategoryComponent implements AfterViewInit {
       if (catId == this.categoryObject.id) {
         for (let z = 0; z < this.categoryObject.threads.length; z++) {
           if (this.categoryObject.threads[z].id == threadId) {
-            this.backendCom.deleteThread(this.categoryObject.id, threadId).subscribe();
             this.categoryObject.threads.splice(z, 1);
             break;
           }

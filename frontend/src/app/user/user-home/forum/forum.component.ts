@@ -48,7 +48,7 @@ export class ForumComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.accessBackend = this.backendComService.getCategories();
+    this.accessBackend = this.backendComService.getCategories();
     this.activeRoute.queryParamMap.subscribe((params) => {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');
