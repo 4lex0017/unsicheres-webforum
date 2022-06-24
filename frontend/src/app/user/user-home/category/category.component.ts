@@ -34,15 +34,18 @@ export class CategoryComponent implements AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    this.dataManagement.notifyOthersObservable$.subscribe((id) => {
-      for (let z = 0; z < this.categoryObject.threads.length; z++) {
-        if (this.categoryObject.threads[z].id == id) {
-          this.backendCom.deleteThread(this.categoryObject.id, id).subscribe();
-          this.categoryObject.threads.splice(z, 1);
-          break;
+    this.dataManagement.notifyOthersObservable$.subscribe(({catId, threadId}) => {
+      if (catId == this.categoryObject.id) {
+        for (let z = 0; z < this.categoryObject.threads.length; z++) {
+          if (this.categoryObject.threads[z].id == threadId) {
+            this.backendCom.deleteThread(this.categoryObject.id, threadId).subscribe();
+            this.categoryObject.threads.splice(z, 1);
+            break;
+          }
         }
       }
     })
+
   }
 
   getSLugFromTitle(title: string): string {

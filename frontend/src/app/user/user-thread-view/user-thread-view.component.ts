@@ -146,7 +146,6 @@ export class UserThreadViewComponent implements OnInit {
     }
 
 
-
     if (!inBox) {
       return;
     }
@@ -387,7 +386,7 @@ export class UserThreadViewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataManagement.notifyRest(threadObject.id)
+        this.dataManagement.notifyRest(threadObject.categoryId!, threadObject.id)
         this.router.navigate(['/forum/home']);
       }
     });
