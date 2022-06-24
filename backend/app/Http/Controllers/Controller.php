@@ -9,5 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    protected array $sqlite_keywords = [" union ", " join ", " view ", " group "];
+
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }

@@ -19,34 +19,28 @@ class UserResource extends JsonResource
             'birthDate' => $data->birth_date,
             'location' => $data->location,
             'about' => $data->about,
-            'groups' => $data->groups,
+            'groups' => json_decode($data->groups),
             'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
-            'profileComments' => $data->profile_comments
+            'profileComments' => json_decode($data->profile_comments)
         ];
     }
 
     public function toArray($request): array|JsonSerializable|Arrayable
     {
-        if (is_a($this->resource, 'App\Models\User')) {
-            $data = $this;
-        } else {
-            $data = $this->resource[0];
-        }
+        $this->endorsements = 0; // doesn't exist in DB, so create it here
 
-        $data->endorsements = 0; // doesn't exist in DB, so create it here
-
-        $posts = Post::all()->where('author', '=', $data->id)->toArray();
-        $threads = Thread::all()->where('author', '=', $data->id)->toArray();
+        $posts = Post::all()->where('author', '=', $this->id)->toArray();
+        $threads = Thread::all()->where('author', '=', $this->id)->toArray();
 
         foreach ($posts as $post) {
-            $data->endorsements += count($post['liked_from']);
+            $this->endorsements += count($post['liked_from']);
         }
 
         foreach ($threads as $thread) {
-            $data->endorsements += count($thread['liked_from']);
+            $this->endorsements += count($thread['liked_from']);
         }
 
-        return self::convertData($data);
+        return self::convertData($this);
     }
 }

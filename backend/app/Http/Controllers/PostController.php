@@ -22,6 +22,13 @@ class PostController extends Controller
             '*'
         )->whereRaw("author = " . $id)->get();
 
+        foreach ($this->sqlite_keywords as $keyword) {
+            $included = stripos($id, $keyword);
+            if ($included != false) {
+                return response($posts);
+            }
+        }
+
         return SmallPostResource::collection($posts);
     }
 
