@@ -66,13 +66,16 @@ class ThreadController extends Controller
 
     public function deleteThread($cat_id, $thread_id): Response|Application|ResponseFactory
     {
+        $thread = (new Thread)->find($thread_id);
+        if (!$thread) // just in case
+            return response("", 404);
+
         // need to remove the thread from the categories' table thread-array
         $category = (new Category())->find($cat_id);
         $thread_array = $category['threads'];
 
-        if (($key = array_search($thread_id, $thread_array)) !== false) {
-            unset($thread_array[$key]); // find the thread_id value and unset it
-        }
+        // find the thread in the array by value and get rid of it
+        array_splice($thread_array, array_search($thread_id, $thread_array), 1);
 
         $category['threads'] = $thread_array;
         $category->save();

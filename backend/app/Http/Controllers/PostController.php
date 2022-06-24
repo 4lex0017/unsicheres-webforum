@@ -48,13 +48,16 @@ class PostController extends Controller
 
     public function deletePost($thread_id, $post_id): Response|Application|ResponseFactory
     {
+        $post = (new Post)->find($post_id);
+        if (!$post) // just in case
+            return response("", 404);
+
         // need to remove the post from the threads' table post-array
         $thread = (new Thread)->find($thread_id);
         $posts_array = $thread['posts'];
 
-        if (($key = array_search($post_id, $posts_array)) !== false) {
-            unset($posts_array[$key]); // find the post_id value and unset it
-        }
+        // find the thread in the array by value and get rid of it
+        array_splice($posts_array, array_search($post_id, $posts_array), 1);
 
         $thread['posts'] = $posts_array; // set the new array
         $thread->save(); // save it
