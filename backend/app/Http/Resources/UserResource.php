@@ -28,6 +28,7 @@ class UserResource extends JsonResource
 
     public function toArray($request): array|JsonSerializable|Arrayable
     {
+
         $this->endorsements = 0; // doesn't exist in DB, so create it here
 
         $posts = Post::all()->where('author', '=', $this->id)->toArray();
