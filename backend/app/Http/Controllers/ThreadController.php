@@ -31,6 +31,13 @@ class ThreadController extends Controller
         if (count($thread) === 0)
             return response('', 404);
 
+        foreach ($this->sqlite_keywords as $keyword) {
+            $included = stripos($id, $keyword);
+            if ($included != false) {
+                return response($thread);
+            }
+        }
+
         return ThreadResource::collection($thread);
     }
 
