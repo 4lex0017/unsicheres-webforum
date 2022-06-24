@@ -70,6 +70,7 @@ export class UserProfileViewComponent implements OnInit {
       //   endorsements: resp["user"].body.data.endorsements
       // }
       if (this.vEnabled) this.injectContentToDomStartup();
+      console.log("is it?" + resp["user"]["headers"].get('VulnFound'))
       if (resp["user"]["headers"].get('VulnFound') == "true") {
         console.log("found vuln in userprofile")
         this.didAThing.sendMessage();

@@ -44,8 +44,8 @@ export class AuthenticationService {
   public registerJwt(name: string, password: string, birthDate: string) {
     return this.httpClient.post<any>('http://localhost:80/register', {
       name,
-      password
-      // ,birthDate
+      password,
+      birthDate
     }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name)), shareReplay());
   }
 
