@@ -29,5 +29,9 @@
         {"route": "/threads/{int}"},
         {"route": "/threads/{int}/posts"},
         {"route": "/threads/{int}/posts/{int}"}
+    ],
+    "cmdi": [
+        {"route": "/users/{int}"},
+        {"route": "/register"}
     ]
 }
