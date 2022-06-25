@@ -45,7 +45,7 @@ class UserController extends Controller
      * @param $id
      * @param Request $request
      */
-    public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory|AnonymousResourceCollection
+    public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
     {
 
         $user = (new User)->find($id);
@@ -71,6 +71,7 @@ class UserController extends Controller
                 $request_string = $request_string . ' , birth_date = "' . $user['birth_date'] . '"';
             }
             if (array_key_exists('password', $user)) {
+                //TODO:: Pasword hash
                 $request_string = $request_string . ' , password = "' . $user['password'] . '"';
             }
             if (array_key_exists('profile_comments', $user)) {
@@ -79,21 +80,37 @@ class UserController extends Controller
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
             $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
+
+            foreach ($this->sqlite_keywords as $keyword) {
+                $included = stripos($request_string, $keyword);
+                if ($included != false) {
+                    $first = true;
+                    $result = '[';
+                    while ($row = $sqlres->fetchArray()) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $result = $result . ",";
+                        }
+                        $result = $result . json_encode($row);
+                    }
+                    $result = $result . ']';
+
+                    return response($result);
+                }
+            }
+            $result = '';
             $first = true;
-            $result = '[';
             while ($row = $sqlres->fetchArray()) {
                 if ($first) {
                     $first = false;
                 } else {
-                    $result = $result . ",";
+                    $result = $result . ',';
                 }
                 $result = $result . json_encode($row);
             }
-            $result = $result . ']';
-            Log::error(print_r($result, true));
-            return UserResource::collection(json_decode($result));
+            return new UserResource(json_decode($result));
         }
-
         return response('', 404);
     }
 

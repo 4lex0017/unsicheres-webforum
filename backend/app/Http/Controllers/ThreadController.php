@@ -15,6 +15,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+use SQLite3;
+
+
 
 class ThreadController extends Controller
 {
@@ -50,25 +53,76 @@ class ThreadController extends Controller
 
     public function createThread(Request $request, $category_id): ThreadResource
     {
-        $json = $request->json();
-        $json->add(['category_id' => $category_id]);
+        $thread = $request->all();
+        if ($thread['category_id'] === (int) $category_id) {
+            $request_string = 'insert into threads (category_id, title, liked_from, author, posts) Values(';
+            if (array_key_exists('category_id', $thread)) {
+                $request_string = $request_string . '"' . $thread['category_id'] . '"';
+            } else
+                return response('', 404);
 
-        $request->setJson($json);
+            if (array_key_exists('title', $thread)) {
+                $request_string = $request_string . ', "' . $thread['title'] . '"';
+            } else
+                return response('', 404);
 
+            if (array_key_exists('liked_from', $thread)) {
+                $request_string = $request_string . ' , "' . $thread['liked_from'] . '"';
+            } else
+                $request_string = $request_string . ' , "[]"';
+
+            if (array_key_exists('author', $thread)) {
+                $request_string = $request_string . ' , "' . $thread['author'] . '"';
+            } else
+                return response('', 404);
+
+            if (array_key_exists('posts', $thread)) {
+                $request_string = $request_string . ' , "' . $thread['posts'] . '"';
+            } else
+                $request_string = $request_string . ' , "[]"';
+
+            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
+            $request_string = $request_string . ') RETURNING *;';
+            $sqlres = $db->query($request_string);
+
+            foreach ($this->sqlite_keywords as $keyword) {
+                $included = stripos($request_string, $keyword);
+                if ($included != false) {
+                    $first = true;
+                    $result = '[';
+                    while ($row = $sqlres->fetchArray()) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $result = $result . ",";
+                        }
+                        $result = $result . json_encode($row);
+                    }
+                    $result = $result . ']';
+
+                    return response($result);
+                }
+            }
+            $result = '';
+            $first = true;
+            while ($row = $sqlres->fetchArray()) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $result = $result . ',';
+                }
+                $result = $result . json_encode($row);
+            }
+            $new_thread = json_decode($result);
+            $category = (new Category())->find($category_id);
+            $thread_array = $category['threads'];
+            $thread_array[] = $new_thread->id;
+            $category['threads'] = $thread_array;
+            $category->save();
+            return new ThreadResource($new_thread);
+        }
+        return response('', 404);
         // need to add the thread to the categories' table thread-array
-        $category = (new Category())->find($category_id);
-        $thread_array = $category['threads'];
-
-        $new_thread = (new Thread)->create($request->all());
-
-        $thread_array[] = $new_thread->id;
-
-        $category['threads'] = $thread_array;
-        $category->save();
-
-        $new_thread->liked_from = "[]"; // fix for null, frontend needs an empty array
-
-        return new ThreadResource($new_thread);
     }
 
     public function deleteThread($cat_id, $thread_id): Response|Application|ResponseFactory
@@ -103,14 +157,60 @@ class ThreadController extends Controller
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             return response('', 404);
 
-        $new_title = $request->json('title');
-        $thread['title'] = $new_title;
+        $thread = $request->all();
+        if ($thread['id'] === (int) $thread_id) {
+            $request_string = 'update threads set id = ' . (int) $thread_id;
+            if (array_key_exists('title', $thread)) {
+                $request_string = $request_string . ', title = "' . $thread['title'] . '"';
+            }
+            if (array_key_exists('liked_from', $thread)) {
+                $request_string = $request_string . ' , liked_from = "' . $thread['liked_from'] . '"';
+            }
+            if (array_key_exists('author', $thread)) {
+                $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
+            }
+            if (array_key_exists('posts', $thread)) {
+                $request_string = $request_string . ' , posts = "' . $thread['posts'] . '"';
+            }
 
-        $thread->save();
+            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
+            $request_string = $request_string . ' where id = ' . (int) $thread_id . ' RETURNING *;';
+            $sqlres = $db->query($request_string);
 
-        return [
-            "title" => $thread->title // this is all the frontend needs
-        ];
+            foreach ($this->sqlite_keywords as $keyword) {
+                $included = stripos($request_string, $keyword);
+                if ($included != false) {
+                    $first = true;
+                    $result = '[';
+                    while ($row = $sqlres->fetchArray()) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $result = $result . ",";
+                        }
+                        $result = $result . json_encode($row);
+                    }
+                    $result = $result . ']';
+
+                    return response($result);
+                }
+            }
+            $result = '';
+            $first = true;
+            while ($row = $sqlres->fetchArray()) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $result = $result . ',';
+                }
+                $result = $result . json_encode($row);
+            }
+            $thread = new ThreadResource(json_decode($result));
+            return [
+                "title" => $thread->title // this is all the frontend needs
+            ];
+        }
+        return response('', 404);
     }
 
     public static function injectableWhere($row, $id): Collection

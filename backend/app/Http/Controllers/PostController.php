@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use SQLite3;
 
 
 class PostController extends Controller
@@ -34,16 +35,67 @@ class PostController extends Controller
 
     public function createPost(Request $request, $thread_id): PostResource
     {
-        $json = $request->json();
-        $json->add(['thread_id' => $thread_id]);
+        $post = $request->all();
+        if ($post['thread_id'] === (int) $thread_id) {
+            $request_string = 'insert into posts (thread_id, author, liked_from, content) Values(';
+            if (array_key_exists('thread_id', $post)) {
+                $request_string = $request_string . '"' . $post['thread_id'] . '"';
+            } else
+                return response('', 404);
 
-        $request->setJson($json);
+            if (array_key_exists('author', $post)) {
+                $request_string = $request_string . ' , "' . $post['author'] . '"';
+            } else
+                return response('', 404);
+
+            if (array_key_exists('liked_from', $post)) {
+                $request_string = $request_string . ' , "' . $post['liked_from'] . '"';
+            } else
+                $request_string = $request_string . ' , "[]"';
+
+            if (array_key_exists('content', $post)) {
+                $request_string = $request_string . ' , "' . $post['content'] . '"';
+            } else
+                $request_string = $request_string . ' , "[]"';
+
+            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
+            $request_string = $request_string . ') RETURNING *;';
+            $sqlres = $db->query($request_string);
+
+            foreach ($this->sqlite_keywords as $keyword) {
+                $included = stripos($request_string, $keyword);
+                if ($included != false) {
+                    $first = true;
+                    $result = '[';
+                    while ($row = $sqlres->fetchArray()) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $result = $result . ",";
+                        }
+                        $result = $result . json_encode($row);
+                    }
+                    $result = $result . ']';
+
+                    return response($result);
+                }
+            }
+            $result = '';
+            $first = true;
+            while ($row = $sqlres->fetchArray()) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $result = $result . ',';
+                }
+                $result = $result . json_encode($row);
+            }
+        }
+        $new_post = json_decode($result);
 
         // need to add the post to the threads' table post-array
         $thread = (new Thread)->find($thread_id);
         $posts_array = $thread['posts'];
-
-        $new_post = (new Post)->create($request->all());
 
         $posts_array[] = $new_post->id; // add new post ID to the posts
 
@@ -85,9 +137,56 @@ class PostController extends Controller
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
             return response('', 404);
 
-        $post->update($request->all());
-        $post->save();
 
-        return new PostResource($post);
+        $post = $request->all();
+        if ($post['id'] === (int) $post_id) {
+            $request_string = 'update posts set id = ' . (int) $post_id;
+            if (array_key_exists('author', $post)) {
+                $request_string = $request_string . ' , author = "' . $post['author'] . '"';
+            }
+            if (array_key_exists('liked_from', $post)) {
+                $request_string = $request_string . ' , liked_from = "' . $post['liked_from'] . '"';
+            }
+            if (array_key_exists('content', $post)) {
+                $request_string = $request_string . ' , content = "' . $post['content'] . '"';
+            }
+
+            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
+            $request_string = $request_string . ' where id = ' . (int) $post_id . ' RETURNING *;';
+            $sqlres = $db->query($request_string);
+
+            foreach ($this->sqlite_keywords as $keyword) {
+                $included = stripos($request_string, $keyword);
+                if ($included != false) {
+                    $first = true;
+                    $result = '[';
+                    while ($row = $sqlres->fetchArray()) {
+                        if ($first) {
+                            $first = false;
+                        } else {
+                            $result = $result . ",";
+                        }
+                        $result = $result . json_encode($row);
+                    }
+                    $result = $result . ']';
+
+                    return response($result);
+                }
+            }
+            $result = '';
+            $first = true;
+            while ($row = $sqlres->fetchArray()) {
+                if ($first) {
+                    $first = false;
+                } else {
+                    $result = $result . ',';
+                }
+                $result = $result . json_encode($row);
+            }
+            $post = json_decode($result);
+            $post->liked_from = json_decode($post->liked_from);
+            return new PostResource($post);
+        }
+        return response('', 404);
     }
 }
