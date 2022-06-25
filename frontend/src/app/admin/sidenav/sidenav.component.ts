@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ThemeService} from "../../theme.service";
+import {AuthenticationServiceAdmin} from "../../data-access/services/authenticationAdmin";
 
 @Component({
   selector: 'admin-sidenav',
@@ -12,7 +13,7 @@ export class SidenavComponent {
   sideNavigationMaximized = true;
   contentMargin = 240;
 
-  constructor(private router: Router, private themeService: ThemeService) {
+  constructor(private router: Router, private themeService: ThemeService, private authAdmin: AuthenticationServiceAdmin) {
     this.themeService.initTheme();
 
   }
@@ -24,5 +25,10 @@ export class SidenavComponent {
     } else {
       this.contentMargin = 210;
     }
+  }
+
+  logout() {
+    this.authAdmin.logoutAdmin();
+    this.router.navigate(['/login'])
   }
 }

@@ -415,8 +415,14 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
       }
       this.dataSource = new MatTableDataSource(this.scoreboard);
     })
+  }
 
+  resetDatabase() {
+    this.backendCom.resetDatabase().subscribe();
+  }
 
+  resetScoreboard() {
+    this.backendCom.resetScoreboard().subscribe();
   }
 
   quickSort(vulnerabilities: AdminVulnerability[]): AdminVulnerability[] {

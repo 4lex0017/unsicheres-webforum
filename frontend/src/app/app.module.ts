@@ -20,6 +20,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {UserThreadViewModule} from "./user/user-thread-view/user-thread-view.module";
 import {DatePipe} from "@angular/common";
 import {AuthInterceptor} from "./data-access/services/AuthInterceptor";
+import {AuthInterceptorAdmin} from "./data-access/services/AuthInterceptorAdmin";
 
 
 @NgModule({
@@ -47,7 +48,10 @@ import {AuthInterceptor} from "./data-access/services/AuthInterceptor";
     UserThreadViewModule,
 
   ],
-  providers: [DatePipe, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [
+    DatePipe,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorAdmin, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule {

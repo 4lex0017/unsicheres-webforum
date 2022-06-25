@@ -87,10 +87,7 @@ export class SearchComponent implements OnInit {
       return content
     }
   }
-
-  getSlugFromTitle(title: string): string {
-    return this.backendCom.getSlugFromTitle(title);
-  }
+  
 
   format(filter: string): string {
     return filter.replace(/_/g, " ");

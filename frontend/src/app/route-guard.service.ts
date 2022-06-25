@@ -14,8 +14,7 @@ export class RouteGuardService implements CanActivate {
 
 
   public canActivate(route: ActivatedRouteSnapshot) {
-    let user = sessionStorage.getItem('upperUser');
-    if (user == 'admin') {
+    if (localStorage.getItem('bearerTokenAdmin')) {
       return true;
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {

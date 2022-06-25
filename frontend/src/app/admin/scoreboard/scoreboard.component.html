@@ -1,10 +1,15 @@
 <div class="outer-container">
   <h2>
     Scoreboard
+    <button class="collapse-expand-button" mat-icon-button color="primary" (click)="resetScoreboard()"
+            matTooltip="Reset scoreboard">
+      <mat-icon>autorenew</mat-icon>
+    </button>
     <button class="collapse-expand-button" mat-icon-button color="primary" (click)="manageAllRows()"
             matTooltip="Expand / Collapse table">
       <mat-icon>sort</mat-icon>
     </button>
+    <button class="resetDatabase" mat-raised-button color="warn" (click)="resetDatabase()">Reset Database</button>
   </h2>
 
 
