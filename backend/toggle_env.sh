@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 help_fn() {
     echo -e "Usage:  toggle_env [OPTION]\n"
