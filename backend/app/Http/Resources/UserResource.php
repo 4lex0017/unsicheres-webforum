@@ -19,10 +19,10 @@ class UserResource extends JsonResource
             'birthDate' => $data->birth_date,
             'location' => $data->location,
             'about' => $data->about,
-            'groups' => json_decode($data->groups),
+            'groups' => $data->groups,
             'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
-            'profileComments' => json_decode($data->profile_comments)
+            'profileComments' => $data->profile_comments
         ];
     }
 

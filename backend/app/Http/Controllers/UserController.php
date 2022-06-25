@@ -45,21 +45,22 @@ class UserController extends Controller
      * @param $id
      * @param Request $request
      */
-    public function updateUser($id, Request $request): UserResource|Response|Application|ResponseFactory
+    public function updateUser($id, Request $request): AnonymousResourceCollection|Response|Application|ResponseFactory
     {
 
         $user = (new User)->find($id);
         if (!$user)
             return response('', 404);
 
-        $user = $request->all();
+        $user = $request->all()['data'];
+
         if ($user['id'] === (int) $id) {
             $request_string = 'update users set id = ' . (int) $id;
             if (array_key_exists('name', $user)) {
                 $request_string = $request_string . ', name = "' . $user['name'] . '"';
             }
-            if (array_key_exists('profile_picture', $user)) {
-                $request_string = $request_string . ' , profile_picture = "' . $user['profile_picture'] . '"';
+            if (array_key_exists('profilePicture', $user)) {
+                $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
             }
             if (array_key_exists('location', $user)) {
                 $request_string = $request_string . ' , location = "' . $user['location'] . '"';
@@ -67,15 +68,15 @@ class UserController extends Controller
             if (array_key_exists('about', $user)) {
                 $request_string = $request_string . ' , about = "' . $user['about'] . '"';
             }
-            if (array_key_exists('birth_date', $user)) {
-                $request_string = $request_string . ' , birth_date = "' . $user['birth_date'] . '"';
+            if (array_key_exists('birthDate', $user)) {
+                $request_string = $request_string . ' , birth_date = "' . $user['birthDate'] . '"';
             }
             if (array_key_exists('password', $user)) {
                 //TODO:: Pasword hash
                 $request_string = $request_string . ' , password = "' . $user['password'] . '"';
             }
-            if (array_key_exists('profile_comments', $user)) {
-                $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profile_comments']) . '"';
+            if (array_key_exists('profileComments', $user)) {
+                $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
             }
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
             $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
@@ -109,7 +110,10 @@ class UserController extends Controller
                 }
                 $result = $result . json_encode($row);
             }
-            return new UserResource(json_decode($result));
+            $user = json_decode($result);
+            $user->groups = json_decode($user->groups);
+            $user->profile_comments = json_decode($user->profile_comments);
+            return UserResource::collection(array($user));
         }
         return response('', 404);
     }
