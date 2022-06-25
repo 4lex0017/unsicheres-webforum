@@ -77,4 +77,8 @@ export class VulnerabilitiesComponent implements OnInit {
       }
     }
   }
+
+  resetDatabase() {
+    this.backendCom.resetDatabase().subscribe();
+  }
 }

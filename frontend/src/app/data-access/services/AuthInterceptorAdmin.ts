@@ -3,14 +3,14 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class AuthInterceptorAdmin implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>,
             next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.headers.get("admin"))
+    if (!req.headers.get("admin"))
       return next.handle(req);
-    
-    const idToken = localStorage.getItem("bearerToken");
+
+    const idToken = localStorage.getItem("bearerTokenAdmin");
 
     if (idToken) {
       const cloned = req.clone({

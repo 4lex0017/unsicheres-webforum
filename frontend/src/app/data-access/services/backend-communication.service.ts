@@ -25,6 +25,7 @@ import {VulnerabilityDifficultyPicker} from "../models/vulnerabilityDifficultyPi
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {UserFullBackend} from "../models/userFullBackendModel";
+import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
 
 
 @Injectable({
@@ -67,8 +68,8 @@ export class BackendCommunicationService {
     return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
   }
 
-  getPostsFromUser(userId: number): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.url + '/users/' + userId + '/posts');
+  getPostsFromUser(userId: number): Observable<PostsSmallBackendModel> {
+    return this.httpClient.get<PostsSmallBackendModel>(this.url + '/users/' + userId + '/posts');
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
@@ -81,22 +82,6 @@ export class BackendCommunicationService {
 
   getUsers(): Observable<UserFull[]> {
     return this.httpClient.get<UserFull[]>(this.url + '/users')
-  }
-
-  postUser(user: any): Observable<any> {
-    // let userPayload = {
-    //   "name": user.name,
-    //   "password": user.password,
-    //   "birth_date": user.birth_date,
-    //   "location": user.location,
-    //   "about": user.about,
-    //   "groups": user.groups,
-    //   "profile_picture": user.profile_picture,
-    //   "profile_comments": user.profile_comments
-    // };
-    let userPayload = {...user}
-    // ...user
-    return this.httpClient.post<UserFull>(this.url + '/users', userPayload);
   }
 
   putUser(user: UserFullBackend): Observable<HttpResponse<UserFull>> {
@@ -184,15 +169,36 @@ export class BackendCommunicationService {
     return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
   }
 
+  setAttackername(name: string): Observable<HttpResponse<any>> {
+    let attackerPayload =
+      {
+        "name": name
+      };
+    return this.httpClient.put<any>(this.url + '/attackername', attackerPayload, {observe: 'response'});
+  }
 
-  //For Admin
+  // Admin
+  resetScoreboard(): Observable<any> {
+    return this.httpClient.post<any>(this.url + '/admin/reset/scoreboard', null, {
+      headers: {admin: "true"}
+    });
+  }
+
+  resetDatabase(): Observable<any> {
+    return this.httpClient.post<any>(this.url + '/admin/reset/db', null, {
+      headers: {admin: "true"}
+    });
+  }
 
   getVulnerabilities(): Observable<VulnerabilityDifficultyOverviewPackage> {
-    return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin');
+    return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin', {
+      headers: {admin: "true"}
+    });
   }
 
   getVulnerabilitiesConfig(): Observable<VulnerabilitiesConfig> {
-    return this.httpClient.get<VulnerabilitiesConfig>(this.url + '/admin/config');
+    return this.httpClient.get<VulnerabilitiesConfig>(this.url + '/admin/config',
+      {headers: {admin: "true"}});
   }
 
   putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverviewPackage): Observable<VulnerabilitiesConfig> {
@@ -209,14 +215,19 @@ export class BackendCommunicationService {
       vulnerabilityPayload.data.push(curState);
     }
     console.log(vulnerabilityPayload)
-    return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload);
+    return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload, {headers: {admin: "true"}});
   }
-
 
   getScoreboard(): Observable<AdminUser[]> {
-    return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard');
+    return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard', {headers: {admin: "true"}});
   }
 
+
+  // Search
+  search(search: string): Observable<HttpResponse<Search>> {
+    let params = new HttpParams().set('q', search)
+    return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
+  }
 
   //Backend
   getUserFromUsername(id: number): User {
@@ -236,75 +247,5 @@ export class BackendCommunicationService {
         this.padTo2Digits(date.getMonth() + 1),
         date.getFullYear(),
       ].join('.'));
-
   }
-
-
-  //For search & Userprofile view
-  getCategoryStrFromThreadId(id: number): string {
-    return "";
-  }
-
-  getThreadSlugFromPostId(id: number): string {
-    return "";
-  }
-
-  getSlugFromTitle(title: string) {
-    return title.replace(/\s+/g, '-').toLowerCase();
-  }
-
-
-  //Fake search result
-
-  search(search: string): Observable<HttpResponse<Search>> {
-    let params = new HttpParams().set('q', search)
-    return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
-  }
-
-  // getRandomUsers(): UserFull[] {
-  //   let users: UserFull[] = [];
-  //   return users;
-  // }
-  //
-  // getRandomPosts(): Post[] {
-  //   return [];
-  // }
-  //
-  // getRandomThreads(): Thread[] {
-  //   return []
-  // }
-
-
-  //Fake authentication
-  checkRegisterUserExists(username: string): boolean {
-    return false;
-  }
-
-  checkLoginData(username: string, password: string): number {
-    return -1;
-  }
-
-  getLoginId(username: string, password: string): number {
-    return -1;
-  }
-
-  registerNewUser(userName: string, userPassword: string): void {
-  }
-
-  // getFullUserFromUserId(id: number): UserFull { //needed for small user -> User conversion
-  //   return {
-  //     id: -1,
-  //     username: "dummy",
-  //     joined: "",
-  //     about: "",
-  //     role: [],
-  //     comments: [
-  //       {
-  //         id: -2,
-  //         content: "",
-  //         userId: -1
-  //       }
-  //     ],
-  //   }
-  // }
 }

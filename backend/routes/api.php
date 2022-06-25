@@ -88,6 +88,15 @@ Route::post('register', 'App\Http\Controllers\UserLoginController@register');
  */
 Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLoginController@login']);
 
+/**
+ * @uses App\Http\Controllers\AdminLoginController::login()
+ */
+Route::post('/admin/login', ['as' => 'login', 'uses' => 'App\Http\Controllers\AdminLoginController@login']);
+/**
+ * @uses App\Http\Controllers\AdminController::putAttackerName()
+ */
+Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /**
@@ -140,8 +149,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      */
     Route::put('threads/{thread_id}/posts/{post_id}/like', 'App\Http\Controllers\LikeController@likePost');
 
-    /**
-     * @uses App\Http\Controllers\AdminController::putAttackerName()
-     */
-    Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
+
 });
