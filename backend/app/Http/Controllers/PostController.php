@@ -49,14 +49,14 @@ class PostController extends Controller
                 return response('', 404);
 
             if (array_key_exists('likedFrom', $post)) {
-                $request_string = $request_string . ' , "' . $post['likedFrom'] . '"';
+                $request_string = $request_string . ' , "' . json_encode($post['likedFrom']) . '"';
             } else
                 $request_string = $request_string . ' , "[]"';
 
             if (array_key_exists('content', $post)) {
                 $request_string = $request_string . ' , "' . $post['content'] . '"';
             } else
-                $request_string = $request_string . ' , "[]"';
+                $request_string = $request_string . ' , ""';
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
             $request_string = $request_string . ') RETURNING *;';
@@ -145,7 +145,7 @@ class PostController extends Controller
                 $request_string = $request_string . ' , author = "' . $post['author'] . '"';
             }
             if (array_key_exists('likedFrom', $post)) {
-                $request_string = $request_string . ' , liked_from = "' . $post['likedFrom'] . '"';
+                $request_string = $request_string . ' , liked_from = "' . json_encode($post['likedFrom']) . '"';
             }
             if (array_key_exists('content', $post)) {
                 $request_string = $request_string . ' , content = "' . $post['content'] . '"';

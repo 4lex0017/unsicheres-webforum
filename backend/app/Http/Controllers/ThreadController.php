@@ -54,7 +54,7 @@ class ThreadController extends Controller
     public function createThread(Request $request, $category_id): ThreadResource
     {
         $thread = $request->all();
-        if ($thread['category_id'] === (int) $category_id) {
+        if ($thread['categoryId'] === (int) $category_id) {
             $request_string = 'insert into threads (category_id, title, liked_from, author, posts) Values(';
             if (array_key_exists('categoryId', $thread)) {
                 $request_string = $request_string . '"' . $thread['categoryId'] . '"';
@@ -67,7 +67,7 @@ class ThreadController extends Controller
                 return response('', 404);
 
             if (array_key_exists('likedFrom', $thread)) {
-                $request_string = $request_string . ' , "' . $thread['likedFrom'] . '"';
+                $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
             } else
                 $request_string = $request_string . ' , "[]"';
 
@@ -77,7 +77,7 @@ class ThreadController extends Controller
                 return response('', 404);
 
             if (array_key_exists('posts', $thread)) {
-                $request_string = $request_string . ' , "' . $thread['posts'] . '"';
+                $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
             } else
                 $request_string = $request_string . ' , "[]"';
 
@@ -164,13 +164,13 @@ class ThreadController extends Controller
                 $request_string = $request_string . ', title = "' . $thread['title'] . '"';
             }
             if (array_key_exists('likedFrom', $thread)) {
-                $request_string = $request_string . ' , liked_from = "' . $thread['likedFrom'] . '"';
+                $request_string = $request_string . ' , liked_from = "' . json_encode($thread['likedFrom']) . '"';
             }
             if (array_key_exists('author', $thread)) {
                 $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
             }
             if (array_key_exists('posts', $thread)) {
-                $request_string = $request_string . ' , posts = "' . $thread['posts'] . '"';
+                $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
             }
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
