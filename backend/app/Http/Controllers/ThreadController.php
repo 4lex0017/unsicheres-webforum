@@ -54,7 +54,7 @@ class ThreadController extends Controller
     public function createThread(Request $request, $category_id): ThreadResource
     {
         $thread = $request->all();
-        if ($thread['category_id'] === (int) $category_id) {
+        if ($thread['categoryId'] === (int) $category_id) {
 
             $request_string = self::createCreateRequestString($thread);
 
@@ -132,7 +132,7 @@ class ThreadController extends Controller
     public function updateThread(Request $request, $cat_id, $thread_id): Response|array|Application|ResponseFactory
     {
         $thread = (new Thread)->where('id', '=', $thread_id, 'and')
-            ->where('category_id', '=', $cat_id)->first();
+            ->where('categoryId', '=', $cat_id)->first();
 
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             return response('', 404);
@@ -246,7 +246,7 @@ class ThreadController extends Controller
             return response('', 404);
 
         if (array_key_exists('likedFrom', $thread)) {
-            $request_string = $request_string . ' , "' . $thread['likedFrom'] . '"';
+            $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
         } else
             $request_string = $request_string . ' , "[]"';
 
@@ -256,7 +256,7 @@ class ThreadController extends Controller
             return response('', 404);
 
         if (array_key_exists('posts', $thread)) {
-            $request_string = $request_string . ' , "' . $thread['posts'] . '"';
+            $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
         } else
             $request_string = $request_string . ' , "[]"';
 
@@ -270,13 +270,13 @@ class ThreadController extends Controller
             $request_string = $request_string . ', title = "' . $thread['title'] . '"';
         }
         if (array_key_exists('likedFrom', $thread)) {
-            $request_string = $request_string . ' , liked_from = "' . $thread['likedFrom'] . '"';
+            $request_string = $request_string . ' , liked_from = "' . json_encode($thread['likedFrom']) . '"';
         }
         if (array_key_exists('author', $thread)) {
             $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
         }
         if (array_key_exists('posts', $thread)) {
-            $request_string = $request_string . ' , posts = "' . $thread['posts'] . '"';
+            $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
         }
 
         return $request_string = $request_string . ' where id = ' . (int) $thread_id . ' RETURNING *;';
