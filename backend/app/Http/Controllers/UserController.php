@@ -52,7 +52,7 @@ class UserController extends Controller
         if (!$user)
             return response('', 404);
 
-        $user = $request->all();
+        $user = $request->all()['data'];
 
         if ($user['id'] === (int) $id) {
             $request_string = 'update users set id = ' . (int) $id;
