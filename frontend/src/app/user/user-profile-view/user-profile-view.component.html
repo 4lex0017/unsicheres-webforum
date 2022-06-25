@@ -86,10 +86,10 @@
       </ng-template>
 
       <div *ngIf="userPosts | async as userPostsObj; else loadingPosts">
-        <mat-tab label="Posts: {{userPostsObj.length}}">
+        <mat-tab label="Posts: {{userPostsObj.data.length}}">
           <mat-list>
-            <mat-list-item *ngFor="let post of userPostsObj">
-              <a [routerLink]="['/forum/threads', getThreadFromPost(post.id)]">
+            <mat-list-item *ngFor="let post of userPostsObj.data">
+              <a [routerLink]="['/forum/threads', post.threadId]">
                 <div mat-line>{{cutPostContent(post.content)}}</div>
                 <div mat-line>Date: {{post.date}}</div>
               </a>

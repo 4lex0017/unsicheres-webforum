@@ -14,6 +14,7 @@ import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-serv
 
 import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBackendModel";
 import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
+import {PostsSmallBackendModel} from "../../data-access/models/PostsSmallBackendModel";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -24,7 +25,7 @@ export class UserProfileViewComponent implements OnInit {
   // userFullObject: UserFull;
   userFullArrayModel: UserFullBackendModel = {data: []};
   userThreads: Observable<ThreadsSmallBackendModel>;
-  userPosts: Observable<Post[]>;
+  userPosts: Observable<PostsSmallBackendModel>;
   vEnabled: boolean;
 
   // @ViewChild('about', {static: false}) about: ElementRef;
@@ -75,7 +76,8 @@ export class UserProfileViewComponent implements OnInit {
         console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
-      // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id)
+      this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullArrayModel.data[0].id);
+      this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullArrayModel.data[0].id);
     });
   }
 

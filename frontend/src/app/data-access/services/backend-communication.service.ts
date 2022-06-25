@@ -25,6 +25,7 @@ import {VulnerabilityDifficultyPicker} from "../models/vulnerabilityDifficultyPi
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {UserFullBackend} from "../models/userFullBackendModel";
+import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
 
 
 @Injectable({
@@ -67,8 +68,8 @@ export class BackendCommunicationService {
     return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
   }
 
-  getPostsFromUser(userId: number): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(this.url + '/users/' + userId + '/posts');
+  getPostsFromUser(userId: number): Observable<PostsSmallBackendModel> {
+    return this.httpClient.get<PostsSmallBackendModel>(this.url + '/users/' + userId + '/posts');
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
@@ -81,22 +82,6 @@ export class BackendCommunicationService {
 
   getUsers(): Observable<UserFull[]> {
     return this.httpClient.get<UserFull[]>(this.url + '/users')
-  }
-
-  postUser(user: any): Observable<any> {
-    // let userPayload = {
-    //   "name": user.name,
-    //   "password": user.password,
-    //   "birth_date": user.birth_date,
-    //   "location": user.location,
-    //   "about": user.about,
-    //   "groups": user.groups,
-    //   "profile_picture": user.profile_picture,
-    //   "profile_comments": user.profile_comments
-    // };
-    let userPayload = {...user}
-    // ...user
-    return this.httpClient.post<UserFull>(this.url + '/users', userPayload);
   }
 
   putUser(user: UserFullBackend): Observable<HttpResponse<UserFull>> {
