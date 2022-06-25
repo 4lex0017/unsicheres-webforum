@@ -19,6 +19,7 @@ class ConfigResource extends JsonResource
             'sqli_difficulty' => $this->sqli_difficulty,
             'sxss_difficulty' => $this->sxss_difficulty,
             'rxss_difficulty' => $this->rxss_difficulty,
+            'cmdi_difficulty' => $this->cmdi_difficulty,
         ];
     }
 }

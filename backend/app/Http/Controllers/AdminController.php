@@ -21,6 +21,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'sqli', 0, $config);
         $this->updateChecked($content, 'rxss', 1, $config);
         $this->updateChecked($content, 'sxss', 2, $config);
+        $this->updateChecked($content, 'cmdi', 3, $config);
 
         return response()->json($content);
     }
@@ -29,17 +30,17 @@ class AdminController extends Controller
     {
         $routes = $this->getRoutes($config, $type);
         $used_difficulties = array();
-        foreach($routes as $route) {
+        foreach ($routes as $route) {
             $difficulty = DB::connection('secure')
                 ->table('vulnerabilities')
                 ->where('uri', $route)
                 ->value($type . '_difficulty');
-            if(in_array($difficulty, $used_difficulties) == false) {
+            if (in_array($difficulty, $used_difficulties) == false) {
                 $used_difficulties[] = $difficulty;
             }
         }
-        foreach($used_difficulties as $difficulty) {
-            $content['vulnerabilities'][$id]['subtasks'][$difficulty-1]['checked'] = true;
+        foreach ($used_difficulties as $difficulty) {
+            $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
         }
     }
 
@@ -88,7 +89,8 @@ class AdminController extends Controller
         return response()->json($attackers_with_values);
     }
 
-    public function getUri($vulnerability_id) {
+    public function getUri($vulnerability_id)
+    {
         return DB::connection('secure')->table('vulnerabilities')->where('vulnerability_id', $vulnerability_id)->value('uri');
     }
 
@@ -163,6 +165,9 @@ class AdminController extends Controller
             case 3:
                 $type = 'sxss';
                 break;
+            case 4:
+                $type = 'cmdi';
+                break;
             default:
                 abort(400);
         }
@@ -184,14 +189,14 @@ class AdminController extends Controller
     }
 
     /**
-     * @param $difficulty1
+     * @param $difficulty
      * @return array
      */
-    public function getDifficultiesUsed($difficulty1): array
+    public function getDifficultiesUsed($difficulty): array
     {
         $difficulties_used = array();
-        for ($i = 1; $i < 5; $i++) {
-            if ($difficulty1[$i]) {
+        for ($i = 1; $i <= sizeof($difficulty); $i++) {
+            if ($difficulty[$i]) {
                 $difficulties_used[$i] = $i;
             }
         }
@@ -246,11 +251,13 @@ class AdminController extends Controller
         foreach ($data as $element) {
             $type = $this->getType($element['id']);
 
-            DB::connection('secure')->table('vulnerabilities')->update([$type . '_difficulty' => 4]);
+            $max_difficulty = $type == 'cmdi' ? 3 : 4;
+
+            DB::connection('secure')->table('vulnerabilities')->update([$type . '_difficulty' => $max_difficulty]);
 
             $routes = $this->getRoutes($config, $type);
 
-            if (sizeof($element['difficulty']) != 4) {
+            if (sizeof($element['difficulty']) != $max_difficulty) {
                 abort(400);
             }
 
@@ -259,7 +266,6 @@ class AdminController extends Controller
             $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
 
             $this->writeRemainingRoutes($routes, $difficulties_used, $type);
-
         }
     }
 }
