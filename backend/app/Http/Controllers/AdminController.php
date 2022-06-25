@@ -27,13 +27,6 @@ class AdminController extends Controller
 
     private function updateChecked(array &$content, string $type, int $id, array $config)
     {
-        /*
-        $used_vulns = json_decode(DB::connection('secure')->table('vulnerabilities')->select($type . '_difficulty')->distinct()->get(), true);
-        foreach ($used_vulns as $used) {
-            $index = $used[$type . '_difficulty'] - 1;
-            $content['vulnerabilities'][$id]['subtasks'][$index]['checked'] = true;
-        }
-        */
         $routes = $this->getRoutes($config, $type);
         $used_difficulties = array();
         foreach($routes as $route) {
@@ -75,8 +68,8 @@ class AdminController extends Controller
 
         foreach ($attackers as $attacker) {
             $found_vulns = $this->getFoundVulnsOfAttacker($attacker);
-            $vulns_of_attacker = array();
 
+            /*
             foreach ($found_vulns as $vuln) {
                 $type = $this->getVulnTypeFromVuln($vuln);
                 $difficulty = $this->getDifficultyOfVuln($vuln, $type);
@@ -86,10 +79,11 @@ class AdminController extends Controller
                     'vulLevel' => $difficulty,
                 ];
             }
+            */
             $attackers_with_values[] = [
                 'ipaddress' => $attacker->ip_address,
                 'username' => $attacker->name,
-                'vulnerabilities' => $vulns_of_attacker,
+                'vulnerabilities' => $found_vulns,
             ];
         }
         return response()->json($attackers_with_values);
@@ -145,29 +139,9 @@ class AdminController extends Controller
     {
         $found_vulns = DB::connection('secure')->table('found_vulnerabilities')
             ->where('attacker_id', '=', $attacker->attacker_id)
-            ->select(['vulnerability_id', 'vuln_type'])
+            ->select(['difficulty', 'vuln_type'])
             ->get();
         return $found_vulns;
-    }
-
-    /**
-     * @param mixed $vuln
-     * @return string
-     */
-    public function getVulnTypeFromVuln(mixed $vuln): string
-    {
-        $type = 'sqli_difficulty';
-        switch ($vuln->vuln_type) {
-            case 'rxss':
-                $type = 'rxss_difficulty';
-                break;
-            case 'sxss':
-                $type = 'sxss_difficulty';
-                break;
-            default:
-                break;
-        }
-        return $type;
     }
 
     /**
