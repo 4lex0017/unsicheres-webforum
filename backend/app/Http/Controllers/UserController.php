@@ -79,7 +79,7 @@ class UserController extends Controller
                 $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
             }
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
+            $request_string = $request_string . ', updated_at = date() where id = ' . (int) $id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {

@@ -37,7 +37,7 @@ class PostController extends Controller
     {
         $post = $request->all();
         if ($post['threadId'] === (int) $thread_id) {
-            $request_string = 'insert into posts (thread_id, author, liked_from, content) Values(';
+            $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
             if (array_key_exists('threadId', $post)) {
                 $request_string = $request_string . '"' . $post['threadId'] . '"';
             } else
@@ -59,7 +59,7 @@ class PostController extends Controller
                 $request_string = $request_string . ' , ""';
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ') RETURNING *;';
+            $request_string = $request_string . 'date(),date()) RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -152,7 +152,7 @@ class PostController extends Controller
             }
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ' where id = ' . (int) $post_id . ' RETURNING *;';
+            $request_string = $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
