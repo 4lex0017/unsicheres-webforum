@@ -6,7 +6,7 @@
             "description": "Allow Requests to inject arbitrary SQL in request body or URL",
             "subtasks": [
                 {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
-                {"id":  2, "state":  "Medium", "description": "Escape string '); is filtered out once", "checked":  false},
+                {"id":  2, "state":  "Medium", "description": "Escape strings such as '); or '; filtered out once", "checked":  false},
                 {"id":  3, "state":  "Hard", "description": "Escape string filtered out repeatedly, SQLite keywords in URL filtered out once", "checked":  false},
                 {"id":  4, "state":  "Impossible", "description": "Escape string and keywords filtered out repeatedly", "checked": false}
             ]
