@@ -56,8 +56,8 @@ class ThreadController extends Controller
         $thread = $request->all();
         if ($thread['category_id'] === (int) $category_id) {
             $request_string = 'insert into threads (category_id, title, liked_from, author, posts) Values(';
-            if (array_key_exists('category_id', $thread)) {
-                $request_string = $request_string . '"' . $thread['category_id'] . '"';
+            if (array_key_exists('categoryId', $thread)) {
+                $request_string = $request_string . '"' . $thread['categoryId'] . '"';
             } else
                 return response('', 404);
 
@@ -66,8 +66,8 @@ class ThreadController extends Controller
             } else
                 return response('', 404);
 
-            if (array_key_exists('liked_from', $thread)) {
-                $request_string = $request_string . ' , "' . $thread['liked_from'] . '"';
+            if (array_key_exists('likedFrom', $thread)) {
+                $request_string = $request_string . ' , "' . $thread['likedFrom'] . '"';
             } else
                 $request_string = $request_string . ' , "[]"';
 
@@ -163,8 +163,8 @@ class ThreadController extends Controller
             if (array_key_exists('title', $thread)) {
                 $request_string = $request_string . ', title = "' . $thread['title'] . '"';
             }
-            if (array_key_exists('liked_from', $thread)) {
-                $request_string = $request_string . ' , liked_from = "' . $thread['liked_from'] . '"';
+            if (array_key_exists('likedFrom', $thread)) {
+                $request_string = $request_string . ' , liked_from = "' . $thread['likedFrom'] . '"';
             }
             if (array_key_exists('author', $thread)) {
                 $request_string = $request_string . ' , author = "' . $thread['author'] . '"';

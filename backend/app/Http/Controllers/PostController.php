@@ -36,10 +36,10 @@ class PostController extends Controller
     public function createPost(Request $request, $thread_id): PostResource
     {
         $post = $request->all();
-        if ($post['thread_id'] === (int) $thread_id) {
+        if ($post['threadId'] === (int) $thread_id) {
             $request_string = 'insert into posts (thread_id, author, liked_from, content) Values(';
-            if (array_key_exists('thread_id', $post)) {
-                $request_string = $request_string . '"' . $post['thread_id'] . '"';
+            if (array_key_exists('threadId', $post)) {
+                $request_string = $request_string . '"' . $post['threadId'] . '"';
             } else
                 return response('', 404);
 
@@ -48,8 +48,8 @@ class PostController extends Controller
             } else
                 return response('', 404);
 
-            if (array_key_exists('liked_from', $post)) {
-                $request_string = $request_string . ' , "' . $post['liked_from'] . '"';
+            if (array_key_exists('likedFrom', $post)) {
+                $request_string = $request_string . ' , "' . $post['likedFrom'] . '"';
             } else
                 $request_string = $request_string . ' , "[]"';
 
@@ -144,8 +144,8 @@ class PostController extends Controller
             if (array_key_exists('author', $post)) {
                 $request_string = $request_string . ' , author = "' . $post['author'] . '"';
             }
-            if (array_key_exists('liked_from', $post)) {
-                $request_string = $request_string . ' , liked_from = "' . $post['liked_from'] . '"';
+            if (array_key_exists('likedFrom', $post)) {
+                $request_string = $request_string . ' , liked_from = "' . $post['likedFrom'] . '"';
             }
             if (array_key_exists('content', $post)) {
                 $request_string = $request_string . ' , content = "' . $post['content'] . '"';
