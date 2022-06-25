@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->foreign('vulnerability_id')->references('vulnerability_id')->on('vulnerabilities');
             $table->string('vuln_type');
             $table->integer('difficulty');
+            $table->unique(['vuln_type', 'vulnerability_id', 'difficulty']);
             $table->timestamps();
         });
     }
