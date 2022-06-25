@@ -47,7 +47,6 @@ class UserController extends Controller
      */
     public function updateUser($id, Request $request): AnonymousResourceCollection|Response|Application|ResponseFactory
     {
-
         $user = (new User)->find($id);
         if (!$user)
             return response('', 404);
@@ -55,31 +54,8 @@ class UserController extends Controller
         $user = $request->all();
 
         if ($user['id'] === (int) $id) {
-            $request_string = 'update users set id = ' . (int) $id;
-            if (array_key_exists('name', $user)) {
-                $request_string = $request_string . ', name = "' . $user['name'] . '"';
-            }
-            if (array_key_exists('profilePicture', $user)) {
-                $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
-            }
-            if (array_key_exists('location', $user)) {
-                $request_string = $request_string . ' , location = "' . $user['location'] . '"';
-            }
-            if (array_key_exists('about', $user)) {
-                $request_string = $request_string . ' , about = "' . $user['about'] . '"';
-            }
-            if (array_key_exists('birthDate', $user)) {
-                $request_string = $request_string . ' , birth_date = "' . $user['birthDate'] . '"';
-            }
-            if (array_key_exists('password', $user)) {
-                //TODO:: Pasword hash
-                $request_string = $request_string . ' , password = "' . $user['password'] . '"';
-            }
-            if (array_key_exists('profileComments', $user)) {
-                $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
-            }
+            $request_string = self::createUpdateRequestString($user, $id);
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -133,5 +109,33 @@ class UserController extends Controller
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
+    }
+
+    public function createUpdateRequestString($user, $id)
+    {
+        $request_string = 'update users set id = ' . (int) $id;
+        if (array_key_exists('name', $user)) {
+            $request_string = $request_string . ', name = "' . $user['name'] . '"';
+        }
+        if (array_key_exists('profilePicture', $user)) {
+            $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
+        }
+        if (array_key_exists('location', $user)) {
+            $request_string = $request_string . ' , location = "' . $user['location'] . '"';
+        }
+        if (array_key_exists('about', $user)) {
+            $request_string = $request_string . ' , about = "' . $user['about'] . '"';
+        }
+        if (array_key_exists('birthDate', $user)) {
+            $request_string = $request_string . ' , birth_date = "' . $user['birthDate'] . '"';
+        }
+        if (array_key_exists('password', $user)) {
+            //TODO:: Pasword hash
+            $request_string = $request_string . ' , password = "' . $user['password'] . '"';
+        }
+        if (array_key_exists('profileComments', $user)) {
+            $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
+        }
+        return $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
     }
 }
