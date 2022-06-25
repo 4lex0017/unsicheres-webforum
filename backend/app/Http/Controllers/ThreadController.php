@@ -55,7 +55,7 @@ class ThreadController extends Controller
     {
         $thread = $request->all();
         if ($thread['categoryId'] === (int) $category_id) {
-            $request_string = 'insert into threads (category_id, title, liked_from, author, posts) Values(';
+            $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
             if (array_key_exists('categoryId', $thread)) {
                 $request_string = $request_string . '"' . $thread['categoryId'] . '"';
             } else
@@ -82,7 +82,7 @@ class ThreadController extends Controller
                 $request_string = $request_string . ' , "[]"';
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ') RETURNING *;';
+            $request_string = $request_string . ',date(),date()) RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -174,7 +174,7 @@ class ThreadController extends Controller
             }
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ' where id = ' . (int) $thread_id . ' RETURNING *;';
+            $request_string = $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
