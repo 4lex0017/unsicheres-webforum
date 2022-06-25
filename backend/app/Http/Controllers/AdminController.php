@@ -69,24 +69,27 @@ class AdminController extends Controller
         foreach ($attackers as $attacker) {
             $found_vulns = $this->getFoundVulnsOfAttacker($attacker);
 
-            /*
+            $vulns_of_attacker = array();
             foreach ($found_vulns as $vuln) {
-                $type = $this->getVulnTypeFromVuln($vuln);
-                $difficulty = $this->getDifficultyOfVuln($vuln, $type);
+                $uri = $this->getUri($vuln->vulnerability_id);
 
                 $vulns_of_attacker[] = [
                     'vulName' => $vuln->vuln_type,
-                    'vulLevel' => $difficulty,
+                    'vulLevel' => $vuln->difficulty,
+                    'uri' => $uri,
                 ];
             }
-            */
             $attackers_with_values[] = [
                 'ipaddress' => $attacker->ip_address,
                 'username' => $attacker->name,
-                'vulnerabilities' => $found_vulns,
+                'vulnerabilities' => $vulns_of_attacker,
             ];
         }
         return response()->json($attackers_with_values);
+    }
+
+    public function getUri($vulnerability_id) {
+        return DB::connection('secure')->table('vulnerabilities')->where('vulnerability_id', $vulnerability_id)->value('uri');
     }
 
     public function resetScoreboard()
@@ -139,22 +142,9 @@ class AdminController extends Controller
     {
         $found_vulns = DB::connection('secure')->table('found_vulnerabilities')
             ->where('attacker_id', '=', $attacker->attacker_id)
-            ->select(['difficulty', 'vuln_type'])
+            ->select(['difficulty', 'vuln_type', 'vulnerability_id'])
             ->get();
         return $found_vulns;
-    }
-
-    /**
-     * @param mixed $vuln
-     * @param string $type
-     * @return mixed|null
-     */
-    public function getDifficultyOfVuln(mixed $vuln, string $type): mixed
-    {
-        $difficulty = DB::connection('secure')->table('vulnerabilities')
-            ->where('vulnerability_id', '=', $vuln->vulnerability_id)
-            ->value($type);
-        return $difficulty;
     }
 
     /**
