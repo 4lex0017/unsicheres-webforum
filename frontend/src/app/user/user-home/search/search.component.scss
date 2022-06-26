@@ -28,3 +28,18 @@ loading-spinner-container {
 h2.loading-text {
   text-align: center;
 }
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+::ng-deep.settings-menu {
+  min-width: 200px !important;
+}

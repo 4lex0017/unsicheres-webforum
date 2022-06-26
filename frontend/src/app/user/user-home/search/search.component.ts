@@ -42,6 +42,8 @@ export class SearchComponent implements OnInit {
   currentSearchQuery: string;
   newSearchQuery: string = "";
   vEnabled: boolean;
+  whereToSearch: string = "all";
+  searchParas: string[] = ["all", "users", "posts", "threads"]
   @ViewChild('search', {static: false}) content: ElementRef;
 
 
@@ -54,7 +56,7 @@ export class SearchComponent implements OnInit {
     this.setVuln();
     this.route.queryParamMap.subscribe((params) => {
       this.currentSearchQuery = "";
-      this.backendCom.search(params.get('q') || "").subscribe(data => {
+      this.backendCom.search(params.get('query') || "", params.get('scope') || "").subscribe(data => {
         this.currentSearchQuery = decodeURIComponent(this.getParaFromResponseUrl(data["headers"].get("self")!))
         console.log("cur query" + this.currentSearchQuery);
         console.log("is vuln enabled?: " + this.vEnabled);
@@ -87,7 +89,7 @@ export class SearchComponent implements OnInit {
       return content
     }
   }
-  
+
 
   format(filter: string): string {
     return filter.replace(/_/g, " ");
@@ -107,7 +109,7 @@ export class SearchComponent implements OnInit {
         },
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {q: this.newSearchQuery}});
+      this.router.navigate(['forum/search'], {queryParams: {scope: this.whereToSearch, query: this.newSearchQuery}});
     }
     //.replace(/ /g, "_")
   }

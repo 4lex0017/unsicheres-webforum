@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Thread} from "../models/thread";
 import {Post} from "../models/post";
-import {catchError, firstValueFrom, map, NotFoundError, Observable, of, retry, throwError} from "rxjs";
+import {catchError, Observable} from "rxjs";
 import {UserFull} from "../models/userFull";
 import {PostReply} from "../models/postReply";
 import {User} from "../models/user";
@@ -21,7 +21,6 @@ import {
   PutConfigStatesDifficulty,
   VulnerabilitiesConfig
 } from "../models/vulnerabilitiesConfig";
-import {VulnerabilityDifficultyPicker} from "../models/vulnerabilityDifficultyPicker";
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {UserFullBackend} from "../models/userFullBackendModel";
@@ -62,7 +61,6 @@ export class BackendCommunicationService {
       );
   }
 
-
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<ThreadsSmallBackendModel> {
     return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
@@ -89,14 +87,11 @@ export class BackendCommunicationService {
       {
         "id": user.id,
         "name": user.name,
-        "birth_date": user.birthDate,
         "location": user.location,
         "about": user.about,
         "groups": user.groups,
-        "profile_picture": user.profilePicture,
-        "profile_comments": user.profileComments
+        "profilePicture": user.profilePicture,
       };
-    // ...user
     return this.httpClient.put<any>(this.url + '/users/' + user.id, userPayload, {observe: 'response'});
   }
 
@@ -119,6 +114,7 @@ export class BackendCommunicationService {
   //       throw {message: 'Bad response', value: error.status}
   //     }));
   // }
+
   postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
     let threadPayload = {
       "title": thread.title,
@@ -135,9 +131,9 @@ export class BackendCommunicationService {
     let threadPayload =
       {
         "id": thread.id,
-        "title": thread.title
+        "title": thread.title,
+        "categoryId": thread.categoryId
       };
-    // let threadPayload = {...thread};
     return this.httpClient.put<Thread>(this.url + '/categories/' + thread.categoryId + '/threads/' + thread.id, threadPayload, {observe: 'response'});
   }
 
@@ -224,9 +220,22 @@ export class BackendCommunicationService {
 
 
   // Search
-  search(search: string): Observable<HttpResponse<Search>> {
+  search(search: string, scope: string): Observable<HttpResponse<Search>> {
     let params = new HttpParams().set('q', search)
-    return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
+    switch (scope) {
+      case ("users"):
+        return this.httpClient.get<Search>(this.url + '/search/users', {params: params, observe: 'response'});
+        break;
+      case ("posts"):
+        return this.httpClient.get<Search>(this.url + '/search/posts', {params: params, observe: 'response'});
+        break;
+      case ("threads"):
+        return this.httpClient.get<Search>(this.url + '/search/threads', {params: params, observe: 'response'});
+        break;
+      default:
+        return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
+        break;
+    }
   }
 
   //Backend

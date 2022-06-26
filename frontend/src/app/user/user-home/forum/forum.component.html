@@ -1,7 +1,7 @@
 <div class="main">
   <div class="container">
     <div class="row">
-      <div class="col-xs-11 col-md-10 col-lg-9">
+      <div class="col-xs-10 col-md-9 col-lg-8">
         <div *ngIf="this.accessBackend | async as access; else loadingAccess">
 
           <app-category *ngFor="let category of access.categories"
@@ -19,7 +19,7 @@
           </div>
         </ng-template>
       </div>
-      <div class="col-xs-1 col-md-2 col-lg-3">
+      <div class="col-xs-2 col-md-3 col-lg-4">
         <div class="side-content-container">
           <button color="primary" (click)="openCreateThreadDialog()" mat-raised-button *ngIf="canCreate()">Create
             Thread
@@ -37,6 +37,20 @@
                   (click)="clickSearch()">
             <mat-icon>search</mat-icon>
           </button>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="settings-menu" xPosition="before">
+            <mat-radio-group [(ngModel)]="whereToSearch" color="primary"
+                             aria-labelledby="example-radio-group-label"
+                             class="example-radio-group">
+              <mat-radio-button class="example-radio-button" (click)="$event.stopPropagation()" [value]="searchP"
+                                *ngFor="let searchP of searchParas">
+                Search {{searchP}}
+              </mat-radio-button>
+
+            </mat-radio-group>
+          </mat-menu>
         </div>
         <mat-card class="userlist">
           <mat-card-title class="sidecontent-users">

@@ -39,6 +39,7 @@ import {DialogContactFormComponent} from './dialog/dialog-contact-form/dialog-co
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatProgressBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatRadioModule
 
   ]
 })

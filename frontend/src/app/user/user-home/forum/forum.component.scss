@@ -50,3 +50,18 @@ h2.loading-text {
   margin: 0 auto;
   margin-bottom: 25px;
 }
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+::ng-deep.settings-menu {
+  min-width: 300px !important;
+}

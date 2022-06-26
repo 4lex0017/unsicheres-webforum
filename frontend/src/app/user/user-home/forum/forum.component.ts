@@ -41,10 +41,15 @@ export class ForumComponent implements OnInit {
   showFull = false;
   searchQuery: string = "";
   categoryMap = new Map<string, number>().set("support", 53).set("community", 51).set("general", 52)
-
+  whereToSearch: string = "all";
+  searchParas: string[] = ["all", "users", "posts", "threads"]
 
   canCreate(): boolean {
     return this.authenticate.isLoggedIn();
+  }
+
+  where(cst: string) {
+    console.log(cst)
   }
 
   ngOnInit(): void {
@@ -108,7 +113,7 @@ export class ForumComponent implements OnInit {
 
       });
     } else {
-      this.router.navigate(['forum/search'], {queryParams: {q: this.searchQuery}});
+      this.router.navigate(['forum/search'], {queryParams: {scope: this.whereToSearch, query: this.searchQuery}});
       // .replace(/ /g, "_")
     }
   }

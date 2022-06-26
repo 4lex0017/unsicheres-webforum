@@ -16,6 +16,20 @@
 
           <mat-icon>search</mat-icon>
         </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" class="settings-menu" xPosition="before">
+          <mat-radio-group [(ngModel)]="whereToSearch" color="primary"
+                           aria-labelledby="example-radio-group-label"
+                           class="example-radio-group">
+            <mat-radio-button class="example-radio-button" (click)="$event.stopPropagation()" [value]="searchP"
+                              *ngFor="let searchP of searchParas">
+              Search {{searchP}}
+            </mat-radio-button>
+
+          </mat-radio-group>
+        </mat-menu>
         <div>Search Result for Query:
           <span *ngIf="!vEnabled"> {{this.currentSearchQuery}}</span>
           <span *ngIf="vEnabled" #search></span>
