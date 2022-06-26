@@ -132,7 +132,7 @@ class ThreadController extends Controller
     public function updateThread(Request $request, $cat_id, $thread_id): Response|array|Application|ResponseFactory
     {
         $thread = (new Thread)->where('id', '=', $thread_id, 'and')
-            ->where('categoryId', '=', $cat_id)->first();
+            ->where('category_id', '=', $cat_id)->first();
 
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             return response('', 404);
