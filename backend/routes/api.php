@@ -97,6 +97,11 @@ Route::post('/admin/login', ['as' => 'login', 'uses' => 'App\Http\Controllers\Ad
  */
 Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
 
+/**
+ * @uses App\Http\Controllers\ProfileCommentController::getAllCommentsOfProfile()
+ */
+Route::get('profileComments/{profile_id}', 'App\Http\Controllers\ProfileCommentController@getAllCommentsOfProfile');
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /**
@@ -149,5 +154,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      */
     Route::put('threads/{thread_id}/posts/{post_id}/like', 'App\Http\Controllers\LikeController@likePost');
 
-
+    /**
+     * @uses App\Http\Controllers\ProfileCommentController::createProfileComment()
+     */
+    Route::post('profileComments/{profile_id}', 'App\Http\Controllers\ProfileCommentController@createProfileComment');
 });

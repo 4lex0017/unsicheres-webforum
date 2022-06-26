@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::connection('insecure')->create('profile_comments', function (Blueprint $table) {
             $table->id();
-            $table->string('content', 50);
+            $table->unsignedBigInteger('profile_id');
+            $table->foreign('profile_id')->references('id')->on('users');
             $table->unsignedBigInteger('author');
             $table->foreign('author')->references('id')->on('users');
+            $table->string('content', 50);
             $table->timestamps();
         });
     }

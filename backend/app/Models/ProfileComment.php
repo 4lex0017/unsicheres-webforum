@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProfileComments extends Model
+/**
+ * @mixin Builder
+ */
+class ProfileComment extends Model
 {
     use HasFactory;
 
@@ -15,8 +19,9 @@ class ProfileComments extends Model
 
     protected $fillable = [
         'id',
-        'content',
+        'profile_id',
         'author',
+        'content',
     ];
 
     public $incrementing = true;
