@@ -202,6 +202,6 @@ class PostController extends Controller
         if (array_key_exists('content', $post)) {
             $request_string = $request_string . ' , content = "' . $post['content'] . '"';
         }
-        return $request_string = $request_string . ' where id = ' . (int) $post_id . ' RETURNING *;';
+        return $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
     }
 }

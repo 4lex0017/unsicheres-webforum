@@ -136,6 +136,6 @@ class UserController extends Controller
         if (array_key_exists('profileComments', $user)) {
             $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
         }
-        return $request_string = $request_string . ' where id = ' . (int) $id . ' RETURNING *;';
+        return $request_string = $request_string . ', updated_at = date() where id = ' . (int) $id . ' RETURNING *;';
     }
 }

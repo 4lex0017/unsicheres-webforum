@@ -279,6 +279,6 @@ class ThreadController extends Controller
             $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
         }
 
-        return $request_string = $request_string . ' where id = ' . (int) $thread_id . ' RETURNING *;';
+        return $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
     }
 }
