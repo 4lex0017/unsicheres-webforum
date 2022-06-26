@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # reset tables
 docker exec php php artisan migrate:reset --path=/database/migrations/secure/ --path=/database/migrations/insecure &&
