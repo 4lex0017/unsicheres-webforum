@@ -59,7 +59,7 @@ class PostController extends Controller
                 $request_string = $request_string . ' , ""';
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . 'date(),date()) RETURNING *;';
+            $request_string = $request_string . ',date(),date()) RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
