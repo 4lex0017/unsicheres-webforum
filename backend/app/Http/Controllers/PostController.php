@@ -166,7 +166,7 @@ class PostController extends Controller
     public function createCreateRequestString(array $post)
     {
 
-        $request_string = 'insert into posts (thread_id, author, liked_from, content) Values(';
+        $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
         if (array_key_exists('threadId', $post)) {
             $request_string = $request_string . '"' . $post['threadId'] . '"';
         } else
@@ -187,7 +187,7 @@ class PostController extends Controller
         } else
             $request_string = $request_string . ' , "[]"';
 
-        return $request_string = $request_string . ') RETURNING *;';
+        return $request_string = $request_string . ',date(),date()) RETURNING *;';
     }
 
     public function createUpdateRequestString(array $post, $post_id)

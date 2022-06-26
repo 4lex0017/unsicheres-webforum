@@ -234,7 +234,7 @@ class ThreadController extends Controller
 
     public function createCreateRequestString(array $thread)
     {
-        $request_string = 'insert into threads (category_id, title, liked_from, author, posts) Values(';
+        $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
         if (array_key_exists('categoryId', $thread)) {
             $request_string = $request_string . '"' . $thread['categoryId'] . '"';
         } else
@@ -260,7 +260,7 @@ class ThreadController extends Controller
         } else
             $request_string = $request_string . ' , "[]"';
 
-        return $request_string = $request_string . ') RETURNING *;';
+        return $request_string = $request_string . ',date(),date()) RETURNING *;';
     }
 
     public function createUpdateRequestString(array $thread, $thread_id)
