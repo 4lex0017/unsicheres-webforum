@@ -37,29 +37,11 @@ class PostController extends Controller
     {
         $post = $request->all();
         if ($post['threadId'] === (int) $thread_id) {
-            $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
-            if (array_key_exists('threadId', $post)) {
-                $request_string = $request_string . '"' . $post['threadId'] . '"';
-            } else
-                return response('', 404);
-
-            if (array_key_exists('author', $post)) {
-                $request_string = $request_string . ' , "' . $post['author'] . '"';
-            } else
-                return response('', 404);
-
-            if (array_key_exists('likedFrom', $post)) {
-                $request_string = $request_string . ' , "' . json_encode($post['likedFrom']) . '"';
-            } else
-                $request_string = $request_string . ' , "[]"';
-
-            if (array_key_exists('content', $post)) {
-                $request_string = $request_string . ' , "' . $post['content'] . '"';
-            } else
-                $request_string = $request_string . ' , ""';
-
+            $request_string = self::createCreateRequestString($post);
+            if (is_a($request_string, 'Illuminate\Http\Response')) {
+                return $request_string;
+            }
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ',date(),date()) RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -140,19 +122,10 @@ class PostController extends Controller
 
         $post = $request->all();
         if ($post['id'] === (int) $post_id) {
-            $request_string = 'update posts set id = ' . (int) $post_id;
-            if (array_key_exists('author', $post)) {
-                $request_string = $request_string . ' , author = "' . $post['author'] . '"';
-            }
-            if (array_key_exists('likedFrom', $post)) {
-                $request_string = $request_string . ' , liked_from = "' . json_encode($post['likedFrom']) . '"';
-            }
-            if (array_key_exists('content', $post)) {
-                $request_string = $request_string . ' , content = "' . $post['content'] . '"';
-            }
+
+            $request_string = self::createUpdateRequestString($post, $post_id);
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -188,5 +161,47 @@ class PostController extends Controller
             return new PostResource($post);
         }
         return response('', 404);
+    }
+
+    public function createCreateRequestString(array $post)
+    {
+
+        $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
+        if (array_key_exists('threadId', $post)) {
+            $request_string = $request_string . '"' . $post['threadId'] . '"';
+        } else
+            return response('', 404);
+
+        if (array_key_exists('author', $post)) {
+            $request_string = $request_string . ' , "' . $post['author'] . '"';
+        } else
+            return response('', 404);
+
+        if (array_key_exists('likedFrom', $post)) {
+            $request_string = $request_string . ' , "' . json_encode($post['likedFrom']) . '"';
+        } else
+            $request_string = $request_string . ' , "[]"';
+
+        if (array_key_exists('content', $post)) {
+            $request_string = $request_string . ' , "' . $post['content'] . '"';
+        } else
+            $request_string = $request_string . ' , "[]"';
+
+        return $request_string = $request_string . ',date(),date()) RETURNING *;';
+    }
+
+    public function createUpdateRequestString(array $post, $post_id)
+    {
+        $request_string = 'update posts set id = ' . (int) $post_id;
+        if (array_key_exists('author', $post)) {
+            $request_string = $request_string . ' , author = "' . $post['author'] . '"';
+        }
+        if (array_key_exists('likedFrom', $post)) {
+            $request_string = $request_string . ' , liked_from = "' . json_encode($post['likedFrom']) . '"';
+        }
+        if (array_key_exists('content', $post)) {
+            $request_string = $request_string . ' , content = "' . $post['content'] . '"';
+        }
+        return $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
     }
 }

@@ -55,34 +55,14 @@ class ThreadController extends Controller
     {
         $thread = $request->all();
         if ($thread['categoryId'] === (int) $category_id) {
-            $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
-            if (array_key_exists('categoryId', $thread)) {
-                $request_string = $request_string . '"' . $thread['categoryId'] . '"';
-            } else
-                return response('', 404);
 
-            if (array_key_exists('title', $thread)) {
-                $request_string = $request_string . ', "' . $thread['title'] . '"';
-            } else
-                return response('', 404);
+            $request_string = self::createCreateRequestString($thread);
 
-            if (array_key_exists('likedFrom', $thread)) {
-                $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
-            } else
-                $request_string = $request_string . ' , "[]"';
-
-            if (array_key_exists('author', $thread)) {
-                $request_string = $request_string . ' , "' . $thread['author'] . '"';
-            } else
-                return response('', 404);
-
-            if (array_key_exists('posts', $thread)) {
-                $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
-            } else
-                $request_string = $request_string . ' , "[]"';
+            if (is_a($request_string, 'Illuminate\Http\Response')) {
+                return $request_string;
+            }
 
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ',date(),date()) RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -159,22 +139,8 @@ class ThreadController extends Controller
 
         $thread = $request->all();
         if ($thread['id'] === (int) $thread_id) {
-            $request_string = 'update threads set id = ' . (int) $thread_id;
-            if (array_key_exists('title', $thread)) {
-                $request_string = $request_string . ', title = "' . $thread['title'] . '"';
-            }
-            if (array_key_exists('likedFrom', $thread)) {
-                $request_string = $request_string . ' , liked_from = "' . json_encode($thread['likedFrom']) . '"';
-            }
-            if (array_key_exists('author', $thread)) {
-                $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
-            }
-            if (array_key_exists('posts', $thread)) {
-                $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
-            }
-
+            $request_string = self::createUpdateRequestString($thread, $thread_id);
             $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $request_string = $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
             $sqlres = $db->query($request_string);
 
             foreach ($this->sqlite_keywords as $keyword) {
@@ -264,5 +230,55 @@ class ThreadController extends Controller
         }
 
         return $thread_array;
+    }
+
+    public function createCreateRequestString(array $thread)
+    {
+        $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
+        if (array_key_exists('categoryId', $thread)) {
+            $request_string = $request_string . '"' . $thread['categoryId'] . '"';
+        } else
+            return response('', 404);
+
+        if (array_key_exists('title', $thread)) {
+            $request_string = $request_string . ', "' . $thread['title'] . '"';
+        } else
+            return response('', 404);
+
+        if (array_key_exists('likedFrom', $thread)) {
+            $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
+        } else
+            $request_string = $request_string . ' , "[]"';
+
+        if (array_key_exists('author', $thread)) {
+            $request_string = $request_string . ' , "' . $thread['author'] . '"';
+        } else
+            return response('', 404);
+
+        if (array_key_exists('posts', $thread)) {
+            $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
+        } else
+            $request_string = $request_string . ' , "[]"';
+
+        return $request_string = $request_string . ',date(),date()) RETURNING *;';
+    }
+
+    public function createUpdateRequestString(array $thread, $thread_id)
+    {
+        $request_string = 'update threads set id = ' . (int) $thread_id;
+        if (array_key_exists('title', $thread)) {
+            $request_string = $request_string . ', title = "' . $thread['title'] . '"';
+        }
+        if (array_key_exists('likedFrom', $thread)) {
+            $request_string = $request_string . ' , liked_from = "' . json_encode($thread['likedFrom']) . '"';
+        }
+        if (array_key_exists('author', $thread)) {
+            $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
+        }
+        if (array_key_exists('posts', $thread)) {
+            $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
+        }
+
+        return $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
     }
 }
