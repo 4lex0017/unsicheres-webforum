@@ -77,7 +77,11 @@ export class SearchComponent implements OnInit {
   }
 
   getParaFromResponseUrl(url: string) {
-    return url.replace("/search?q=", "");
+    url = url.replace("/search?q=", "");
+    url = url.replace("/search/users?q=", "");
+    url = url.replace("/search/threads?q=", "");
+    url = url.replace("/search/posts?q=", "");
+    return url;
   }
 
   cutPostContent(content: string): string {

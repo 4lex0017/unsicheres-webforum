@@ -1,7 +1,7 @@
 export interface Search {
-  users: SearchUsers[]
-  threads: SearchThreads[]
-  posts: SearchPosts[]
+  users?: SearchUsers[]
+  threads?: SearchThreads[]
+  posts?: SearchPosts[]
 }
 
 

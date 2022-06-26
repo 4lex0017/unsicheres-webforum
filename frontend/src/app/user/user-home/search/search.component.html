@@ -37,7 +37,7 @@
       </mat-card-title>
     </mat-card-header>
 
-    <div *ngIf="search.threads.length>0">
+    <div *ngIf="search.threads && search.threads.length>0">
       <mat-list>
         <div mat-subheader>Threads: Found {{search.threads.length}} results.</div>
         <mat-list-item *ngFor="let thread of search.threads">
@@ -49,7 +49,7 @@
       </mat-list>
     </div>
 
-    <div *ngIf="search.posts.length>0">
+    <div *ngIf="search.posts && search.posts.length>0">
       <mat-list>
         <div mat-subheader>Posts: Found {{search.posts.length}} results.</div>
         <mat-list-item *ngFor="let post of search.posts">
@@ -61,7 +61,7 @@
       </mat-list>
     </div>
 
-    <div *ngIf="search.users.length>0">
+    <div *ngIf="search.users && search.users.length>0">
       <mat-list>
         <div mat-subheader>Users: Found {{search.users.length}} results.</div>
         <mat-list-item *ngFor="let user of search.users">
