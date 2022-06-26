@@ -25,6 +25,7 @@ import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {UserFullBackend} from "../models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
+import {UserComment} from "../models/comment";
 
 
 @Injectable({
@@ -93,6 +94,19 @@ export class BackendCommunicationService {
         "profilePicture": user.profilePicture,
       };
     return this.httpClient.put<any>(this.url + '/users/' + user.id, userPayload, {observe: 'response'});
+  }
+
+  //post comment
+  postCommentOnProfile(commentedOnProfileId: number, userId: number, commentContent: string): Observable<HttpResponse<any>> {
+    let commentPayload =
+      {
+        "author": userId,
+        "content": commentContent
+      };
+    return this.httpClient.post<any>(this.url + '/profileComments/' + commentedOnProfileId, commentPayload, {
+      observe: 'response',
+      headers: {"Content-Type": "application/json"}
+    });
   }
 
   //authenticateUser(password: string):cookie{}

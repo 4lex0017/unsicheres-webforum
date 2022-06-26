@@ -59,7 +59,8 @@
             </div>
             <mat-divider></mat-divider>
           </mat-list-item>
-          <button color="primary" mat-mini-fab matTooltip="Add a comment" (click)="openCreateComment()">
+          <button color="primary" mat-mini-fab matTooltip="Add a comment"
+                  (click)="openCreateComment(userFullObject.id)">
             <mat-icon>library_add</mat-icon>
           </button>
         </mat-list>

@@ -157,20 +157,16 @@ export class UserProfileViewComponent implements OnInit {
     });
   }
 
-  openCreateComment(): void {
+  openCreateComment(profileId: number): void {
     const dialogRef = this.dialog.open(DialogCreateCommentComponent, {
       width: '65%',
       data: ""
     });
-    dialogRef.afterClosed().subscribe(result => {
-      this.createComment(result);
+    dialogRef.afterClosed().subscribe(content => {
+      this.backendServiceCom.postCommentOnProfile(profileId, this.authenticate.getCurrentUserId(), content).subscribe()
     });
   }
 
-  createComment(content: string): void {
-    this.authenticate.getCurrentUserId();
-    //  BACKEND POST /user/userView/comments -> enthält curUserId + content
-  }
 
   injectContentToDomStartup(): void {
     for (let i = 0; i < this.userFullArrayModel.data.length; i++) {
