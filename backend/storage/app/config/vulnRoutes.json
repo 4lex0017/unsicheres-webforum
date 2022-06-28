@@ -1,37 +1,107 @@
 {
     "sqli": [
-        {"route": "/search"},
-        {"route": "/search/users"},
-        {"route": "/search/posts"},
-        {"route": "/search/threads"},
-        {"route": "/users"},
-        {"route": "/categories/{int}/threads"},
-        {"route": "/threads/{int}"},
-        {"route": "/threads/{int}/posts"},
-        {"route": "/threads/{int}/posts/{int}"}
+        {
+            "route": "/search"
+        },
+        {
+            "route": "/search/users"
+        },
+        {
+            "route": "/search/posts"
+        },
+        {
+            "route": "/search/threads"
+        },
+        {
+            "route": "/users"
+        },
+        {
+            "route": "/categories/{int}/threads"
+        },
+        {
+            "route": "/threads/{int}"
+        },
+        {
+            "route": "/threads/{int}/posts"
+        },
+        {
+            "route": "/threads/{int}/posts/{int}"
+        }
     ],
     "qsqli": [
-        {"route": "/users/{int}"},
-        {"route": "/categories/{int}"},
-        {"route": "/categories/{int}/threads"},
-        {"route": "/threads/{int}"}
+        {
+            "route": "/users/{int}"
+        },
+        {
+            "route": "/categories/{int}"
+        },
+        {
+            "route": "/categories/{int}/threads"
+        },
+        {
+            "route": "/threads/{int}"
+        }
     ],
     "rxss": [
-        {"route": "/search"},
-        {"route": "/search/users"},
-        {"route": "/search/posts"},
-        {"route": "/search/threads"}
+        {
+            "route": "/search"
+        },
+        {
+            "route": "/search/users"
+        },
+        {
+            "route": "/search/posts"
+        },
+        {
+            "route": "/search/threads"
+        }
     ],
     "sxss": [
-        {"route": "/users"},
-        {"route": "/users/{int}"},
-        {"route": "/categories/{int}/threads"},
-        {"route": "/threads/{int}"},
-        {"route": "/threads/{int}/posts"},
-        {"route": "/threads/{int}/posts/{int}"}
+        {
+            "route": "/users"
+        },
+        {
+            "route": "/users/{int}"
+        },
+        {
+            "route": "/categories/{int}/threads"
+        },
+        {
+            "route": "/threads/{int}"
+        },
+        {
+            "route": "/threads/{int}/posts"
+        },
+        {
+            "route": "/threads/{int}/posts/{int}"
+        }
     ],
     "cmdi": [
-        {"route": "/users/{int}"},
-        {"route": "/register"}
+        {
+            "route": "/users/{int}"
+        },
+        {
+            "route": "/register"
+        }
+    ],
+    "fend": [
+        {
+            "route": "/users"
+        },
+        {
+            "route": "/users/{int}"
+        },
+        {
+            "route": "/categories/{int}/threads"
+        },
+        {
+            "route": "/threads/{int}"
+        },
+        {
+            "route": "/threads/{int}/posts"
+        },
+        {
+            "route": "/threads/{int}/posts/{int}"
+        }
     ]
 }

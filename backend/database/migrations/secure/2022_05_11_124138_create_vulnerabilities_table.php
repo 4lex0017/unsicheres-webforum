@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('rxss_difficulty');
             $table->integer('sqli_difficulty');
             $table->integer('cmdi_difficulty');
+            $table->integer('fend_difficulty');
             $table->timestamps();
         });
     }

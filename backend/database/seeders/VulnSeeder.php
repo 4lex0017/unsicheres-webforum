@@ -22,6 +22,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/search/users',
@@ -29,6 +30,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/search/threads',
@@ -36,6 +38,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/search/posts',
@@ -43,6 +46,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/users',
@@ -50,6 +54,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/users/{int}',
@@ -57,6 +62,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/sitecontent/users',
@@ -64,6 +70,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/categories',
@@ -71,6 +78,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/categories/{int}',
@@ -78,6 +86,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/categories/{int}/threads',
@@ -85,6 +94,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/threads/{int}',
@@ -92,6 +102,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/threads/{int}/posts',
@@ -99,6 +110,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/threads/{int}/posts/{int}',
@@ -106,6 +118,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/register',
@@ -113,6 +126,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
             [
                 'uri' => '/login',
@@ -120,6 +134,7 @@ class VulnSeeder extends Seeder
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
                 'cmdi_difficulty' => 4,
+                'fend_difficulty' => 4,
             ],
         ]);
     }

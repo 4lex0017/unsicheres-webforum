@@ -22,6 +22,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'rxss', 1, $config);
         $this->updateChecked($content, 'sxss', 2, $config);
         $this->updateChecked($content, 'cmdi', 3, $config);
+        $this->updateChecked($content, 'fend', 4, $config);
 
         return response()->json($content);
     }
@@ -168,6 +169,9 @@ class AdminController extends Controller
             case 4:
                 $type = 'cmdi';
                 break;
+            case 5:
+                $type = 'fend';
+                break;
             default:
                 abort(400);
         }
@@ -215,10 +219,28 @@ class AdminController extends Controller
             if (sizeof($routes) == 0) {
                 break;
             }
-            $key = array_rand($routes);
-            while ($routes[$key] == null) {
+            do {
+                $is_in_arr = true;
                 $key = array_rand($routes);
+                //TODO: refactor to make this prettier
+                if($type == 'fend') {
+                    $sxss_difficulty = $routes[$key] == null ?
+                        4 :
+                        DB::connection('secure')
+                            ->table('vulnerabilities')
+                            ->where('uri', $routes[$key]['route'])
+                            ->value('sxss_difficulty');
+                    if($sxss_difficulty != 4) {
+                        unset($routes[$key]);
+                        if(sizeof($routes) == 0) {
+                            return;
+                        }
+                        continue;
+                    }
+                }
+                $is_in_arr = $routes[$key] == null;
             }
+            while ($is_in_arr);
             $route = $routes[$key]['route'];
             DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulty]);
             unset($routes[$key]);
@@ -233,12 +255,23 @@ class AdminController extends Controller
      */
     public function writeRemainingRoutes(mixed $routes, array $difficulties_used, string $type): void
     {
+        if ($type == 'fend') {
+            return;
+        }
         foreach ($routes as $route) {
             if ($route == null) {
                 continue;
             }
             $key = array_rand($difficulties_used);
-            DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulties_used[$key]]);
+            if($type == 'sxss') {
+                $fend_difficulty = DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->value('fend_difficulty');
+            }
+            else {
+                $fend_difficulty = 4;
+            }
+            if ($fend_difficulty == 4) {
+                DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulties_used[$key]]);
+            }
         }
     }
 
@@ -248,6 +281,7 @@ class AdminController extends Controller
      */
     public function doUpdateConfiguration(mixed $data, mixed $config)
     {
+        $stored = array();
         foreach ($data as $element) {
             $type = $this->getType($element['id']);
 
@@ -265,7 +299,15 @@ class AdminController extends Controller
 
             $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
 
-            $this->writeRemainingRoutes($routes, $difficulties_used, $type);
+            $stored[] = [
+                'diffs' => $difficulties_used,
+                'type' => $type,
+                'routes' => $routes,
+            ];
+
+        }
+        foreach ($stored as $element) {
+            $this->writeRemainingRoutes($element['routes'], $element['diffs'], $element['type']);
         }
     }
 }
