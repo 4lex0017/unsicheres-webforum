@@ -51,13 +51,13 @@
                 {
                     "id": 3,
                     "state": "Hard",
-                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in URL filtered out once",
+                    "description": "<script> tags filtered out repeatedly",
                     "checked": false
                 },
                 {
                     "id": 4,
                     "state": "Impossible",
-                    "description": "<script> tags and </> characters filtered out repeatedly",
+                    "description": "all < and > are filtered out",
                     "checked": false
                 }
             ]
@@ -82,13 +82,13 @@
                 {
                     "id": 3,
                     "state": "Hard",
-                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once",
+                    "description": "<script> tags filtered out repeatedly",
                     "checked": false
                 },
                 {
                     "id": 4,
                     "state": "Impossible",
-                    "description": "<script> tags and </> characters filtered out repeatedly",
+                    "description": "all < and > are filtered out",
                     "checked": false
                 }
             ]
@@ -113,7 +113,7 @@
                 {
                     "id": 3,
                     "state": "Hard",
-                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once",
+                    "description": "<script> tags filtered out repeatedly",
                     "checked": false
                 },
                 {
