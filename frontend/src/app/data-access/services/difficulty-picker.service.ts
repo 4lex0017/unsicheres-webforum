@@ -35,6 +35,14 @@ export class DifficultyPickerService {
 
   }
 
+
+  // change vEnabled to number with this mapping
+  // 0 == false
+  // 1 == true (backend)
+  // 2 == frontend easy
+  // 3 == frontend normal
+  // 4 == frontend hard
+
   isEnabledInConfig(str: string): boolean {
     this.updateConfig()
 
@@ -52,16 +60,20 @@ export class DifficultyPickerService {
   }
 
 
-  // filterTagsEasy(content: string): string {
-  //   return content.replace("<script>", "");
-  // }
-  //
-  // filterTagsHard(content: string): string {
-  //   if (content.includes("<script>")) {
-  //     return this.filterTagsHard(content.replace("<script>", ""));
-  //   } else {
-  //     return content;
-  //   }
-  //
-  // }
+  frontendFilterTagsNormal(content: string): string {
+    return content.replace("<script>", "");
+  }
+
+  frontendFilterTagsHard(content: string): string {
+    if (content.includes("<script>")) {
+      return this.frontendFilterTagsHard(content.replace("<script>", ""));
+    } else if (content.includes("<") || content.includes(">") || content.includes("/")) {
+      let filtered = content.replace("<", "");
+      filtered = filtered.replace(">", "");
+      return this.frontendFilterTagsHard(filtered.replace("/", ""));
+    } else {
+      return content;
+    }
+
+  }
 }

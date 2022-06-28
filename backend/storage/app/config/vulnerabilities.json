@@ -5,32 +5,123 @@
             "name": "SQL Injection",
             "description": "Allow Requests to inject arbitrary SQL in request body or URL",
             "subtasks": [
-                {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
-                {"id":  2, "state":  "Medium", "description": "Escape strings such as '); or '; filtered out once", "checked":  false},
-                {"id":  3, "state":  "Hard", "description": "Escape string filtered out repeatedly, SQLite keywords in URL filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "Escape string and keywords filtered out repeatedly", "checked": false}
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "Escape strings such as '); or '; filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "Escape string filtered out repeatedly, SQLite keywords in URL filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 4,
+                    "state": "Impossible",
+                    "description": "Escape string and keywords filtered out repeatedly",
+                    "checked": false
+                }
             ]
         },
         {
             "id": 2,
-            "name": "Reflected XSS",
+            "name": "Reflected XSS (Backend)",
             "description": "Allow Requests to contain JavaScript inside the URL",
             "subtasks": [
-                {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
-                {"id":  2, "state":  "Medium", "description": "<script> tags are filtered out once", "checked":  false},
-                {"id":  3, "state":  "Hard", "description": "<script> tags filtered out repeatedly, '<'/'>' characters in URL filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly", "checked": false}
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "<script> tags are filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in URL filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 4,
+                    "state": "Impossible",
+                    "description": "<script> tags and </> characters filtered out repeatedly",
+                    "checked": false
+                }
             ]
         },
         {
             "id": 3,
-            "name": "Stored XSS",
-            "description": "Allow posted contents to contain JavaScript",
+            "name": "Stored XSS (Backend)",
+            "description": "Allow posted contents to contain JavaScript, filtered in backend",
             "subtasks": [
-                {"id":  1, "state":  "Easy", "description": "No filtering whatsoever", "checked":  false},
-                {"id":  2, "state":  "Medium", "description": "<script> tags are filtered out once", "checked":  false},
-                {"id":  3, "state":  "Hard", "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once", "checked":  false},
-                {"id":  4, "state":  "Impossible", "description": "<script> tags and </> characters filtered out repeatedly", "checked": false}
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "<script> tags are filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 4,
+                    "state": "Impossible",
+                    "description": "<script> tags and </> characters filtered out repeatedly",
+                    "checked": false
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Stored XSS (Frontend)",
+            "description": "Allow posted contents to contain JavaScript, filtered in frontend",
+            "subtasks": [
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "<script> tags are filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "<script> tags filtered out repeatedly, '<'/'>' characters in text filtered out once",
+                    "checked": false
+                },
+                {
+                    "id": 4,
+                    "state": "Impossible",
+                    "description": "No filtering, but use of Angular directive to forbid script execution.",
+                    "checked": false
+                }
             ]
         },
         {
@@ -38,9 +129,24 @@
             "name": "Command Injection",
             "description": "upload non-image files as profile pictures",
             "subtasks": [
-                {"id": 1, "state": "Easy", "description": "No filtering whatsoever", "checked": false},
-                {"id": 2, "state": "Medium", "description": "file type is validated using file extension", "checked": false},
-                {"id": 3, "state": "Impossible", "description": "file type is validated using magic bytes", "checked": false}
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "file type is validated using file extension",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Impossible",
+                    "description": "file type is validated using magic bytes",
+                    "checked": false
+                }
             ]
         }
     ]
