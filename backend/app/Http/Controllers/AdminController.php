@@ -254,8 +254,11 @@ class AdminController extends Controller
                 list($routes, $keys_left) = $this->checkRouteIsNotUsed($routes, $key, $keys_left);
             }
 
-            $is_in_arr = $routes[$key] == null;
-        } while ($is_in_arr && $keys_left == true);
+            $not_in_arr = array_key_exists($key, $routes) == false;
+            if($not_in_arr == false) {
+                $not_in_arr = $routes[$key] == null;
+            }
+        } while ($not_in_arr && $keys_left);
 
         return array($keys_left, $key, $routes);
     }
