@@ -94,6 +94,31 @@
             ]
         },
         {
+            "id": 4,
+            "name": "Command Injection",
+            "description": "upload non-image files as profile pictures",
+            "subtasks": [
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No filtering whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "file type is validated using file extension",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Impossible",
+                    "description": "file type is validated using magic bytes",
+                    "checked": false
+                }
+            ]
+        },
+        {
             "id": 5,
             "name": "Stored XSS (Frontend)",
             "description": "Allow posted contents to contain JavaScript, filtered in frontend",
@@ -120,31 +145,6 @@
                     "id": 4,
                     "state": "Impossible",
                     "description": "No filtering, but use of Angular directive to forbid script execution.",
-                    "checked": false
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "name": "Command Injection",
-            "description": "upload non-image files as profile pictures",
-            "subtasks": [
-                {
-                    "id": 1,
-                    "state": "Easy",
-                    "description": "No filtering whatsoever",
-                    "checked": false
-                },
-                {
-                    "id": 2,
-                    "state": "Medium",
-                    "description": "file type is validated using file extension",
-                    "checked": false
-                },
-                {
-                    "id": 3,
-                    "state": "Impossible",
-                    "description": "file type is validated using magic bytes",
                     "checked": false
                 }
             ]
