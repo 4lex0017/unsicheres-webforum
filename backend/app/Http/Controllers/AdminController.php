@@ -6,13 +6,17 @@ use App\Models\Vulnerability;
 use Illuminate\Http\Request;
 use App\Http\Resources\ConfigResource;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function getSupportedVulnerabilities()
+    /**
+     * get list of supported vulnerabilities and which difficulties are in use
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSupportedVulnerabilities(): \Illuminate\Http\JsonResponse
     {
         $json = Storage::disk('local')->get('/config/vulnerabilities.json');
         $config = json_decode(Storage::disk('local')->get('/config/vulnRoutes.json'), true);
@@ -27,25 +31,70 @@ class AdminController extends Controller
         return response()->json($content);
     }
 
+    /**
+     * check which difficulties of type are in use
+     *
+     * @param array $content
+     * @param string $type
+     * @param int $id
+     * @param array $config
+     * @return void
+     */
     private function updateChecked(array &$content, string $type, int $id, array $config)
     {
         $routes = $this->getRoutes($config, $type);
         $used_difficulties = array();
+
         foreach ($routes as $route) {
-            $difficulty = DB::connection('secure')
-                ->table('vulnerabilities')
-                ->where('uri', $route)
-                ->value($type . '_difficulty');
+            $difficulty = $this->getDifficultyOfRouteAndType($route, $type);
             if (in_array($difficulty, $used_difficulties) == false) {
                 $used_difficulties[] = $difficulty;
             }
         }
+
         foreach ($used_difficulties as $difficulty) {
             $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
         }
     }
 
-    public function updateConfiguration(Request $request)
+    /**
+     * return all routes where $type is possible
+     *
+     * @param mixed $config
+     * @param string $type
+     * @return array|mixed
+     */
+    public function getRoutes(mixed $config, string $type): mixed
+    {
+        $routes = $config[$type];
+        if ($type == 'sqli') {
+            $routes = array_merge($routes, $config['qsqli']);
+        }
+        return $routes;
+    }
+
+    /**
+     * return single difficulty
+     *
+     * @param mixed $route
+     * @param string $type
+     * @return mixed|null
+     */
+    public function getDifficultyOfRouteAndType(mixed $route, string $type): mixed
+    {
+        return DB::connection('secure')
+            ->table('vulnerabilities')
+            ->where('uri', $route)
+            ->value($type . '_difficulty');
+    }
+
+    /**
+     * change used difficulties
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function updateConfiguration(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $config = json_decode(Storage::disk('local')->get('/config/vulnRoutes.json'), true);
         $data = json_decode($request->getContent(), true)['data'];
@@ -58,116 +107,46 @@ class AdminController extends Controller
         return $this->getConfiguration();
     }
 
-    public function getConfiguration()
+    /**
+     * logic of updateConfiguration()
+     *
+     * @param mixed $data
+     * @param mixed $config
+     */
+    public function doUpdateConfiguration(mixed $data, mixed $config)
     {
-        return ConfigResource::collection(Vulnerability::all());
-    }
+        $stored = array();
+        foreach ($data as $element) {
+            $type = $this->getType($element['id']);
 
-    public function getSingleRoute(Request $request)
-    {
-        $route = $request->query('r');
-        if ($route == null) {
-            abort(400);
-        }
-        $route = trim($route);
-        Log::debug($route);
-        $result = DB::connection('secure')
-            ->table('vulnerabilities')
-            ->where('uri', $route)
-            ->select(['sxss_difficulty', 'fend_difficulty'])
-            ->get();
-        Log::debug($result);
-        return $result;
-    }
+            $max_difficulty = $type == 'cmdi' ? 3 : 4;
 
-    public function getScoreboard()
-    {
-        $attackers = $this->getAllAttackers();
-        $attackers_with_values = array();
+            $this->resetDifficulty($type, $max_difficulty);
 
-        foreach ($attackers as $attacker) {
-            $found_vulns = $this->getFoundVulnsOfAttacker($attacker);
+            $routes = $this->getRoutes($config, $type);
 
-            $vulns_of_attacker = array();
-            foreach ($found_vulns as $vuln) {
-                $uri = $this->getUri($vuln->vulnerability_id);
-
-                $vulns_of_attacker[] = [
-                    'vulName' => $vuln->vuln_type,
-                    'vulLevel' => $vuln->difficulty,
-                    'uri' => $uri,
-                ];
+            if (sizeof($element['difficulty']) != $max_difficulty) {
+                abort(400);
             }
-            $attackers_with_values[] = [
-                'ipaddress' => $attacker->ip_address,
-                'username' => $attacker->name,
-                'vulnerabilities' => $vulns_of_attacker,
+
+            $difficulties_used = $this->getDifficultiesUsed($element['difficulty']);
+
+            $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
+
+            $stored[] = [
+                'diffs' => $difficulties_used,
+                'type' => $type,
+                'routes' => $routes,
             ];
         }
-        return response()->json($attackers_with_values);
-    }
-
-    public function getUri($vulnerability_id)
-    {
-        return DB::connection('secure')->table('vulnerabilities')->where('vulnerability_id', $vulnerability_id)->value('uri');
-    }
-
-    public function resetScoreboard()
-    {
-        DB::connection('secure')->unprepared("DELETE FROM found_vulnerabilities;");
-        DB::connection('secure')->unprepared("VACUUM;");
-        return response()->noContent();
-    }
-
-    public function resetDatabase()
-    {
-        $this->resetDB();
-        return response()->noContent();
-    }
-
-    public function putAttackerName(Request $request)
-    {
-        DB::connection('secure')
-            ->table('attackers')
-            ->updateOrInsert(
-                ['ip_address' => $request->ip()],
-                ['name' => $request->json()->get('name')]
-            );
-    }
-
-    function resetDB(): void
-    {
-        Artisan::call('migrate:refresh', [
-            '--path' => '/database/migrations/insecure',
-            '--seed' => true,
-        ]);
+        foreach ($stored as $element) {
+            $this->writeRemainingRoutes($element['routes'], $element['diffs'], $element['type']);
+        }
     }
 
     /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getAllAttackers(): \Illuminate\Support\Collection
-    {
-        $attackers = DB::connection('secure')->table('attackers')
-            ->select(['ip_address', 'name', 'attacker_id'])
-            ->get();
-        return $attackers;
-    }
-
-    /**
-     * @param mixed $attacker
-     * @return \Illuminate\Support\Collection
-     */
-    public function getFoundVulnsOfAttacker(mixed $attacker): \Illuminate\Support\Collection
-    {
-        $found_vulns = DB::connection('secure')->table('found_vulnerabilities')
-            ->where('attacker_id', '=', $attacker->attacker_id)
-            ->select(['difficulty', 'vuln_type', 'vulnerability_id'])
-            ->get();
-        return $found_vulns;
-    }
-
-    /**
+     * get vulnerability type from $id
+     *
      * @param $id
      * @return string
      */
@@ -196,74 +175,136 @@ class AdminController extends Controller
     }
 
     /**
-     * @param mixed $config
+     * reset difficulty of $type to $max_difficulty for all routes
+     *
      * @param string $type
-     * @return array|mixed
+     * @param int $max_difficulty
+     * @return void
      */
-    public function getRoutes(mixed $config, string $type): mixed
+    public function resetDifficulty(string $type, int $max_difficulty): void
     {
-        $routes = $config[$type];
-        if ($type == 'sqli') {
-            $routes = array_merge($routes, $config['qsqli']);
-        }
-        return $routes;
+        DB::connection('secure')
+            ->table('vulnerabilities')
+            ->update([$type . '_difficulty' => $max_difficulty]);
     }
 
     /**
+     * get array of used difficulties as numbers from boolean array
+     *
      * @param $difficulty
      * @return array
      */
     public function getDifficultiesUsed($difficulty): array
     {
         $difficulties_used = array();
+
         for ($i = 1; $i <= sizeof($difficulty); $i++) {
             if ($difficulty[$i]) {
                 $difficulties_used[$i] = $i;
             }
         }
+
         return $difficulties_used;
     }
 
     /**
+     * find a route for each difficulty and sets it to that difficulty.
+     * used to ensure every active difficulty has at least one active route.
+     *
      * @param array $difficulties_used
      * @param string $type
      * @param mixed $routes
      * @return void
      */
-    public function writeOneRouteForEachDifficulty(array &$difficulties_used, string $type, mixed &$routes)
+    public function writeOneRouteForEachDifficulty(array &$difficulties_used, string $type, mixed &$routes): void
     {
         foreach ($difficulties_used as $difficulty) {
             if (sizeof($routes) == 0) {
                 break;
             }
-            do {
-                $is_in_arr = true;
-                $key = array_rand($routes);
-                //TODO: refactor to make this prettier
-                if ($type == 'fend') {
-                    $sxss_difficulty = $routes[$key] == null ?
-                        4 :
-                        DB::connection('secure')
-                            ->table('vulnerabilities')
-                            ->where('uri', $routes[$key]['route'])
-                            ->value('sxss_difficulty');
-                    if ($sxss_difficulty != 4) {
-                        unset($routes[$key]);
-                        if (sizeof($routes) == 0) {
-                            return;
-                        }
-                        continue;
-                    }
-                }
-                $is_in_arr = $routes[$key] == null;
-            } while ($is_in_arr);
+
+            list($keys_left, $key, $routes) = $this->getRouteForDifficulty($routes, $type);
+            if($keys_left == false) {
+                break;
+            }
+
             $route = $routes[$key]['route'];
-            DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulty]);
+
+            $this->writeDifficultyForRoute($route, $type, $difficulty);
+
             unset($routes[$key]);
         }
     }
 
     /**
+     * find a route in $routes that isn't used yet
+     * needs to do additional check for frontend filter to avoid clashes with the backend xss filter
+     *
+     * @param mixed $routes
+     * @param string $type
+     * @return array
+     */
+    public function getRouteForDifficulty(mixed $routes, string $type): array
+    {
+        $keys_left = true;
+        do {
+            $key = array_rand($routes);
+
+            if ($type == 'fend') {
+                list($routes, $keys_left) = $this->checkRouteIsNotUsed($routes, $key, $keys_left);
+            }
+
+            $is_in_arr = $routes[$key] == null;
+        } while ($is_in_arr && $keys_left == true);
+
+        return array($keys_left, $key, $routes);
+    }
+
+    /**
+     * check whether sxss difficulty of given route is set to something other than 0 to avoid clashes
+     *
+     * @param mixed $routes
+     * @param int|array|string $key
+     * @param bool $keys_left
+     * @return array
+     */
+    public function checkRouteIsNotUsed(mixed $routes, int|array|string $key, bool $keys_left): array
+    {
+        $sxss_difficulty = $routes[$key] == null ?
+            4 :
+            $this->getDifficultyOfRouteAndType($routes[$key]['route'], 'sxss');
+
+        if ($sxss_difficulty != 4) {
+            unset($routes[$key]);
+            if (sizeof($routes) == 0) {
+                $keys_left = false;
+            }
+        }
+
+        return array($routes, $keys_left);
+    }
+
+    /**
+     * write difficulty for a route to DB
+     *
+     * @param mixed $route
+     * @param string $type
+     * @param mixed $difficulty
+     * @return void
+     */
+    public function writeDifficultyForRoute(mixed $route, string $type, mixed $difficulty): void
+    {
+        DB::connection('secure')
+            ->table('vulnerabilities')
+            ->where('uri', $route)
+            ->update([$type . '_difficulty' => $difficulty]);
+    }
+
+    /**
+     * fill up remaining routes with used difficulties.
+     * doesn't fill up more routes than necessary for the frontend filter and includes extra checks for the backend
+     * sxss filter to avoid clashes.
+     *
      * @param mixed $routes
      * @param array $difficulties_used
      * @param string $type
@@ -274,55 +315,208 @@ class AdminController extends Controller
         if ($type == 'fend') {
             return;
         }
+
         foreach ($routes as $route) {
             if ($route == null) {
                 continue;
             }
             $key = array_rand($difficulties_used);
+
+            $can_write_to_route = true;
             if ($type == 'sxss') {
-                $fend_difficulty = DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->value('fend_difficulty');
-            } else {
-                $fend_difficulty = 4;
+                $can_write_to_route = $this->getDifficultyOfRouteAndType($route, 'fend') == 4;
             }
-            if ($fend_difficulty == 4) {
-                DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulties_used[$key]]);
+
+            if ($can_write_to_route) {
+                $this->writeDifficultyForRoute($route, $type, $difficulties_used[$key]);
             }
         }
     }
 
     /**
-     * @param mixed $data
-     * @param mixed $config
+     * get current configuration of endpoints and filter difficulties
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function doUpdateConfiguration(mixed $data, mixed $config)
+    public function getConfiguration(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $stored = array();
-        foreach ($data as $element) {
-            $type = $this->getType($element['id']);
+        return ConfigResource::collection(Vulnerability::all());
+    }
 
-            $max_difficulty = $type == 'cmdi' ? 3 : 4;
+    /**
+     * get sxss and frontend difficulty for a single route
+     *
+     * @param Request $request
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSingleRoute(Request $request)
+    {
+        $route = $request->query('r');
 
-            DB::connection('secure')->table('vulnerabilities')->update([$type . '_difficulty' => $max_difficulty]);
+        if ($route == null) {
+            abort(400);
+        }
 
-            $routes = $this->getRoutes($config, $type);
+        $route = trim($route);
 
-            if (sizeof($element['difficulty']) != $max_difficulty) {
-                abort(400);
-            }
+        return DB::connection('secure')
+            ->table('vulnerabilities')
+            ->where('uri', $route)
+            ->select(['sxss_difficulty', 'fend_difficulty'])
+            ->get();
+    }
 
-            $difficulties_used = $this->getDifficultiesUsed($element['difficulty']);
+    /**
+     * generate and return the current scoreboard
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getScoreboard()
+    {
+        $attackers = $this->getAllAttackers();
 
-            $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
+        $attackers_with_values = $this->addFoundVulnsToAttackers($attackers);
 
-            $stored[] = [
-                'diffs' => $difficulties_used,
-                'type' => $type,
-                'routes' => $routes,
+        return response()->json($attackers_with_values);
+    }
+
+    /**
+     * get all attackers currently stored in DB
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllAttackers(): \Illuminate\Support\Collection
+    {
+        return DB::connection('secure')
+            ->table('attackers')
+            ->select(['ip_address', 'name', 'attacker_id'])
+            ->get();
+    }
+
+    /**
+     * go through attackers and add their found vulnerabilities so they show up in scoreboard
+     *
+     * @param \Illuminate\Support\Collection $attackers
+     * @return array
+     */
+    public function addFoundVulnsToAttackers(\Illuminate\Support\Collection $attackers): array
+    {
+        $attackers_with_values = array();
+        foreach ($attackers as $attacker) {
+            $found_vulns = $this->getFoundVulnsOfAttacker($attacker);
+
+            $vulns_of_attacker = $this->addUriToFoundVulns($found_vulns);
+
+            $attackers_with_values[] = [
+                'ipaddress' => $attacker->ip_address,
+                'username' => $attacker->name,
+                'vulnerabilities' => $vulns_of_attacker,
             ];
+        }
+        return $attackers_with_values;
+    }
 
+    /**
+     * get found vulnerabilities for one attacker
+     *
+     * @param mixed $attacker
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFoundVulnsOfAttacker(mixed $attacker): \Illuminate\Support\Collection
+    {
+        return DB::connection('secure')
+            ->table('found_vulnerabilities')
+            ->where('attacker_id', '=', $attacker->attacker_id)
+            ->select(['difficulty', 'vuln_type', 'vulnerability_id'])
+            ->get();
+    }
+
+    /**
+     * go through found vulnerabilities and add the uri to each one
+     *
+     * @param \Illuminate\Support\Collection $found_vulns
+     * @return array
+     */
+    public function addUriToFoundVulns(\Illuminate\Support\Collection $found_vulns): array
+    {
+        $vulns_of_attacker = array();
+        foreach ($found_vulns as $vuln) {
+            $uri = $this->getUri($vuln->vulnerability_id);
+
+            $vulns_of_attacker[] = [
+                'vulName' => $vuln->vuln_type,
+                'vulLevel' => $vuln->difficulty,
+                'uri' => $uri,
+            ];
         }
-        foreach ($stored as $element) {
-            $this->writeRemainingRoutes($element['routes'], $element['diffs'], $element['type']);
-        }
+        return $vulns_of_attacker;
+    }
+
+    /**
+     * get uri from vulnerability id
+     *
+     * @param $vulnerability_id
+     * @return mixed|null
+     */
+    public function getUri($vulnerability_id)
+    {
+        return DB::connection('secure')
+            ->table('vulnerabilities')
+            ->where('vulnerability_id', $vulnerability_id)
+            ->value('uri');
+    }
+
+    /**
+     * reset the scoreboard. attackers and config are not affected.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resetScoreboard()
+    {
+        DB::connection('secure')
+            ->unprepared("DELETE FROM found_vulnerabilities;");
+        DB::connection('secure')
+            ->unprepared("VACUUM;");
+        return response()->noContent();
+    }
+
+    /**
+     * reset the insecure database. used in case of breaking vulnerability use.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resetDatabase()
+    {
+        $this->resetDB();
+        return response()->noContent();
+    }
+
+    /**
+     * logic for resetDatabase()
+     *
+     * @return void
+     */
+    function resetDB(): void
+    {
+        Artisan::call('migrate:refresh', [
+            '--path' => '/database/migrations/insecure',
+            '--seed' => true,
+        ]);
+    }
+
+    /**
+     * update attacker name
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function putAttackerName(Request $request)
+    {
+        DB::connection('secure')
+            ->table('attackers')
+            ->updateOrInsert(
+                ['ip_address' => $request->ip()],
+                ['name' => $request->json()->get('name')]
+            );
     }
 }
