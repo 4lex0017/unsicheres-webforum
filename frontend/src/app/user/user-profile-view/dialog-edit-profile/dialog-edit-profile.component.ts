@@ -2,6 +2,7 @@ import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UserFull} from "../../../data-access/models/userFull";
 import {UserProfileViewComponent} from "../user-profile-view.component";
+import {UserFullBackend} from "../../../data-access/models/userFullBackendModel";
 
 @Component({
   selector: 'app-dialog-edit-profile',
@@ -11,30 +12,47 @@ import {UserProfileViewComponent} from "../user-profile-view.component";
 export class DialogEditProfileComponent {
   constructor(
     public dialogRef: MatDialogRef<UserProfileViewComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: UserFull,
+    @Inject(MAT_DIALOG_DATA) public data: UserFullBackend,
   ) {
   }
+
+  location = this.data.location;
+  name = this.data.name;
+  about = this.data.about;
+  profilePicture: string = this.data.profilePicture
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  onAccept(): void {
+    let closeData = {
+      location: this.location,
+      name: this.name,
+      about: this.about,
+      profilePicture: this.profilePicture
+    }
+    this.dialogRef.close(closeData);
+  }
+
   @ViewChild('fileInput') fileInput: ElementRef;
   fileAttr = 'Choose File';
 
-  uploadFileEvt(imgFile: any) {
-    if (imgFile.target.files && imgFile.target.files[0]) {
-      this.fileAttr = '';
-      Array.from(imgFile.target.files).forEach((file: any) => {
-        this.fileAttr += file.name + ' - ';
-      });
+  uploadFileEvent(imgFile: any) {
+    if (imgFile.target.files[0]) {
+      this.fileAttr = imgFile.target.files[0].name;
+      // Array.from(imgFile.target.files).forEach((file: any) => {
+      //   this.fileAttr += file.name + ' - ';
+      // });
       let reader = new FileReader();
       reader.onload = (e: any) => {
         let image = new Image();
-        image.src = e.target.result;
-        image.onload = (rs) => {
-          this.data.profile_picture = e.target.result
-        };
+        console.log("The Name" + e.target.result)
+        this.profilePicture = e.target.result
+        // image.src = e.target.result;
+        // image.onload = (rs) => {
+        //   this.profilePicture = e.target.result
+        // };
       };
       reader.readAsDataURL(imgFile.target.files[0]);
       this.fileInput.nativeElement.value = '';

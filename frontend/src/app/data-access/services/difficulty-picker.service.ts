@@ -67,10 +67,6 @@ export class DifficultyPickerService {
   frontendFilterTagsHard(content: string): string {
     if (content.includes("<script>")) {
       return this.frontendFilterTagsHard(content.replace("<script>", ""));
-    } else if (content.includes("<") || content.includes(">") || content.includes("/")) {
-      let filtered = content.replace("<", "");
-      filtered = filtered.replace(">", "");
-      return this.frontendFilterTagsHard(filtered.replace("/", ""));
     } else {
       return content;
     }

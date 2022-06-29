@@ -124,28 +124,31 @@ export class UserProfileViewComponent implements OnInit {
   openEditProfileDialog(userFullObject: UserFullBackend): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
-      data: {
-        name: userFullObject.name,
-        about: userFullObject.about,
-        profile_picture: userFullObject.profilePicture,
-        location: userFullObject.location
-      },
+      data:
+        {
+          name: userFullObject.name,
+          about: userFullObject.about,
+          profilePicture: userFullObject.profilePicture,
+          location: userFullObject.location
+        },
     });
     dialogRef.afterClosed().subscribe(result => {
-      userFullObject.name = result.name;
-      userFullObject.about = result.about;
-      userFullObject.profilePicture = result.profile_picture;
-      userFullObject.location = result.location;
-      this.backendServiceCom.putUser(userFullObject).subscribe(
+      let newDataModel = {
+        name: result.name,
+        about: result.about,
+        profilePicture: result.profilePicture,
+        location: result.location,
+        id: userFullObject.id
+      }
+      this.backendServiceCom.putUser(newDataModel).subscribe(
         (resp: Data) => {
           console.log(resp)
-          userFullObject = resp["body"].data;
+          userFullObject = resp["body"].data[0];
           this.userFullArrayModel.data.forEach((user, index) => {
             if (user.id === userFullObject.id) {
               this.userFullArrayModel.data[index] = userFullObject;
             }
           });
-
           if (this.vEnabled) this.injectContentToDom(userFullObject);
           console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
@@ -153,7 +156,6 @@ export class UserProfileViewComponent implements OnInit {
             this.didAThing.sendMessage();
           }
         });
-      // if (this.vEnabled) this.injectContentToDom();
     });
   }
 

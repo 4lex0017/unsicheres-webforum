@@ -2,12 +2,12 @@
   <p>Username</p>
   <mat-form-field appearance="fill" class="user-edit-input-container">
     <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="data.name">
+    <input matInput [(ngModel)]="name">
   </mat-form-field>
   <span class="spacer"></span>
   <mat-form-field appearance="fill" class="user-edit-input-container">
     <mat-label>Location</mat-label>
-    <input matInput [(ngModel)]="data.location">
+    <input matInput [(ngModel)]="location">
   </mat-form-field>
   <p>Profile Picture</p>
   <mat-form-field>
@@ -20,11 +20,11 @@
         type="file"
         #fileInput
         id="uploadFile"
-        (change)="uploadFileEvt($event)"
-        name="uploadFile"
-        multiple="multiple"
-        accept="image/*"
-      />
+        (change)="uploadFileEvent($event)"
+        name="uploadFile"/>
+      <!--        multiple="multiple"-->
+      <!--        accept="image/*"-->
+
     </div>
   </mat-form-field>
   <p>About</p>
@@ -33,12 +33,12 @@
               cdkTextareaAutosize
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="10"
-              [(ngModel)]="data.about">
+              [(ngModel)]="about">
 
     </textarea>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
+  <button mat-raised-button color="primary" (click)="onAccept()" cdkFocusInitial>Save changes</button>
   <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
 </div>
