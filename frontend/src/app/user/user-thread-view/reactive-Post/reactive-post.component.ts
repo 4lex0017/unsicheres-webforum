@@ -12,6 +12,7 @@ import {DifficultyPickerService} from "../../../data-access/services/difficulty-
 import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-post.component";
 import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
 import {AllowEditService} from "../../../data-access/services/allowEdit.service";
+import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
 
 @Component({
   selector: 'app-reactive-post',
@@ -39,6 +40,7 @@ export class ReactivePostComponent implements OnInit {
   @Output() replyPostEvent = new EventEmitter<Post>();
   @Output() editPostEvent = new EventEmitter<Post>();
   @Output() moveToReplyBoxEvent = new EventEmitter;
+  @Output() shareEvent = new EventEmitter<number>();
   vEnabled: boolean;
   editing: boolean = false;
   contentArray: any[]
@@ -140,7 +142,7 @@ export class ReactivePostComponent implements OnInit {
     reply.className = "testReply";
     reply.style.borderRadius = '1px';
     reply.style.border = 'solid #0643b8';
-    reply.style.marginLeft = '10%';
+    reply.style.marginLeft = '3%';
     reply.style.width = '80%';
     reply.style.borderLeftWidth = '8px';
     reply.style.borderSpacing = '10px';
@@ -220,6 +222,7 @@ export class ReactivePostComponent implements OnInit {
   }
 
   deserializePost(postString: string): void {
+    //this.deserializePostRegex(postString);
     console.log("Message: " + postString)   //schaun ob Attribute noch da sin
     let stringArray = Array.from(postString);
     let start = 0;
@@ -237,7 +240,7 @@ export class ReactivePostComponent implements OnInit {
           replyFull.className = "testReply";
           replyFull.style.borderRadius = '1px';
           replyFull.style.border = 'solid #0643b8';
-          replyFull.style.marginLeft = '10%';
+          replyFull.style.marginLeft = '3%';
           replyFull.style.width = '80%';
           replyFull.style.borderLeftWidth = '8px';
           replyFull.style.borderSpacing = '10px';
@@ -312,6 +315,42 @@ export class ReactivePostComponent implements OnInit {
     this.contentArray = content;
   }
 
+
+  deserializePostRegex(postString: string): void{
+    let brRegex = new RegExp(/[/b?]/);
+    let replyRegex = new RegExp(/[/r]/);
+    let attibuteRegex = new RegExp(/[/a]/);
+    let stringArray = postString.split(replyRegex);
+    let content: any[] = new Array(0);
+    for(let i = 0; i < stringArray.length; i++){
+      if((Array.from(postString)[1] + Array.from(postString)[2]) == '/a'){
+        let replyArray = stringArray[i].split(attibuteRegex);
+        let blockElement = document.createElement("blockquote");
+        blockElement.setAttribute("id", replyArray[0])
+        let replyContent = replyArray[1].split(brRegex);
+        let user = document.createElement("p");
+        user.textContent = replyContent[0];
+        blockElement.appendChild(user);
+        for(let j = 1; j < replyContent.length; j++){
+          let divElement = document.createElement("div");
+          divElement.textContent = replyContent[i];
+          blockElement.appendChild(divElement);
+        }
+        content.push(blockElement)
+      }else{
+        let line: string[] = stringArray[i].split(brRegex);
+        for(let j = 0; j < line.length; j++){
+          let divElement = document.createElement("div");
+          divElement.textContent = line[i];
+          content.push(divElement);
+        }
+      }
+    }
+    this.contentArray = content;
+  }
+
+
+
   isDiv(element: HTMLElement) {
     if (element.nodeName == "DIV") {
       return true;
@@ -331,5 +370,15 @@ export class ReactivePostComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  openReportDialog(): void {
+    const dialogRef = this.dialog.open(DialogReportPostComponent, {
+      width: '65%',
+    });
+  }
+
+  copyUrl(): void{
+    this.shareEvent.emit(this.postObject.id);
   }
 }

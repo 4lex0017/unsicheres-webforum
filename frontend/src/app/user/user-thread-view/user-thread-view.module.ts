@@ -21,6 +21,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatBadgeModule} from "@angular/material/badge";
 import {ReactivePostComponent} from "./reactive-Post/reactive-post.component";
+import {DialogReportPostComponent} from "./dialog-report-post/dialog-report-post.component";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {ReactivePostComponent} from "./reactive-Post/reactive-post.component";
     DialogEditPostComponent,
     DialogDeletePostComponent,
     DialogDeleteThreadComponent,
+    DialogReportPostComponent,
     PostComponent,
     ReactivePostComponent
   ],

@@ -64,9 +64,9 @@
               matBadgePosition="above before" matBadgeColor="primary">
           <button mat-button (click)="likePostButton()">LIKE</button>
         </span>
-    <button mat-button>SHARE</button>
+    <button mat-button (click)="copyUrl()">SHARE</button>
     <button mat-button (click)="replyPostEvent.emit(postObject);moveToReplyBoxEvent.emit()">REPLY</button>
-    <button mat-button>REPORT</button>
+    <button mat-button (click)="openReportDialog()">REPORT</button>
   </mat-card-actions>
 </mat-card>
 

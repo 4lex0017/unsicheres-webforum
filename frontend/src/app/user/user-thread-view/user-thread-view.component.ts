@@ -154,7 +154,7 @@ export class UserThreadViewComponent implements OnInit {
     reply.className = "testReply";
     reply.style.borderRadius = '1px';
     reply.style.border = 'solid #0643b8';
-    reply.style.marginLeft = '10%';
+    reply.style.marginLeft = '3%';
     reply.style.width = '80%';
     reply.style.borderLeftWidth = '8px';
     reply.style.borderSpacing = '10px';
@@ -244,6 +244,9 @@ export class UserThreadViewComponent implements OnInit {
     }
     console.log(replyString);
     console.log("pushed stuff");
+    if(replyString == "/b?/b?"){
+      return;
+    }
     threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
     while (fullReply!.children.length > 0) {
       fullReply!.removeChild(fullReply!.lastChild!);
@@ -272,7 +275,7 @@ export class UserThreadViewComponent implements OnInit {
           replyFull.className = "testReply";
           replyFull.style.borderRadius = '1px';
           replyFull.style.border = 'solid #0643b8';
-          replyFull.style.marginLeft = '10%';
+          replyFull.style.marginLeft = '3%';
           replyFull.style.width = '80%';
           replyFull.style.borderLeftWidth = '8px';
           replyFull.style.borderSpacing = '10px';
@@ -401,6 +404,11 @@ export class UserThreadViewComponent implements OnInit {
       console.log(this.authenticate.getCurrentUserId())
       threadObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
+  }
+
+  copyUrl(postIDd: number): void{
+    // geht net richtig weils alten #ref auch mit dazu macht -> weg finden ThreadId zu kriegen
+    navigator.clipboard.writeText(window.location.href + "#" + postIDd);
   }
 
 

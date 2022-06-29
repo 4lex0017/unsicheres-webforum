@@ -51,7 +51,8 @@
                          (deletePostEvent)="openDeletePostConsumer(threadObject, $event)"
                          (moveToPostEvent)="moveToPost($event)"
                          (editPostEvent)="currentEdit($event)"
-                         (moveToReplyBoxEvent)="moveToReply(threadObject.id)"></app-reactive-post>
+                         (moveToReplyBoxEvent)="moveToReply(threadObject.id)"
+                         (shareEvent)="copyUrl($event)"></app-reactive-post>
     </div>
 
     <div class="thread-newReply">

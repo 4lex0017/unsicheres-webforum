@@ -1,0 +1,11 @@
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="user-report-textarea-container">
+    <mat-label>Report Message</mat-label>
+    <textarea matInput rows="24" [(ngModel)]="this.data" required></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Send Report
+  </button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
+</div>
