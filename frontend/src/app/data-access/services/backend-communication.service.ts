@@ -224,8 +224,11 @@ export class BackendCommunicationService {
         1: vulnerabilities.vulnerabilities[i].subtasks[0].checked,
         2: vulnerabilities.vulnerabilities[i].subtasks[1].checked,
         3: vulnerabilities.vulnerabilities[i].subtasks[2].checked,
-        4: vulnerabilities.vulnerabilities[i].subtasks[3].checked,
       }
+      if (vulnerabilities.vulnerabilities[i].subtasks[3]) {
+        curStateDiff["4"] = vulnerabilities.vulnerabilities[i].subtasks[3].checked;
+      }
+
       let curState: PutConfigStates = {id: vulnerabilities.vulnerabilities[i].id, difficulty: curStateDiff};
       vulnerabilityPayload.data.push(curState);
     }
