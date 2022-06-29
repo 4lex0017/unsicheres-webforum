@@ -23,9 +23,7 @@ import {
 } from "../models/vulnerabilitiesConfig";
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
-import {UserFullBackend} from "../models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
-import {UserComment} from "../models/comment";
 
 
 @Injectable({
@@ -40,11 +38,20 @@ export class BackendCommunicationService {
   }
 
   errorBreadCrumb(text: string): void {
+    let fullText = "Sorry, something went wrong. " + text + " Error";
+    this.errorBreadCrumbTemplate(fullText);
+    this.router.navigate(['/forum/home']);
+  }
+
+  errorBreadCrumbAdvanced(fullText: string): void {
+
+  }
+
+  errorBreadCrumbTemplate(text: string): void {
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
-      data: "Sorry, something went wrong. " + text + " Error",
+      data: text,
     })
-    this.router.navigate(['/forum/home']);
   }
 
   //For home
@@ -83,17 +90,15 @@ export class BackendCommunicationService {
     return this.httpClient.get<UserFull[]>(this.url + '/users')
   }
 
-  putUser(user: UserFullBackend): Observable<HttpResponse<UserFull>> {
-    let userPayload =
-      {
-        "id": user.id,
-        "name": user.name,
-        "location": user.location,
-        "about": user.about,
-        "groups": user.groups,
-        "profilePicture": user.profilePicture,
-      };
-    return this.httpClient.put<any>(this.url + '/users/' + user.id, userPayload, {observe: 'response'});
+  putUser(userPayload: any): Observable<HttpResponse<UserFull>> {
+    return this.httpClient.put<any>(this.url + '/users/' + userPayload.id, userPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        if (error.status == 418) {
+          this.errorBreadCrumbTemplate("The uploaded image datatype is invalid.")
+        }
+        throw {message: 'Bad response', value: error.status}
+      }));
+    ;
   }
 
   //post comment

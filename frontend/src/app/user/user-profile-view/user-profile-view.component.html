@@ -10,7 +10,7 @@
       </div>
       <mat-card-title>
         <span *ngIf="!vEnabled">{{userFullObject.name}}</span>
-        <span *ngIf="vEnabled" #username id="name{{userFullObject.id}}"></span>
+        <span *ngIf="vEnabled" id="name{{userFullObject.id}}"></span>
         <span class="spacer"></span>
         <button mat-mini-fab color="primary" *ngIf="canEdit(userFullObject.id)"
                 (click)="openEditProfileDialog(userFullObject)"
