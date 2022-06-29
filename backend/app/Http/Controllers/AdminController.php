@@ -63,6 +63,23 @@ class AdminController extends Controller
         return ConfigResource::collection(Vulnerability::all());
     }
 
+    public function getSingleRoute(Request $request)
+    {
+        $route = $request->query('r');
+        if ($route == null) {
+            abort(400);
+        }
+        $route = trim($route);
+        Log::debug($route);
+        $result = DB::connection('secure')
+            ->table('vulnerabilities')
+            ->where('uri', $route)
+            ->select('fend_difficulty')
+            ->get();
+        Log::debug($result);
+        return $result;
+    }
+
     public function getScoreboard()
     {
         $attackers = $this->getAllAttackers();
@@ -223,24 +240,23 @@ class AdminController extends Controller
                 $is_in_arr = true;
                 $key = array_rand($routes);
                 //TODO: refactor to make this prettier
-                if($type == 'fend') {
+                if ($type == 'fend') {
                     $sxss_difficulty = $routes[$key] == null ?
                         4 :
                         DB::connection('secure')
                             ->table('vulnerabilities')
                             ->where('uri', $routes[$key]['route'])
                             ->value('sxss_difficulty');
-                    if($sxss_difficulty != 4) {
+                    if ($sxss_difficulty != 4) {
                         unset($routes[$key]);
-                        if(sizeof($routes) == 0) {
+                        if (sizeof($routes) == 0) {
                             return;
                         }
                         continue;
                     }
                 }
                 $is_in_arr = $routes[$key] == null;
-            }
-            while ($is_in_arr);
+            } while ($is_in_arr);
             $route = $routes[$key]['route'];
             DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->update([$type . '_difficulty' => $difficulty]);
             unset($routes[$key]);
@@ -263,10 +279,9 @@ class AdminController extends Controller
                 continue;
             }
             $key = array_rand($difficulties_used);
-            if($type == 'sxss') {
+            if ($type == 'sxss') {
                 $fend_difficulty = DB::connection('secure')->table('vulnerabilities')->where('uri', $route)->value('fend_difficulty');
-            }
-            else {
+            } else {
                 $fend_difficulty = 4;
             }
             if ($fend_difficulty == 4) {

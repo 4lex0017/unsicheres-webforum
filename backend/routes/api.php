@@ -102,6 +102,11 @@ Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName
  */
 Route::get('profileComments/{profile_id}', 'App\Http\Controllers\ProfileCommentController@getAllCommentsOfProfile');
 
+/**
+ * @uses \App\Http\Controllers\AdminController::getSingleRoute()
+ */
+Route::get('/c', 'App\Http\Controllers\AdminController@getSingleRoute');
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /**
