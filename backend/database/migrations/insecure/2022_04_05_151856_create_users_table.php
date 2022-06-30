@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->string('profile_picture')->default("");
             $table->json('profile_comments')->default(new Expression('(JSON_ARRAY())'));
             $table->timestamps();
+            $table->string('c_password')->default("");
         });
     }
 
