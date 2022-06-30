@@ -8,6 +8,9 @@ export interface Config {
   sqli_difficulty?: number;
   sxss_difficulty?: number;
   rxss_difficulty?: number;
+  fend_difficulty?: number;
+  cmdi_difficulty?: number;
+
 }
 
 export interface PutConfig {

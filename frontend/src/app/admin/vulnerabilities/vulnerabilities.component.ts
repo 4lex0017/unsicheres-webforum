@@ -15,6 +15,8 @@ import {
 
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {VulnerabilitiesConfig} from "../../data-access/models/vulnerabilitiesConfig";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
 
 
 @Component({
@@ -27,7 +29,12 @@ export class VulnerabilitiesComponent implements OnInit {
   currentConfig: VulnerabilitiesConfig;
   curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
 
-  constructor(private dialog: MatDialog, private backend: BackendService, private router: Router, private backendCom: BackendCommunicationService, private diffPicker: DifficultyPickerService) {
+  constructor(private dialog: MatDialog,
+              private backend: BackendService,
+              private router: Router,
+              private backendCom: BackendCommunicationService,
+              private diffPicker: DifficultyPickerService,
+              private _snackBar: MatSnackBar) {
   }
 
 
@@ -51,6 +58,16 @@ export class VulnerabilitiesComponent implements OnInit {
     this.backendCom.putVulnerabilitiesConfig(this.curVulnerabilities).subscribe(resp => {
       console.log(resp)
       this.currentConfig = resp;
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "New config loaded successfully",
+      })
+
+    }, error => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Failed loading config.",
+      })
     })
   }
 

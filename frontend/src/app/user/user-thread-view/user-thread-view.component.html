@@ -21,8 +21,8 @@
         </button>
         <mat-card-title>
           <div>
-            <span class="title" *ngIf="vEnabled" #title id="title{{threadObject.id}}"></span>
-            <span class="title" *ngIf="!vEnabled">{{threadObject.title}}</span>
+            <span class="title" *ngIf="vEnabledFrontend" #title id="title{{threadObject.id}}"></span>
+            <span class="title" *ngIf="!vEnabledFrontend">{{threadObject.title}}</span>
             <span class="spacer"></span>
 
           </div>

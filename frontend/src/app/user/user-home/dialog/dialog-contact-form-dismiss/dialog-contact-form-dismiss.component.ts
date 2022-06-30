@@ -24,12 +24,12 @@ export class DialogContactFormDismissComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("add later");
-    if (this.vEnabled) {
-      this.changeDetectorRef.detectChanges();
-      this.content.nativeElement.replaceChildren();
-      this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.data));
-    }
+    // this.vEnabled = this.diffPicker.isEnabledInConfig("add later");
+    // if (this.vEnabled) {
+    //   this.changeDetectorRef.detectChanges();
+    //   this.content.nativeElement.replaceChildren();
+    //   this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.data));
+    // }
     this.timer();
   }
 

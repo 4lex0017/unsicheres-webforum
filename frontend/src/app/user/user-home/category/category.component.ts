@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewInit, ChangeDetectorRef,
   Component,
   Input,
 
@@ -26,7 +26,14 @@ export class CategoryComponent implements AfterViewInit {
   @Input()
   showFull: boolean;
 
-  constructor(private dataManagement: DataManagementService, private router: Router, private backend: BackendService, private backendCom: BackendCommunicationService) {
+  vEnabled: number
+  vEnabledFrontend: boolean;
+
+  constructor(private dataManagement: DataManagementService,
+              private router: Router,
+              private changeDetectorRef: ChangeDetectorRef,
+              private backend: BackendService,
+              private backendServiceCom: BackendCommunicationService) {
   }
 
 
@@ -34,7 +41,36 @@ export class CategoryComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Thread>();
 
 
-  ngAfterViewInit(): void {
+  async setVuln() {
+    await this.backendServiceCom.getVulnerabilitySingle("/categories").then(value => {
+        this.vEnabled = value
+        this.vEnabledFrontend = this.isActive();
+      }
+    );
+  }
+
+  isActive(): boolean {
+    return this.vEnabled != 0;
+  }
+
+  injectContentToDomStartup(): void {
+    for (let i = 0; i < this.categoryObject.threads.length; i++) {
+
+      this.changeDetectorRef.detectChanges();
+      let title = document.getElementById("threadContent" + this.categoryObject.threads[i].id);
+      title!.replaceChildren();
+      title!.appendChild(document.createRange().createContextualFragment(this.categoryObject.threads[i].title));
+
+      let user = document.getElementById('threadUser' + this.categoryObject.threads[i].author.id);
+      user!.replaceChildren();
+      user!.appendChild(document.createRange().createContextualFragment(this.categoryObject.threads[i].author.name));
+
+    }
+  }
+
+  async ngAfterViewInit() {
+    await this.setVuln();
+    if (this.vEnabled != 0) this.injectContentToDomStartup();
     this.dataManagement.notifyOthersObservable$.subscribe(({catId, threadId}) => {
       if (catId == this.categoryObject.id) {
         for (let z = 0; z < this.categoryObject.threads.length; z++) {

@@ -41,32 +41,43 @@ export class SearchComponent implements OnInit {
   search: Search = {users: [], posts: [], threads: []};
   currentSearchQuery: string;
   newSearchQuery: string = "";
-  vEnabled: boolean;
+  vEnabled: number;
+  vEnabledFrontend: boolean
   whereToSearch: string = "all";
   searchParas: string[] = ["all", "users", "posts", "threads"]
   @ViewChild('search', {static: false}) content: ElementRef;
 
 
-  async setVuln() {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/search");
-    console.log(this.vEnabled)
+  async setVuln(str: string) {
+    if (str == "all") str = "";
+    if (str != "") str = "/" + str;
+    await this.backendCom.getVulnerabilityReflectedSingle("/search" + str).then(value => {
+        this.vEnabled = value
+        console.log(this.vEnabled)
+        this.vEnabledFrontend = this.isActive();
+      }
+    );
   }
 
-  ngOnInit(): void {
-    this.setVuln();
-    this.route.queryParamMap.subscribe((params) => {
+  isActive(): boolean {
+    return this.vEnabled != 0;
+  }
+
+  async ngOnInit() {
+    await this.setVuln(this.whereToSearch);
+    await this.route.queryParamMap.subscribe((params) => {
       this.currentSearchQuery = "";
       this.backendCom.search(params.get('query') || "", params.get('scope') || "").subscribe(data => {
+        this.setVuln(params.get('scope') || "");
         this.currentSearchQuery = decodeURIComponent(this.getParaFromResponseUrl(data["headers"].get("self")!))
         console.log("cur query" + this.currentSearchQuery);
         console.log("is vuln enabled?: " + this.vEnabled);
         this.search = data["body"]!
-        if (this.vEnabled) {
+        if (this.vEnabled != 0) {
           this.changeDetectorRef.detectChanges();
           this.content.nativeElement.replaceChildren();
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
         }
-        console.log(data);
         console.log(data["headers"].get('VulnFound') == "true")
         if (data["headers"].get('VulnFound') == "true") {
           console.log("found vuln in userprofile")
@@ -115,6 +126,5 @@ export class SearchComponent implements OnInit {
     } else {
       this.router.navigate(['forum/search'], {queryParams: {scope: this.whereToSearch, query: this.newSearchQuery}});
     }
-    //.replace(/ /g, "_")
   }
 }

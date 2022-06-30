@@ -1,5 +1,4 @@
 <div class="user-container">
-  <!--  <div class="user-container">-->
   <mat-card class="user-card" *ngFor="let userFullObject of userFullArrayModel.data ">
     <mat-card-header>
       <div mat-card-avatar class="user-default-img-container" *ngIf="!userFullObject.profilePicture">
@@ -9,8 +8,8 @@
         <img src="{{userFullObject.profilePicture}}" alt="image">
       </div>
       <mat-card-title>
-        <span *ngIf="!vEnabled">{{userFullObject.name}}</span>
-        <span *ngIf="vEnabled" id="name{{userFullObject.id}}"></span>
+        <span *ngIf="!vEnabledFrontend">{{userFullObject.name}}</span>
+        <span *ngIf="vEnabledFrontend" id="name{{userFullObject.id}}"></span>
         <span class="spacer"></span>
         <button mat-mini-fab color="primary" *ngIf="canEdit(userFullObject.id)"
                 (click)="openEditProfileDialog(userFullObject)"
@@ -24,19 +23,18 @@
         <div>Born: {{parseDate(userFullObject.birthDate)}} </div>
         <div *ngIf="userFullObject.location">
           From:
-          <span *ngIf="!vEnabled">{{userFullObject.location}}</span>
-          <span *ngIf="vEnabled" #location id="location{{userFullObject.id}}"></span>
+          <span *ngIf="!vEnabledFrontend ">{{userFullObject.location}}</span>
+          <span *ngIf="vEnabledFrontend" #location id="location{{userFullObject.id}}"></span>
         </div>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <h2>About: </h2>
-      <p *ngIf="!vEnabled">{{userFullObject.about}}</p>
-      <p *ngIf="vEnabled" #about id="content{{userFullObject.id}}"></p>
-
+      <p *ngIf="!vEnabledFrontend">{{userFullObject.about}}</p>
+      <p *ngIf="vEnabledFrontend" #content id="content{{userFullObject.id}}"></p>
       <mat-chip-list>
-        <mat-chip class="user-badge" color="primary" selected
-                  *ngFor="let role of userFullObject.groups">{{role}}</mat-chip>
+        <!--        <mat-chip class="user-badge" color="primary" selected-->
+        <!--                  *ngFor="let role of userFullObject.groups">{{role}}</mat-chip>-->
         <mat-chip class="endorsements-container">
           <mat-chip-avatar>
             <mat-icon>star</mat-icon>
@@ -45,26 +43,25 @@
         </mat-chip>
       </mat-chip-list>
     </mat-card-content>
-
     <mat-tab-group>
-      <mat-tab label="Comments:  {{userFullObject.profileComments.length}}">
-        <mat-list>
-          <mat-list-item *ngFor="let comment of userFullObject.profileComments">
-            <div mat-line>{{comment.content}}</div>
-            <div mat-line>
-              By:
-              <a [routerLink]="['/forum/users', comment.userSmall.id]">
-                {{comment.userSmall.name}}
-              </a>
-            </div>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-          <button color="primary" mat-mini-fab matTooltip="Add a comment"
-                  (click)="openCreateComment(userFullObject.id)">
-            <mat-icon>library_add</mat-icon>
-          </button>
-        </mat-list>
-      </mat-tab>
+      <!--      <mat-tab label="Comments:  {{userFullObject.profileComments.length}}">-->
+      <!--        <mat-list>-->
+      <!--          <mat-list-item *ngFor="let comment of userFullObject.profileComments">-->
+      <!--            <div mat-line>{{comment.content}}</div>-->
+      <!--            <div mat-line>-->
+      <!--              By:-->
+      <!--              <a [routerLink]="['/forum/users', comment.userSmall.id]">-->
+      <!--                {{comment.userSmall.name}}-->
+      <!--              </a>-->
+      <!--            </div>-->
+      <!--            <mat-divider></mat-divider>-->
+      <!--          </mat-list-item>-->
+      <!--          <button color="primary" mat-mini-fab matTooltip="Add a comment"-->
+      <!--                  (click)="openCreateComment(userFullObject.id)">-->
+      <!--            <mat-icon>library_add</mat-icon>-->
+      <!--          </button>-->
+      <!--        </mat-list>-->
+      <!--      </mat-tab>-->
 
       <div *ngIf="userThreads | async as userThreadsObj; else loadingThreads">
         <mat-tab label="Threads: {{userThreadsObj.data.length}}">
@@ -108,8 +105,5 @@
     </mat-tab-group>
     <mat-card-footer class="user-footer"></mat-card-footer>
   </mat-card>
-  <!--  </div>-->
-
-
 </div>
 

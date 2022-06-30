@@ -8,13 +8,14 @@ import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-prof
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {NotFoundError, Observable} from "rxjs";
+import {async, NotFoundError, Observable} from "rxjs";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBackendModel";
 import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../../data-access/models/PostsSmallBackendModel";
+import {animate} from "@angular/animations";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -26,11 +27,9 @@ export class UserProfileViewComponent implements OnInit {
   userFullArrayModel: UserFullBackendModel = {data: []};
   userThreads: Observable<ThreadsSmallBackendModel>;
   userPosts: Observable<PostsSmallBackendModel>;
-  vEnabled: boolean;
+  vEnabled: number;
+  vEnabledFrontend: boolean
 
-  // @ViewChild('about', {static: false}) about: ElementRef;
-  // @ViewChild('username', {static: false}) username: ElementRef;
-  // @ViewChild('location', {static: false}) location: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -45,32 +44,23 @@ export class UserProfileViewComponent implements OnInit {
 
 
   async setVuln() {
-
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/users/{int}");
-    // this.vEnabled = true;
+    await this.backendServiceCom.getVulnerabilitySingle("/users/{int}").then(value => {
+        this.vEnabled = value
+        this.vEnabledFrontend = this.isActive();
+      }
+    );
   }
 
-  ngOnInit() {
-    this.setVuln()
+  isActive(): boolean {
+    return this.vEnabled != 0;
+  }
+
+  async ngOnInit() {
+    await this.setVuln()
     this.route.data.subscribe((resp: Data) => {
-      console.log(resp) //drinnen lassen um kurz daten zu checken
-      //
-      // this.vEnabled = false;
       this.userFullArrayModel = resp["user"].body;
       console.log(this.userFullArrayModel)
-      // this.userFullObject = {
-      //   id: resp["user"].body.data.id,
-      //   name: resp["user"].body.data.name,
-      //   joined: resp["user"].body.data.joined,
-      //   birth_date: resp["user"].body.data.birthDate,
-      //   about: resp["user"].body.data.about,
-      //   groups: resp["user"].body.data.groups,
-      //   profile_comments: resp["user"].body.data.profileComments,
-      //   profile_picture: resp["user"].body.data.profilePicture,
-      //   location: resp["user"].body.data.location,
-      //   endorsements: resp["user"].body.data.endorsements
-      // }
-      if (this.vEnabled) this.injectContentToDomStartup();
+      if (this.vEnabled != 0) this.injectContentToDomStartup();
       console.log("is it?" + resp["user"]["headers"].get('VulnFound'))
       if (resp["user"]["headers"].get('VulnFound') == "true") {
         console.log("found vuln in userprofile")
@@ -81,46 +71,27 @@ export class UserProfileViewComponent implements OnInit {
     });
   }
 
-  // this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullObject.id);
-  // this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullObject.id);
-  //
-  //
-  // this.userFullObject$ = this.route.data.pipe();
-  // this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject$.id);
-  // this.userPosts = this.backendService.getPostsFromUser(this.userFullObject$.id);
-  // this.routeData$ = this.route.data;
-  //
-  //  this.route.data.subscribe((data: any) => {
-  //   this.userFullObject = data.user;
-  //   this.userThreads = this.backendService.getThreadsFromUser(this.userFullObject.id);
-  //   this.userPosts = this.backendService.getPostsFromUser(this.userFullObject.id);
-  //   this.vEnabled = this.diffPicker.isEnabledInConfig();
-  //   if (this.vEnabled) this.injectContentToDom();
-  // });
-  //
-  //
-  // startUp() {
-  //   firstValueFrom(this.route.data).then((resp: any) => {
-  //     console.log(resp) //drinnen lassen um kurz daten zu checken
-  //     this.userFullObject = {
-  //       id: resp.user.body.data.id,
-  //       name: resp.user.body.data.name,
-  //       joined: resp.user.body.data.joined,
-  //       birth_date: resp.user.body.data.birthDate,
-  //       about: resp.user.body.data.about,
-  //       groups: resp.user.body.data.groups,
-  //       profile_comments: resp.user.body.data.profileComments,
-  //       profile_picture: resp.user.body.data.profilePicture,
-  //       location: resp.user.body.data.location,
-  //       endorsements: resp.user.body.data.endorsements
-  //     }
-  //     const keys = resp.headers.keys();
-  //     let headers = keys.map(key =>
-  //       `${key}: ${resp.headers.get(key)}`);
-  //     console.log(headers)
-  //
-  //   });
-  // }
+
+  filterDataModelInFrontendNormal(result: any, id: number): any {
+    return {
+      name: this.diffPicker.frontendFilterTagsNormal(result.name),
+      about: this.diffPicker.frontendFilterTagsNormal(result.about),
+      profilePicture: result.profilePicture,
+      location: this.diffPicker.frontendFilterTagsNormal(result.location),
+      id: id
+    }
+  }
+
+  filterDataModelInFrontendHard(result: any, id: number): any {
+    return {
+      name: this.diffPicker.frontendFilterTagsNormal(result.name),
+      about: this.diffPicker.frontendFilterTagsNormal(result.about),
+      profilePicture: result.profilePicture,
+      location: this.diffPicker.frontendFilterTagsNormal(result.location),
+      id: id
+    }
+  }
+
   openEditProfileDialog(userFullObject: UserFullBackend): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
@@ -133,12 +104,18 @@ export class UserProfileViewComponent implements OnInit {
         },
     });
     dialogRef.afterClosed().subscribe(result => {
-      let newDataModel = {
-        name: result.name,
-        about: result.about,
-        profilePicture: result.profilePicture,
-        location: result.location,
-        id: userFullObject.id
+      let newDataModel = {}
+
+      if (this.vEnabled == 1) newDataModel = this.filterDataModelInFrontendNormal(result, userFullObject.id)
+      else if (this.vEnabled == 2) newDataModel = this.filterDataModelInFrontendHard(result, userFullObject.id)
+      else {
+        newDataModel = {
+          name: result.name,
+          about: result.about,
+          profilePicture: result.profilePicture,
+          location: result.location,
+          id: userFullObject.id
+        }
       }
       this.backendServiceCom.putUser(newDataModel).subscribe(
         (resp: Data) => {
@@ -149,7 +126,7 @@ export class UserProfileViewComponent implements OnInit {
               this.userFullArrayModel.data[index] = userFullObject;
             }
           });
-          if (this.vEnabled) this.injectContentToDom(userFullObject);
+          if (this.vEnabled != 0) this.injectContentToDom(userFullObject);
           console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
             console.log("found vuln in userprofile")
@@ -172,6 +149,7 @@ export class UserProfileViewComponent implements OnInit {
 
   injectContentToDomStartup(): void {
     for (let i = 0; i < this.userFullArrayModel.data.length; i++) {
+
       this.changeDetectorRef.detectChanges();
       let content = document.getElementById("content" + this.userFullArrayModel.data[i].id);
       content!.replaceChildren();

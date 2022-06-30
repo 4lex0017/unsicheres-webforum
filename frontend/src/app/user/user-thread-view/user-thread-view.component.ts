@@ -23,13 +23,11 @@ import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
 export class UserThreadViewComponent implements OnInit {
   // threadObject: Thread;
   threadObjectArrayModel: ThreadArrayModel;
-  vEnabled: boolean
+  vEnabled: number
+  vEnabledFrontend: boolean;
   content: string = "";
   testcontent: any[];
   editId: number;
-  // @ViewChild('content', {static: false}) content: ElementRef;
-  // @ViewChild('title', {static: false}) title: ElementRef;
-  // @ViewChild('replyBox') replyBox: ElementRef;
 
 
   constructor(private route: ActivatedRoute,
@@ -44,8 +42,19 @@ export class UserThreadViewComponent implements OnInit {
               private didAThing: DidAThingServiceService) {
   }
 
+  // async setVuln() {
+  //   this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}");
+  // }
   async setVuln() {
-    this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}");
+    await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}").then(value => {
+        this.vEnabled = value
+        this.vEnabledFrontend = this.isActive();
+      }
+    );
+  }
+
+  isActive(): boolean {
+    return this.vEnabled != 0;
   }
 
   injectContentToDomStartup() {
@@ -64,16 +73,15 @@ export class UserThreadViewComponent implements OnInit {
     title!.appendChild(document.createRange().createContextualFragment(thread.title));
   }
 
-  ngOnInit(): void {
-    this.setVuln();
+  async ngOnInit() {
+    await this.setVuln();
     this.route.data.subscribe((resp: Data) => {
         console.log(resp["thread"].body)
         this.threadObjectArrayModel = resp["thread"].body;
         console.log(this.threadObjectArrayModel)
-        if (this.vEnabled) this.injectContentToDomStartup()
+        if (this.vEnabled != 0) this.injectContentToDomStartup()
       }
     );
-    // this.deserializePost(this.content);
   }
 
   canEditThread(id: number): boolean {
@@ -91,7 +99,9 @@ export class UserThreadViewComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      threadObject.title = result.title;
+      if (this.vEnabled == 1) threadObject.title = this.diffPicker.frontendFilterTagsNormal(result.title)
+      else if (this.vEnabled == 2) threadObject.title = this.diffPicker.frontendFilterTagsHard(result.title)
+      else threadObject.title = result.title;
       this.backendServiceCom.putThread(threadObject).subscribe(
         (resp: Data) => {
           let title = resp["body"].title;
@@ -100,7 +110,7 @@ export class UserThreadViewComponent implements OnInit {
               this.threadObjectArrayModel.data[index].title = title;
             }
           });
-          if (this.vEnabled) this.injectContentToDom(threadObject)
+          if (this.vEnabled != 0) this.injectContentToDom(threadObject)
           if (resp["headers"].get('VulnFound') == "true") {
             console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
@@ -110,7 +120,6 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   moveToReply(id: number): void {
-    // this.replyBox.nativeElement.focus();
     this.changeDetectorRef.detectChanges();
     document.getElementById("replyBox" + id)!.focus();
   }
@@ -244,7 +253,7 @@ export class UserThreadViewComponent implements OnInit {
     }
     console.log(replyString);
     console.log("pushed stuff");
-    if(replyString == "/b?/b?"){
+    if (replyString == "/b?/b?") {
       return;
     }
     threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
@@ -406,7 +415,7 @@ export class UserThreadViewComponent implements OnInit {
     }
   }
 
-  copyUrl(postIDd: number): void{
+  copyUrl(postIDd: number): void {
     // geht net richtig weils alten #ref auch mit dazu macht -> weg finden ThreadId zu kriegen
     navigator.clipboard.writeText(window.location.href + "#" + postIDd);
   }

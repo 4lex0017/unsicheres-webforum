@@ -126,14 +126,6 @@ export class BackendCommunicationService {
       }));
   }
 
-  // getUser(userId: number): Observable<HttpResponse<UserFull>> {
-  //   return this.httpClient.get<UserFull>(this.url + '/users/' + userId, {observe: 'response'})
-  //     .pipe(catchError((error: Response) => {
-  //       this.errorBreadCrumb(error.status.toString())
-  //       throw {message: 'Bad response', value: error.status}
-  //     }));
-  // }
-
   postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
     let threadPayload = {
       "title": thread.title,
@@ -199,6 +191,7 @@ export class BackendCommunicationService {
     });
   }
 
+
   resetDatabase(): Observable<any> {
     return this.httpClient.post<any>(this.url + '/admin/reset/db', null, {
       headers: {admin: "true"}
@@ -238,6 +231,20 @@ export class BackendCommunicationService {
 
   getScoreboard(): Observable<AdminUser[]> {
     return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard', {headers: {admin: "true"}});
+  }
+
+  async getVulnerabilitySingle(apiUri: string): Promise<number> {
+    const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
+    console.log(value)
+    if (value[0].fend_difficulty < 3) return value[0].fend_difficulty;
+    else if (value[0].sxss_difficulty < 4) return 5;
+    else return 0;
+  }
+
+  async getVulnerabilityReflectedSingle(apiUri: string): Promise<number> {
+    const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
+    if (value[0].rxss_difficulty < 4) return value[0].fend_difficulty;
+    else return 0;
   }
 
 

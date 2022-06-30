@@ -13,6 +13,7 @@ import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-pos
 import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
 import {AllowEditService} from "../../../data-access/services/allowEdit.service";
 import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
+import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 
 @Component({
   selector: 'app-reactive-post',
@@ -29,7 +30,8 @@ export class ReactivePostComponent implements OnInit {
               private dataManagement: DataManagementService,
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private changeDetectorRef: ChangeDetectorRef,
+              private backendServiceCom: BackendCommunicationService) {
   }
 
 
@@ -41,25 +43,33 @@ export class ReactivePostComponent implements OnInit {
   @Output() editPostEvent = new EventEmitter<Post>();
   @Output() moveToReplyBoxEvent = new EventEmitter;
   @Output() shareEvent = new EventEmitter<number>();
-  vEnabled: boolean;
+  vEnabled: number
+  vEnabledFrontend: boolean;
   editing: boolean = false;
   contentArray: any[]
   @ViewChild('content', {static: false}) content: ElementRef;
 
 
   async setVuln() {
-    this.vEnabled = false;
-    // = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
+    await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}/posts").then(value => {
+        this.vEnabled = value
+        this.vEnabledFrontend = this.isActive();
+      }
+    );
   }
 
-  ngOnInit(): void {
-    this.setVuln();
-    // this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}/posts");
+  isActive(): boolean {
+    return this.vEnabled != 0;
+  }
+
+  async ngOnInit() {
+    await this.setVuln();
     this.deserializePost(this.postObject.content);
-    if (this.vEnabled) {
+    if (this.vEnabled != 0) {
       this.changeDetectorRef.detectChanges();
-      this.content.nativeElement.replaceChildren();
-      this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.postObject.content));
+      let content = document.getElementById('content');
+      content!.replaceChildren();
+      content!.appendChild(document.createRange().createContextualFragment(this.postObject.content));
     }
   }
 
@@ -114,7 +124,7 @@ export class ReactivePostComponent implements OnInit {
   }
 
   editPost(): void {
-    if(this.allowEditService.askForEdit()){
+    if (this.allowEditService.askForEdit()) {
       this.editing = true;
       this.editPostEvent.emit(this.postObject);
     }
@@ -216,7 +226,11 @@ export class ReactivePostComponent implements OnInit {
     this.editing = false;
     console.log("string")
     console.log(replyString);
-    this.postObject.content = replyString;
+
+    if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(replyString)
+    else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(replyString)
+    else this.postObject.content = replyString;
+    // this.postObject.content = replyString;
     this.allowEditService.finishEdit();
     this.deserializePost(replyString);
   }
@@ -316,14 +330,14 @@ export class ReactivePostComponent implements OnInit {
   }
 
 
-  deserializePostRegex(postString: string): void{
+  deserializePostRegex(postString: string): void {
     let brRegex = new RegExp(/[/b?]/);
     let replyRegex = new RegExp(/[/r]/);
     let attibuteRegex = new RegExp(/[/a]/);
     let stringArray = postString.split(replyRegex);
     let content: any[] = new Array(0);
-    for(let i = 0; i < stringArray.length; i++){
-      if((Array.from(postString)[1] + Array.from(postString)[2]) == '/a'){
+    for (let i = 0; i < stringArray.length; i++) {
+      if ((Array.from(postString)[1] + Array.from(postString)[2]) == '/a') {
         let replyArray = stringArray[i].split(attibuteRegex);
         let blockElement = document.createElement("blockquote");
         blockElement.setAttribute("id", replyArray[0])
@@ -331,15 +345,15 @@ export class ReactivePostComponent implements OnInit {
         let user = document.createElement("p");
         user.textContent = replyContent[0];
         blockElement.appendChild(user);
-        for(let j = 1; j < replyContent.length; j++){
+        for (let j = 1; j < replyContent.length; j++) {
           let divElement = document.createElement("div");
           divElement.textContent = replyContent[i];
           blockElement.appendChild(divElement);
         }
         content.push(blockElement)
-      }else{
+      } else {
         let line: string[] = stringArray[i].split(brRegex);
-        for(let j = 0; j < line.length; j++){
+        for (let j = 0; j < line.length; j++) {
           let divElement = document.createElement("div");
           divElement.textContent = line[i];
           content.push(divElement);
@@ -348,7 +362,6 @@ export class ReactivePostComponent implements OnInit {
     }
     this.contentArray = content;
   }
-
 
 
   isDiv(element: HTMLElement) {
@@ -378,7 +391,7 @@ export class ReactivePostComponent implements OnInit {
     });
   }
 
-  copyUrl(): void{
+  copyUrl(): void {
     this.shareEvent.emit(this.postObject.id);
   }
 }

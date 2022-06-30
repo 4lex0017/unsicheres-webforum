@@ -20,14 +20,20 @@
       <ng-container matColumnDef="general-information">
         <th mat-header-cell *matHeaderCellDef>
           <div class="category-title">{{categoryObject.title}} </div>
+
           <div class="category-replies">Threads: {{categoryObject.numberOfThreads}}</div>
         </th>
         <td mat-cell *matCellDef="let element">
           <a [routerLink]="['/forum/threads', element.id]">
-            <div class="thread-title"> {{element.title}} </div>
+            <div class="thread-title" *ngIf="!vEnabledFrontend"> {{element.title}} </div>
+            <div class="thread-title" *ngIf="vEnabledFrontend" id="threadContent{{element.id}}"></div>
           </a>
-          <div class="thread-author"> Author: <a
-            [routerLink]="['/forum/users', element.author.id]">{{element.author.name}}</a></div>
+          <div class="thread-author"> Author:
+            <a [routerLink]="['/forum/users', element.author.id]" *ngIf="!vEnabledFrontend">{{element.author.name}}</a>
+            <a [routerLink]="['/forum/users', element.author.id]" *ngIf="vEnabledFrontend"
+               id="threadUser{{element.author.id}}"></a>
+
+          </div>
         </td>
       </ng-container>
 

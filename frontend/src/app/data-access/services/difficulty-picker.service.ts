@@ -11,37 +11,13 @@ export class DifficultyPickerService {
   constructor(private backendCom: BackendCommunicationService) {
   }
 
-
-  isEnabled(idVuln: number, idState: number): boolean {
-    // let curVuln = this.getCurrentData(idVuln)
-    // if (curVuln) {
-    //   for (let state of curVuln.subtasks) {
-    //     if (state.id == idState) {
-    //       if (state.checked) return true;
-    //       return false;
-    //     }
-    //   }
-    // }
-    return false;
-  }
-
   updateConfig(): void {
-
     this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
       DifficultyPickerService.curConfig = data
       console.log(DifficultyPickerService.curConfig)
     });
-
-
   }
 
-
-  // change vEnabled to number with this mapping
-  // 0 == false
-  // 1 == true (backend)
-  // 2 == frontend easy
-  // 3 == frontend normal
-  // 4 == frontend hard
 
   isEnabledInConfig(str: string): boolean {
     this.updateConfig()
@@ -58,6 +34,11 @@ export class DifficultyPickerService {
     }
     return false;
   }
+
+
+  // async isEnabledInConfigSingle(str: string): Promise<number> {
+  //   return await this.backendCom.getVulnerabilitySingle(str)
+  // }
 
 
   frontendFilterTagsNormal(content: string): string {
