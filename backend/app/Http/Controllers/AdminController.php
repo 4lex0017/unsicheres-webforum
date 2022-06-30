@@ -365,7 +365,7 @@ class AdminController extends Controller
         return DB::connection('secure')
             ->table('vulnerabilities')
             ->where('uri', $route)
-            ->select(['sxss_difficulty', 'fend_difficulty'])
+            ->select(['sxss_difficulty', 'fend_difficulty', 'rxss_difficulty'])
             ->get();
     }
 
