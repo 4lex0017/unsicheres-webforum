@@ -25,6 +25,14 @@ class PasswordSeeder extends Seeder
         {
             foreach ($users as $value)
             {
+                DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['c_password' => $value['password']]);
+            }
+        }
+
+        if(false)
+        {
+            foreach ($users as $value)
+            {
                 DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['c_password' => sha1($value['password'])]);
             }
         }
