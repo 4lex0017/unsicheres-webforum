@@ -14,6 +14,7 @@ class AdminController extends Controller
 {
     /**
      * get list of supported vulnerabilities and which difficulties are in use
+     * ROUTE GET /admin
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -60,23 +61,6 @@ class AdminController extends Controller
     }
 
     /**
-     * check which difficulty of route independent type is in use
-     *
-     * @param array $content
-     * @param string $type
-     * @param int $id
-     * @return void
-     */
-    private function updateCheckedStatic(array &$content, string $type, int $id): void
-    {
-        $difficulty = DB::connection('secure')
-            ->table('staticvulnerabilities')
-            ->value($type . '_difficulty');
-
-        $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
-    }
-
-    /**
      * return all routes where $type is possible
      *
      * @param mixed $config
@@ -108,7 +92,25 @@ class AdminController extends Controller
     }
 
     /**
+     * check which difficulty of route independent type is in use
+     *
+     * @param array $content
+     * @param string $type
+     * @param int $id
+     * @return void
+     */
+    private function updateCheckedStatic(array &$content, string $type, int $id): void
+    {
+        $difficulty = DB::connection('secure')
+            ->table('staticvulnerabilities')
+            ->value($type . '_difficulty');
+
+        $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
+    }
+
+    /**
      * change used difficulties
+     * ROUTE PUT /admin/config
      *
      * @param Request $request
      * @return array
@@ -405,6 +407,7 @@ class AdminController extends Controller
 
     /**
      * get current configuration of endpoints and filter difficulties
+     * ROUTE GET /admin/config
      *
      * @return array
      */
@@ -418,11 +421,12 @@ class AdminController extends Controller
 
     /**
      * get sxss and frontend difficulty for a single route
+     * ROUTE GET /c?r=route
      *
      * @param Request $request
      * @return \Illuminate\Support\Collection
      */
-    public function getSingleRoute(Request $request)
+    public function getSingleRoute(Request $request): \Illuminate\Support\Collection
     {
         $route = $request->query('r');
 
@@ -441,10 +445,11 @@ class AdminController extends Controller
 
     /**
      * generate and return the current scoreboard
+     * ROUTE GET /admin/scoreboard
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getScoreboard()
+    public function getScoreboard(): \Illuminate\Http\JsonResponse
     {
         $attackers = $this->getAllAttackers();
 
@@ -541,10 +546,11 @@ class AdminController extends Controller
 
     /**
      * reset the scoreboard. attackers and config are not affected.
+     * ROUTE POST /admin/reset/scoreboard
      *
      * @return \Illuminate\Http\Response
      */
-    public function resetScoreboard()
+    public function resetScoreboard(): \Illuminate\Http\Response
     {
         DB::connection('secure')
             ->unprepared("DELETE FROM found_vulnerabilities;");
@@ -555,10 +561,11 @@ class AdminController extends Controller
 
     /**
      * reset the insecure database. used in case of breaking vulnerability use.
+     * ROUTE POST /admin/reset/db
      *
      * @return \Illuminate\Http\Response
      */
-    public function resetDatabase()
+    public function resetDatabase(): \Illuminate\Http\Response
     {
         $this->resetDB();
         return response()->noContent();
@@ -579,11 +586,12 @@ class AdminController extends Controller
 
     /**
      * update attacker name
+     * ROUTE PUT /attackername
      *
      * @param Request $request
      * @return void
      */
-    public function putAttackerName(Request $request)
+    public function putAttackerName(Request $request): void
     {
         DB::connection('secure')
             ->table('attackers')
