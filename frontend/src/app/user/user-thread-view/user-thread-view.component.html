@@ -46,6 +46,7 @@
     </mat-card>
     <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
       <app-reactive-post [postObject]="post"
+                         [threadId]="threadObject.id"
                          (createPostEvent)="createPostConsumer(threadObject, $event)"
                          (replyPostEvent)="addReply(threadObject, $event)"
                          (deletePostEvent)="openDeletePostConsumer(threadObject, $event)"

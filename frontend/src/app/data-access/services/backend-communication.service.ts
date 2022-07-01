@@ -148,6 +148,14 @@ export class BackendCommunicationService {
     return this.httpClient.put<Thread>(this.url + '/categories/' + thread.categoryId + '/threads/' + thread.id, threadPayload, {observe: 'response'});
   }
 
+  likeThread(threadId: number): Observable<any> {
+    return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/like', {})
+  }
+
+  likePost(threadId: number, postId: number): Observable<any> {
+    return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/posts/' + postId + '/like', {})
+  }
+
   postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
     let postPayload = {...post};
     return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
@@ -243,7 +251,7 @@ export class BackendCommunicationService {
 
   async getVulnerabilityReflectedSingle(apiUri: string): Promise<number> {
     const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
-    if (value[0].rxss_difficulty < 4) return value[0].fend_difficulty;
+    if (value[0].rxss_difficulty < 4) return value[0].rxss_difficulty;
     else return 0;
   }
 

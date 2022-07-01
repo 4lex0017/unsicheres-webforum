@@ -15,6 +15,5 @@ export class AppComponent {
 
   constructor(private themeService: ThemeService, private diffPicker: DifficultyPickerService) {
     this.themeService.initTheme();
-    this.diffPicker.updateConfig();
   }
 }

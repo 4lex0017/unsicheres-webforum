@@ -168,7 +168,7 @@ export class UserThreadViewComponent implements OnInit {
     }
 
     let editElement = document.getElementById("replyBox" + this.editId);
-    if(editElement != null){
+    if (editElement != null) {
       for (let i = 0; i < editElement.children.length; i++) {
         if (tag.parentNode!.parentNode == editElement.children[i] || tag.parentNode!.parentNode == editElement) {
           inBox = true;
@@ -278,7 +278,7 @@ export class UserThreadViewComponent implements OnInit {
     while (fullReply!.children.length > 0) {
       fullReply!.removeChild(fullReply!.lastChild!);
     }
-    if(fullReply!.textContent != ""){
+    if (fullReply!.textContent != "") {
       replyString = fullReply!.textContent + "/b?" + replyString
     }
     threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
@@ -429,6 +429,7 @@ export class UserThreadViewComponent implements OnInit {
 
   likeThreadButton(threadObject: Thread): void {
     if (!this.checkLoggedIn()) return;
+    this.backendServiceCom.likeThread(threadObject.id).subscribe()
     let i = threadObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
     if (i != -1) {
       threadObject.likedFrom.splice(i, 1)

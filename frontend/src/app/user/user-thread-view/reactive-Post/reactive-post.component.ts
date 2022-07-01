@@ -34,7 +34,7 @@ export class ReactivePostComponent implements OnInit {
               private backendServiceCom: BackendCommunicationService) {
   }
 
-
+  @Input() threadId: number;
   @Input() postObject: Post;
   @Output() deletePostEvent = new EventEmitter<number>();
   @Output() createPostEvent = new EventEmitter<Post>();
@@ -112,6 +112,7 @@ export class ReactivePostComponent implements OnInit {
 
   likePostButton(): void {
     if (!this.checkLoggedIn()) return;
+    this.backendServiceCom.likePost(this.threadId, this.postObject.id).subscribe()
     let i = this.postObject.likedFrom.indexOf(this.authenticate.getCurrentUserId());
     if (i != -1) {
       this.postObject.likedFrom.splice(i, 1)
@@ -323,14 +324,14 @@ export class ReactivePostComponent implements OnInit {
   }
 
 
-  deserializePostRegex(postString: string): void{
+  deserializePostRegex(postString: string): void {
     let stringArray = postString.split("/r?");
-    for (let i = 0; i < stringArray.length; i++){
+    for (let i = 0; i < stringArray.length; i++) {
       console.log("desTest: " + stringArray[i])
     }
     let content: any[] = new Array(0);
-    for(let i = 0; i < stringArray.length; i++){
-      if((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a'){
+    for (let i = 0; i < stringArray.length; i++) {
+      if ((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a') {
         let replyArray = stringArray[i].split("/a?");
         let blockElement = document.createElement("blockquote");
         blockElement.id = replyArray[1];
@@ -338,18 +339,18 @@ export class ReactivePostComponent implements OnInit {
         let user = document.createElement("p");
         user.textContent = replyContent[0];
         blockElement.appendChild(user);
-        for(let j = 1; j < replyContent.length; j++){
+        for (let j = 1; j < replyContent.length; j++) {
           let divElement = document.createElement("div");
           divElement.textContent = replyContent[j];
           blockElement.appendChild(divElement);
         }
         content.push(blockElement)
-      }else{
+      } else {
         let line: string[] = stringArray[i].split("/b?");
-        for(let j = 0; j < line.length; j++){
+        for (let j = 0; j < line.length; j++) {
           let divElement = document.createElement("div");
           divElement.textContent = line[j];
-          if(divElement.textContent != "") {
+          if (divElement.textContent != "") {
             content.push(divElement);
           }
           console.log("divEle: " + divElement.textContent)
@@ -359,14 +360,14 @@ export class ReactivePostComponent implements OnInit {
     this.contentArray = content;
   }
 
-  deserializePostRegexUnsafe(postString: string): void{
+  deserializePostRegexUnsafe(postString: string): void {
     let stringArray = postString.split("/r?");
-    for (let i = 0; i < stringArray.length; i++){
+    for (let i = 0; i < stringArray.length; i++) {
       console.log("desTest: " + stringArray[i])
     }
     let content: any[] = new Array(0);
-    for(let i = 0; i < stringArray.length; i++){
-      if((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a'){
+    for (let i = 0; i < stringArray.length; i++) {
+      if ((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a') {
         let replyArray = stringArray[i].split("/a?");
         let blockElement = document.createElement("blockquote");
         blockElement.id = replyArray[1];
@@ -375,16 +376,17 @@ export class ReactivePostComponent implements OnInit {
         console.log("unsaveContent: " + replyContent[0])
         user.appendChild(document.createRange().createContextualFragment(replyContent[0]));
         blockElement.appendChild(user);
-        for(let j = 1; j < replyContent.length; j++){
+        for (let j = 1; j < replyContent.length; j++) {
           let divElement = document.createElement("div");
           divElement.appendChild(document.createRange().createContextualFragment(replyContent[j]))
           blockElement.appendChild(divElement);
         }
         content.push(blockElement)
-      }else{
+      } else {
         let line: string[] = stringArray[i].split("/b?");
-        for(let j = 0; j < line.length; j++){
+        for (let j = 0; j < line.length; j++) {
           let divElement = document.createElement("div");
+          // document.create
           console.log("newContent :" + line[j])
           divElement.appendChild(document.createRange().createContextualFragment(line[j]))
           content.push(divElement);
