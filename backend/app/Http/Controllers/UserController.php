@@ -92,10 +92,8 @@ class UserController extends Controller
     public function createUpdateRequestString($user, $id): string | Response
     {
         $request_string = 'update users set id = ' . (int) $id;
-        if (array_key_exists('name', $user)) {
-            if (self::userIsUnique($user)) {
-                $request_string = $request_string . ', name = "' . $user['name'] . '"';
-            } else return response('', 400);
+        if (array_key_exists('name', $user) && self::userIsUnique($user)) {
+            $request_string = $request_string . ', name = "' . $user['name'] . '"';
         }
         if (array_key_exists('profilePicture', $user)) {
             $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
