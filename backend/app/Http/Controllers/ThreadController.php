@@ -15,7 +15,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-use SQLite3;
 
 
 
@@ -62,43 +61,11 @@ class ThreadController extends Controller
                 return $request_string;
             }
 
-            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $sqlres = $db->query($request_string);
+            DB::connection('insecure')->unprepared($request_string);
+            $new_thread = (new Thread())->orderby('created_at', 'desc')->first();
 
-            foreach ($this->sqlite_keywords as $keyword) {
-                $included = stripos($request_string, $keyword);
-                if ($included != false) {
-                    $first = true;
-                    $result = '[';
-                    while ($row = $sqlres->fetchArray()) {
-                        if ($first) {
-                            $first = false;
-                        } else {
-                            $result = $result . ",";
-                        }
-                        $result = $result . json_encode($row);
-                    }
-                    $result = $result . ']';
+            self::addThreadToCategory($new_thread, $category_id);
 
-                    return response($result);
-                }
-            }
-            $result = '';
-            $first = true;
-            while ($row = $sqlres->fetchArray()) {
-                if ($first) {
-                    $first = false;
-                } else {
-                    $result = $result . ',';
-                }
-                $result = $result . json_encode($row);
-            }
-            $new_thread = json_decode($result);
-            $category = (new Category())->find($category_id);
-            $thread_array = $category['threads'];
-            $thread_array[] = $new_thread->id;
-            $category['threads'] = $thread_array;
-            $category->save();
             return new ThreadResource($new_thread);
         }
         return response('', 404);
@@ -111,15 +78,8 @@ class ThreadController extends Controller
         if (!$thread) // just in case
             return response("", 404);
 
-        // need to remove the thread from the categories' table thread-array
-        $category = (new Category())->find($cat_id);
-        $thread_array = $category['threads'];
 
-        // find the thread in the array by value and get rid of it
-        array_splice($thread_array, array_search($thread_id, $thread_array), 1);
-
-        $category['threads'] = $thread_array;
-        $category->save();
+        self::deleteThreadFromCategory($cat_id, $thread_id);
 
         DB::connection('insecure')
             ->table('threads')
@@ -140,43 +100,14 @@ class ThreadController extends Controller
         $thread = $request->all();
         if ($thread['id'] === (int) $thread_id) {
             $request_string = self::createUpdateRequestString($thread, $thread_id);
-            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $sqlres = $db->query($request_string);
+            DB::connection('insecure')->unprepared($request_string);
 
-            foreach ($this->sqlite_keywords as $keyword) {
-                $included = stripos($request_string, $keyword);
-                if ($included != false) {
-                    $first = true;
-                    $result = '[';
-                    while ($row = $sqlres->fetchArray()) {
-                        if ($first) {
-                            $first = false;
-                        } else {
-                            $result = $result . ",";
-                        }
-                        $result = $result . json_encode($row);
-                    }
-                    $result = $result . ']';
-
-                    return response($result);
-                }
-            }
-            $result = '';
-            $first = true;
-            while ($row = $sqlres->fetchArray()) {
-                if ($first) {
-                    $first = false;
-                } else {
-                    $result = $result . ',';
-                }
-                $result = $result . json_encode($row);
-            }
-            $thread = new ThreadResource(json_decode($result));
+            $thread = (new Thread())->find($thread_id);
             return [
                 "title" => $thread->title // this is all the frontend needs
             ];
         }
-        return response('', 404);
+        return response('', 400);
     }
 
     public static function injectableWhere($row, $id): Collection
@@ -202,6 +133,28 @@ class ThreadController extends Controller
             )
             ->orderBy('threads.updated_at')
             ->get()->toArray();
+    }
+
+    private function addThreadToCategory($thread, $category_id): void
+    {
+        $category = (new Category())->find($category_id);
+        $thread_array = $category['threads'];
+        $thread_array[] = $thread->id;
+        $category['threads'] = $thread_array;
+        $category->save();
+    }
+
+    private function deleteThreadFromCategory($cat_id, $thread_id): void
+    {
+        // need to remove the thread from the categories' table thread-array
+        $category = (new Category())->find($cat_id);
+        $thread_array = $category['threads'];
+
+        // find the thread in the array by value and get rid of it
+        array_splice($thread_array, array_search($thread_id, $thread_array), 1);
+
+        $category['threads'] = $thread_array;
+        $category->save();
     }
 
     public static function buildSmallThreadArray($threads, bool $firstFour = false): array
@@ -232,18 +185,18 @@ class ThreadController extends Controller
         return $thread_array;
     }
 
-    public function createCreateRequestString(array $thread)
+    public function createCreateRequestString(array $thread): string|Response
     {
         $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
         if (array_key_exists('categoryId', $thread)) {
             $request_string = $request_string . '"' . $thread['categoryId'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('title', $thread)) {
             $request_string = $request_string . ', "' . $thread['title'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('likedFrom', $thread)) {
             $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
@@ -253,7 +206,7 @@ class ThreadController extends Controller
         if (array_key_exists('author', $thread)) {
             $request_string = $request_string . ' , "' . $thread['author'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('posts', $thread)) {
             $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
@@ -263,7 +216,7 @@ class ThreadController extends Controller
         return $request_string = $request_string . ',date(),date()) RETURNING *;';
     }
 
-    public function createUpdateRequestString(array $thread, $thread_id)
+    public function createUpdateRequestString(array $thread, $thread_id): string
     {
         $request_string = 'update threads set id = ' . (int) $thread_id;
         if (array_key_exists('title', $thread)) {

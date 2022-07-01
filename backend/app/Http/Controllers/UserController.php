@@ -13,7 +13,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use SQLite3;
 
 
 
@@ -55,43 +54,13 @@ class UserController extends Controller
 
         if ($user['id'] === (int) $id) {
             $request_string = self::createUpdateRequestString($user, $id);
-            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $sqlres = $db->query($request_string);
-
-            foreach ($this->sqlite_keywords as $keyword) {
-                $included = stripos($request_string, $keyword);
-                if ($included != false) {
-                    $first = true;
-                    $result = '[';
-                    while ($row = $sqlres->fetchArray()) {
-                        if ($first) {
-                            $first = false;
-                        } else {
-                            $result = $result . ",";
-                        }
-                        $result = $result . json_encode($row);
-                    }
-                    $result = $result . ']';
-
-                    return response($result);
-                }
+            if (is_a($request_string, 'Illuminate\Http\Response')) {
+                return $request_string;
             }
-            $result = '';
-            $first = true;
-            while ($row = $sqlres->fetchArray()) {
-                if ($first) {
-                    $first = false;
-                } else {
-                    $result = $result . ',';
-                }
-                $result = $result . json_encode($row);
-            }
-            $user = json_decode($result);
-            $user->groups = json_decode($user->groups);
-            $user->profile_comments = json_decode($user->profile_comments);
-            return UserResource::collection(array($user));
+            DB::connection('insecure')->unprepared($request_string);
+            return UserResource::collection(User::where('id', '=', $id)->get());
         }
-        return response('', 404);
+        return response('', 400);
     }
 
     public function findUser($id): ?Collection
@@ -104,6 +73,15 @@ class UserController extends Controller
         return $user;
     }
 
+    private function userIsUnique($user): bool
+    {
+        $user_exist = (new User)->where('name', '=', $user['name'])->get();
+        if ($user_exist != null) {
+            return false;
+        }
+        return true;
+    }
+
     public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
@@ -111,10 +89,10 @@ class UserController extends Controller
         )->whereRaw($row . " = " . $id)->get();
     }
 
-    public function createUpdateRequestString($user, $id)
+    public function createUpdateRequestString($user, $id): string | Response
     {
         $request_string = 'update users set id = ' . (int) $id;
-        if (array_key_exists('name', $user)) {
+        if (array_key_exists('name', $user) && self::userIsUnique($user)) {
             $request_string = $request_string . ', name = "' . $user['name'] . '"';
         }
         if (array_key_exists('profilePicture', $user)) {
