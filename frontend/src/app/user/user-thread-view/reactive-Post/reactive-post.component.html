@@ -41,7 +41,7 @@
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing" class="replyBox" id="replyBox" contenteditable="true">
+    <div *ngIf="editing" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>

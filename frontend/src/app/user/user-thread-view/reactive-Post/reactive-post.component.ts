@@ -64,7 +64,14 @@ export class ReactivePostComponent implements OnInit {
 
   async ngOnInit() {
     await this.setVuln();
-    this.deserializePost(this.postObject.content);
+    /*
+    if(this.vEnabledFrontend){
+      this.deserializePostRegexUnsafe(this.postObject.content)
+    }else {
+      this.deserializePostRegex(this.postObject.content);
+    }
+     */
+    this.deserializePostRegexUnsafe(this.postObject.content);
     if (this.vEnabled != 0) {
       this.changeDetectorRef.detectChanges();
       let content = document.getElementById('content');
@@ -150,15 +157,7 @@ export class ReactivePostComponent implements OnInit {
 
     const reply = document.createElement("blockquote");
     reply.className = "testReply";
-    reply.style.borderRadius = '1px';
-    reply.style.border = 'solid #0643b8';
-    reply.style.marginLeft = '3%';
-    reply.style.width = '80%';
-    reply.style.borderLeftWidth = '8px';
-    reply.style.borderSpacing = '10px';
-    reply.setAttribute('replyPostId', replyPost.id.toString());
-    reply.setAttribute('replyUserId', replyPost.author.id.toString());
-    reply.setAttribute('replyUserName', replyPost.author.name);
+    reply.setAttribute('id', replyPost.id.toString());
     const replyHeader = document.createElement("p");
     const replyBody = document.createElement("div");
     replyHeader.textContent = replyPost.author.name + ":";
@@ -186,7 +185,7 @@ export class ReactivePostComponent implements OnInit {
   editContent(): void {
     console.log("edit");
     this.editPostEvent.emit(this.postObject);
-    let fullReply = document.getElementById('replyBox');
+    let fullReply = document.getElementById('replyBox' + this.postObject.id);
     let replyString: string = "";
     for (let i = 0; i < fullReply!.children.length; i++) {
       let child = fullReply!.children[i];
@@ -200,25 +199,25 @@ export class ReactivePostComponent implements OnInit {
         for (let j = 0; j < child.children.length; j++) {
           if (child.children[j].tagName == "BLOCKQUOTE") {
             console.log("idAfterEdit: " + child.children[j].id);
-            let infos: string = "/a?postId=" + child.children[j].id + "&userId=" + child.children[j].getAttribute('replyUserId') + "&userName=" + child.children[j].getAttribute('replyUserName') + "/a";
+            let infos: string = "/a?" + child.children[j].id + "/a?";
             let header: string = child.children[j].children[0].textContent! + "/b?"
             let body: string = "";
             for (let k = 1; k < child.children[j].children.length; k++) {
               body = body + child.children[j].children[k].textContent! + "/b?"
             }
-            replyString = replyString + "/r?" + infos + header + body + "/r";
+            replyString = replyString + "/r?" + infos + header + body + "/r?";
           } else {
             replyString = replyString + child.children[j].textContent + "/b?";
           }
         }
       } else if (child.tagName == "BLOCKQUOTE") {
-        let infos: string = "/a?postId=" + child.getAttribute('replyPostId')! + "&userId=" + child.getAttribute('replyUserId') + "&userName=" + child.getAttribute('replyUserName') + "/a";
+        let infos: string = "/a?" + child.getAttribute('id')! + "/a?";
         let header: string = child.children[0].textContent! + "/b?"
         let body: string = "";
         for (let k = 1; k < child.children.length; k++) {
           body = body + child.children[k].textContent! + "/b?"
         }
-        replyString = replyString + "/r?" + infos + header + body + "/r";
+        replyString = replyString + "/r?" + infos + header + body + "/r?";
       } else {
         replyString = replyString + child.textContent + "/b?";
       }
@@ -232,7 +231,7 @@ export class ReactivePostComponent implements OnInit {
     else this.postObject.content = replyString;
     // this.postObject.content = replyString;
     this.allowEditService.finishEdit();
-    this.deserializePost(replyString);
+    this.deserializePostRegex(replyString);
   }
 
   deserializePost(postString: string): void {
@@ -252,12 +251,6 @@ export class ReactivePostComponent implements OnInit {
         } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
           let replyFull = document.createElement("blockquote")
           replyFull.className = "testReply";
-          replyFull.style.borderRadius = '1px';
-          replyFull.style.border = 'solid #0643b8';
-          replyFull.style.marginLeft = '3%';
-          replyFull.style.width = '80%';
-          replyFull.style.borderLeftWidth = '8px';
-          replyFull.style.borderSpacing = '10px';
           i = i + 13;
           start = i;
           for (let j = i; j < stringArray.length; j++) {
@@ -330,39 +323,76 @@ export class ReactivePostComponent implements OnInit {
   }
 
 
-  deserializePostRegex(postString: string): void {
-    let brRegex = new RegExp(/[/b?]/);
-    let replyRegex = new RegExp(/[/r]/);
-    let attibuteRegex = new RegExp(/[/a]/);
-    let stringArray = postString.split(replyRegex);
+  deserializePostRegex(postString: string): void{
+    let stringArray = postString.split("/r?");
+    for (let i = 0; i < stringArray.length; i++){
+      console.log("desTest: " + stringArray[i])
+    }
     let content: any[] = new Array(0);
-    for (let i = 0; i < stringArray.length; i++) {
-      if ((Array.from(postString)[1] + Array.from(postString)[2]) == '/a') {
-        let replyArray = stringArray[i].split(attibuteRegex);
+    for(let i = 0; i < stringArray.length; i++){
+      if((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a'){
+        let replyArray = stringArray[i].split("/a?");
         let blockElement = document.createElement("blockquote");
-        blockElement.setAttribute("id", replyArray[0])
-        let replyContent = replyArray[1].split(brRegex);
+        blockElement.id = replyArray[1];
+        let replyContent = replyArray[2].split("/b?");
         let user = document.createElement("p");
         user.textContent = replyContent[0];
         blockElement.appendChild(user);
-        for (let j = 1; j < replyContent.length; j++) {
+        for(let j = 1; j < replyContent.length; j++){
           let divElement = document.createElement("div");
-          divElement.textContent = replyContent[i];
+          divElement.textContent = replyContent[j];
           blockElement.appendChild(divElement);
         }
         content.push(blockElement)
-      } else {
-        let line: string[] = stringArray[i].split(brRegex);
-        for (let j = 0; j < line.length; j++) {
+      }else{
+        let line: string[] = stringArray[i].split("/b?");
+        for(let j = 0; j < line.length; j++){
           let divElement = document.createElement("div");
-          divElement.textContent = line[i];
-          content.push(divElement);
+          divElement.textContent = line[j];
+          if(divElement.textContent != "") {
+            content.push(divElement);
+          }
+          console.log("divEle: " + divElement.textContent)
         }
       }
     }
     this.contentArray = content;
   }
 
+  deserializePostRegexUnsafe(postString: string): void{
+    let stringArray = postString.split("/r?");
+    for (let i = 0; i < stringArray.length; i++){
+      console.log("desTest: " + stringArray[i])
+    }
+    let content: any[] = new Array(0);
+    for(let i = 0; i < stringArray.length; i++){
+      if((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a'){
+        let replyArray = stringArray[i].split("/a?");
+        let blockElement = document.createElement("blockquote");
+        blockElement.id = replyArray[1];
+        let replyContent = replyArray[2].split("/b?");
+        let user = document.createElement("p");
+        console.log("unsaveContent: " + replyContent[0])
+        user.appendChild(document.createRange().createContextualFragment(replyContent[0]));
+        blockElement.appendChild(user);
+        for(let j = 1; j < replyContent.length; j++){
+          let divElement = document.createElement("div");
+          divElement.appendChild(document.createRange().createContextualFragment(replyContent[j]))
+          blockElement.appendChild(divElement);
+        }
+        content.push(blockElement)
+      }else{
+        let line: string[] = stringArray[i].split("/b?");
+        for(let j = 0; j < line.length; j++){
+          let divElement = document.createElement("div");
+          console.log("newContent :" + line[j])
+          divElement.appendChild(document.createRange().createContextualFragment(line[j]))
+          content.push(divElement);
+        }
+      }
+    }
+    this.contentArray = content;
+  }
 
   isDiv(element: HTMLElement) {
     if (element.nodeName == "DIV") {
