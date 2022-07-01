@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use SQLite3;
 
 
 class PostController extends Controller
@@ -41,48 +40,12 @@ class PostController extends Controller
             if (is_a($request_string, 'Illuminate\Http\Response')) {
                 return $request_string;
             }
-            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $sqlres = $db->query($request_string);
-
-            foreach ($this->sqlite_keywords as $keyword) {
-                $included = stripos($request_string, $keyword);
-                if ($included != false) {
-                    $first = true;
-                    $result = '[';
-                    while ($row = $sqlres->fetchArray()) {
-                        if ($first) {
-                            $first = false;
-                        } else {
-                            $result = $result . ",";
-                        }
-                        $result = $result . json_encode($row);
-                    }
-                    $result = $result . ']';
-
-                    return response($result);
-                }
-            }
-            $result = '';
-            $first = true;
-            while ($row = $sqlres->fetchArray()) {
-                if ($first) {
-                    $first = false;
-                } else {
-                    $result = $result . ',';
-                }
-                $result = $result . json_encode($row);
-            }
+            DB::connection('insecure')->unprepared($request_string);
         }
-        $new_post = json_decode($result);
 
-        // need to add the post to the threads' table post-array
-        $thread = (new Thread)->find($thread_id);
-        $posts_array = $thread['posts'];
+        $new_post = (new Post())->orderby('created_at', 'desc')->first();
 
-        $posts_array[] = $new_post->id; // add new post ID to the posts
-
-        $thread['posts'] = $posts_array;
-        $thread->save();
+        self::addPostToThread($new_post);
 
         return new PostResource($new_post);
     }
@@ -93,15 +56,7 @@ class PostController extends Controller
         if (!$post) // just in case
             return response("", 404);
 
-        // need to remove the post from the threads' table post-array
-        $thread = (new Thread)->find($thread_id);
-        $posts_array = $thread['posts'];
-
-        // find the thread in the array by value and get rid of it
-        array_splice($posts_array, array_search($post_id, $posts_array), 1);
-
-        $thread['posts'] = $posts_array; // set the new array
-        $thread->save(); // save it
+        self::deletePostFromThread($thread_id, $post_id);
 
         DB::connection('insecure')
             ->table('posts')
@@ -122,45 +77,39 @@ class PostController extends Controller
 
         $post = $request->all();
         if ($post['id'] === (int) $post_id) {
-
             $request_string = self::createUpdateRequestString($post, $post_id);
 
-            $db = new SQLite3('/var/www/html/database/insecure.sqlite');
-            $sqlres = $db->query($request_string);
+            DB::connection('insecure')->unprepared($request_string);
 
-            foreach ($this->sqlite_keywords as $keyword) {
-                $included = stripos($request_string, $keyword);
-                if ($included != false) {
-                    $first = true;
-                    $result = '[';
-                    while ($row = $sqlres->fetchArray()) {
-                        if ($first) {
-                            $first = false;
-                        } else {
-                            $result = $result . ",";
-                        }
-                        $result = $result . json_encode($row);
-                    }
-                    $result = $result . ']';
-
-                    return response($result);
-                }
-            }
-            $result = '';
-            $first = true;
-            while ($row = $sqlres->fetchArray()) {
-                if ($first) {
-                    $first = false;
-                } else {
-                    $result = $result . ',';
-                }
-                $result = $result . json_encode($row);
-            }
-            $post = json_decode($result);
-            $post->liked_from = json_decode($post->liked_from);
-            return new PostResource($post);
+            $new_post = (new Post())->find($post_id);
+            return new PostResource($new_post);
         }
         return response('', 404);
+    }
+
+    private function addPostToThread($post)
+    {
+        // need to add the post to the threads' table post-array
+        $thread = (new Thread)->find($post->thread_id);
+        $posts_array = $thread['posts'];
+
+        $posts_array[] = $post->id; // add new post ID to the posts
+
+        $thread['posts'] = $posts_array;
+        $thread->save();
+    }
+
+    private function deletePostFromThread($thread_id, $post_id)
+    {
+        // need to remove the post from the threads' table post-array
+        $thread = (new Thread)->find($thread_id);
+        $posts_array = $thread['posts'];
+
+        // find the thread in the array by value and get rid of it
+        array_splice($posts_array, array_search($post_id, $posts_array), 1);
+
+        $thread['posts'] = $posts_array; // set the new array
+        $thread->save(); // save it    }
     }
 
     public function createCreateRequestString(array $post)
