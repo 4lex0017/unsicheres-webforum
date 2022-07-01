@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vulnerability;
+use Database\Seeders\PasswordSeeder;
 use Illuminate\Http\Request;
 use App\Http\Resources\ConfigResource;
 use Illuminate\Support\Facades\Artisan;
@@ -27,6 +28,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'sxss', 2, $config);
         $this->updateChecked($content, 'cmdi', 3, $config);
         $this->updateChecked($content, 'fend', 4, $config);
+        $this->updateCheckedStatic($content, 'hash', 5, $config);
 
         return response()->json($content);
     }
@@ -40,7 +42,7 @@ class AdminController extends Controller
      * @param array $config
      * @return void
      */
-    private function updateChecked(array &$content, string $type, int $id, array $config)
+    private function updateChecked(array &$content, string $type, int $id, array $config): void
     {
         $routes = $this->getRoutes($config, $type);
         $used_difficulties = array();
@@ -55,6 +57,23 @@ class AdminController extends Controller
         foreach ($used_difficulties as $difficulty) {
             $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
         }
+    }
+
+    /**
+     * check which difficulty of route independent type is in use
+     *
+     * @param array $content
+     * @param string $type
+     * @param int $id
+     * @return void
+     */
+    private function updateCheckedStatic(array &$content, string $type, int $id): void
+    {
+        $difficulty = DB::connection('secure')
+            ->table('staticvulnerabilities')
+            ->value($type . '_difficulty');
+
+        $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;
     }
 
     /**
@@ -92,9 +111,9 @@ class AdminController extends Controller
      * change used difficulties
      *
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return array
      */
-    public function updateConfiguration(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function updateConfiguration(Request $request): array
     {
         $config = json_decode(Storage::disk('local')->get('/config/vulnRoutes.json'), true);
         $data = json_decode($request->getContent(), true)['data'];
@@ -119,29 +138,74 @@ class AdminController extends Controller
         foreach ($data as $element) {
             $type = $this->getType($element['id']);
 
-            $max_difficulty = $type == 'cmdi' ? 3 : 4;
-
-            $this->resetDifficulty($type, $max_difficulty);
-
-            $routes = $this->getRoutes($config, $type);
-
-            if (sizeof($element['difficulty']) != $max_difficulty) {
-                abort(400);
+            if ($element['id'] == 6) {
+                $this->updateStaticConfig($element['difficulty'], $type);
+            } else {
+                $this->updateRouteConfig($type, $config, $element['difficulty'], $stored);
             }
-
-            $difficulties_used = $this->getDifficultiesUsed($element['difficulty']);
-
-            $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
-
-            $stored[] = [
-                'diffs' => $difficulties_used,
-                'type' => $type,
-                'routes' => $routes,
-            ];
         }
         foreach ($stored as $element) {
             $this->writeRemainingRoutes($element['routes'], $element['diffs'], $element['type']);
         }
+    }
+
+    /**
+     * update config for static vuln type
+     *
+     * @param $difficulty
+     * @param string $type
+     */
+    public function updateStaticConfig($difficulty, string $type)
+    {
+        $difficulties_used = $this->getDifficultiesUsed($difficulty);
+        $difficulty = $difficulties_used[array_key_first($difficulties_used)];
+        $this->updateStaticDifficulty($type, $difficulty);
+        (new PasswordSeeder)->run();
+    }
+
+    /**
+     * DB call for updating a static difficulty
+     *
+     * @param string $type
+     * @param mixed $difficulty
+     * @return void
+     */
+    public function updateStaticDifficulty(string $type, mixed $difficulty): void
+    {
+        DB::connection('secure')
+            ->table('staticdifficulties')
+            ->update([$type . '_difficulty' => $difficulty]);
+    }
+
+    /**
+     * update route config for route dependent vuln type
+     *
+     * @param string $type
+     * @param mixed $config
+     * @param $difficulty
+     * @param array $stored
+     */
+    public function updateRouteConfig(string $type, mixed &$config, $difficulty, array &$stored): void
+    {
+        $max_difficulty = $type == 'cmdi' ? 3 : 4;
+
+        $this->resetDifficulty($type, $max_difficulty);
+
+        $routes = $this->getRoutes($config, $type);
+
+        if (sizeof($difficulty) != $max_difficulty) {
+            abort(400);
+        }
+
+        $difficulties_used = $this->getDifficultiesUsed($difficulty);
+
+        $this->writeOneRouteForEachDifficulty($difficulties_used, $type, $routes);
+
+        $stored[] = [
+            'diffs' => $difficulties_used,
+            'type' => $type,
+            'routes' => $routes,
+        ];
     }
 
     /**
@@ -167,6 +231,9 @@ class AdminController extends Controller
                 break;
             case 5:
                 $type = 'fend';
+                break;
+            case 6:
+                $type = 'hash';
                 break;
             default:
                 abort(400);
@@ -224,7 +291,7 @@ class AdminController extends Controller
             }
 
             list($keys_left, $key, $routes) = $this->getRouteForDifficulty($routes, $type);
-            if($keys_left == false) {
+            if ($keys_left == false) {
                 break;
             }
 
@@ -255,7 +322,7 @@ class AdminController extends Controller
             }
 
             $not_in_arr = array_key_exists($key, $routes) == false;
-            if($not_in_arr == false) {
+            if ($not_in_arr == false) {
                 $not_in_arr = $routes[$key] == null;
             }
         } while ($not_in_arr && $keys_left);
@@ -339,11 +406,14 @@ class AdminController extends Controller
     /**
      * get current configuration of endpoints and filter difficulties
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return array
      */
-    public function getConfiguration(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function getConfiguration(): array
     {
-        return ConfigResource::collection(Vulnerability::all());
+        return [
+            'data' => ConfigResource::collection(Vulnerability::all())->jsonSerialize(),
+            'hash_difficulty' => DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty'),
+        ];
     }
 
     /**

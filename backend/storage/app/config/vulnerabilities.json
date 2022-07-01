@@ -148,6 +148,37 @@
                     "checked": false
                 }
             ]
+        },
+        {
+            "id": 6,
+            "name": "Password Hashes",
+            "description": "Hash user DB column cpassword using different algorithms",
+            "subtasks":[
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "cpassword is stored in plain text",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "cpassword is hashed using MD5",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "cpassword is hashed using SHA1",
+                    "checked": false
+                },
+                {
+                    "id": 4,
+                    "state": "Impossible",
+                    "description": "cpassword is hashed using SHA256",
+                    "checked": false
+                }
+            ]
         }
     ]
 }
