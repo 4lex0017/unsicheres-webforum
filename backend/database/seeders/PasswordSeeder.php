@@ -21,7 +21,9 @@ class PasswordSeeder extends Seeder
         $json = Storage::disk('local')->get('/defaults/defaultUsers.json');
         $users = json_decode($json, true);
 
-        if(false)
+        $difficulty = DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty');
+
+        if($difficulty == 1)
         {
             foreach ($users as $value)
             {
@@ -29,7 +31,7 @@ class PasswordSeeder extends Seeder
             }
         }
 
-        if(false)
+        if($difficulty == 2)
         {
             foreach ($users as $value)
             {
@@ -37,7 +39,7 @@ class PasswordSeeder extends Seeder
             }
         }
 
-        if(false)
+        if($difficulty == 3)
         {
             foreach ($users as $value)
             {
@@ -45,7 +47,7 @@ class PasswordSeeder extends Seeder
             }
         }
 
-        if(false)
+        if($difficulty == 4)
         {
             foreach ($users as $value)
             {
