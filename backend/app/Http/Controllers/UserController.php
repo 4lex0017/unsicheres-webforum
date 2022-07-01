@@ -13,8 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
-
+use PhpParser\JsonDecoder;
 
 class UserController extends Controller
 {
@@ -35,7 +34,6 @@ class UserController extends Controller
                 return response($user);
             }
         }
-
         return UserResource::collection($user);
     }
 
@@ -76,7 +74,7 @@ class UserController extends Controller
     private function userIsUnique($user): bool
     {
         $user_exist = (new User)->where('name', '=', $user['name'])->get();
-        if ($user_exist != null) {
+        if ($user_exist === null) {
             return false;
         }
         return true;
