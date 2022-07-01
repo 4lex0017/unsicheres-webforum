@@ -87,7 +87,7 @@ class PostController extends Controller
         return response('', 404);
     }
 
-    private function addPostToThread($post)
+    private function addPostToThread($post): void
     {
         // need to add the post to the threads' table post-array
         $thread = (new Thread)->find($post->thread_id);
@@ -99,7 +99,7 @@ class PostController extends Controller
         $thread->save();
     }
 
-    private function deletePostFromThread($thread_id, $post_id)
+    private function deletePostFromThread($thread_id, $post_id): void
     {
         // need to remove the post from the threads' table post-array
         $thread = (new Thread)->find($thread_id);
@@ -112,7 +112,7 @@ class PostController extends Controller
         $thread->save(); // save it    }
     }
 
-    public function createCreateRequestString(array $post)
+    public function createCreateRequestString(array $post): string | Response
     {
 
         $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
@@ -139,7 +139,7 @@ class PostController extends Controller
         return $request_string = $request_string . ',date(),date()) RETURNING *;';
     }
 
-    public function createUpdateRequestString(array $post, $post_id)
+    public function createUpdateRequestString(array $post, $post_id): string
     {
         $request_string = 'update posts set id = ' . (int) $post_id;
         if (array_key_exists('author', $post)) {

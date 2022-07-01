@@ -107,7 +107,7 @@ class ThreadController extends Controller
                 "title" => $thread->title // this is all the frontend needs
             ];
         }
-        return response('', 404);
+        return response('', 400);
     }
 
     public static function injectableWhere($row, $id): Collection
@@ -135,7 +135,7 @@ class ThreadController extends Controller
             ->get()->toArray();
     }
 
-    private function addThreadToCategory($thread, $category_id)
+    private function addThreadToCategory($thread, $category_id): void
     {
         $category = (new Category())->find($category_id);
         $thread_array = $category['threads'];
@@ -144,7 +144,7 @@ class ThreadController extends Controller
         $category->save();
     }
 
-    private function deleteThreadFromCategory($cat_id, $thread_id)
+    private function deleteThreadFromCategory($cat_id, $thread_id): void
     {
         // need to remove the thread from the categories' table thread-array
         $category = (new Category())->find($cat_id);
@@ -185,18 +185,18 @@ class ThreadController extends Controller
         return $thread_array;
     }
 
-    public function createCreateRequestString(array $thread)
+    public function createCreateRequestString(array $thread): string|Response
     {
         $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
         if (array_key_exists('categoryId', $thread)) {
             $request_string = $request_string . '"' . $thread['categoryId'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('title', $thread)) {
             $request_string = $request_string . ', "' . $thread['title'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('likedFrom', $thread)) {
             $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
@@ -206,7 +206,7 @@ class ThreadController extends Controller
         if (array_key_exists('author', $thread)) {
             $request_string = $request_string . ' , "' . $thread['author'] . '"';
         } else
-            return response('', 404);
+            return response('', 400);
 
         if (array_key_exists('posts', $thread)) {
             $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
@@ -216,7 +216,7 @@ class ThreadController extends Controller
         return $request_string = $request_string . ',date(),date()) RETURNING *;';
     }
 
-    public function createUpdateRequestString(array $thread, $thread_id)
+    public function createUpdateRequestString(array $thread, $thread_id): string
     {
         $request_string = 'update threads set id = ' . (int) $thread_id;
         if (array_key_exists('title', $thread)) {

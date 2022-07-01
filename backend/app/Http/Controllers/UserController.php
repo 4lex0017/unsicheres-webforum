@@ -54,10 +54,13 @@ class UserController extends Controller
 
         if ($user['id'] === (int) $id) {
             $request_string = self::createUpdateRequestString($user, $id);
+            if (is_a($request_string, 'Illuminate\Http\Response')) {
+                return $request_string;
+            }
             DB::connection('insecure')->unprepared($request_string);
             return UserResource::collection(User::where('id', '=', $id)->get());
         }
-        return response('', 404);
+        return response('', 400);
     }
 
     public function findUser($id): ?Collection
@@ -70,6 +73,15 @@ class UserController extends Controller
         return $user;
     }
 
+    private function userIsUnique($user): bool
+    {
+        $user_exist = (new User)->where('name', '=', $user['name'])->get();
+        if ($user_exist != null) {
+            return false;
+        }
+        return true;
+    }
+
     public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
@@ -77,11 +89,13 @@ class UserController extends Controller
         )->whereRaw($row . " = " . $id)->get();
     }
 
-    public function createUpdateRequestString($user, $id)
+    public function createUpdateRequestString($user, $id): string | Response
     {
         $request_string = 'update users set id = ' . (int) $id;
         if (array_key_exists('name', $user)) {
-            $request_string = $request_string . ', name = "' . $user['name'] . '"';
+            if (self::userIsUnique($user)) {
+                $request_string = $request_string . ', name = "' . $user['name'] . '"';
+            } else return response('', 400);
         }
         if (array_key_exists('profilePicture', $user)) {
             $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
