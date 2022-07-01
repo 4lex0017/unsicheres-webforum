@@ -48,6 +48,11 @@ class UserController extends Controller
         if (!$user)
             return response('', 404);
 
+        if(!self::isThisTheRightUser($id, $request))
+        {
+            return response('this is not your user', 403);
+        }
+
         $user = $request->all();
 
         if ($user['id'] === (int) $id) {
@@ -114,4 +119,17 @@ class UserController extends Controller
         }
         return $request_string = $request_string . ', updated_at = date() where id = ' . (int) $id . ' RETURNING *;';
     }
+
+    public function isThisTheRightUser($id, Request $request)
+    {
+        if($id == $request->user()->id)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }
