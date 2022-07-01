@@ -69,7 +69,7 @@ class AdminLoginController extends Controller
     
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
 
         return [
             'message' => 'Logged out'
