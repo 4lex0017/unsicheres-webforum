@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BackendService} from "./backend.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {shareReplay, tap} from "rxjs";
+import {Observable, shareReplay, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -50,9 +50,19 @@ export class AuthenticationService {
   }
 
   public logout() {
-    localStorage.removeItem("currentUsername")
-    localStorage.removeItem("currentUserId")
-    localStorage.removeItem("bearerToken")
+    this.logoutUserBackend().subscribe(
+      value => {
+        localStorage.removeItem("currentUsername")
+        localStorage.removeItem("currentUserId")
+        localStorage.removeItem("bearerToken")
+      }
+    );
+    
+
+  }
+
+  private logoutUserBackend(): Observable<any> {
+    return this.httpClient.post<any>("http://localhost:80/logout", {}, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
   }
 
   isLoggedOut() {

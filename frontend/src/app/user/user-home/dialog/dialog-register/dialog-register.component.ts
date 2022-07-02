@@ -94,22 +94,6 @@ export class DialogRegisterComponent {
     }
   }
 
-  // createNewUser(userName, userPassword, date) {
-  //   this.backend.registerNewUser(userName, userPassword, date);  //DELETE later
-  //   let user = {
-  //     "name": userName,
-  //     "password": userPassword,
-  //     "birth_date": date,
-  //     "about": "",
-  //     "groups": [
-  //       "Member"
-  //     ],
-  //     "profile_comments": []
-  //   }
-  //   this.backendCom.postUser(user).subscribe(response => {
-  //     // this.authenticate.currentUserId = response.data.id;
-  //   });
-  // }
 
   close(): void {
     this.dialogref.close();

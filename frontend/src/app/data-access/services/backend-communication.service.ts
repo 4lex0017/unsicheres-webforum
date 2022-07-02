@@ -101,6 +101,24 @@ export class BackendCommunicationService {
     ;
   }
 
+  putUserPassword(userId: number, newPassword: string): Observable<HttpResponse<UserFull>> {
+    let userPayload = {
+      id: userId,
+      password: newPassword
+    }
+    return this.httpClient.put<any>(this.url + '/users/' + userId, userPayload, {
+      observe: 'response',
+      headers: {"Content-Type": "application/json"}
+    })
+      .pipe(catchError((error: Response) => {
+        if (error.status == 418) {
+          this.errorBreadCrumbTemplate("The uploaded image datatype is invalid.")
+        }
+        throw {message: 'Bad response', value: error.status}
+      }));
+    ;
+  }
+
   //post comment
   postCommentOnProfile(commentedOnProfileId: number, userId: number, commentContent: string): Observable<HttpResponse<any>> {
     let commentPayload =

@@ -40,6 +40,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatRadioModule} from "@angular/material/radio";
+import { DialogChangePasswordComponent } from './dialog/dialog-change-password/dialog-change-password.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import {MatRadioModule} from "@angular/material/radio";
     DialogRegisterComponent,
     DialogContactFormDismissComponent,
     DialogContactFormComponent,
+    DialogChangePasswordComponent,
   ],
   imports: [
     CommonModule,

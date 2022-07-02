@@ -102,7 +102,7 @@ class AdminController extends Controller
     private function updateCheckedStatic(array &$content, string $type, int $id): void
     {
         $difficulty = DB::connection('secure')
-            ->table('staticvulnerabilities')
+            ->table('staticdifficulties')
             ->value($type . '_difficulty');
 
         $content['vulnerabilities'][$id]['subtasks'][$difficulty - 1]['checked'] = true;

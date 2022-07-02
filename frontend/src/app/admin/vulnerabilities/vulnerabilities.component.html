@@ -25,10 +25,14 @@
           <div class="container">
             <div class="row">
               <div class="col-xs-12 col-md-12 col-lg-12">
-                <app-vulnerability-picker
-                  [task]="vulnerability"
-                  (sendVulnerability)="updateVulnerability($event)">
+                <app-vulnerability-picker *ngIf="vulnerability.id !== 6"
+                                          [task]="vulnerability"
+                                          (sendVulnerability)="updateVulnerability($event)">
                 </app-vulnerability-picker>
+                <app-vulnerability-picker-switch *ngIf="vulnerability.id === 6"
+                                                 [task]="vulnerability"
+                                                 (sendVulnerability)="updateVulnerability($event)">
+                </app-vulnerability-picker-switch>
               </div>
             </div>
           </div>

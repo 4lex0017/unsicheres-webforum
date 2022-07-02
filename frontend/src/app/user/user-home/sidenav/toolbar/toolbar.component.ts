@@ -5,6 +5,7 @@ import {ThemeService} from "../../../../theme.service";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 import {DialogLoginComponent} from "../../dialog/dialog-login/dialog-login.component";
 import {DialogRegisterComponent} from "../../dialog/dialog-register/dialog-register.component";
+import {DialogChangePasswordComponent} from "../../dialog/dialog-change-password/dialog-change-password.component";
 
 @Component({
   selector: 'app-toolbar',
@@ -32,6 +33,12 @@ export class ToolbarComponent {
 
   openLogin(): void {
     const dialogRef = this.dialog.open(DialogLoginComponent, {
+      width: '30%',
+    });
+  }
+
+  changePassword() {
+    const dialogRef = this.dialog.open(DialogChangePasswordComponent, {
       width: '30%',
     });
   }

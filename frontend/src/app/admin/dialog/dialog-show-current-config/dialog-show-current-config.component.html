@@ -1,6 +1,9 @@
 <div class="outer-container">
+  <p class="staticPassword">Password-hash ({{data.hash_difficulty}})</p>
   <h2 mat-dialog-title>Current Config:</h2>
+
   <mat-dialog-content class="mat-typography">
+
     <mat-list>
       <mat-list-item *ngFor="let config of data.data">
         <h1 matLine> {{config.uri}} </h1>

@@ -27,7 +27,11 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VulnerabilityPickerComponent} from './vulnerability-picker/vulnerability-picker.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { DialogShowCurrentConfigComponent } from './dialog/dialog-show-current-config/dialog-show-current-config.component';
+import {
+  DialogShowCurrentConfigComponent
+} from './dialog/dialog-show-current-config/dialog-show-current-config.component';
+import {VulnerabilityPickerSwitchComponent} from './vulnerability-picker-switch/vulnerability-picker-switch.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 
 @NgModule({
@@ -38,6 +42,7 @@ import { DialogShowCurrentConfigComponent } from './dialog/dialog-show-current-c
     SidenavComponent,
     VulnerabilityPickerComponent,
     DialogShowCurrentConfigComponent,
+    VulnerabilityPickerSwitchComponent,
 
   ],
   imports: [
@@ -63,7 +68,8 @@ import { DialogShowCurrentConfigComponent } from './dialog/dialog-show-current-c
     MatTooltipModule,
     MatTabsModule,
     MatCheckboxModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatRadioModule
   ],
   exports: []
 })
