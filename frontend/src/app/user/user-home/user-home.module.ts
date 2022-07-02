@@ -34,13 +34,15 @@ import {
 } from "./dialog/dialog-search-error-message/dialog-search-error-message.component";
 import {DialogCreateThreadComponent} from "./dialog/dialog-create-thread/dialog-create-thread.component";
 import {DialogLoginComponent} from "./dialog/dialog-login/dialog-login.component";
-import {DialogRegisterComponent} from "./dialog/dialog-register/dialog-register.component";
+import {
+  DialogRegisterComponent, SnackBarOnRegisterSuccessComponent
+} from "./dialog/dialog-register/dialog-register.component";
 import {DialogContactFormComponent} from './dialog/dialog-contact-form/dialog-contact-form.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatRadioModule} from "@angular/material/radio";
-import { DialogChangePasswordComponent } from './dialog/dialog-change-password/dialog-change-password.component';
+import {DialogChangePasswordComponent} from './dialog/dialog-change-password/dialog-change-password.component';
 
 
 @NgModule({
@@ -59,6 +61,8 @@ import { DialogChangePasswordComponent } from './dialog/dialog-change-password/d
     DialogContactFormDismissComponent,
     DialogContactFormComponent,
     DialogChangePasswordComponent,
+    DialogRegisterComponent,
+    SnackBarOnRegisterSuccessComponent
   ],
   imports: [
     CommonModule,

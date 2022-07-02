@@ -92,7 +92,7 @@ export class UserProfileViewComponent implements OnInit {
     }
   }
 
-  openEditProfileDialog(userFullObject: UserFullBackend): void {
+  public openEditProfileDialog(userFullObject: UserFullBackend): void {
     const dialogRef = this.dialog.open(DialogEditProfileComponent, {
       width: '65%',
       data:
