@@ -1,36 +1,45 @@
 <div class="outer-container">
-  <p class="staticPassword">Password-hash ({{data.hash_difficulty}})</p>
   <h2 mat-dialog-title>Current Config:</h2>
 
   <mat-dialog-content class="mat-typography">
+    <mat-grid-list cols="4" rowHeight="200px">
+      <mat-grid-tile>
+        <mat-card class="cards">
+          <mat-card-title><h3><b>General </b></h3></mat-card-title>
+          <p>Password-hash ({{data.hash_difficulty}})</p>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile *ngFor="let config of data.data">
+        <mat-card class="cards">
+          <mat-card-title><h3><b>{{config.uri}} </b></h3></mat-card-title>
+          <mat-card-content>
+            <p *ngIf="config.rxss_difficulty && config.rxss_difficulty < 4">
+              <span> Reflected XSS </span>
+              <span class="demo-2"> ({{config.rxss_difficulty}}) </span>
+            </p>
 
-    <mat-list>
-      <mat-list-item *ngFor="let config of data.data">
-        <h1 matLine> {{config.uri}} </h1>
-        <p *ngIf="config.rxss_difficulty && config.rxss_difficulty < 4" matLine>
-          <span> Reflected XSS </span>
-          <span class="demo-2"> ({{config.rxss_difficulty}}) </span>
-        </p>
-        <p *ngIf="config.sxss_difficulty &&  config.sxss_difficulty < 4" matLine>
-          <span> Stored XSS </span>
-          <span class="demo-2"> ({{config.sxss_difficulty}}) </span>
-        </p>
-        <p *ngIf="config.fend_difficulty &&  config.fend_difficulty < 4" matLine>
-          <span> Frontend XSS </span>
-          <span class="demo-2"> ({{config.fend_difficulty}})</span>
-        </p>
-        <p *ngIf="config.sqli_difficulty &&  config.sqli_difficulty < 4" matLine>
-          <span> SQL Injection </span>
-          <span class="demo-2"> ({{config.sqli_difficulty}})</span>
-        </p>
-        <p *ngIf=" config.cmdi_difficulty &&  config.cmdi_difficulty < 4" matLine>
-          <span> Command Injection </span>
-          <span class="demo-2"> ({{config.cmdi_difficulty}})</span>
-        </p>
-      </mat-list-item>
-    </mat-list>
+            <p *ngIf="config.sxss_difficulty &&  config.sxss_difficulty < 4">
+              <span> Stored XSS </span>
+              <span class="demo-2"> ({{config.sxss_difficulty}}) </span>
+            </p>
+            <p *ngIf="config.fend_difficulty &&  config.fend_difficulty < 4">
+              <span> Frontend XSS </span>
+              <span class="demo-2"> ({{config.fend_difficulty}})</span>
+            </p>
+            <p *ngIf="config.sqli_difficulty &&  config.sqli_difficulty < 4">
+              <span> SQL Injection </span>
+              <span class="demo-2"> ({{config.sqli_difficulty}})</span>
+            </p>
+            <p *ngIf=" config.cmdi_difficulty &&  config.cmdi_difficulty < 4">
+              <span> Command Injection </span>
+              <span class="demo-2"> ({{config.cmdi_difficulty}})</span>
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-raised-button (click)="close()" color="primary" cdkFocusInitial>Dismiss</button>
+    <button mat-raised-button (click)="close()" color="primary">Dismiss</button>
   </mat-dialog-actions>
 </div>
