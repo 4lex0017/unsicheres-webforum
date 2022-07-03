@@ -22,7 +22,7 @@ import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
 })
 export class UserThreadViewComponent implements OnInit {
   // threadObject: Thread;
-  threadObjectArrayModel: ThreadArrayModel;
+  threadObjectArrayModel: ThreadArrayModel = {data: []};
   vEnabled: number
   vEnabledFrontend: boolean;
   content: string = "";

@@ -23,7 +23,6 @@ import {animate} from "@angular/animations";
   styleUrls: ['./user-profile-view.component.scss']
 })
 export class UserProfileViewComponent implements OnInit {
-  // userFullObject: UserFull;
   userFullArrayModel: UserFullBackendModel = {data: []};
   userThreads: Observable<ThreadsSmallBackendModel>;
   userPosts: Observable<PostsSmallBackendModel>;
@@ -182,6 +181,9 @@ export class UserProfileViewComponent implements OnInit {
   }
 
   cutPostContent(content: string): string {
+    const rExp: RegExp = new RegExp("(?<=/b\\\?).*(?=/b)");
+    let test = content.match(rExp) || "";
+    content = test[0];
     if (content.length > 25) {
       let subStr = content.slice(0, 22);
       subStr += "...";
