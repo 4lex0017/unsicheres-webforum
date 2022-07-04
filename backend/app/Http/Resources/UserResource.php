@@ -19,16 +19,15 @@ class UserResource extends JsonResource
             'birthDate' => $data->birth_date,
             'location' => $data->location,
             'about' => $data->about,
-            'groups' => $data->groups,
+            'groups' => json_decode($data->groups),
             'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
-            'profileComments' => $data->profile_comments
+            'profileComments' => json_decode($data->profile_comments)
         ];
     }
 
     public function toArray($request): array|JsonSerializable|Arrayable
     {
-
         $this->endorsements = 0; // doesn't exist in DB, so create it here
 
         $posts = Post::all()->where('author', '=', $this->id)->toArray();

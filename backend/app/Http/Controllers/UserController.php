@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource;
@@ -12,8 +11,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use PhpParser\JsonDecoder;
 
 class UserController extends Controller
 {
@@ -37,11 +34,6 @@ class UserController extends Controller
         return UserResource::collection($user);
     }
 
-
-    /**
-     * @param $id
-     * @param Request $request
-     */
     public function updateUser($id, Request $request): AnonymousResourceCollection|Response|Application|ResponseFactory
     {
         $user = (new User)->find($id);
@@ -61,7 +53,7 @@ class UserController extends Controller
                 return $request_string;
             }
             DB::connection('insecure')->unprepared($request_string);
-            return UserResource::collection(User::where('id', '=', $id)->get());
+            return UserResource::collection(self::findUser($id));
         }
         return response('', 400);
     }
