@@ -16,16 +16,16 @@ class ProfileCommentResource extends JsonResource
      */
 
     #[ArrayShape([
-        'profileId' => "mixed",
         'author' => "mixed",
+        'authorName' => "mixed",
         'content' => "mixed",
         'date' => "mixed"
     ])]
     public function toArray($request): array
     {
         return [
-            'profileId' => $this->profile_id,
             'author' => $this->author,
+            'authorName' => $this->name,
             'content' => $this->content,
             'date' => $this->created_at,
         ];

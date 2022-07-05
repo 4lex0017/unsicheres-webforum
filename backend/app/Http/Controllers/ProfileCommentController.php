@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ProfileCommentController extends Controller
@@ -48,7 +50,16 @@ class ProfileCommentController extends Controller
         if ($profile_id <= 0 || !is_numeric($profile_id))
             return response('', 404);
 
-        $comments = ProfileComment::all()->where('profile_id', '=', $profile_id);
+        $comments = DB::connection('insecure')
+            ->table('profile_comments')
+            ->join('users', 'users.id', '=', 'profile_comments.author')
+            ->select('profile_comments.author',
+                'profile_comments.content',
+                'profile_comments.created_at',
+                'users.name')
+            ->where('profile_id', '=', $profile_id)
+            ->get()
+            ->toArray();
 
         return ProfileCommentResource::collection($comments);
     }
