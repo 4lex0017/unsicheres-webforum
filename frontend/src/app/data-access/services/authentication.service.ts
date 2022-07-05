@@ -55,10 +55,13 @@ export class AuthenticationService {
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")
         localStorage.removeItem("bearerToken")
+        //  Catch this in backend (Peters job)
+      }, error => {
+        localStorage.removeItem("currentUsername")
+        localStorage.removeItem("currentUserId")
+        localStorage.removeItem("bearerToken")
       }
     );
-    
-
   }
 
   private logoutUserBackend(): Observable<any> {

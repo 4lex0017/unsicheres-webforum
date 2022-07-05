@@ -148,6 +148,9 @@ export class UserProfileViewComponent implements OnInit {
     });
   }
 
+  isLoggedIn(): boolean {
+    return this.authenticate.isLoggedIn();
+  }
 
   injectContentToDomStartup(): void {
     for (let i = 0; i < this.userFullArrayModel.data.length; i++) {
