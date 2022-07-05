@@ -106,9 +106,6 @@ class UserController extends Controller
             //TODO:: Pasword hash
             $request_string = $request_string . ' , password = "' . $user['password'] . '"';
         }
-        if (array_key_exists('profileComments', $user)) {
-            $request_string = $request_string . ' , profile_comments = "' . json_encode($user['profileComments']) . '"';
-        }
         return $request_string = $request_string . ', updated_at = date() where id = ' . (int) $id . ' RETURNING *;';
     }
 

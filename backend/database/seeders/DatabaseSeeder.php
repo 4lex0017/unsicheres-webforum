@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ThreadSeeder::class,
             PostSeeder::class,
-            AdminSeeder::class
+            AdminSeeder::class,
+            ProfileCommentSeeder::class
         ]);
     }
 }

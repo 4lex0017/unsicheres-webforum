@@ -22,7 +22,6 @@ class UserResource extends JsonResource
             'groups' => json_decode($data->groups),
             'endorsements' => $data->endorsements,
             'profilePicture' => $data->profile_picture,
-            'profileComments' => json_decode($data->profile_comments)
         ];
     }
 

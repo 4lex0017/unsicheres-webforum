@@ -27,12 +27,10 @@ class User extends Authenticable
         'about',
         'groups',
         'profile_picture',
-        'profile_comments',
     ];
 
     protected $casts = [
         'groups' => 'array',
-        'profile_comments' => 'array'
     ];
 
     public $incrementing = true;
