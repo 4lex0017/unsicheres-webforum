@@ -89,7 +89,7 @@ export class BackendCommunicationService {
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
-    return this.httpClient.get<UserFull>(this.url + '/users/' + userId, {observe: 'response'})
+    return this.httpClient.get<UserFull>('/users/' + userId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
         this.errorBreadCrumb(error.status.toString())
         throw {message: 'Bad response', value: error.status}

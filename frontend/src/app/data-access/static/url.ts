@@ -1,3 +1,3 @@
 export const constant = {
-  url: 'http://localhost:80'
+  url: ''
 } as const;
