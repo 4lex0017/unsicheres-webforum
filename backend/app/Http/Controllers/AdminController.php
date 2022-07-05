@@ -29,7 +29,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'sxss', 2, $config);
         $this->updateChecked($content, 'cmdi', 3, $config);
         $this->updateChecked($content, 'fend', 4, $config);
-        $this->updateCheckedStatic($content, 'hash', 5, $config);
+        $this->updateCheckedStatic($content, 'hash', 5);
 
         return response()->json($content);
     }

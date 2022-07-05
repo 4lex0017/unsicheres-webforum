@@ -62,7 +62,7 @@ class VulnSeeder extends Seeder
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
-                'cmdi_difficulty' => 4,
+                'cmdi_difficulty' => 3,
                 'fend_difficulty' => 4,
             ],
             [
