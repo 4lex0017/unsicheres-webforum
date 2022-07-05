@@ -7,7 +7,6 @@ import {BackendService} from "../../data-access/services/backend.service";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {DialogLoginComponent} from "../../user/user-home/dialog/dialog-login/dialog-login.component";
 import {MatDialog} from "@angular/material/dialog";
 import {
   DialogShowCurrentConfigComponent
@@ -44,9 +43,6 @@ export class VulnerabilitiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.setVuln()
-    this.backendCom.getVulnerabilities().subscribe((data) => this.curVulnerabilities = data);
-    // this.vulnerabilities$ = this.backendCom.getVulnerabilities();
-    // this.backendCom.getVulnerabilities().subscribe(data => this.curVulnerabilities = data)
     this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
       this.currentConfig = data;
     })

@@ -16,6 +16,7 @@ import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBac
 import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../../data-access/models/PostsSmallBackendModel";
 import {animate} from "@angular/animations";
+import {UserComment, UserCommentWrapper} from "../../data-access/models/comment";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -26,6 +27,7 @@ export class UserProfileViewComponent implements OnInit {
   userFullArrayModel: UserFullBackendModel = {data: []};
   userThreads: Observable<ThreadsSmallBackendModel>;
   userPosts: Observable<PostsSmallBackendModel>;
+  userComments: Observable<UserCommentWrapper>
   vEnabled: number;
   vEnabledFrontend: boolean
 
@@ -67,6 +69,7 @@ export class UserProfileViewComponent implements OnInit {
       }
       this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullArrayModel.data[0].id);
       this.userPosts = this.backendServiceCom.getPostsFromUser(this.userFullArrayModel.data[0].id);
+      this.userComments = this.backendServiceCom.getCommentsFromUser(this.userFullArrayModel.data[0].id);
     });
   }
 
@@ -202,17 +205,11 @@ export class UserProfileViewComponent implements OnInit {
     return title.replace(/\s+/g, '-').toLowerCase();
   }
 
-  getCategoryFromThread(id: number): string {
-    return this.backendService.getCategoryStrFromThreadId(id);
-  }
 
   getThreadFromPost(id: number): string {
     return this.backendService.getThreadSlugFromPostId(id)
   }
 
-  getFullUserFromUserId(id: number): UserFull {
-    return this.backendService.getFullUserFromUserId(id);
-  }
 
   parseDate(date: string): string {
     let dateObj: Date = new Date(date);

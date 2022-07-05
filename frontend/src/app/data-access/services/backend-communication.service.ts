@@ -24,6 +24,7 @@ import {
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
+import {UserComment, UserCommentWrapper} from "../models/comment";
 
 
 @Injectable({
@@ -69,9 +70,17 @@ export class BackendCommunicationService {
       );
   }
 
+  getSideContent(): Observable<any> {
+    return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/users');
+  }
+
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<ThreadsSmallBackendModel> {
     return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
+  }
+
+  getCommentsFromUser(userId: number): Observable<UserCommentWrapper> {
+    return this.httpClient.get<UserCommentWrapper>(this.url + '/profileComments/' + userId);
   }
 
   getPostsFromUser(userId: number): Observable<PostsSmallBackendModel> {

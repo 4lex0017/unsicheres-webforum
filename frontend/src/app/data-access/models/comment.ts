@@ -1,8 +1,11 @@
-import {User} from "./user";
-
 export interface UserComment {
-  id: number;
+  author: number;
+  authorName: string;
   content: string;
-  userSmall: User;
-
+  date: string;
 }
+
+export interface UserCommentWrapper {
+  data: UserComment[]
+}
+
