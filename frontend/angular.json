@@ -74,7 +74,9 @@
         },
         "serve": {
           "options": {
-            "port": 4200
+            "port": 4200,
+            "browserTarget": "PrototypeProjektarbeit:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
