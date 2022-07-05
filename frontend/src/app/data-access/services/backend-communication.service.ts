@@ -25,6 +25,7 @@ import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
 import {UserComment, UserCommentWrapper} from "../models/comment";
+import {constant} from "../static/url";
 
 
 @Injectable({
@@ -32,7 +33,7 @@ import {UserComment, UserCommentWrapper} from "../models/comment";
 })
 
 export class BackendCommunicationService {
-  readonly url: string = 'http://localhost:80';
+  readonly url: string = constant.url;
 
 
   constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
