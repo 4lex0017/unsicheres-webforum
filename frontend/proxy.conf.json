@@ -1,5 +1,101 @@
 {
-  "*": {
+  "/login": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/logout": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/register": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/login": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/logout": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/categories": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/categories/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/sitecontent/users": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/users": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/users/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/profileComments/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/threads/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/attackername": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/c": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/search": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/search/*": {
     "target": "http://localhost:80",
     "secure": false,
     "logLevel": "debug",

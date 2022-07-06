@@ -186,7 +186,7 @@ export class BackendCommunicationService {
 
   postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
     let postPayload = {...post};
-    return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
+    return this.httpClient.post<Post>(this.url + '/threads/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
@@ -208,9 +208,9 @@ export class BackendCommunicationService {
     // -> postThread()
   }
 
-  getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
-  }
+  // getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
+  //   return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
+  // }
 
   setAttackername(name: string): Observable<HttpResponse<any>> {
     let attackerPayload =
