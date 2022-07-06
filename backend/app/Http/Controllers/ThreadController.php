@@ -72,20 +72,22 @@ class ThreadController extends Controller
         // need to add the thread to the categories' table thread-array
     }
 
-    public function deleteThread($cat_id, $thread_id): Response|Application|ResponseFactory
+    public function deleteThread($cat_id, $thread_id, Request $request): Response|Application|ResponseFactory
     {
         $thread = (new Thread)->find($thread_id);
         if (!$thread) // just in case
             return response("", 404);
 
-
+        if(!self::isThisTheRightUser($thread->author_id, $request))
+            return response("User not allowed to delete this Thread", 403);
+        
         self::deleteThreadFromCategory($cat_id, $thread_id);
 
         DB::connection('insecure')
             ->table('threads')
             ->whereRaw('id = ' . $thread_id . ' and category_id = ' . $cat_id)
             ->delete();
-
+        
         return response("", 204);
     }
 
@@ -97,6 +99,9 @@ class ThreadController extends Controller
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             return response('', 404);
 
+        if(!self::isThisTheRightUser($thread->author_id, $request))
+        return response("User not allowed to update this Thread", 403);
+        
         $thread = $request->all();
         if ($thread['id'] === (int) $thread_id) {
             $request_string = self::createUpdateRequestString($thread, $thread_id);
@@ -233,5 +238,17 @@ class ThreadController extends Controller
         }
 
         return $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
+    }
+
+    public function isThisTheRightUser($id, Request $request)
+    {
+        if($id == $request->user()->id || in_array("Admin", $request->user()->groups))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
