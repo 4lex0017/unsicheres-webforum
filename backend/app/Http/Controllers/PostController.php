@@ -97,7 +97,7 @@ class PostController extends Controller
             ->where('thread_id', '=', $thread_id)->first();
 
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
-            abort(422);
+            return response()->json('!$post || $post->id != $post_id || $post->thread_id != $thread_id', 422);
 
         if (!self::isThisTheRightUser($post->author_id, $request))
             return response()->json('You are not allowed to edit this post!', 403);
@@ -113,7 +113,7 @@ class PostController extends Controller
             return new PostResource($new_post);
         }
 
-        abort(422); // TODO: why the **** is this here
+        return response()->json('end of function error', 422);
     }
 
     private function addPostToThread($post): void
