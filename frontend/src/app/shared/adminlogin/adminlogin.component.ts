@@ -61,6 +61,6 @@ export class AdminLoginComponent {
 
 
   openUserLogin() {
-    this.router.navigate(['/login'])
+    this.router.navigate(['/userLogin'])
   }
 }

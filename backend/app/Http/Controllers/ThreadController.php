@@ -82,12 +82,14 @@ class ThreadController extends Controller
         // need to add the thread to the categories' table thread-array
     }
 
-    public function deleteThread($cat_id, $thread_id): Response|Application|ResponseFactory
+    public function deleteThread($cat_id, $thread_id, Request $request): Response|Application|ResponseFactory
     {
         $thread = (new Thread)->find($thread_id);
         if (!$thread) // just in case
             return response("", 404);
 
+        if (!self::isThisTheRightUser($thread->author_id, $request))
+            return response("User not allowed to delete this Thread", 403);
 
         self::deleteThreadFromCategory($cat_id, $thread_id);
 
@@ -120,6 +122,9 @@ class ThreadController extends Controller
 
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
             abort(422);
+
+        if (!self::isThisTheRightUser($thread->author_id, $request))
+            return response("User not allowed to update this Thread", 403);
 
         $thread = $request->all();
         if ($thread['id'] === (int) $thread_id) {
