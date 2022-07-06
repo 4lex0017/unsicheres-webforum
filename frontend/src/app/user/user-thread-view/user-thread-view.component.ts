@@ -369,6 +369,7 @@ export class UserThreadViewComponent implements OnInit {
     if (fullReply!.textContent != "") {
       replyString = fullReply!.textContent + "/b?" + replyString
     }
+    replyString = "/b?" + replyString;
     //console.log("hier")
     if (this.vEnabledPost == 1) replyString = this.diffPicker.frontendFilterTagsNormal(replyString)
     else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)

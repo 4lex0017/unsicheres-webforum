@@ -417,7 +417,6 @@ export class ReactivePostComponent implements OnInit {
         let counter: number;
         for(let j = 0; j < line.length; j++){
           //console.log("newContent :" + line[j])
-          console.log(j)
           if(line[j] != "") {
             placeHolderDiv = document.createElement("div")
             placeHolderDiv.id = this.postObject.id + "placeDiv" + j;
