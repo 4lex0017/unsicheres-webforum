@@ -14,6 +14,11 @@ import {DialogLoginComponent} from "../user-home/dialog/dialog-login/dialog-logi
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {addBodyClass} from "@angular/cdk/schematics";
+import {HttpClientModule, HttpResponse} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -24,10 +29,13 @@ export class UserThreadViewComponent implements OnInit {
   // threadObject: Thread;
   threadObjectArrayModel: ThreadArrayModel = {data: []};
   vEnabled: number
+  vEnabledPost: number
   vEnabledFrontend: boolean;
   content: string = "";
   testcontent: any[];
   editId: number;
+  url: string = "http://localhost:4200/forum";
+
 
 
   constructor(private route: ActivatedRoute,
@@ -39,7 +47,8 @@ export class UserThreadViewComponent implements OnInit {
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
               private changeDetectorRef: ChangeDetectorRef,
-              private didAThing: DidAThingServiceService) {
+              private didAThing: DidAThingServiceService,
+              private _snackBar: MatSnackBar) {
   }
 
   // async setVuln() {
@@ -49,6 +58,10 @@ export class UserThreadViewComponent implements OnInit {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}").then(value => {
         this.vEnabled = value
         this.vEnabledFrontend = this.isActive();
+      }
+    );
+    await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}/posts").then(value => {
+        this.vEnabledPost = value
       }
     );
   }
@@ -76,9 +89,9 @@ export class UserThreadViewComponent implements OnInit {
   async ngOnInit() {
     await this.setVuln();
     this.route.data.subscribe((resp: Data) => {
-        console.log(resp["thread"].body)
+        //console.log(resp["thread"].body)
         this.threadObjectArrayModel = resp["thread"].body;
-        console.log(this.threadObjectArrayModel)
+        //console.log(this.threadObjectArrayModel)
         if (this.vEnabled != 0) this.injectContentToDomStartup()
       }
     );
@@ -112,7 +125,7 @@ export class UserThreadViewComponent implements OnInit {
           });
           if (this.vEnabled != 0) this.injectContentToDom(threadObject)
           if (resp["headers"].get('VulnFound') == "true") {
-            console.log("found vuln in userprofile")
+            //console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
@@ -140,14 +153,15 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
+    //console.log("reply: " + replyPost.content)
     let selected = window.getSelection();
     let range = selected!.getRangeAt(0);
     let tag = range.commonAncestorContainer;
     const box = document.getElementById('replyBox' + threadObject.id)
     /*
-    console.log(tag.parentNode == box!.parentNode);
+    //console.log(tag.parentNode == box!.parentNode);
     if(false){
-      console.log("inside fix")
+      //console.log("inside fix")
       let replacement = document.createElement("div");
       replacement.id = "firstline";
       if(box!.children.length != 0){
@@ -158,8 +172,8 @@ export class UserThreadViewComponent implements OnInit {
     }
      */
 
-    let inBox = false;
 
+    let inBox = false;
 
     for (let i = 0; i < box!.children.length; i++) {
       if (tag.parentNode == box?.children[i] || tag.parentNode == box) {
@@ -167,15 +181,27 @@ export class UserThreadViewComponent implements OnInit {
       }
     }
 
-    let editElement = document.getElementById("replyBox" + this.editId);
+    if(box!.children[0] == null){
+      inBox = true;
+    }
+
+    let editElement;
+    if(this.vEnabledFrontend){
+      editElement = document.getElementById("loop" + this.editId);
+    }else{
+      editElement = document.getElementById("replyBox" + this.editId);
+    }
+
+    let addedToEdit = false;
     if (editElement != null) {
       for (let i = 0; i < editElement.children.length; i++) {
-        if (tag.parentNode!.parentNode == editElement.children[i] || tag.parentNode!.parentNode == editElement) {
+        if (tag.parentNode!.parentNode == editElement.children[i] || tag.parentNode!.parentNode == editElement || (tag.parentNode == editElement && this.vEnabledFrontend)) {
+          addedToEdit = true;
           inBox = true;
         }
       }
     }
-
+    //console.log("inBox: " + inBox);
     if (!inBox) {
       return;
     }
@@ -192,6 +218,7 @@ export class UserThreadViewComponent implements OnInit {
     const replyHeader = document.createElement("p");
     replyHeader.textContent = replyPost.author.name + ":";
     reply.appendChild(replyHeader);
+    /*
     let stringArray = Array.from(replyPost.content);
     let start = 0;
     for (let i = 0; i < replyPost.content.length; i++) {
@@ -199,8 +226,8 @@ export class UserThreadViewComponent implements OnInit {
         if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
           let replyLine = document.createElement("div");
           replyLine.textContent = replyPost.content.substring(start, i);
-          console.log("Linezeug" + replyLine.textContent)
           reply.appendChild(replyLine)
+          //console.log("line thats added : " + replyLine.textContent)
           i = i + 3;
           start = i;
         } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
@@ -214,21 +241,84 @@ export class UserThreadViewComponent implements OnInit {
         }
       }
     }
+     */
+    let rsplit = replyPost.content.split("/r?");
+    let filteredOfReply: string[] = new Array(0);
+    for(let i = 0; i < rsplit.length; i++){
+      if((Array.from(rsplit[i])[0] + Array.from(rsplit[i])[1]) == '/a'){
+
+      }else{
+        //console.log("splitpart: " + rsplit[i])
+        filteredOfReply.push(rsplit[i]);
+      }
+    }
+    let filteredOfB: string[] = new Array(0);
+    for(let i = 0; i < filteredOfReply.length; i++){
+      let firstFilter = filteredOfReply[i].split("/b?");
+      for(let j = 0; j < firstFilter.length; j++){
+        filteredOfB.push(firstFilter[j])
+      }
+    }
+    for(let i = 0; i < filteredOfB.length; i++){
+      let line = document.createElement("div");
+      line.textContent = filteredOfB[i];
+      reply.appendChild(line);
+    }
     const above = document.createElement("div");
     const under = document.createElement("div");
     const linebreak = document.createElement("br");
     const linebreak2 = document.createElement("br");
     above.appendChild(linebreak);
     under.appendChild(linebreak2);
-    console.log(box!.children[0].textContent);
+    if(box!.children[0] == null && !addedToEdit){
+      //console.log("addcase 0");
+      let firsline = document.createElement("div");
+      firsline.textContent = box!.textContent;
+      box!.textContent = null;
+      box!.appendChild(firsline);
+      box!.appendChild(above);
+      box!.appendChild(reply);
+      box!.appendChild(under);
+      return;
+    }
     if (box!.children[0].textContent == "" && this.editId == -1) {
+      //console.log("addcase1")
       box!.appendChild(reply)
     } else {
-      tag.parentNode!.insertBefore(reply, tag.nextSibling);
-      reply.parentNode!.insertBefore(above, reply);
+      if(addedToEdit && !this.vEnabledFrontend){
+        tag.parentNode!.insertBefore(under, tag.nextSibling);
+      }
+      if(addedToEdit && tag.parentNode!.children.length == 1 && !this.vEnabledFrontend){
+        //console.log("addcase 3")
+        let addBox = document.getElementById("replyBox" + this.editId);
+        addBox!.appendChild(above);
+        addBox!.appendChild(reply);
+      }else if(tag.nextSibling != null) {
+        //console.log("addcase 2")
+        //console.log(tag)
+        tag.parentNode!.insertBefore(reply, tag.nextSibling);
+        reply.parentNode!.insertBefore(above, reply);
+      }else{
+        /*
+      }
+        if(addedToEdit && !this.vEnabledFrontend){
+          //console.log("addcase 3")
+          let addBox = document.getElementById("replyBox" + this.editId);
+          addBox!.appendChild(above);
+          addBox!.appendChild(reply);
+        }else{
+        */
+          //console.log("addcase 4")
+          tag.parentNode!.insertBefore(reply, tag.nextSibling);
+          reply.parentNode!.insertBefore(above, reply);
+          /*
+        }
+           */
+      }
     }
-
-    box!.appendChild(under);
+    if(!addedToEdit){
+      box!.appendChild(under);
+    }
   }
 
   createPost(threadObject: Thread): void {
@@ -258,7 +348,6 @@ export class UserThreadViewComponent implements OnInit {
           }
         }
       } else if (child.tagName == "BLOCKQUOTE") {
-        console.log("extra")
         let infos: string = "/a?" + child.id + "/a?";
         let header: string = child.children[0].textContent! + "/b?"
         let body: string = "";
@@ -270,8 +359,7 @@ export class UserThreadViewComponent implements OnInit {
         replyString = replyString + child.textContent + "/b?";
       }
     }
-    console.log(replyString);
-    console.log("pushed stuff");
+    //console.log("pushed stuff: " + replyString);
     if (replyString == "/b?/b?") {
       return;
     }
@@ -281,7 +369,18 @@ export class UserThreadViewComponent implements OnInit {
     if (fullReply!.textContent != "") {
       replyString = fullReply!.textContent + "/b?" + replyString
     }
-    threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), replyString));
+    //console.log("hier")
+    if (this.vEnabledPost == 1) replyString = this.diffPicker.frontendFilterTagsNormal(replyString)
+    else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)
+    this.backendServiceCom.postPost(threadObject.id, this.authenticate.getCurrentUserId(), replyString).subscribe((value: Data) => {
+      let newPost = value["body"];
+      //console.log(newPost);
+      threadObject.posts.push(newPost)
+      if (value["headers"].get('VulnFound') == "true") {
+        //console.log("found vuln in userprofile")
+        this.didAThing.sendMessage();
+      }
+    })
     fullReply!.textContent = "";
     let newLine = document.createElement("div");
     let linebreak = document.createElement("br");
@@ -366,18 +465,6 @@ export class UserThreadViewComponent implements OnInit {
         }
       }
     }
-    for (let i = 0; i < content.length; i++) {
-      if (content[i].children.length != 0) {
-        console.log(content[i].nodeName);
-        for (let j = 0; j < content[i].children.length; j++) {
-          console.log(content[i].children[j].nodeName);
-          console.log(content[i].children[j].textContent)
-        }
-      } else {
-        console.log(content[i].nodeName)
-        console.log(content[i].textContent)
-      }
-    }
     this.testcontent = content;
   }
 
@@ -394,7 +481,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   openDeletePostConsumer(threadObject: Thread, postObjectId: number) {
-    console.log(postObjectId)
+    //console.log(postObjectId)
     this.threadObjectArrayModel.data.forEach((thread, index) => {
       if (thread.id == threadObject.id) {
         for (let z = 0; z < threadObject.posts.length; z++) {
@@ -434,14 +521,18 @@ export class UserThreadViewComponent implements OnInit {
     if (i != -1) {
       threadObject.likedFrom.splice(i, 1)
     } else {
-      console.log(this.authenticate.getCurrentUserId())
+      //console.log(this.authenticate.getCurrentUserId())
       threadObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
   }
 
-  copyUrl(postIDd: number): void {
-    // geht net richtig weils alten #ref auch mit dazu macht -> weg finden ThreadId zu kriegen
-    navigator.clipboard.writeText(window.location.href + "#" + postIDd);
+  copyUrl(postId: number): void {
+    let url = window.location.href.split("#")
+    navigator.clipboard.writeText(url[0] + "#" + postId);
+    this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+      duration: 5000,
+      data: "Copied Link"
+    })
   }
 
 
