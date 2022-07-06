@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BackendService} from "./backend.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, shareReplay, tap} from "rxjs";
+import {constant} from "../static/url";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ export class AuthenticationService {
 
   constructor(private backend: BackendService, private httpClient: HttpClient) {
   }
+
+  readonly url: string = constant.url;
 
   getCurrentUsername(): string {
     return localStorage.getItem("currentUsername")!;
@@ -28,7 +31,7 @@ export class AuthenticationService {
   // }
 
   public loginJwt(name: string, password: string) {
-    return this.httpClient.post<any>('http://localhost:80/login', {
+    return this.httpClient.post<any>(this.url + '/login', {
       name,
       password
     }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name), error => console.log(error)), shareReplay());
@@ -42,7 +45,7 @@ export class AuthenticationService {
   }
 
   public registerJwt(name: string, password: string, birthDate: string) {
-    return this.httpClient.post<any>('http://localhost:80/register', {
+    return this.httpClient.post<any>(this.url + '/register', {
       name,
       password,
       birthDate
@@ -55,14 +58,17 @@ export class AuthenticationService {
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")
         localStorage.removeItem("bearerToken")
+        //  Catch this in backend (Peters job)
+      }, error => {
+        localStorage.removeItem("currentUsername")
+        localStorage.removeItem("currentUserId")
+        localStorage.removeItem("bearerToken")
       }
     );
-    
-
   }
 
   private logoutUserBackend(): Observable<any> {
-    return this.httpClient.post<any>("http://localhost:80/logout", {}, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
+    return this.httpClient.post<any>(this.url + "/logout", {}, {headers: new HttpHeaders({'Content-Type': 'application/json'})});
   }
 
   isLoggedOut() {

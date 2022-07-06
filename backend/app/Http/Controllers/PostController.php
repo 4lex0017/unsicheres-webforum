@@ -12,10 +12,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 
 class PostController extends Controller
 {
+    protected static array $map = [
+        'threadId' => 'thread_id',
+        'content' => 'content',
+        'likedFrom' => 'liked_from',
+        'author' => 'author'
+    ];
+
     public function getAllPostsOfUser($id): AnonymousResourceCollection
     {
         $posts = DB::connection('insecure')->table('posts')->select(
@@ -34,13 +43,20 @@ class PostController extends Controller
 
     public function createPost(Request $request, $thread_id): PostResource
     {
+        $validator = Validator::make($request->all(), [
+            'threadId' => 'required',
+            'content' => 'required|min:5',
+            'author' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
+        }
+
         $post = $request->all();
         if ($post['threadId'] === (int) $thread_id) {
-            $request_string = self::createCreateRequestString($post);
-            if (is_a($request_string, 'Illuminate\Http\Response')) {
-                return $request_string;
-            }
-            DB::connection('insecure')->unprepared($request_string);
+            DB::connection('insecure')->unprepared(UtilityController::createStringBuilder('posts', self::$map, $request));
         }
 
         $new_post = (new Post())->orderby('created_at', 'desc')->first();
@@ -50,11 +66,14 @@ class PostController extends Controller
         return new PostResource($new_post);
     }
 
-    public function deletePost($thread_id, $post_id): Response|Application|ResponseFactory
+    public function deletePost($thread_id, $post_id, Request $request): Response|Application|ResponseFactory
     {
         $post = (new Post)->find($post_id);
         if (!$post) // just in case
             return response("", 404);
+
+        if (!self::isThisTheRightUser($post->author_id, $request))
+            return response("User not allowed to delete this Post", 403);
 
         self::deletePostFromThread($thread_id, $post_id);
 
@@ -66,25 +85,40 @@ class PostController extends Controller
         return response("", 204);
     }
 
-    public function updatePost(Request $request, $thread_id, $post_id): PostResource|Response|Application|ResponseFactory
+    public function updatePost(Request $request, $thread_id, $post_id): PostResource|JsonResponse|Application|ResponseFactory
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'threadId' => 'required',
+            'content' => 'sometimes|required|min:5',
+            'author' => 'sometimes|required',
+            'likedFrom' => 'sometimes|required'
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
+        }
+
         $post = (new Post)->where('id', '=', $post_id, 'and')
             ->where('thread_id', '=', $thread_id)->first();
 
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
-            return response('', 404);
+            abort(422);
 
+        if (!self::isThisTheRightUser($post->author_id, $request))
+            return response("User not allowed to update this Post", 403);
 
         $post = $request->all();
         if ($post['id'] === (int) $post_id) {
-            $request_string = self::createUpdateRequestString($post, $post_id);
+            $request_string = UtilityController::updateStringBuilder('posts', self::$map, $request, $post_id);
 
             DB::connection('insecure')->unprepared($request_string);
 
             $new_post = (new Post())->find($post_id);
             return new PostResource($new_post);
         }
-        return response('', 404);
+        abort(422);
     }
 
     private function addPostToThread($post): void
@@ -112,45 +146,8 @@ class PostController extends Controller
         $thread->save(); // save it    }
     }
 
-    public function createCreateRequestString(array $post): string | Response
+    public function isThisTheRightUser($id, Request $request)
     {
-
-        $request_string = 'insert into posts (thread_id, author, liked_from, content, created_at, updated_at) Values(';
-        if (array_key_exists('threadId', $post)) {
-            $request_string = $request_string . '"' . $post['threadId'] . '"';
-        } else
-            return response('', 404);
-
-        if (array_key_exists('author', $post)) {
-            $request_string = $request_string . ' , "' . $post['author'] . '"';
-        } else
-            return response('', 404);
-
-        if (array_key_exists('likedFrom', $post)) {
-            $request_string = $request_string . ' , "' . json_encode($post['likedFrom']) . '"';
-        } else
-            $request_string = $request_string . ' , "[]"';
-
-        if (array_key_exists('content', $post)) {
-            $request_string = $request_string . ' , "' . $post['content'] . '"';
-        } else
-            $request_string = $request_string . ' , "[]"';
-
-        return $request_string = $request_string . ',date(),date()) RETURNING *;';
-    }
-
-    public function createUpdateRequestString(array $post, $post_id): string
-    {
-        $request_string = 'update posts set id = ' . (int) $post_id;
-        if (array_key_exists('author', $post)) {
-            $request_string = $request_string . ' , author = "' . $post['author'] . '"';
-        }
-        if (array_key_exists('likedFrom', $post)) {
-            $request_string = $request_string . ' , liked_from = "' . json_encode($post['likedFrom']) . '"';
-        }
-        if (array_key_exists('content', $post)) {
-            $request_string = $request_string . ' , content = "' . $post['content'] . '"';
-        }
-        return $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
+        return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }
 }

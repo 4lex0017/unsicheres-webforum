@@ -6,8 +6,8 @@ import {ErrorComponent} from "./shared/error/error.component";
 import {AdminLoginComponent} from "./shared/adminlogin/adminlogin.component";
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'adminlogin', component: AdminLoginComponent},
+  {path: 'userLogin', component: LoginComponent},
+  {path: 'adminLogin', component: AdminLoginComponent},
   {
     path: 'admin',
     canActivate: [RouteGuardService],
@@ -17,7 +17,7 @@ const routes: Routes = [
     path: 'forum',
     loadChildren: () => import('./user/user-home/user-home.module').then(m => m.UserHomeModule)
   },
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
+  {path: '', redirectTo: 'userLogin', pathMatch: 'full'},
   {path: '**', component: ErrorComponent}
 ];
 

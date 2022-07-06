@@ -8,7 +8,7 @@ export interface UserFull {
   birth_date: string
   about: string;
   groups: string[];
-  profile_comments: UserComment[];
+  profile_comments?: UserComment[];
   profile_picture?: string;
   location?: string;
   endorsements?: number;

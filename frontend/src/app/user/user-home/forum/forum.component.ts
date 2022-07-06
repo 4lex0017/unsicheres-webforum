@@ -37,6 +37,7 @@ export class ForumComponent implements OnInit {
 
   curId: number = -1;
   curTitle: string = "";
+  sideContent: Observable<any>;
   accessBackend: Observable<AccessBackend>;
   showFull = false;
   searchQuery: string = "";
@@ -54,6 +55,7 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessBackend = this.backendComService.getCategories();
+    this.sideContent = this.backendComService.getSideContent();
     this.activeRoute.queryParamMap.subscribe((params) => {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');

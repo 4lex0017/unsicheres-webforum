@@ -24,6 +24,8 @@ import {
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
+import {UserComment, UserCommentWrapper} from "../models/comment";
+import {constant} from "../static/url";
 
 
 @Injectable({
@@ -31,7 +33,7 @@ import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
 })
 
 export class BackendCommunicationService {
-  readonly url: string = 'http://localhost:80';
+  readonly url: string = constant.url;
 
 
   constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
@@ -69,9 +71,17 @@ export class BackendCommunicationService {
       );
   }
 
+  getSideContent(): Observable<any> {
+    return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/users');
+  }
+
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<ThreadsSmallBackendModel> {
     return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
+  }
+
+  getCommentsFromUser(userId: number): Observable<UserCommentWrapper> {
+    return this.httpClient.get<UserCommentWrapper>(this.url + '/profileComments/' + userId);
   }
 
   getPostsFromUser(userId: number): Observable<PostsSmallBackendModel> {
@@ -79,7 +89,7 @@ export class BackendCommunicationService {
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
-    return this.httpClient.get<UserFull>(this.url + '/users/' + userId, {observe: 'response'})
+    return this.httpClient.get<UserFull>('/users/' + userId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
         this.errorBreadCrumb(error.status.toString())
         throw {message: 'Bad response', value: error.status}
@@ -176,7 +186,7 @@ export class BackendCommunicationService {
 
   postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
     let postPayload = {...post};
-    return this.httpClient.post<Post>(this.url + '/thread/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
+    return this.httpClient.post<Post>(this.url + '/threads/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
@@ -198,9 +208,9 @@ export class BackendCommunicationService {
     // -> postThread()
   }
 
-  getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
-    return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
-  }
+  // getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
+  //   return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
+  // }
 
   setAttackername(name: string): Observable<HttpResponse<any>> {
     let attackerPayload =

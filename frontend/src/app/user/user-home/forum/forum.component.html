@@ -56,14 +56,18 @@
           <mat-card-title class="sidecontent-users">
             Registered Users
           </mat-card-title>
-
-          <span *ngFor="let user of backEndService.userData; let i = index"
+          <div *ngIf="sideContent | async as sideContentObj; else loadingComments">
+          <span *ngFor="let user of sideContentObj.data; let i = index"
                 [routerLink]="['/forum/users', user.id]"
                 style="word-wrap: break-word">
             <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
             ,
           </span>
-          ...
+            ...
+          </div>
+          <ng-template #loadingComments>
+            <p>Loading ...</p>
+          </ng-template>
         </mat-card>
       </div>
     </div>
