@@ -34,11 +34,6 @@ Route::get('search/threads', 'App\Http\Controllers\SearchController@searchThread
 Route::get('search', 'App\Http\Controllers\SearchController@globalSearch');
 
 /**
- * @uses App\Http\Controllers\UserController::getAllUsers()
- */
-Route::get('users', 'App\Http\Controllers\UserController@getAllUsers');
-
-/**
  * @uses App\Http\Controllers\UserController::getUserById()
  */
 Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');

@@ -50,14 +50,6 @@ class VulnSeeder extends Seeder
                 'fend_difficulty' => 4,
             ],
             [
-                'uri' => '/users',
-                'sxss_difficulty' => 4,
-                'rxss_difficulty' => 4,
-                'sqli_difficulty' => 4,
-                'cmdi_difficulty' => 3,
-                'fend_difficulty' => 4,
-            ],
-            [
                 'uri' => '/users/{int}',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
