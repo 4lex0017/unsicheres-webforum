@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -77,7 +78,7 @@ class PostController extends Controller
         return response("", 204);
     }
 
-    public function updatePost(Request $request, $thread_id, $post_id): PostResource|JsonResponse|Application|ResponseFactory
+    public function updatePost(Request $request, $thread_id, $post_id): JsonResponse|PostResource
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -99,7 +100,7 @@ class PostController extends Controller
             abort(422);
 
         if (!self::isThisTheRightUser($post->author_id, $request))
-            return response("User not allowed to update this Post", 403);
+            return response()->json('You are not allowed to edit this post!', 403);
 
         $post = $request->all();
         if ($post['id'] === (int)$post_id) {
