@@ -95,7 +95,7 @@
         },
         {
             "id": 4,
-            "name": "Command Injection",
+            "name": "Insecure File Upload",
             "description": "upload non-image files as profile pictures",
             "subtasks": [
                 {
