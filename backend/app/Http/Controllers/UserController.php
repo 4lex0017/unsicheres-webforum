@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 
 class UserController extends Controller
@@ -48,7 +49,7 @@ class UserController extends Controller
         return UserResource::collection($user);
     }
 
-    public function updateUser($id, Request $request): AnonymousResourceCollection|Response|Application|ResponseFactory
+    public function updateUser($id, Request $request): AnonymousResourceCollection|JsonResponse|Application|ResponseFactory
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -63,7 +64,7 @@ class UserController extends Controller
 
         $user = (new User)->find($id);
         if (!$user)
-            return response('', 404);
+            abort(404);
 
         if (!self::isThisTheRightUser($id, $request))
             return response()->json('you are not allowed to update this user', 403);
@@ -78,7 +79,7 @@ class UserController extends Controller
             DB::connection('insecure')->unprepared($request_string);
             return UserResource::collection(self::findUser($id));
         }
-        return response('', 400);
+        abort(404);
     }
 
     public function findUser($id): ?Collection
@@ -91,45 +92,12 @@ class UserController extends Controller
         return $user;
     }
 
-    private function userIsUnique($user): bool
-    {
-        $user_exist = (new User)->where('name', '=', $user['name'])->get();
-        if ($user_exist === null) {
-            return false;
-        }
-        return true;
-    }
 
     public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
-    }
-
-    public function createUpdateRequestString($user, $id): string | Response
-    {
-        $request_string = 'update users set id = ' . (int) $id;
-        if (array_key_exists('name', $user) && self::userIsUnique($user)) {
-            $request_string = $request_string . ', name = "' . $user['name'] . '"';
-        }
-        if (array_key_exists('profilePicture', $user)) {
-            $request_string = $request_string . ' , profile_picture = "' . $user['profilePicture'] . '"';
-        }
-        if (array_key_exists('location', $user)) {
-            $request_string = $request_string . ' , location = "' . $user['location'] . '"';
-        }
-        if (array_key_exists('about', $user)) {
-            $request_string = $request_string . ' , about = "' . $user['about'] . '"';
-        }
-        if (array_key_exists('birthDate', $user)) {
-            $request_string = $request_string . ' , birth_date = "' . $user['birthDate'] . '"';
-        }
-        if (array_key_exists('password', $user)) {
-            //TODO:: Pasword hash
-            $request_string = $request_string . ' , password = "' . $user['password'] . '"';
-        }
-        return $request_string = $request_string . ', updated_at = date() where id = ' . (int) $id . ' RETURNING *;';
     }
 
     public function isThisTheRightUser($id, Request $request)

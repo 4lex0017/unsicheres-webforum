@@ -41,7 +41,7 @@ class PostController extends Controller
         return SmallPostResource::collection($posts);
     }
 
-    public function createPost(Request $request, $thread_id): PostResource
+    public function createPost(Request $request, $thread_id): PostResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'threadId' => 'required',
