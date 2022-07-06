@@ -212,4 +212,9 @@ class ThreadController extends Controller
 
         return $thread_array;
     }
+
+    public function isThisTheRightUser($id, Request $request)
+    {
+        return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
+    }
 }

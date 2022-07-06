@@ -134,10 +134,6 @@ class UserController extends Controller
 
     public function isThisTheRightUser($id, Request $request)
     {
-        if ($id == $request->user()->id || in_array("Admin", $request->user()->groups)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }
 }

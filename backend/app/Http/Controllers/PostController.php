@@ -145,4 +145,9 @@ class PostController extends Controller
         $thread['posts'] = $posts_array; // set the new array
         $thread->save(); // save it    }
     }
+
+    public function isThisTheRightUser($id, Request $request)
+    {
+        return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
+    }
 }
