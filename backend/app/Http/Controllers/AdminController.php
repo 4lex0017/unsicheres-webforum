@@ -109,6 +109,48 @@ class AdminController extends Controller
     }
 
     /**
+     * change used difficulties based on config json
+     * ROUTE PUT /admin/config/premade
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function updateConfigurationFromJson(Request $request): array
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $this->updateStaticDifficulty('hash', $data['hash_difficulty']);
+        (new PasswordSeeder)->run();
+
+        $this->updateRoutesFromJson($data['data']);
+
+        SiteController::generateNewSmallUserConfig();
+        return $this->getConfiguration();
+    }
+
+    /**
+     * update each route based on array
+     *
+     * @param $routes
+     * @return void
+     */
+    public function updateRoutesFromJson($routes): void
+    {
+        foreach ($routes as $route) {
+            DB::connection('secure')
+                ->table('vulnerabilities')
+                ->where('uri', $route['uri'])
+                ->update([
+                    'sqli_difficulty' => $route['sqli_difficulty'],
+                    'rxss_difficulty' => $route['rxss_difficulty'],
+                    'sxss_difficulty' => $route['sxss_difficulty'],
+                    'cmdi_difficulty' => $route['cmdi_difficulty'],
+                    'fend_difficulty' => $route['fend_difficulty'],
+                ]);
+        }
+    }
+
+    /**
      * change used difficulties
      * ROUTE PUT /admin/config
      *
