@@ -560,7 +560,8 @@ class AdminController extends Controller
     public function resetScoreboard(): \Illuminate\Http\Response
     {
         DB::connection('secure')
-            ->unprepared("DELETE FROM found_vulnerabilities;");
+            ->table('found_vulnerabilities')
+            ->delete();
         DB::connection('secure')
             ->unprepared("VACUUM;");
         return response()->noContent();
