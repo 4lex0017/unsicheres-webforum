@@ -50,11 +50,14 @@ class PostController extends Controller
         return new PostResource($new_post);
     }
 
-    public function deletePost($thread_id, $post_id): Response|Application|ResponseFactory
+    public function deletePost($thread_id, $post_id, Request $request): Response|Application|ResponseFactory
     {
         $post = (new Post)->find($post_id);
         if (!$post) // just in case
             return response("", 404);
+
+        if(!self::isThisTheRightUser($post->author_id, $request))
+        return response("User not allowed to delete this Post", 403);
 
         self::deletePostFromThread($thread_id, $post_id);
 
@@ -62,7 +65,7 @@ class PostController extends Controller
             ->table('posts')
             ->whereRaw('id = ' . $post_id . ' and thread_id = ' . $thread_id)
             ->delete();
-
+        
         return response("", 204);
     }
 
@@ -74,6 +77,8 @@ class PostController extends Controller
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
             return response('', 404);
 
+        if(!self::isThisTheRightUser($post->author_id, $request))
+        return response("User not allowed to update this Post", 403);
 
         $post = $request->all();
         if ($post['id'] === (int) $post_id) {
@@ -153,4 +158,17 @@ class PostController extends Controller
         }
         return $request_string . ', updated_at = date() where id = ' . (int) $post_id . ' RETURNING *;';
     }
+
+    public function isThisTheRightUser($id, Request $request)
+    {
+        if($id == $request->user()->id || in_array("Admin", $request->user()->groups))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }

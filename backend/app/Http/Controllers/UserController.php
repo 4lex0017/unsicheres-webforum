@@ -41,9 +41,7 @@ class UserController extends Controller
             return response('', 404);
 
         if(!self::isThisTheRightUser($id, $request))
-        {
-            return response('this is not your user', 403);
-        }
+            return response()->json('you are not allowed to update this user', 403);
 
         $user = $request->all();
 
@@ -111,7 +109,7 @@ class UserController extends Controller
 
     public function isThisTheRightUser($id, Request $request)
     {
-        if($id == $request->user()->id)
+        if($id == $request->user()->id || in_array("Admin", $request->user()->groups))
         {
             return true;
         }
