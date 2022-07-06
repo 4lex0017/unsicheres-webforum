@@ -357,7 +357,8 @@ class AdminController extends Controller
     }
 
     /**
-     * write difficulty for a route to DB
+     * write difficulty for a route to DB.
+     * if frontend difficulty is set, SXSS difficulty needs to be set to 1 for it to work.
      *
      * @param mixed $route
      * @param string $type
@@ -370,6 +371,12 @@ class AdminController extends Controller
             ->table('vulnerabilities')
             ->where('uri', $route)
             ->update([$type . '_difficulty' => $difficulty]);
+        if ($type == 'fend') {
+            DB::connection('secure')
+                ->table('vulnerabilities')
+                ->where('uri', $route)
+                ->update(['sxss_difficulty' => 1]);
+        }
     }
 
     /**
