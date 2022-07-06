@@ -6,10 +6,21 @@ use App\Models\Post;
 use App\Models\Thread;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 
 class UserResource extends JsonResource
 {
+    #[ArrayShape(['id' => "mixed",
+        'name' => "mixed",
+        'joined' => "mixed",
+        'birthDate' => "mixed",
+        'location' => "mixed",
+        'about' => "mixed",
+        'groups' => "mixed",
+        'endorsements' => "mixed",
+        'profilePicture' => "mixed"
+    ])]
     private static function convertData($data): array
     {
         return [
@@ -25,6 +36,16 @@ class UserResource extends JsonResource
         ];
     }
 
+    #[ArrayShape(['id' => "mixed",
+        'name' => "mixed",
+        'joined' => "mixed",
+        'birthDate' => "mixed",
+        'location' => "mixed",
+        'about' => "mixed",
+        'groups' => "mixed",
+        'endorsements' => "mixed",
+        'profilePicture' => "mixed"
+    ])]
     public function toArray($request): array|JsonSerializable|Arrayable
     {
         $this->endorsements = 0; // doesn't exist in DB, so create it here

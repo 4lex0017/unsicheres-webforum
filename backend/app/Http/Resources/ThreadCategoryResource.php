@@ -2,25 +2,28 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
-use App\Models\Thread;
-
-use Illuminate\Support\Facades\Log;
-
+use JetBrains\PhpStorm\ArrayShape;
 
 class ThreadCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
 
     public static $wrap = null;
 
-    public function toArray($request)
+    #[ArrayShape(['id' => "mixed",
+        'title' => "mixed",
+        'endorsements' => "mixed",
+        'date' => "mixed", 'likedFrom' => "mixed",
+        'author' => "mixed"
+    ])]
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,

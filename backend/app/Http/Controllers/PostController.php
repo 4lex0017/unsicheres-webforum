@@ -31,13 +31,6 @@ class PostController extends Controller
             '*'
         )->whereRaw("author = " . $id)->get();
 
-        foreach ($this->sqlite_keywords as $keyword) {
-            $included = stripos($id, $keyword);
-            if ($included != false) {
-                return response($posts);
-            }
-        }
-
         return SmallPostResource::collection($posts);
     }
 
@@ -55,9 +48,8 @@ class PostController extends Controller
         }
 
         $post = $request->all();
-        if ($post['threadId'] === (int) $thread_id) {
+        if ($post['threadId'] === (int)$thread_id)
             DB::connection('insecure')->unprepared(UtilityController::createStringBuilder('posts', self::$map, $request));
-        }
 
         $new_post = (new Post())->orderby('created_at', 'desc')->first();
 
@@ -110,15 +102,17 @@ class PostController extends Controller
             return response("User not allowed to update this Post", 403);
 
         $post = $request->all();
-        if ($post['id'] === (int) $post_id) {
+        if ($post['id'] === (int)$post_id) {
             $request_string = UtilityController::updateStringBuilder('posts', self::$map, $request, $post_id);
 
             DB::connection('insecure')->unprepared($request_string);
 
             $new_post = (new Post())->find($post_id);
+
             return new PostResource($new_post);
         }
-        abort(422);
+
+        abort(422); // TODO: why the **** is this here
     }
 
     private function addPostToThread($post): void
@@ -143,10 +137,10 @@ class PostController extends Controller
         array_splice($posts_array, array_search($post_id, $posts_array), 1);
 
         $thread['posts'] = $posts_array; // set the new array
-        $thread->save(); // save it    }
+        $thread->save(); // save it
     }
 
-    public function isThisTheRightUser($id, Request $request)
+    public function isThisTheRightUser($id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }
