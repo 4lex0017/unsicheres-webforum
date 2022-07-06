@@ -184,33 +184,28 @@ export class BackendCommunicationService {
     return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/posts/' + postId + '/like', {})
   }
 
-  postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
-    let postPayload = {...post};
-    return this.httpClient.post<Post>(this.url + '/threads/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
+  postPost( threadId: number, author: number,  content: string): Observable<HttpResponse<Post>> {
+    let postPayload = {
+      "threadId": threadId,
+      "author": author,
+      "content": content
+    };
+    return this.httpClient.post<Post>(this.url + '/threads/' + threadId + '/posts', postPayload, {observe: 'response'});
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
     return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId);
   }
 
-  putPost(threadId: number, post: Post): Observable<Post> {
-    let postPayload = {...post};
-    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + post.id, postPayload);
+  putPost(threadId: number, author: number, postId: number,  content: string): Observable<HttpResponse<Post>> {
+    let postPayload = {
+      "id": postId,
+      "threadId": threadId,
+      "author": author,
+      "content": content
+    };
+    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + postId, postPayload, {observe: 'response'});
   }
-
-  createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {
-    throw new Error();
-    // -> postPost()
-  }
-
-  createThreadObject(userId: number, title: string, content: string,): Thread {
-    throw new Error();
-    // -> postThread()
-  }
-
-  // getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
-  //   return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
-  // }
 
   setAttackername(name: string): Observable<HttpResponse<any>> {
     let attackerPayload =

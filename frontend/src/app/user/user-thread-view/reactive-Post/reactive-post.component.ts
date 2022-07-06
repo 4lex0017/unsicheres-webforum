@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, O
 import {Post} from "../../../data-access/models/post";
 import {DialogEditPostComponent} from "../dialog-edit-post/dialog-edit-post.component";
 import {DialogDeletePostComponent} from "../dialog-delete-post/dialog-delete-post.component";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {BackendService} from "../../../data-access/services/backend.service";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
@@ -14,6 +14,9 @@ import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-l
 import {AllowEditService} from "../../../data-access/services/allowEdit.service";
 import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {DidAThingServiceService} from "../../../shared/did-a-thing/did-a-thing-service.service";
+import {Observable} from "rxjs";
+
 
 @Component({
   selector: 'app-reactive-post',
@@ -31,7 +34,8 @@ export class ReactivePostComponent implements OnInit {
               public authenticate: AuthenticationService,
               private diffPicker: DifficultyPickerService,
               private changeDetectorRef: ChangeDetectorRef,
-              private backendServiceCom: BackendCommunicationService) {
+              private backendServiceCom: BackendCommunicationService,
+              private didAThing: DidAThingServiceService) {
   }
 
   @Input() threadId: number;
@@ -47,6 +51,7 @@ export class ReactivePostComponent implements OnInit {
   vEnabledFrontend: boolean;
   editing: boolean = false;
   contentArray: any[]
+  url: string = "http://localhost:4200/forum";
   @ViewChild('content', {static: false}) content: ElementRef;
 
 
@@ -64,20 +69,23 @@ export class ReactivePostComponent implements OnInit {
 
   async ngOnInit() {
     await this.setVuln();
-    /*
     if(this.vEnabledFrontend){
       this.deserializePostRegexUnsafe(this.postObject.content)
     }else {
       this.deserializePostRegex(this.postObject.content);
     }
-     */
+    /*
+    this.vEnabledFrontend = true
     this.deserializePostRegexUnsafe(this.postObject.content);
+     */
+    /*
     if (this.vEnabled != 0) {
       this.changeDetectorRef.detectChanges();
       let content = document.getElementById('content');
       content!.replaceChildren();
       content!.appendChild(document.createRange().createContextualFragment(this.postObject.content));
     }
+     */
   }
 
   parseDate(date: string): string {
@@ -133,8 +141,12 @@ export class ReactivePostComponent implements OnInit {
 
   editPost(): void {
     if (this.allowEditService.askForEdit()) {
+      if(this.vEnabledFrontend){
+        let element = document.getElementById("loop" + this.postObject.id)
+        element!.contentEditable = "true";
+      }
       this.editing = true;
-      this.editPostEvent.emit(this.postObject);
+      this.editPostEvent.emit(this.postObject)
     }
   }
 
@@ -142,7 +154,6 @@ export class ReactivePostComponent implements OnInit {
     let sel = window.getSelection();
     let ran = sel!.getRangeAt(0);
     let tag = ran.commonAncestorContainer;
-    console.log(tag.parentNode)
     const box = document.getElementById('replyBox')
     let inBox = false;
 
@@ -171,9 +182,9 @@ export class ReactivePostComponent implements OnInit {
     const linebreak2 = document.createElement("br");
     above.appendChild(linebreak);
     under.appendChild(linebreak2);
-    console.log(box!.children[0].textContent);
+    //console.log(box!.children[0].textContent);
     if (box!.children[0].textContent == "") {
-      console.log("did it");
+      //console.log("did it");
       box!.appendChild(reply)
     } else {
       tag.parentNode!.insertBefore(reply, tag.nextSibling);
@@ -184,9 +195,16 @@ export class ReactivePostComponent implements OnInit {
   }
 
   editContent(): void {
-    console.log("edit");
+    //console.log("edit");
     this.editPostEvent.emit(this.postObject);
-    let fullReply = document.getElementById('replyBox' + this.postObject.id);
+    let fullReply;
+    if(this.vEnabledFrontend){
+      fullReply = document.getElementById('loop' + this.postObject.id);
+      fullReply.contentEditable = "false";
+    }else {
+      fullReply = document.getElementById('replyBox' + this.postObject.id);
+    }
+    //console.log("fullrep: " + fullReply.textContent);
     let replyString: string = "";
     for (let i = 0; i < fullReply!.children.length; i++) {
       let child = fullReply!.children[i];
@@ -199,7 +217,7 @@ export class ReactivePostComponent implements OnInit {
         replyString = replyString + test + "/b?";
         for (let j = 0; j < child.children.length; j++) {
           if (child.children[j].tagName == "BLOCKQUOTE") {
-            console.log("idAfterEdit: " + child.children[j].id);
+            //console.log("idAfterEdit: " + child.children[j].id);
             let infos: string = "/a?" + child.children[j].id + "/a?";
             let header: string = child.children[j].children[0].textContent! + "/b?"
             let body: string = "";
@@ -224,20 +242,32 @@ export class ReactivePostComponent implements OnInit {
       }
     }
     this.editing = false;
-    console.log("string")
-    console.log(replyString);
+    //console.log("editString: " + replyString);
 
     if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(replyString)
     else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(replyString)
     else this.postObject.content = replyString;
+    this.backendServiceCom.putPost(this.threadId,this.postObject.author.id, this.postObject.id,  this.postObject.content).subscribe(
+      (value: Data) =>{
+        //console.log("nowEdited: ")
+        //console.log(value)
+        let editedContent = value["body"].content;
+        this.postObject.content = editedContent;
+        if (value["headers"].get('VulnFound') == "true") {
+          //console.log("found vuln in userprofile")
+          this.didAThing.sendMessage();
+        }
+        this.allowEditService.finishEdit();
+        this.deserializePostRegex(this.postObject.content);
+      }
+    )
     // this.postObject.content = replyString;
-    this.allowEditService.finishEdit();
-    this.deserializePostRegex(replyString);
   }
+
 
   deserializePost(postString: string): void {
     //this.deserializePostRegex(postString);
-    console.log("Message: " + postString)   //schaun ob Attribute noch da sin
+    //console.log("Message: " + postString)   //schaun ob Attribute noch da sin
     let stringArray = Array.from(postString);
     let start = 0;
     let content: any[] = new Array(0);
@@ -308,18 +338,6 @@ export class ReactivePostComponent implements OnInit {
         }
       }
     }
-    for (let i = 0; i < content.length; i++) {
-      if (content[i].children.length != 0) {
-        console.log(content[i].nodeName);
-        for (let j = 0; j < content[i].children.length; j++) {
-          console.log(content[i].children[j].nodeName);
-          console.log(content[i].children[j].textContent)
-        }
-      } else {
-        console.log(content[i].nodeName)
-        console.log(content[i].textContent)
-      }
-    }
     this.contentArray = content;
   }
 
@@ -327,7 +345,7 @@ export class ReactivePostComponent implements OnInit {
   deserializePostRegex(postString: string): void {
     let stringArray = postString.split("/r?");
     for (let i = 0; i < stringArray.length; i++) {
-      console.log("desTest: " + stringArray[i])
+      //console.log("desTest: " + stringArray[i])
     }
     let content: any[] = new Array(0);
     for (let i = 0; i < stringArray.length; i++) {
@@ -353,47 +371,63 @@ export class ReactivePostComponent implements OnInit {
           if (divElement.textContent != "") {
             content.push(divElement);
           }
-          console.log("divEle: " + divElement.textContent)
+          //console.log("divEle: " + divElement.textContent)
         }
       }
     }
     this.contentArray = content;
   }
 
-  deserializePostRegexUnsafe(postString: string): void {
+  deserializePostRegexUnsafe(postString: string): void{       //edit noch broken, rest passt
     let stringArray = postString.split("/r?");
-    for (let i = 0; i < stringArray.length; i++) {
-      console.log("desTest: " + stringArray[i])
+    for (let i = 0; i < stringArray.length; i++){
+      //console.log("desTest: " + stringArray[i])
     }
-    let content: any[] = new Array(0);
-    for (let i = 0; i < stringArray.length; i++) {
-      if ((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a') {
+    let refElement;
+    for(let i = 0; i < stringArray.length; i++){
+      if((Array.from(stringArray[i])[0] + Array.from(stringArray[i])[1]) == '/a'){
         let replyArray = stringArray[i].split("/a?");
-        let blockElement = document.createElement("blockquote");
-        blockElement.id = replyArray[1];
+        refElement = document.getElementById("loop" + this.postObject.id);
+        let blockElement = document.createElement("blockquote");  //irgendwie klickbar machen
+        blockElement.style.borderRadius = '1px';
+        blockElement.style.border = 'solid #0643b8';
+        blockElement.style.marginLeft = '3%';
+        blockElement.style.width = '80%';
+        blockElement.style.borderLeftWidth = '8px';
+        blockElement.style.borderSpacing = '10px';
+        blockElement.id = this.postObject.id + "blockOf" + replyArray[1];
+        refElement!.appendChild(blockElement);
+        let blockElementRef = document.getElementById(this.postObject.id + "blockOf" + replyArray[1]);
         let replyContent = replyArray[2].split("/b?");
-        let user = document.createElement("p");
-        console.log("unsaveContent: " + replyContent[0])
-        user.appendChild(document.createRange().createContextualFragment(replyContent[0]));
-        blockElement.appendChild(user);
-        for (let j = 1; j < replyContent.length; j++) {
-          let divElement = document.createElement("div");
-          divElement.appendChild(document.createRange().createContextualFragment(replyContent[j]))
-          blockElement.appendChild(divElement);
+        //console.log("unsaveContent: " + replyContent[0])
+        blockElementRef!.appendChild(document.createRange().createContextualFragment(replyContent[0]));//Username vlt zu p machen statt div? + : nach Username
+        blockElementRef!.appendChild(document.createElement("br"))
+        for(let j = 1; j < replyContent.length; j++){
+          if(replyContent[j] != "") {
+            blockElementRef!.appendChild(document.createRange().createContextualFragment(replyContent[j]))
+            if(j + 1 != replyContent.length){
+              blockElementRef!.appendChild(document.createElement("br"))
+            }
+          }
         }
-        content.push(blockElement)
-      } else {
+      }else{
         let line: string[] = stringArray[i].split("/b?");
-        for (let j = 0; j < line.length; j++) {
-          let divElement = document.createElement("div");
-          // document.create
-          console.log("newContent :" + line[j])
-          divElement.appendChild(document.createRange().createContextualFragment(line[j]))
-          content.push(divElement);
+        let divElement = document.getElementById("loop" + this.postObject.id);
+        let placeHolderDiv;
+        let counter: number;
+        for(let j = 0; j < line.length; j++){
+          //console.log("newContent :" + line[j])
+          console.log(j)
+          if(line[j] != "") {
+            placeHolderDiv = document.createElement("div")
+            placeHolderDiv.id = this.postObject.id + "placeDiv" + j;
+            divElement!.appendChild(placeHolderDiv)
+            let place = document.getElementById(this.postObject.id + "placeDiv" + j)
+            place!.appendChild(document.createRange().createContextualFragment(line[j]))
+          }
         }
       }
     }
-    this.contentArray = content;
   }
 
   isDiv(element: HTMLElement) {
