@@ -39,6 +39,7 @@ export class BackendCommunicationService {
   constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
   }
 
+
   errorBreadCrumb(text: string): void {
     let fullText = "Sorry, something went wrong. " + text + " Error";
     this.errorBreadCrumbTemplate(fullText);
@@ -157,6 +158,7 @@ export class BackendCommunicationService {
   postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
     let threadPayload = {
       "title": thread.title,
+      "categoryId": categoryId,
       "author": thread.author.id
     };
     return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'});
@@ -272,9 +274,10 @@ export class BackendCommunicationService {
   async getVulnerabilitySingle(apiUri: string): Promise<number> {
     const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
     console.log(value)
-    if (value[0].fend_difficulty < 3) return value[0].fend_difficulty;
-    else if (value[0].sxss_difficulty < 4) return 5;
-    else return 0;
+    if (value[0].fend_difficulty == 2) return 1;
+    else if (value[0].fend_difficulty == 3) return 2;
+    else if (value[0].sxss_difficulty < 4 || value[0].fend_difficulty == 1) return 5;
+    return 0;
   }
 
   async getVulnerabilityReflectedSingle(apiUri: string): Promise<number> {

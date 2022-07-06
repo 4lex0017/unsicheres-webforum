@@ -9,7 +9,7 @@ const routes: Routes = [
   {path: 'userLogin', component: LoginComponent},
   {path: 'adminLogin', component: AdminLoginComponent},
   {
-    path: 'admin',
+    path: 'adminPanel',
     canActivate: [RouteGuardService],
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
   },
