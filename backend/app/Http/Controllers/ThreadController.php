@@ -14,12 +14,22 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 
 
 
 class ThreadController extends Controller
 {
+    protected static array $map = [
+        'categoryId' => 'category_id',
+        'title' => 'title',
+        'likedFrom' => 'liked_from',
+        'author' => 'author',
+        'posts' => 'posts'
+    ];
+
+
     public function getAllSmallThreads(): JsonResponse
     {
         $data = self::buildSmallThreadArray(self::queryAllSmallThreads());
@@ -52,23 +62,23 @@ class ThreadController extends Controller
 
     public function createThread(Request $request, $category_id): ThreadResource
     {
-        $thread = $request->all();
-        if ($thread['categoryId'] === (int) $category_id) {
+        $validator = Validator::make($request->all(), [
+            'categoryId' => 'required',
+            'title' => 'required|min:5',
+            'author' => 'required'
+        ]);
 
-            $request_string = self::createCreateRequestString($thread);
-
-            if (is_a($request_string, 'Illuminate\Http\Response')) {
-                return $request_string;
-            }
-
-            DB::connection('insecure')->unprepared($request_string);
-            $new_thread = (new Thread())->orderby('created_at', 'desc')->first();
-
-            self::addThreadToCategory($new_thread, $category_id);
-
-            return new ThreadResource($new_thread);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
         }
-        return response('', 404);
+
+        DB::connection('insecure')->unprepared(UtilityController::createStringBuilder('threads', self::$map, $request));
+        $new_thread = (new Thread())->orderby('created_at', 'desc')->first();
+
+        self::addThreadToCategory($new_thread, $category_id);
+
+        return new ThreadResource($new_thread);
         // need to add the thread to the categories' table thread-array
     }
 
@@ -89,25 +99,38 @@ class ThreadController extends Controller
         return response("", 204);
     }
 
-    public function updateThread(Request $request, $cat_id, $thread_id): Response|array|Application|ResponseFactory
+    public function updateThread(Request $request, $cat_id, $thread_id): JsonResponse|array|Application|ResponseFactory
     {
+        $validator = Validator::make($request->all(), [
+            'categoryId' => 'required',
+            'id' => 'required',
+            'title' => 'sometimes|required|min:5',
+            'author' => 'sometimes|required',
+            'likedFrom' => 'sometimes|required',
+            'posts' => 'sometimes|required'
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
+        }
+
         $thread = (new Thread)->where('id', '=', $thread_id, 'and')
             ->where('category_id', '=', $cat_id)->first();
 
         if (!$thread || $thread->id != $thread_id || $thread->category_id != $cat_id)
-            return response('', 404);
+            abort(422);
 
         $thread = $request->all();
         if ($thread['id'] === (int) $thread_id) {
-            $request_string = self::createUpdateRequestString($thread, $thread_id);
-            DB::connection('insecure')->unprepared($request_string);
+            DB::connection('insecure')->unprepared(UtilityController::updateStringBuilder('threads', self::$map, $request, $thread_id));
 
             $thread = (new Thread())->find($thread_id);
             return [
                 "title" => $thread->title // this is all the frontend needs
             ];
         }
-        return response('', 400);
+        abort(400);
     }
 
     public static function injectableWhere($row, $id): Collection
@@ -183,55 +206,5 @@ class ThreadController extends Controller
         }
 
         return $thread_array;
-    }
-
-    public function createCreateRequestString(array $thread): string|Response
-    {
-        $request_string = 'insert into threads (category_id, title, liked_from, author, posts, created_at, updated_at) Values(';
-        if (array_key_exists('categoryId', $thread)) {
-            $request_string = $request_string . '"' . $thread['categoryId'] . '"';
-        } else
-            return response('', 400);
-
-        if (array_key_exists('title', $thread)) {
-            $request_string = $request_string . ', "' . $thread['title'] . '"';
-        } else
-            return response('', 400);
-
-        if (array_key_exists('likedFrom', $thread)) {
-            $request_string = $request_string . ' , "' . json_encode($thread['likedFrom']) . '"';
-        } else
-            $request_string = $request_string . ' , "[]"';
-
-        if (array_key_exists('author', $thread)) {
-            $request_string = $request_string . ' , "' . $thread['author'] . '"';
-        } else
-            return response('', 400);
-
-        if (array_key_exists('posts', $thread)) {
-            $request_string = $request_string . ' , "' . json_encode($thread['posts']) . '"';
-        } else
-            $request_string = $request_string . ' , "[]"';
-
-        return $request_string = $request_string . ',date(),date()) RETURNING *;';
-    }
-
-    public function createUpdateRequestString(array $thread, $thread_id): string
-    {
-        $request_string = 'update threads set id = ' . (int) $thread_id;
-        if (array_key_exists('title', $thread)) {
-            $request_string = $request_string . ', title = "' . $thread['title'] . '"';
-        }
-        if (array_key_exists('likedFrom', $thread)) {
-            $request_string = $request_string . ' , liked_from = "' . json_encode($thread['likedFrom']) . '"';
-        }
-        if (array_key_exists('author', $thread)) {
-            $request_string = $request_string . ' , author = "' . $thread['author'] . '"';
-        }
-        if (array_key_exists('posts', $thread)) {
-            $request_string = $request_string . ' , posts = "' . json_encode($thread['posts']) . '"';
-        }
-
-        return $request_string . ', updated_at = date() where id = ' . (int) $thread_id . ' RETURNING *;';
     }
 }

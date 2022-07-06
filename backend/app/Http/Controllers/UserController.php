@@ -11,9 +11,23 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class UserController extends Controller
 {
+
+    protected static array $map = [
+        'name' => 'name',
+        'password' => 'password',
+        'birthDate' => 'birth_date',
+        'location' => 'location',
+        'about' => 'about',
+        'groups' => 'groups',
+        'profilePicture' => 'profile_picture'
+    ];
+
+
     public function getAllUsers(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
@@ -36,19 +50,29 @@ class UserController extends Controller
 
     public function updateUser($id, Request $request): AnonymousResourceCollection|Response|Application|ResponseFactory
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'name' => 'sometimes|required|min:5',
+            'birthDate' => 'sometimes|required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
+        }
+
         $user = (new User)->find($id);
         if (!$user)
             return response('', 404);
 
-        if(!self::isThisTheRightUser($id, $request))
-        {
+        if (!self::isThisTheRightUser($id, $request)) {
             return response('this is not your user', 403);
         }
 
         $user = $request->all();
 
         if ($user['id'] === (int) $id) {
-            $request_string = self::createUpdateRequestString($user, $id);
+            $request_string = UtilityController::updateStringBuilder('users', self::$map, $request, $id);
             if (is_a($request_string, 'Illuminate\Http\Response')) {
                 return $request_string;
             }
@@ -111,14 +135,10 @@ class UserController extends Controller
 
     public function isThisTheRightUser($id, Request $request)
     {
-        if($id == $request->user()->id)
-        {
+        if ($id == $request->user()->id) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
-
 }
