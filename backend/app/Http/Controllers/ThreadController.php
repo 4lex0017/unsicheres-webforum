@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 
-
-
 class ThreadController extends Controller
 {
     protected static array $map = [
@@ -28,7 +26,6 @@ class ThreadController extends Controller
         'author' => 'author',
         'posts' => 'posts'
     ];
-
 
     public function getAllSmallThreads(): JsonResponse
     {
@@ -43,13 +40,6 @@ class ThreadController extends Controller
         if (count($thread) === 0)
             return response('', 404);
 
-        foreach ($this->sqlite_keywords as $keyword) {
-            $included = stripos($id, $keyword);
-            if ($included != false) {
-                return response($thread);
-            }
-        }
-
         return ThreadResource::collection($thread);
     }
 
@@ -60,7 +50,7 @@ class ThreadController extends Controller
         return SmallThreadResource::collection($threads);
     }
 
-    public function createThread(Request $request, $category_id): ThreadResource
+    public function createThread(Request $request, $category_id): ThreadResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'categoryId' => 'required',
@@ -74,12 +64,12 @@ class ThreadController extends Controller
         }
 
         DB::connection('insecure')->unprepared(UtilityController::createStringBuilder('threads', self::$map, $request));
+
         $new_thread = (new Thread())->orderby('created_at', 'desc')->first();
 
-        self::addThreadToCategory($new_thread, $category_id);
+        self::addThreadToCategory($new_thread, $category_id); // need to add the thread to the categories' table thread-array
 
         return new ThreadResource($new_thread);
-        // need to add the thread to the categories' table thread-array
     }
 
     public function deleteThread($cat_id, $thread_id, Request $request): Response|Application|ResponseFactory
@@ -127,7 +117,7 @@ class ThreadController extends Controller
             return response("User not allowed to update this Thread", 403);
 
         $thread = $request->all();
-        if ($thread['id'] === (int) $thread_id) {
+        if ($thread['id'] === (int)$thread_id) {
             DB::connection('insecure')->unprepared(UtilityController::updateStringBuilder('threads', self::$map, $request, $thread_id));
 
             $thread = (new Thread())->find($thread_id);
@@ -135,7 +125,8 @@ class ThreadController extends Controller
                 "title" => $thread->title // this is all the frontend needs
             ];
         }
-        abort(400);
+
+        abort(400); // TODO: why the **** is this here
     }
 
     public static function injectableWhere($row, $id): Collection
@@ -213,7 +204,7 @@ class ThreadController extends Controller
         return $thread_array;
     }
 
-    public function isThisTheRightUser($id, Request $request)
+    public function isThisTheRightUser($id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }

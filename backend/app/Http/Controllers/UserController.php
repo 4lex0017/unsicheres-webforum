@@ -12,12 +12,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 
 
 class UserController extends Controller
 {
-
     protected static array $map = [
         'name' => 'name',
         'password' => 'password',
@@ -27,7 +25,6 @@ class UserController extends Controller
         'groups' => 'groups',
         'profilePicture' => 'profile_picture'
     ];
-
 
     public function getAllUsers(): AnonymousResourceCollection
     {
@@ -40,16 +37,10 @@ class UserController extends Controller
         if (!$user)
             return response('', 404);
 
-        foreach ($this->sqlite_keywords as $keyword) {
-            $included = stripos($id, $keyword);
-            if ($included != false) {
-                return response($user);
-            }
-        }
         return UserResource::collection($user);
     }
 
-    public function updateUser($id, Request $request): AnonymousResourceCollection|JsonResponse|Application|ResponseFactory
+    public function updateUser($id, Request $request): Response|string|AnonymousResourceCollection
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -71,14 +62,16 @@ class UserController extends Controller
 
         $user = $request->all();
 
-        if ($user['id'] === (int) $id) {
+        if ($user['id'] === (int)$id) {
             $request_string = UtilityController::updateStringBuilder('users', self::$map, $request, $id);
-            if (is_a($request_string, 'Illuminate\Http\Response')) {
+            if (is_a($request_string, 'Illuminate\Http\Response'))
                 return $request_string;
-            }
+
             DB::connection('insecure')->unprepared($request_string);
+
             return UserResource::collection(self::findUser($id));
         }
+
         abort(404);
     }
 
@@ -92,7 +85,6 @@ class UserController extends Controller
         return $user;
     }
 
-
     public function injectableWhere($row, $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
@@ -100,7 +92,7 @@ class UserController extends Controller
         )->whereRaw($row . " = " . $id)->get();
     }
 
-    public function isThisTheRightUser($id, Request $request)
+    public function isThisTheRightUser($id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }
