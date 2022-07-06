@@ -26,11 +26,6 @@ class UserController extends Controller
         'profilePicture' => 'profile_picture'
     ];
 
-    public function getAllUsers(): AnonymousResourceCollection
-    {
-        return UserResource::collection(User::all());
-    }
-
     public function getUserById($id): UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
     {
         $user = UserController::findUser($id);
