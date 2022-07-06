@@ -60,7 +60,7 @@ class ThreadController extends Controller
         return SmallThreadResource::collection($threads);
     }
 
-    public function createThread(Request $request, $category_id): ThreadResource
+    public function createThread(Request $request, $category_id): ThreadResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'categoryId' => 'required',
