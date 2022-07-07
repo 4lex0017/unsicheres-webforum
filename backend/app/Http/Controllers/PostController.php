@@ -25,7 +25,13 @@ class PostController extends Controller
         'author' => 'author'
     ];
 
-    public function getAllPostsOfUser($id): AnonymousResourceCollection
+    /**
+     * gets all Posts of User
+     *
+     * @param string|integer $id
+     * @return AnonymousResourceCollection
+     */
+    public function getAllPostsOfUser(string|int $id): AnonymousResourceCollection
     {
         $posts = DB::connection('insecure')->table('posts')->select(
             '*'
@@ -34,7 +40,14 @@ class PostController extends Controller
         return SmallPostResource::collection($posts);
     }
 
-    public function createPost(Request $request, $thread_id): PostResource|JsonResponse
+    /**
+     * Creates a Post (injectable)
+     *
+     * @param Request $request
+     * @param string|integer $thread_id
+     * @return PostResource|JsonResponse
+     */
+    public function createPost(Request $request, string|int $thread_id): PostResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'threadId' => 'required',
@@ -58,7 +71,15 @@ class PostController extends Controller
         return new PostResource($new_post);
     }
 
-    public function deletePost($thread_id, $post_id, Request $request): Response|Application|ResponseFactory
+    /**
+     * Deletes a Post (injectable)
+     *
+     * @param string|integer $thread_id
+     * @param string|integer $post_id
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function deletePost(string|int $thread_id, string|int $post_id, Request $request): Response|Application|ResponseFactory
     {
         $post = (new Post)->find($post_id);
         if (!$post) // just in case
@@ -77,7 +98,15 @@ class PostController extends Controller
         return response("", 204);
     }
 
-    public function updatePost(Request $request, $thread_id, $post_id): PostResource|JsonResponse|Application|ResponseFactory
+    /**
+     * Updates a Post (injectable)
+     *
+     * @param Request $request
+     * @param string|integer $thread_id
+     * @param string|integer $post_id
+     * @return PostResource|JsonResponse|Application|ResponseFactory
+     */
+    public function updatePost(Request $request, string|int $thread_id, string|int $post_id): PostResource|JsonResponse|Application|ResponseFactory
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -115,7 +144,13 @@ class PostController extends Controller
         abort(422); // TODO: why the **** is this here
     }
 
-    private function addPostToThread($post): void
+    /**
+     * Adds Post to Thread
+     *
+     * @param Post $post
+     * @return void
+     */
+    private function addPostToThread(Post $post): void
     {
         // need to add the post to the threads' table post-array
         $thread = (new Thread)->find($post->thread_id);
@@ -127,7 +162,14 @@ class PostController extends Controller
         $thread->save();
     }
 
-    private function deletePostFromThread($thread_id, $post_id): void
+    /**
+     * Deletes Post form Thread
+     *
+     * @param string|integer $thread_id
+     * @param string|integer $post_id
+     * @return void
+     */
+    private function deletePostFromThread(string|int $thread_id, string|int $post_id): void
     {
         // need to remove the post from the threads' table post-array
         $thread = (new Thread)->find($thread_id);
@@ -140,7 +182,14 @@ class PostController extends Controller
         $thread->save(); // save it
     }
 
-    public function isThisTheRightUser($id, Request $request): bool
+    /**
+     * check if User is Allowed
+     *
+     * @param string|integer $id
+     * @param Request $request
+     * @return boolean
+     */
+    public function isThisTheRightUser(string|int $id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }

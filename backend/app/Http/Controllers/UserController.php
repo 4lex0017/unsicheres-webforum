@@ -13,9 +13,13 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-
 class UserController extends Controller
 {
+    /**
+     * Array for updating User
+     *
+     * @var array
+     */
     protected static array $map = [
         'name' => 'name',
         'password' => 'password',
@@ -26,11 +30,22 @@ class UserController extends Controller
         'profilePicture' => 'profile_picture'
     ];
 
+    /**
+     * Gets all Users
+     *
+     * @return AnonymousResourceCollection
+     */
     public function getAllUsers(): AnonymousResourceCollection
     {
         return UserResource::collection(User::all());
     }
 
+    /**
+     * gets user by id
+     *
+     * @param string|int $id
+     * @return UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
+     */
     public function getUserById($id): UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
     {
         $user = UserController::findUser($id);
@@ -39,7 +54,13 @@ class UserController extends Controller
 
         return UserResource::collection($user);
     }
-
+    /**
+     * Update User with id
+     *
+     * @param string|int $id
+     * @param Request $request
+     * @return Response|string|AnonymousResourceCollection
+     */
     public function updateUser($id, Request $request): Response|string|AnonymousResourceCollection
     {
         $validator = Validator::make($request->all(), [
@@ -75,6 +96,12 @@ class UserController extends Controller
         abort(404);
     }
 
+    /**
+     * Find User with id
+     *
+     * @param string|int $id
+     * @return Collection|null
+     */
     public function findUser($id): ?Collection
     {
         $user = self::injectableWhere('id', $id);
@@ -85,14 +112,28 @@ class UserController extends Controller
         return $user;
     }
 
-    public function injectableWhere($row, $id): Collection
+    /**
+     * SQL injectable Where for Users
+     *
+     * @param string $row
+     * @param string|int $id
+     * @return Collection
+     */
+    public function injectableWhere(string $row, string|int $id): Collection
     {
         return DB::connection('insecure')->table('users')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
     }
 
-    public function isThisTheRightUser($id, Request $request): bool
+    /**
+     * checks if User is allowed
+     *
+     * @param string|int $id
+     * @param Request $request
+     * @return boolean
+     */
+    public function isThisTheRightUser(string|int $id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }
