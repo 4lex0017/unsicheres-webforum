@@ -1,0 +1,27 @@
+<div class="outer-container">
+  <h2 mat-dialog-title>Here is your cookie.</h2>
+  <mat-dialog-content class="mat-typography" style="overflow: hidden">
+    <p></p>
+    <h2>Cookie name: </h2>
+    <div class="inner-container">
+      <span>{{cookieName}}</span>
+      <button mat-mini-fab (click)="copyToClipboard(this.cookieName)" color="primary"
+              class="btn" matTooltip="Copy to clipboard">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="spacer"></mat-divider>
+
+    <h2>Cookie value:</h2>
+    <div class="inner-container">
+      <span>{{cookieValue}}</span>
+      <button mat-mini-fab (click)="copyToClipboard(this.cookieValue)" color="primary"
+              class="btn" matTooltip="Copy to clipboard">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="close()" color="primary">Dismiss</button>
+  </mat-dialog-actions>
+</div>

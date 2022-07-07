@@ -6,6 +6,11 @@ import {BackendService} from "../../data-access/services/backend.service";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 import {SnackBarNotificationComponent} from "../snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  DialogChangePasswordComponent
+} from "../../user/user-home/dialog/dialog-change-password/dialog-change-password.component";
+import {DialogFirstLoginComponent} from "../dialog-first-login/dialog-first-login.component";
 
 @Component({
   selector: 'app-login',
@@ -15,7 +20,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class LoginComponent {
   username;
 
-  constructor(private http: HttpClient, private router: Router, private backendCom: BackendCommunicationService, private _snackBar: MatSnackBar) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              private backendCom: BackendCommunicationService,
+              private _snackBar: MatSnackBar,
+              private dialog: MatDialog) {
   }
 
 
@@ -23,6 +32,9 @@ export class LoginComponent {
     if (this.username) {
       this.backendCom.setAttackername(this.username).subscribe();
       this.router.navigate(['/forum']);
+      const dialogRef = this.dialog.open(DialogFirstLoginComponent, {
+        width: '60%',
+      });
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,

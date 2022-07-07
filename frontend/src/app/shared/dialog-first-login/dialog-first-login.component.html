@@ -1,0 +1,23 @@
+<div class="outer-container">
+  <h1 class="header">{{this.header}}</h1>
+  <mat-dialog-content class="mat-typography">
+    <h2>{{this.subHeader1}}</h2>
+    <p>{{this.p1}}</p>
+    <mat-divider class="spacer"></mat-divider>
+    <h2>{{this.subHeader2}}</h2>
+    <p>{{this.p2}}</p>
+    <mat-divider class="spacer"></mat-divider>
+    <h2>{{this.subHeader3}}</h2>
+    <p>{{this.p3}}</p>
+    <mat-divider class="spacer"></mat-divider>
+    <h2>{{this.subHeader4}}</h2>
+    <p>{{this.p4}}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="close()" color="primary" disabled="{{buttonState}}">Dismiss ({{timeLeft}})
+    </button>
+    <button mat-raised-button class="btn-change-language" (click)="changeLanguage()" color="primary">Change Language
+    </button>
+  </mat-dialog-actions>
+</div>
+
