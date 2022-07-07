@@ -29,6 +29,6 @@ export class SidenavComponent {
 
   logout() {
     this.authAdmin.logoutAdmin();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/userLogin'])
   }
 }

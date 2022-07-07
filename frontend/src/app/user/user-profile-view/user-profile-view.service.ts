@@ -20,7 +20,6 @@ export class UserProfileViewService {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any> {
-    // return this.backendService.getUser(route.params['id']).pipe(catchError((err) => this.router.navigateByUrl('/')));
     return this.backendServiceCom.getUser(route.params['id']).pipe(catchError((err) => this.router.navigateByUrl('/forum')));
   }
 }

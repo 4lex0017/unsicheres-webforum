@@ -39,6 +39,7 @@ export class BackendCommunicationService {
   constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
   }
 
+
   errorBreadCrumb(text: string): void {
     let fullText = "Sorry, something went wrong. " + text + " Error";
     this.errorBreadCrumbTemplate(fullText);
@@ -157,6 +158,7 @@ export class BackendCommunicationService {
   postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
     let threadPayload = {
       "title": thread.title,
+      "categoryId": categoryId,
       "author": thread.author.id
     };
     return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'});
@@ -184,33 +186,28 @@ export class BackendCommunicationService {
     return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/posts/' + postId + '/like', {})
   }
 
-  postPost(categoryId: number, threadId: number, post: Post): Observable<HttpResponse<Post>> {
-    let postPayload = {...post};
-    return this.httpClient.post<Post>(this.url + '/threads/' + categoryId + '/' + threadId, postPayload, {observe: 'response'});
+  postPost( threadId: number, author: number,  content: string): Observable<HttpResponse<Post>> {
+    let postPayload = {
+      "threadId": threadId,
+      "author": author,
+      "content": content
+    };
+    return this.httpClient.post<Post>(this.url + '/threads/' + threadId + '/posts', postPayload, {observe: 'response'});
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
     return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId);
   }
 
-  putPost(threadId: number, post: Post): Observable<Post> {
-    let postPayload = {...post};
-    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + post.id, postPayload);
+  putPost(threadId: number, author: number, postId: number,  content: string): Observable<HttpResponse<Post>> {
+    let postPayload = {
+      "id": postId,
+      "threadId": threadId,
+      "author": author,
+      "content": content
+    };
+    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + postId, postPayload, {observe: 'response'});
   }
-
-  createPostObject(userId: number, content: string, repliedTo?: PostReply): Post {
-    throw new Error();
-    // -> postPost()
-  }
-
-  createThreadObject(userId: number, title: string, content: string,): Thread {
-    throw new Error();
-    // -> postThread()
-  }
-
-  // getSearchThreadResult(searchQuery: string): Observable<Thread[]> {
-  //   return this.httpClient.get<Thread[]>(this.url + '/thread/search/' + searchQuery);
-  // }
 
   setAttackername(name: string): Observable<HttpResponse<any>> {
     let attackerPayload =
@@ -272,9 +269,10 @@ export class BackendCommunicationService {
   async getVulnerabilitySingle(apiUri: string): Promise<number> {
     const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
     console.log(value)
-    if (value[0].fend_difficulty < 3) return value[0].fend_difficulty;
-    else if (value[0].sxss_difficulty < 4) return 5;
-    else return 0;
+    if (value[0].fend_difficulty == 2) return 1;
+    else if (value[0].fend_difficulty == 3) return 2;
+    else if (value[0].sxss_difficulty < 4 || value[0].fend_difficulty == 1) return 5;
+    return 0;
   }
 
   async getVulnerabilityReflectedSingle(apiUri: string): Promise<number> {

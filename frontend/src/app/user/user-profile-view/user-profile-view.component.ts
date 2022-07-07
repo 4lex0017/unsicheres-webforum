@@ -86,10 +86,10 @@ export class UserProfileViewComponent implements OnInit {
 
   filterDataModelInFrontendHard(result: any, id: number): any {
     return {
-      name: this.diffPicker.frontendFilterTagsNormal(result.name),
-      about: this.diffPicker.frontendFilterTagsNormal(result.about),
+      name: this.diffPicker.frontendFilterTagsHard(result.name),
+      about: this.diffPicker.frontendFilterTagsHard(result.about),
       profilePicture: result.profilePicture,
-      location: this.diffPicker.frontendFilterTagsNormal(result.location),
+      location: this.diffPicker.frontendFilterTagsHard(result.location),
       id: id
     }
   }
@@ -107,7 +107,7 @@ export class UserProfileViewComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       let newDataModel = {}
-
+      console.log(this.vEnabled)
       if (this.vEnabled == 1) newDataModel = this.filterDataModelInFrontendNormal(result, userFullObject.id)
       else if (this.vEnabled == 2) newDataModel = this.filterDataModelInFrontendHard(result, userFullObject.id)
       else {
@@ -187,11 +187,11 @@ export class UserProfileViewComponent implements OnInit {
   }
 
   cutPostContent(content: string): string {
-    const rExp: RegExp = new RegExp("(?<=/b\\\?).*(?=/b)");
-    let test = content.match(rExp) || "";
+    const rExp: RegExp = new RegExp("(?<=\\/b\\?)(.*?)(?=\\/b?)");
+    let test = content.match(rExp) || ["Invalid content"];
     content = test[0];
-    if (content.length > 25) {
-      let subStr = content.slice(0, 22);
+    if (content.length > 35) {
+      let subStr = content.slice(0, 32);
       subStr += "...";
       return subStr;
     } else {
