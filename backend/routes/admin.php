@@ -29,6 +29,11 @@ Route::get('config', 'App\Http\Controllers\AdminController@getConfiguration');
 Route::put('config', 'App\Http\Controllers\AdminController@updateConfiguration');
 
 /**
+ * @uses App\Http\Controllers\AdminController::updateConfigurationFromJson()
+ */
+Route::put('config/premade', 'App\Http\Controllers\AdminController@updateConfigurationFromJson');
+
+/**
  * @uses App\Http\Controllers\AdminController::resetDatabase()
  */
 Route::post('reset/db', 'App\Http\Controllers\AdminController@resetDatabase');

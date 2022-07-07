@@ -109,6 +109,48 @@ class AdminController extends Controller
     }
 
     /**
+     * change used difficulties based on config json
+     * ROUTE PUT /admin/config/premade
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function updateConfigurationFromJson(Request $request): array
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $this->updateStaticDifficulty('hash', $data['hash_difficulty']);
+        (new PasswordSeeder)->run();
+
+        $this->updateRoutesFromJson($data['data']);
+
+        SiteController::generateNewSmallUserConfig();
+        return $this->getConfiguration();
+    }
+
+    /**
+     * update each route based on array
+     *
+     * @param $routes
+     * @return void
+     */
+    public function updateRoutesFromJson($routes): void
+    {
+        foreach ($routes as $route) {
+            DB::connection('secure')
+                ->table('vulnerabilities')
+                ->where('uri', $route['uri'])
+                ->update([
+                    'sqli_difficulty' => $route['sqli_difficulty'],
+                    'rxss_difficulty' => $route['rxss_difficulty'],
+                    'sxss_difficulty' => $route['sxss_difficulty'],
+                    'cmdi_difficulty' => $route['cmdi_difficulty'],
+                    'fend_difficulty' => $route['fend_difficulty'],
+                ]);
+        }
+    }
+
+    /**
      * change used difficulties
      * ROUTE PUT /admin/config
      *
@@ -357,7 +399,8 @@ class AdminController extends Controller
     }
 
     /**
-     * write difficulty for a route to DB
+     * write difficulty for a route to DB.
+     * if frontend difficulty is set, SXSS difficulty needs to be set to 1 for it to work.
      *
      * @param mixed $route
      * @param string $type
@@ -370,6 +413,12 @@ class AdminController extends Controller
             ->table('vulnerabilities')
             ->where('uri', $route)
             ->update([$type . '_difficulty' => $difficulty]);
+        if ($type == 'fend') {
+            DB::connection('secure')
+                ->table('vulnerabilities')
+                ->where('uri', $route)
+                ->update(['sxss_difficulty' => 1]);
+        }
     }
 
     /**
@@ -553,7 +602,8 @@ class AdminController extends Controller
     public function resetScoreboard(): \Illuminate\Http\Response
     {
         DB::connection('secure')
-            ->unprepared("DELETE FROM found_vulnerabilities;");
+            ->table('found_vulnerabilities')
+            ->delete();
         DB::connection('secure')
             ->unprepared("VACUUM;");
         return response()->noContent();

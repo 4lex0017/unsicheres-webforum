@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 
@@ -104,9 +105,9 @@ class PostController extends Controller
      * @param Request $request
      * @param string|integer $thread_id
      * @param string|integer $post_id
-     * @return PostResource|JsonResponse|Application|ResponseFactory
+     * @return PostResource|JsonResponse
      */
-    public function updatePost(Request $request, string|int $thread_id, string|int $post_id): PostResource|JsonResponse|Application|ResponseFactory
+    public function updatePost(Request $request, string|int $thread_id, string|int $post_id): PostResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
@@ -125,10 +126,10 @@ class PostController extends Controller
             ->where('thread_id', '=', $thread_id)->first();
 
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
-            abort(422);
+            return response()->json('!$post || $post->id != $post_id || $post->thread_id != $thread_id', 422);
 
         if (!self::isThisTheRightUser($post->author_id, $request))
-            return response("User not allowed to update this Post", 403);
+            return response()->json('You are not allowed to edit this post!', 403);
 
         $post = $request->all();
         if ($post['id'] === (int)$post_id) {
@@ -141,7 +142,7 @@ class PostController extends Controller
             return new PostResource($new_post);
         }
 
-        abort(422); // TODO: why the **** is this here
+        return response()->json('end of function error', 422);
     }
 
     /**

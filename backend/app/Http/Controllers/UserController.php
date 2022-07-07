@@ -31,16 +31,6 @@ class UserController extends Controller
     ];
 
     /**
-     * Gets all Users
-     *
-     * @return AnonymousResourceCollection
-     */
-    public function getAllUsers(): AnonymousResourceCollection
-    {
-        return UserResource::collection(User::all());
-    }
-
-    /**
      * gets user by id
      *
      * @param string|int $id

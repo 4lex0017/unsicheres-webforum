@@ -13,9 +13,6 @@
             "route": "/search/threads"
         },
         {
-            "route": "/users"
-        },
-        {
             "route": "/categories/{int}/threads"
         },
         {
@@ -58,9 +55,6 @@
     ],
     "sxss": [
         {
-            "route": "/users"
-        },
-        {
             "route": "/users/{int}"
         },
         {
@@ -85,9 +79,6 @@
         }
     ],
     "fend": [
-        {
-            "route": "/users"
-        },
         {
             "route": "/users/{int}"
         },

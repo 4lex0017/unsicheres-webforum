@@ -26,7 +26,7 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content class="replyBox" [id]=postObject.id>
-    <div *ngIf="!editing">
+    <div *ngIf="!editing && !vEnabledFrontend" >
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
@@ -41,7 +41,7 @@
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
+    <div *ngIf="editing && !vEnabledFrontend" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
@@ -54,6 +54,8 @@
           </div>
         </blockquote>
       </div>
+    </div>
+    <div class = "unsafeContent" id="loop{{postObject.id}}">
     </div>
     <button *ngIf="editing" mat-raised-button (click)="editContent()">DONE</button>
     <!--<p *ngIf="vEnabled" #content></p>
