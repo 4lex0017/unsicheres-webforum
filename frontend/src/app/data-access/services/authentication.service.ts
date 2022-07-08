@@ -44,12 +44,23 @@ export class AuthenticationService {
 
   }
 
-  public registerJwt(name: string, password: string, birthDate: string) {
-    return this.httpClient.post<any>(this.url + '/register', {
-      name,
-      password,
-      birthDate
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name)), shareReplay());
+  public registerJwt(name: string, password: string, birthDate: string, profilePicture: string) {
+    let userPayload;
+    if (profilePicture != "") {
+      userPayload = {
+        name,
+        password,
+        birthDate,
+        profilePicture
+      }
+    } else {
+      userPayload = {
+        name,
+        password,
+        birthDate
+      }
+    }
+    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name)), shareReplay());
   }
 
   public logout() {

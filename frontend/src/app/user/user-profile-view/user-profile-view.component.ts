@@ -164,9 +164,12 @@ export class UserProfileViewComponent implements OnInit {
       name!.replaceChildren();
       name!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].name));
 
-      let location = document.getElementById("location" + this.userFullArrayModel.data[i].id);
-      location!.replaceChildren();
-      location!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].location));
+      if (this.userFullArrayModel.data[i].location) {
+        let location = document.getElementById("location" + this.userFullArrayModel.data[i].id);
+        location!.replaceChildren();
+        location!.appendChild(document.createRange().createContextualFragment(this.userFullArrayModel.data[i].location));
+      }
+
     }
   }
 

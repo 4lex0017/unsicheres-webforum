@@ -92,6 +92,11 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   resetDatabase() {
-    this.backendCom.resetDatabase().subscribe();
+    this.backendCom.resetDatabase().subscribe(value => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Database has been reset.",
+      })
+    });
   }
 }
