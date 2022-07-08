@@ -45,7 +45,7 @@ export class ToolbarComponent {
 
   openRegister(): void {
     const dialogRef = this.dialog.open(DialogRegisterComponent, {
-      width: '30%'
+      width: '40%'
     });
   }
 

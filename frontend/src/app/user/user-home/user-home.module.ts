@@ -43,6 +43,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatRadioModule} from "@angular/material/radio";
 import {DialogChangePasswordComponent} from './dialog/dialog-change-password/dialog-change-password.component';
+import { DialogGetCookieComponent } from './dialog/dialog-get-cookie/dialog-get-cookie.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import {DialogChangePasswordComponent} from './dialog/dialog-change-password/dia
     DialogContactFormComponent,
     DialogChangePasswordComponent,
     DialogRegisterComponent,
-    SnackBarOnRegisterSuccessComponent
+    SnackBarOnRegisterSuccessComponent,
+    DialogGetCookieComponent
   ],
   imports: [
     CommonModule,

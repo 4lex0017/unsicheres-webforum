@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ThreadController extends Controller
 {
+    /**
+     * Array for Creating and Updating a Thread
+     *
+     * @var array
+     */
     protected static array $map = [
         'categoryId' => 'category_id',
         'title' => 'title',
@@ -27,6 +32,11 @@ class ThreadController extends Controller
         'posts' => 'posts'
     ];
 
+    /**
+     * Gets a small representation of all Threads
+     *
+     * @return JsonResponse
+     */
     public function getAllSmallThreads(): JsonResponse
     {
         $data = self::buildSmallThreadArray(self::queryAllSmallThreads());
@@ -34,6 +44,12 @@ class ThreadController extends Controller
         return response()->json(['threads' => $data])->setStatusCode(200);
     }
 
+    /**
+     * gets a Thread
+     *
+     * @param string|int $id
+     * @return Response|AnonymousResourceCollection|Application|ResponseFactory
+     */
     public function getThreadById($id): Response|AnonymousResourceCollection|Application|ResponseFactory
     {
         $thread = ThreadController::injectableWhere('id', $id);
@@ -43,6 +59,12 @@ class ThreadController extends Controller
         return ThreadResource::collection($thread);
     }
 
+    /**
+     * gets all Threads of User
+     *
+     * @param string|int $id
+     * @return AnonymousResourceCollection
+     */
     public function getAllThreadsOfUser($id): AnonymousResourceCollection
     {
         $threads = ThreadController::injectableWhere('author', $id);
@@ -50,7 +72,14 @@ class ThreadController extends Controller
         return SmallThreadResource::collection($threads);
     }
 
-    public function createThread(Request $request, $category_id): ThreadResource|JsonResponse
+    /**
+     * Creates Thread (injectable)
+     *
+     * @param Request $request
+     * @param string|int $category_id
+     * @return ThreadResource|JsonResponse
+     */
+    public function createThread(Request $request, string|int $category_id): ThreadResource|JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'categoryId' => 'required',
@@ -72,7 +101,15 @@ class ThreadController extends Controller
         return new ThreadResource($new_thread);
     }
 
-    public function deleteThread($cat_id, $thread_id, Request $request): Response|Application|ResponseFactory
+    /**
+     * Deletes Thread (injectable)
+     *
+     * @param string|int $cat_id
+     * @param string|int $thread_id
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function deleteThread(string|int $cat_id, string|int $thread_id, Request $request): Response|Application|ResponseFactory
     {
         $thread = (new Thread)->find($thread_id);
         if (!$thread) // just in case
@@ -91,7 +128,15 @@ class ThreadController extends Controller
         return response("", 204);
     }
 
-    public function updateThread(Request $request, $cat_id, $thread_id): JsonResponse|array|Application|ResponseFactory
+    /**
+     * Updates Thread (Injectable)
+     *
+     * @param Request $request
+     * @param string|int $cat_id
+     * @param string|int $thread_id
+     * @return JsonResponse|array|Application|ResponseFactory
+     */
+    public function updateThread(Request $request, string|int $cat_id, string|int $thread_id): JsonResponse|array|Application|ResponseFactory
     {
         $validator = Validator::make($request->all(), [
             'categoryId' => 'required',
@@ -129,13 +174,25 @@ class ThreadController extends Controller
         abort(400); // TODO: why the **** is this here
     }
 
-    public static function injectableWhere($row, $id): Collection
+    /**
+     * Injectable SQL select where
+     *
+     * @param string|int $row
+     * @param string|int $id
+     * @return Collection
+     */
+    public static function injectableWhere(string|int $row, string|int $id): Collection
     {
         return DB::connection('insecure')->table('threads')->select(
             '*'
         )->whereRaw($row . " = " . $id)->get();
     }
 
+    /**
+     * Gets all small Threads
+     *
+     * @return array
+     */
     public static function queryAllSmallThreads(): array
     {
         return DB::connection('insecure')
@@ -154,7 +211,14 @@ class ThreadController extends Controller
             ->get()->toArray();
     }
 
-    private function addThreadToCategory($thread, $category_id): void
+    /**
+     * Adds Thread to Category
+     *
+     * @param Thread $thread
+     * @param string|int $category_id
+     * @return void
+     */
+    private function addThreadToCategory(Thread $thread, $category_id): void
     {
         $category = (new Category())->find($category_id);
         $thread_array = $category['threads'];
@@ -163,7 +227,14 @@ class ThreadController extends Controller
         $category->save();
     }
 
-    private function deleteThreadFromCategory($cat_id, $thread_id): void
+    /**
+     * Deletes Thread from Category
+     *
+     * @param string|integer $cat_id
+     * @param string|integer $thread_id
+     * @return void
+     */
+    private function deleteThreadFromCategory(string|int $cat_id, string|int $thread_id): void
     {
         // need to remove the thread from the categories' table thread-array
         $category = (new Category())->find($cat_id);
@@ -176,6 +247,13 @@ class ThreadController extends Controller
         $category->save();
     }
 
+    /**
+     * Creates small Thread array
+     *
+     * @param mixed $threads
+     * @param boolean $firstFour
+     * @return array
+     */
     public static function buildSmallThreadArray($threads, bool $firstFour = false): array
     {
         $thread_array = array();
@@ -204,7 +282,14 @@ class ThreadController extends Controller
         return $thread_array;
     }
 
-    public function isThisTheRightUser($id, Request $request): bool
+    /**
+     * Checks if user is allowed
+     *
+     * @param string|integer $id
+     * @param Request $request
+     * @return boolean
+     */
+    public function isThisTheRightUser(string|int $id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
     }

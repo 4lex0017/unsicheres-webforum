@@ -6,6 +6,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {AdminUser, AdminVulnerability} from "../../data-access/models/scoreboard";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
+import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-scoreboard',
@@ -28,7 +30,9 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
   // = new MatTableDataSource(ELEMENT_DATA);
   scoreboard: AdminUser[] = [];
 
-  constructor(private _liveAnnouncer: LiveAnnouncer, private backendCom: BackendCommunicationService) {
+  constructor(private _liveAnnouncer: LiveAnnouncer,
+              private backendCom: BackendCommunicationService,
+              private _snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -43,11 +47,21 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
   }
 
   resetDatabase() {
-    this.backendCom.resetDatabase().subscribe();
+    this.backendCom.resetDatabase().subscribe(value => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Database has been reset.",
+      })
+    });
   }
 
   resetScoreboard() {
-    this.backendCom.resetScoreboard().subscribe();
+    this.backendCom.resetScoreboard().subscribe(value => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "Scoreboard has been reset.",
+      })
+    });
   }
 
   quickSort(vulnerabilities: AdminVulnerability[]): AdminVulnerability[] {

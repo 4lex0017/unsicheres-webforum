@@ -11,6 +11,22 @@
     <mat-datepicker #picker startView="multi-year" [startAt]="startDate"></mat-datepicker>
   </mat-form-field>
   <p></p>
+  <mat-form-field appearance="fill" class="picture-container">
+    <mat-label *ngIf="isPicked()">Choose your Profile Picture</mat-label>
+    <mat-toolbar class="toolbar-container">
+
+      <input matInput [(ngModel)]="fileAttr" readonly name="name" class="default-text"/>
+      <button mat-flat-button color="primary">Browse File</button>
+    </mat-toolbar>
+    <input
+      type="file"
+      #fileInput
+      id="uploadFile"
+      (change)="uploadFileEvent($event)"
+      name="uploadFile"/>
+
+  </mat-form-field>
+  <p></p>
   <mat-form-field appearance="fill" class="password-register-input-container">
     <mat-label>Enter password</mat-label>
     <input matInput [(ngModel)]="this.password" [type]="hide ? 'password' : 'text'" required>
@@ -20,7 +36,6 @@
     </button>
     <!--    <mat-error *ngIf="this.passwordError">{{this.passwordErrorMessage}}</mat-error>-->
   </mat-form-field>
-
 
   <mat-form-field appearance="fill" class="repeatPassword-register-input-container">
     <mat-label>Repeat password</mat-label>

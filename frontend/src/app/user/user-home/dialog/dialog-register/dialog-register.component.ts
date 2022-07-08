@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from "@angular/core";
+import {Component, ElementRef, Inject, OnInit, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
 import {BackendService} from "../../../../data-access/services/backend.service";
@@ -30,8 +30,10 @@ export class DialogRegisterComponent {
   username: string;
   password: string;
   passwordRepeat: string;
+  profilePicture: string = "";
   date = new FormControl(null, Validators.required);
-
+  @ViewChild('fileInput') fileInput: ElementRef;
+  fileAttr = 'Choose your Profile Picture';
 
   constructor(
     public dialogref: MatDialogRef<ForumComponent>,
@@ -43,10 +45,14 @@ export class DialogRegisterComponent {
     private backendCom: BackendCommunicationService) {
   }
 
+  isPicked() {
+    return this.fileAttr != 'Choose your Profile Picture';
+  }
+
   registerUser(): void {
     if (this.username && this.password && this.passwordRepeat && this.date.value) {
       if (this.password == this.passwordRepeat) {
-        this.authenticate.registerJwt(this.username, this.password, this.date.value).subscribe(d => {
+        this.authenticate.registerJwt(this.username, this.password, this.date.value, this.profilePicture).subscribe(d => {
           this._snackBar.openFromComponent(SnackBarOnRegisterSuccessComponent, {
             duration: 5000,
             data: "Click here to view your Profile",
@@ -82,6 +88,21 @@ export class DialogRegisterComponent {
     }
   }
 
+  uploadFileEvent(imgFile: any) {
+    if (imgFile.target.files[0]) {
+      this.fileAttr = imgFile.target.files[0].name;
+      let reader = new FileReader();
+      reader.onload = (e: any) => {
+        let image = new Image();
+        console.log("The Name" + e.target.result)
+        this.profilePicture = e.target.result
+      };
+      reader.readAsDataURL(imgFile.target.files[0]);
+      this.fileInput.nativeElement.value = '';
+    } else {
+      this.fileAttr = 'Choose File';
+    }
+  }
 
   close(): void {
     this.dialogref.close();

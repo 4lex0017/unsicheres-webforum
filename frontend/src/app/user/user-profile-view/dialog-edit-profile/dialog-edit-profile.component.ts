@@ -36,23 +36,16 @@ export class DialogEditProfileComponent {
   }
 
   @ViewChild('fileInput') fileInput: ElementRef;
-  fileAttr = 'Choose File';
+  fileAttr = 'Choose Picture';
 
   uploadFileEvent(imgFile: any) {
     if (imgFile.target.files[0]) {
       this.fileAttr = imgFile.target.files[0].name;
-      // Array.from(imgFile.target.files).forEach((file: any) => {
-      //   this.fileAttr += file.name + ' - ';
-      // });
       let reader = new FileReader();
       reader.onload = (e: any) => {
         let image = new Image();
         console.log("The Name" + e.target.result)
         this.profilePicture = e.target.result
-        // image.src = e.target.result;
-        // image.onload = (rs) => {
-        //   this.profilePicture = e.target.result
-        // };
       };
       reader.readAsDataURL(imgFile.target.files[0]);
       this.fileInput.nativeElement.value = '';

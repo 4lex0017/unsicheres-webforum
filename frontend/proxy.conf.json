@@ -77,7 +77,25 @@
     "logLevel": "debug",
     "changeOrigin": false
   },
-  "/admin/*": {
+  "/admin/reset/*": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/config": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/scoreboard": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
+  "/admin/vulnerabilities": {
     "target": "http://localhost:80",
     "secure": false,
     "logLevel": "debug",

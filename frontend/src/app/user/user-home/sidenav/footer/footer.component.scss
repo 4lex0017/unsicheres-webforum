@@ -9,6 +9,12 @@
   align-self: flex-end;
 }
 
+.btn-cookie {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+}
+
 .settings {
   float: left;
 }
@@ -27,7 +33,7 @@
   overflow: auto;
 }
 
-.contact-formular-btn {
+.contact-form-btn {
   margin: 5px;
 
 }

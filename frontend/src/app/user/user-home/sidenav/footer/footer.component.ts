@@ -3,6 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {DialogContactFormComponent} from "../../dialog/dialog-contact-form/dialog-contact-form.component";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
+import {DialogGetCookieComponent} from "../../dialog/dialog-get-cookie/dialog-get-cookie.component";
 
 @Component({
   selector: 'app-footer',
@@ -24,6 +25,12 @@ export class FooterComponent {
 
   testlogin() {
     this.auth.loginJwt("TestUsername1", "123").subscribe()
+  }
+
+  getCookieDialog() {
+    const dialogRef = this.dialog.open(DialogGetCookieComponent, {
+      width: '65%'
+    });
   }
 
 }

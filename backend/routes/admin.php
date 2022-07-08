@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * @uses App\Http\Controllers\AdminController::getSupportedVulnerabilities()
  */
-Route::get('', 'App\Http\Controllers\AdminController@getSupportedVulnerabilities');
+Route::get('vulnerabilities', 'App\Http\Controllers\AdminController@getSupportedVulnerabilities');
 
 /**
  * @uses App\Http\Controllers\AdminController::getConfiguration()
@@ -60,10 +60,10 @@ Route::post('login', 'App\Http\Controllers\AdminLoginController@login');
 
 
 //Gruppe für nur Admin authenticated Routen
-Route::middleware(['auth:sanctum','ability:isAdmin'])->group(function () {
+Route::middleware(['auth:sanctum', 'ability:isAdmin'])->group(function () {
 
     /**
-    * @uses App\Http\Controllers\AdminLoginController::logout()
-    */
+     * @uses App\Http\Controllers\AdminLoginController::logout()
+     */
     Route::post('logout', 'App\Http\Controllers\AdminLoginController@logout');
 });

@@ -186,7 +186,7 @@ export class BackendCommunicationService {
     return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/posts/' + postId + '/like', {})
   }
 
-  postPost( threadId: number, author: number,  content: string): Observable<HttpResponse<Post>> {
+  postPost(threadId: number, author: number, content: string): Observable<HttpResponse<Post>> {
     let postPayload = {
       "threadId": threadId,
       "author": author,
@@ -199,7 +199,7 @@ export class BackendCommunicationService {
     return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId);
   }
 
-  putPost(threadId: number, author: number, postId: number,  content: string): Observable<HttpResponse<Post>> {
+  putPost(threadId: number, author: number, postId: number, content: string): Observable<HttpResponse<Post>> {
     let postPayload = {
       "id": postId,
       "threadId": threadId,
@@ -232,7 +232,7 @@ export class BackendCommunicationService {
   }
 
   getVulnerabilities(): Observable<VulnerabilityDifficultyOverviewPackage> {
-    return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin', {
+    return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin/vulnerabilities', {
       headers: {admin: "true"}
     });
   }
