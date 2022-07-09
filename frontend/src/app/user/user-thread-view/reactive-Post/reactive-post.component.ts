@@ -69,11 +69,7 @@ export class ReactivePostComponent implements OnInit {
 
   async ngOnInit() {
     await this.setVuln();
-    if(this.vEnabledFrontend){
-      this.deserializePostRegexUnsafe(this.postObject.content)
-    }else {
-      this.deserializePostRegex(this.postObject.content);
-    }
+    this.deserializePost(this.postObject.content)
     /*
     this.vEnabledFrontend = true
     this.deserializePostRegexUnsafe(this.postObject.content);
@@ -141,59 +137,13 @@ export class ReactivePostComponent implements OnInit {
 
   editPost(): void {
     if (this.allowEditService.askForEdit()) {
-      if(this.vEnabledFrontend){
-        let element = document.getElementById("loop" + this.postObject.id)
-        element!.contentEditable = "true";
-      }
       this.editing = true;
+      let edit = document.getElementById("postBox" + this.postObject.id)
+      edit!.contentEditable = "true"
       this.editPostEvent.emit(this.postObject)
     }
   }
-
-  addReply(replyPost: Post): void {
-    let sel = window.getSelection();
-    let ran = sel!.getRangeAt(0);
-    let tag = ran.commonAncestorContainer;
-    const box = document.getElementById('replyBox')
-    let inBox = false;
-
-    for (let i = 0; i < box!.children.length; i++) {
-      if (tag.parentNode == box?.children[i] || tag.parentNode == box) {
-        inBox = true;
-      }
-    }
-
-    if (!inBox) {
-      return;
-    }
-
-    const reply = document.createElement("blockquote");
-    reply.className = "testReply";
-    reply.setAttribute('id', replyPost.id.toString());
-    const replyHeader = document.createElement("p");
-    const replyBody = document.createElement("div");
-    replyHeader.textContent = replyPost.author.name + ":";
-    replyBody.textContent = replyPost.content;
-    reply.appendChild(replyHeader);
-    reply.appendChild(replyBody);
-    const above = document.createElement("div");
-    const under = document.createElement("div");
-    const linebreak = document.createElement("br");
-    const linebreak2 = document.createElement("br");
-    above.appendChild(linebreak);
-    under.appendChild(linebreak2);
-    //console.log(box!.children[0].textContent);
-    if (box!.children[0].textContent == "") {
-      //console.log("did it");
-      box!.appendChild(reply)
-    } else {
-      tag.parentNode!.insertBefore(reply, tag.nextSibling);
-      reply.parentNode!.insertBefore(above, reply);
-    }
-
-    box!.appendChild(under);
-  }
-
+  /*
   editContent(): void {
     //console.log("edit");
     this.editPostEvent.emit(this.postObject);
@@ -263,85 +213,44 @@ export class ReactivePostComponent implements OnInit {
     )
     // this.postObject.content = replyString;
   }
+   */
 
-
-  deserializePost(postString: string): void {
-    //this.deserializePostRegex(postString);
-    //console.log("Message: " + postString)   //schaun ob Attribute noch da sin
-    let stringArray = Array.from(postString);
-    let start = 0;
-    let content: any[] = new Array(0);
-    for (let i = 0; i < stringArray.length; i++) {
-      if (stringArray[i] == "/") {
-        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
-          let replyLine = document.createElement("div");
-          replyLine.textContent = postString.substring(start, i);
-          content.push(replyLine);
-          i = i + 2;
-          start = i + 1;
-        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
-          let replyFull = document.createElement("blockquote")
-          replyFull.className = "testReply";
-          i = i + 13;
-          start = i;
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
-              replyFull.setAttribute("replyPostId", postString.substring(start, j));
-              replyFull.id = replyFull.getAttribute("replyPostId")!;
-              start = j + 8;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
-              replyFull.setAttribute("replyUserId", postString.substring(start, j))
-              start = j + 10;
-              i = start
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "a") {
-              replyFull.setAttribute("replyUserName", postString.substring(start, j))
-              start = j + 2;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "b") {
-              let header = document.createElement("p");
-              header.textContent = postString.substring(start, j);
-              replyFull.appendChild(header);
-              start = j + 3;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/") {
-              if (stringArray[j + 1] == "b") {
-                let line = document.createElement("div");
-                line.textContent = postString.substring(start, j);
-                replyFull.appendChild(line);
-                start = j + 3;
-                i = start - 1;
-              } else if (stringArray[j + 1] == "r") {
-                start = j + 2;
-                i = start - 1;
-                break;
-              }
-            }
-          }
-          content.push(replyFull);
-        }
+  editRework(): void{
+    let edit = document.getElementById("postBox" + this.postObject.id)
+    edit!.contentEditable = "false"
+    this.editPostEvent.emit(this.postObject)
+    let fullreply = document.getElementById("postBox" + this.postObject.id)
+    let editString = "";
+    for(let i = 0; i < fullreply!.children.length; i++){
+      let current = fullreply!.children[i].children[0]
+      if(current.nodeName == "DIV"){
+        editString = editString + current.textContent
+      }else{
+        console.log("inQuote")
+        let id = fullreply!.id.replace("postBox", "");
+        editString = editString + "[quote=" + current.children[0].textContent + ":" + id + "]" + current.children[1].textContent + "[/quote]"
       }
     }
-    this.contentArray = content;
+    this.editing = false
+    if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(editString)
+    else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(editString)
+    else this.postObject.content = editString;
+    this.backendServiceCom.putPost(this.threadId,this.postObject.author.id, this.postObject.id,  this.postObject.content).subscribe(
+      (value: Data) =>{
+        //console.log("nowEdited: ")
+        //console.log(value)
+        let editedContent = value["body"].content;
+        this.postObject.content = editedContent;
+        if (value["headers"].get('VulnFound') == "true") {
+          //console.log("found vuln in userprofile")
+          this.didAThing.sendMessage();
+        }
+        this.allowEditService.finishEdit();
+        this.deserializePost(this.postObject.content);
+      }
+    )
   }
-
-
+  /*
   deserializePostRegex(postString: string): void {
     let stringArray = postString.split("/r?");
     for (let i = 0; i < stringArray.length; i++) {
@@ -378,7 +287,7 @@ export class ReactivePostComponent implements OnInit {
     this.contentArray = content;
   }
 
-  deserializePostRegexUnsafe(postString: string): void{       //edit noch broken, rest passt
+  deserializePostRegexUnsafe(postString: string): void{
     let stringArray = postString.split("/r?");
     for (let i = 0; i < stringArray.length; i++){
       //console.log("desTest: " + stringArray[i])
@@ -427,6 +336,65 @@ export class ReactivePostComponent implements OnInit {
         }
       }
     }
+  }
+   */
+  deserializePost(postContent: string): void{
+    const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+    let current;
+    let lastMatchIndex = 0;
+    let dividedContent: string[] = new Array(0)
+    while ((current = splitRegex.exec(postContent)) !== null) {
+      if (current.index === splitRegex.lastIndex) {
+        splitRegex.lastIndex++;
+      }
+      if((postContent.substring(lastMatchIndex, current.index)) != ""){
+        dividedContent.push(postContent.substring(lastMatchIndex, current.index))
+      }
+      dividedContent.push(postContent.substring(current.index, splitRegex.lastIndex))
+      lastMatchIndex = splitRegex.lastIndex;
+    }
+
+    if(lastMatchIndex != postContent.length){
+      dividedContent.push(postContent.substring(lastMatchIndex))
+    }
+    let contentArray: HTMLElement[] = new Array(0)
+    const replyInfoRegex = /\[quote=(.*?)]/gmid;
+    const userNameRegex = /(?<=\=)(.*?)(?=\:)/gmid
+    const postIdRegex = /(?<=\:)(.*?)(?=\])/gmid
+    for(let i = 0; i < dividedContent.length; i++){
+      if(dividedContent[i].startsWith("[")){
+        let infos: string = replyInfoRegex.exec(dividedContent[i])![0];
+        let userName = userNameRegex.exec(infos);
+        let postId = postIdRegex.exec(infos)
+        let blockElement = document.createElement("blockquote");
+        blockElement.setAttribute("id",postId![1])
+        let p = document.createElement("p");
+        let div = document.createElement("div");
+        let blockContent = splitRegex.exec(dividedContent[i])
+        if(this.vEnabledFrontend){
+          console.log("Filter on")
+          p.appendChild(document.createRange().createContextualFragment(userName![1]))
+          div.appendChild(document.createRange().createContextualFragment(blockContent![1]))
+        }else{
+          console.log("Filter off")
+          p.textContent = userName![1];
+          div.textContent = blockContent![1];
+        }
+        blockElement.appendChild(p);
+        blockElement.appendChild(div);
+        contentArray.push(blockElement);
+      }else{
+        let divElement = document.createElement("div")
+        if(this.vEnabledFrontend){
+          divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
+        }else{
+          divElement.textContent = dividedContent[i]
+        }
+        contentArray.push(divElement);
+      }
+    }
+    this.contentArray = contentArray;
+    console.log(Date.now());
   }
 
   isDiv(element: HTMLElement) {

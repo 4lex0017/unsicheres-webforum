@@ -58,11 +58,9 @@
 
     <div class="thread-newReply">
       <mat-card>
-        <div id="replyBox{{threadObject.id}}" class="replyBox" contenteditable="true" #replyBox>
-          <div style="display: block">
-            <br style="display: block">
-          </div>
-        </div>
+          <textarea id="replyBox{{threadObject.id}}" class="replyBox" rows ="8">
+
+          </textarea>
         <button mat-raised-button (click)="createPost(threadObject)">POST</button>
       </mat-card>
     </div>

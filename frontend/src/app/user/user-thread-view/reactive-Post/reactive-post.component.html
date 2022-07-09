@@ -25,23 +25,23 @@
       </button>
     </mat-card-title>
   </mat-card-header>
-  <mat-card-content class="replyBox" [id]=postObject.id>
-    <div *ngIf="!editing && !vEnabledFrontend" >
+  <mat-card-content>
+    <div class="replyBox" id="postBox{{postObject.id}}" contenteditable="false">
       <div *ngFor="let element of contentArray">
-        <div *ngIf="isDiv(element)" [textContent]="element.textContent">
+        <div *ngIf="isDiv(element)" [textContent]="element.textContent" style="white-space: pre-line">
         </div>
         <blockquote class="repBlockquote" *ngIf="isBlock(element)" [id]=element.id
                     (click)="moveToPostEvent.emit(element.id)">
           <div *ngFor="let subelement of element.children">
             <p *ngIf="isP(subelement)" [textContent]="subelement.textContent">
             </p>
-            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent">
+            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent" style="white-space: pre-line">
             </div>
           </div>
         </blockquote>
       </div>
     </div>
-    <div *ngIf="editing && !vEnabledFrontend" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
+    <!--<div *ngIf="editing" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent">
         </div>
@@ -49,15 +49,13 @@
           <div *ngFor="let subelement of element.children">
             <p *ngIf="isP(subelement)" [textContent]="subelement.textContent">
             </p>
-            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent">
+            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent" style="white-space: pre-line">
             </div>
           </div>
         </blockquote>
       </div>
-    </div>
-    <div class = "unsafeContent" id="loop{{postObject.id}}">
-    </div>
-    <button *ngIf="editing" mat-raised-button (click)="editContent()">DONE</button>
+    </div>-->
+    <button *ngIf="editing" mat-raised-button (click)="editRework()">DONE</button>
     <!--<p *ngIf="vEnabled" #content></p>
     <p *ngIf="!vEnabled"> {{postObject.content}} </p>-->
   </mat-card-content>
