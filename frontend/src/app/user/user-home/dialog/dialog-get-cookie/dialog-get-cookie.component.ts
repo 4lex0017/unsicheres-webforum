@@ -5,6 +5,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
+import {CookieService} from "ngx-cookie-service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dialog-get-cookie',
@@ -15,15 +17,24 @@ export class DialogGetCookieComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<DialogGetCookieComponent>,
               private clipboard: Clipboard, private _snackBar: MatSnackBar,
+              private router: Router,
+              private cookieService: CookieService
   ) {
   }
 
   cookieValue: string;
-  cookieName: string;
+  cookieName: string = "tracker";
 
   ngOnInit(): void {
-    this.cookieValue = "o[sfagjhera[phjeadfjhedjhphjrtspijrtpisojhrtsdfgphj"
-    this.cookieName = "trackingCookieDummy"
+    if (!this.cookieService.check('tracker')) {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        data: "How did you get here? Login first."
+      });
+      this.router.navigate(['/userLogin']);
+      this.dialogRef.close();
+    }
+    this.cookieValue = this.cookieService.get("tracker");
   }
 
   copyToClipboard(copyText: string) {

@@ -46,10 +46,6 @@ export class BackendCommunicationService {
     this.router.navigate(['/forum/home']);
   }
 
-  errorBreadCrumbAdvanced(fullText: string): void {
-
-  }
-
   errorBreadCrumbTemplate(text: string): void {
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
@@ -57,15 +53,48 @@ export class BackendCommunicationService {
     })
   }
 
+  errorManagement(error: Response) {
+    let errorResponseString = "";
+    switch (error.status) {
+      case 409:
+        errorResponseString = 'Please login before using the site.'
+        this.router.navigate(['/userLogin'])
+        break;
+      case 200:
+        errorResponseString = 'An application breaking sqlInjection was triggered.'
+        break;
+      case 418:
+        errorResponseString = 'The uploaded image datatype is invalid.'
+        break;
+      case 429:
+        errorResponseString = 'Too many requests! Slow down.'
+        break;
+      case 403:
+        errorResponseString = 'Forbidden. Not allowed to access resource'
+        break;
+      case 404:
+        errorResponseString = 'Content not found!'
+        break;
+      default:
+        return;
+    }
+    this.errorBreadCrumbTemplate(errorResponseString);
+  }
+
   //For home
   getCategories(): Observable<AccessBackend> {
-    return this.httpClient.get<AccessBackend>(this.url + '/categories');
+    return this.httpClient.get<AccessBackend>(this.url + '/categories')
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getCategory(categoryId: number): Observable<AccessBackend> {
     return this.httpClient.get<AccessBackend>(this.url + '/categories/' + categoryId)
       .pipe(catchError((error: Response) => {
-          this.errorBreadCrumb(error.status.toString())
+          // this.errorBreadCrumb(error.status.toString())
+          this.errorManagement(error);
           this.router.navigate(['/forum/home']);
           throw {message: 'Bad response', value: error.status}
         })
@@ -73,40 +102,60 @@ export class BackendCommunicationService {
   }
 
   getSideContent(): Observable<any> {
-    return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/users');
+    return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/users')
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
+    ;
   }
 
   //For Userprofile view
   getThreadsFromUser(userId: number): Observable<ThreadsSmallBackendModel> {
-    return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads');
+    return this.httpClient.get<ThreadsSmallBackendModel>(this.url + '/users/' + userId + '/threads')
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getCommentsFromUser(userId: number): Observable<UserCommentWrapper> {
-    return this.httpClient.get<UserCommentWrapper>(this.url + '/profileComments/' + userId);
+    return this.httpClient.get<UserCommentWrapper>(this.url + '/profileComments/' + userId)
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getPostsFromUser(userId: number): Observable<PostsSmallBackendModel> {
-    return this.httpClient.get<PostsSmallBackendModel>(this.url + '/users/' + userId + '/posts');
+    return this.httpClient.get<PostsSmallBackendModel>(this.url + '/users/' + userId + '/posts')
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
     return this.httpClient.get<UserFull>('/users/' + userId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
-        this.errorBreadCrumb(error.status.toString())
+        // this.errorBreadCrumb(error.status.toString())
+        this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
   }
 
   getUsers(): Observable<UserFull[]> {
     return this.httpClient.get<UserFull[]>(this.url + '/users')
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }))
   }
 
   putUser(userPayload: any): Observable<HttpResponse<UserFull>> {
     return this.httpClient.put<any>(this.url + '/users/' + userPayload.id, userPayload, {observe: 'response'})
       .pipe(catchError((error: Response) => {
-        if (error.status == 418) {
-          this.errorBreadCrumbTemplate("The uploaded image datatype is invalid.")
-        }
+        this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
     ;
@@ -122,9 +171,7 @@ export class BackendCommunicationService {
       headers: {"Content-Type": "application/json"}
     })
       .pipe(catchError((error: Response) => {
-        if (error.status == 418) {
-          this.errorBreadCrumbTemplate("The uploaded image datatype is invalid.")
-        }
+        this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
     ;
@@ -140,17 +187,20 @@ export class BackendCommunicationService {
     return this.httpClient.post<any>(this.url + '/profileComments/' + commentedOnProfileId, commentPayload, {
       observe: 'response',
       headers: {"Content-Type": "application/json"}
-    });
+    })
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
-
-  //authenticateUser(password: string):cookie{}
 
 
   // For Thread view
   getThread(threadId: number): Observable<HttpResponse<Thread>> {
     return this.httpClient.get<Thread>(this.url + '/threads/' + threadId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
-        this.errorBreadCrumb(error.status.toString())
+        // this.errorBreadCrumb(error.status.toString())
+        this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
   }
@@ -161,11 +211,19 @@ export class BackendCommunicationService {
       "categoryId": categoryId,
       "author": thread.author.id
     };
-    return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'});
+    return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   deleteThread(categoryId: number, threadId: number): Observable<Thread> {
-    return this.httpClient.delete<Thread>(this.url + '/categories/' + categoryId + '/threads/' + threadId);
+    return this.httpClient.delete<Thread>(this.url + '/categories/' + categoryId + '/threads/' + threadId)
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   putThread(thread: Thread): Observable<HttpResponse<Thread>> {
@@ -175,15 +233,27 @@ export class BackendCommunicationService {
         "title": thread.title,
         "categoryId": thread.categoryId
       };
-    return this.httpClient.put<Thread>(this.url + '/categories/' + thread.categoryId + '/threads/' + thread.id, threadPayload, {observe: 'response'});
+    return this.httpClient.put<Thread>(this.url + '/categories/' + thread.categoryId + '/threads/' + thread.id, threadPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   likeThread(threadId: number): Observable<any> {
     return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/like', {})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }))
   }
 
   likePost(threadId: number, postId: number): Observable<any> {
     return this.httpClient.put<any>(this.url + '/threads/' + threadId + '/posts/' + postId + '/like', {})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }))
   }
 
   postPost(threadId: number, author: number, content: string): Observable<HttpResponse<Post>> {
@@ -192,11 +262,19 @@ export class BackendCommunicationService {
       "author": author,
       "content": content
     };
-    return this.httpClient.post<Post>(this.url + '/threads/' + threadId + '/posts', postPayload, {observe: 'response'});
+    return this.httpClient.post<Post>(this.url + '/threads/' + threadId + '/posts', postPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   deletePost(threadId: number, postId: number): Observable<Post> {
-    return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId);
+    return this.httpClient.delete<Post>(this.url + '/threads/' + threadId + '/posts/' + postId)
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   putPost(threadId: number, author: number, postId: number, content: string): Observable<HttpResponse<Post>> {
@@ -206,7 +284,11 @@ export class BackendCommunicationService {
       "author": author,
       "content": content
     };
-    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + postId, postPayload, {observe: 'response'});
+    return this.httpClient.put<Post>(this.url + '/threads/' + threadId + '/posts/' + postId, postPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   setAttackername(name: string): Observable<HttpResponse<any>> {
@@ -214,32 +296,51 @@ export class BackendCommunicationService {
       {
         "name": name
       };
-    return this.httpClient.put<any>(this.url + '/attackername', attackerPayload, {observe: 'response'});
+    return this.httpClient.post<any>(this.url + '/attacker', attackerPayload, {observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   // Admin
   resetScoreboard(): Observable<any> {
     return this.httpClient.post<any>(this.url + '/admin/reset/scoreboard', null, {
       headers: {admin: "true"}
-    });
+    })
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
 
   resetDatabase(): Observable<any> {
     return this.httpClient.post<any>(this.url + '/admin/reset/db', null, {
       headers: {admin: "true"}
-    });
+    })
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getVulnerabilities(): Observable<VulnerabilityDifficultyOverviewPackage> {
     return this.httpClient.get<VulnerabilityDifficultyOverviewPackage>(this.url + '/admin/vulnerabilities', {
       headers: {admin: "true"}
-    });
+    }).pipe(catchError((error: Response) => {
+      this.errorManagement(error);
+      throw {message: 'Bad response', value: error.status}
+    }));
   }
 
   getVulnerabilitiesConfig(): Observable<VulnerabilitiesConfig> {
     return this.httpClient.get<VulnerabilitiesConfig>(this.url + '/admin/config',
-      {headers: {admin: "true"}});
+      {headers: {admin: "true"}})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverviewPackage): Observable<VulnerabilitiesConfig> {
@@ -259,11 +360,19 @@ export class BackendCommunicationService {
       vulnerabilityPayload.data.push(curState);
     }
     console.log(vulnerabilityPayload)
-    return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload, {headers: {admin: "true"}});
+    return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload, {headers: {admin: "true"}})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   getScoreboard(): Observable<AdminUser[]> {
-    return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard', {headers: {admin: "true"}});
+    return this.httpClient.get<AdminUser[]>(this.url + '/admin/scoreboard', {headers: {admin: "true"}})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   async getVulnerabilitySingle(apiUri: string): Promise<number> {
@@ -285,27 +394,27 @@ export class BackendCommunicationService {
   // Search
   search(search: string, scope: string): Observable<HttpResponse<Search>> {
     let params = new HttpParams().set('q', search)
+    let query = '/search'
     switch (scope) {
       case ("users"):
-        return this.httpClient.get<Search>(this.url + '/search/users', {params: params, observe: 'response'});
+        query = query + '/users'
         break;
       case ("posts"):
-        return this.httpClient.get<Search>(this.url + '/search/posts', {params: params, observe: 'response'});
+        query = query + '/posts'
         break;
       case ("threads"):
-        return this.httpClient.get<Search>(this.url + '/search/threads', {params: params, observe: 'response'});
+        query = query + '/threads'
         break;
       default:
-        return this.httpClient.get<Search>(this.url + '/search', {params: params, observe: 'response'});
         break;
     }
+    return this.httpClient.get<Search>(this.url + query, {params: params, observe: 'response'})
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
-  //Backend
-  getUserFromUsername(id: number): User {
-    let username = "";
-    return {id: id, name: username};
-  }
 
   padTo2Digits(num: number) {
     return num.toString().padStart(2, '0');

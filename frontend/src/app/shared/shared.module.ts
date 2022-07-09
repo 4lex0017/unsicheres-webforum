@@ -9,9 +9,10 @@ import {MatButtonModule} from "@angular/material/button";
 import {AdminLoginComponent} from "./adminlogin/adminlogin.component";
 import {SnackBarNotificationComponent} from './snack-bar-notification/snack-bar-notification.component';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {DialogFirstLoginComponent} from './dialog-first-login/dialog-first-login.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
+import {DialogHasCookieComponent} from './dialog/dialog-has-cookie/dialog-has-cookie.component';
+import {DialogFirstLoginComponent} from "./dialog/dialog-first-login/dialog-first-login.component";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {MatDividerModule} from "@angular/material/divider";
     AdminLoginComponent,
     SnackBarNotificationComponent,
     DialogFirstLoginComponent,
+    DialogHasCookieComponent,
   ],
   imports: [
     CommonModule,

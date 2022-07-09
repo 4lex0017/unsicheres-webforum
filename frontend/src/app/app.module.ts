@@ -21,6 +21,7 @@ import {UserThreadViewModule} from "./user/user-thread-view/user-thread-view.mod
 import {DatePipe} from "@angular/common";
 import {AuthInterceptor} from "./data-access/services/AuthInterceptor";
 import {AuthInterceptorAdmin} from "./data-access/services/AuthInterceptorAdmin";
+import {CookieService} from 'ngx-cookie-service';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import {AuthInterceptorAdmin} from "./data-access/services/AuthInterceptorAdmin"
   ],
   providers: [
     DatePipe,
+    CookieService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorAdmin, multi: true}],
   bootstrap: [AppComponent]

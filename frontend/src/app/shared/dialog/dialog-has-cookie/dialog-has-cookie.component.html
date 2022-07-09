@@ -1,0 +1,19 @@
+<div class="outer-container">
+  <h1 class="header">You already have a cookie!</h1>
+  <mat-dialog-content class="mat-typography">
+    <h2>Why are you here?</h2>
+    <p>This page is only for the first login and to get a cookie to track you. (As you know, because you read
+      the message that appeared the first time you got here.)</p>
+    <h2>You forgot?</h2>
+    <p>
+      <button (click)="showFirstLoginMessage()" class="btnShowFirstLoginMessage">Click here</button>
+      to view the message once more (10 second wait time included ... again)
+    </p>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="goToForum()" color="primary">Go to forum</button>
+    <button mat-raised-button (click)="close()" color="primary">Dismiss</button>
+  </mat-dialog-actions>
+</div>
+
