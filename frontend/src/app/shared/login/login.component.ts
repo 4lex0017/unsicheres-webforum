@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
           width: '60%',
         });
       }, error => {
-        if (error.status == 422) {
+        if (error.value == 422) {
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,
             data: "This Username is already taken."
@@ -63,8 +63,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.cookieService.check('tracker'))
-    console.log(this.cookieService.get('tracker'))
     if (this.cookieService.check('tracker')) {
       const dialogRef = this.dialog.open(DialogHasCookieComponent, {
         width: '60%',
