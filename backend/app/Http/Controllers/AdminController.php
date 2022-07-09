@@ -670,7 +670,8 @@ class AdminController extends Controller
         $attacker->tracker = $tracker_data;
 
         $attacker->save();
-
-        return response()->json()->withCookie(cookie('tracker', $tracker_data, 20 * 365 * 24 * 60)); // 20 years
+        //                                                                                   20 years
+        return response()->json()->withCookie(cookie('tracker', $tracker_data, 20 * 365 * 24 * 60,
+            null, null, false, false)); // http only has to be false because of angular...
     }
 }
