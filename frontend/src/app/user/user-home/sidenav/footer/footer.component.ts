@@ -29,7 +29,7 @@ export class FooterComponent {
 
   getCookieDialog() {
     const dialogRef = this.dialog.open(DialogGetCookieComponent, {
-      width: '65%'
+      width: '25%'
     });
   }
 

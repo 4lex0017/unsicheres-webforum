@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attacker;
 use App\Models\Vulnerability;
 use Database\Seeders\PasswordSeeder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\ConfigResource;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -16,9 +20,9 @@ class AdminController extends Controller
      * get list of supported vulnerabilities and which difficulties are in use
      * ROUTE GET /admin
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getSupportedVulnerabilities(): \Illuminate\Http\JsonResponse
+    public function getSupportedVulnerabilities(): JsonResponse
     {
         $json = Storage::disk('local')->get('/config/vulnerabilities.json');
         $config = json_decode(Storage::disk('local')->get('/config/vulnRoutes.json'), true);
@@ -502,9 +506,9 @@ class AdminController extends Controller
      * generate and return the current scoreboard
      * ROUTE GET /admin/scoreboard
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getScoreboard(): \Illuminate\Http\JsonResponse
+    public function getScoreboard(): JsonResponse
     {
         $attackers = $this->getAllAttackers();
 
@@ -641,19 +645,39 @@ class AdminController extends Controller
     }
 
     /**
-     * update attacker name
-     * ROUTE PUT /attackername
+     * create unique attacker with name, tracker cookie and id
+     * ROUTE POST /attacker
      *
      * @param Request $request
-     * @return void
+     * @return JsonResponse
      */
-    public function putAttackerName(Request $request): void
+    public function createAttacker(Request $request): JsonResponse
     {
-        DB::connection('secure')
-            ->table('attackers')
-            ->updateOrInsert(
-                ['ip_address' => $request->ip()],
-                ['name' => $request->json()->get('name')]
-            );
+        $validator = Validator::make($request->all(), [
+            'name' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return response()->json(['error' => $validator->errors()], 422);
+
+        $name = $request->json()->get('name');
+
+        if ((new Attacker)->where('name', $name)->exists())
+            return response()->json('Attacker name already exists', 422);
+
+        $tracker_data = base64_encode(openssl_encrypt($name, 'aes-256-ctr',
+            "1337youwill420neverguess69thisxd", 0, 'lK_P:-2RB<r#W1u@'));
+
+        Log::debug($tracker_data);
+
+        $attacker = new Attacker;
+
+        $attacker->name = $name;
+        $attacker->tracker = $tracker_data;
+
+        $attacker->save();
+        //                                                                                   20 years
+        return response()->json()->withCookie(cookie('tracker', $tracker_data, 20 * 365 * 24 * 60,
+            null, null, false, false)); // http only has to be false because of angular...
     }
 }

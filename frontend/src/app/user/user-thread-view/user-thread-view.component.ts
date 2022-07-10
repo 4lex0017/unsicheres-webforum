@@ -153,224 +153,38 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
-    //console.log("reply: " + replyPost.content)
-    let selected = window.getSelection();
-    let range = selected!.getRangeAt(0);
-    let tag = range.commonAncestorContainer;
-    const box = document.getElementById('replyBox' + threadObject.id)
-    /*
-    //console.log(tag.parentNode == box!.parentNode);
-    if(false){
-      //console.log("inside fix")
-      let replacement = document.createElement("div");
-      replacement.id = "firstline";
-      if(box!.children.length != 0){
-        box!.insertBefore(replacement, box!.children[0])
-      }else{
-        box!.appendChild(replacement);
+    let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+    let currentFilter;
+    let myValue = replyPost.content
+    let lastMatchIndex = 0
+    while((currentFilter = regex.exec(replyPost.content)) != null){
+      if(currentFilter.index === regex.lastIndex){
+        regex.lastIndex++;
       }
-    }
-     */
-
-
-    let inBox = false;
-
-    for (let i = 0; i < box!.children.length; i++) {
-      if (tag.parentNode == box?.children[i] || tag.parentNode == box) {
-        inBox = true;
+      if(currentFilter.index === lastMatchIndex){
+        myValue = myValue.replace(currentFilter[0],'')
+      }else {
+        myValue = myValue.replace(currentFilter[0], '\n')
       }
+      lastMatchIndex = regex.lastIndex
     }
 
-    if(box!.children[0] == null){
-      inBox = true;
-    }
+    var myElement = <HTMLTextAreaElement> document.getElementById("replyBox" + threadObject.id);
+    var startPosition = myElement!.selectionStart;
+    var endPosition = myElement!.selectionEnd;
 
-    let editElement;
-    if(this.vEnabledFrontend){
-      editElement = document.getElementById("loop" + this.editId);
-    }else{
-      editElement = document.getElementById("replyBox" + this.editId);
-    }
-
-    let addedToEdit = false;
-    if (editElement != null) {
-      for (let i = 0; i < editElement.children.length; i++) {
-        if (tag.parentNode!.parentNode == editElement.children[i] || tag.parentNode!.parentNode == editElement || (tag.parentNode == editElement && this.vEnabledFrontend)) {
-          addedToEdit = true;
-          inBox = true;
-        }
-      }
-    }
-    //console.log("inBox: " + inBox);
-    if (!inBox) {
-      return;
-    }
-
-    const reply = document.createElement("blockquote");
-    reply.className = "testReply";
-    reply.style.borderRadius = '1px';
-    reply.style.border = 'solid #0643b8';
-    reply.style.marginLeft = '3%';
-    reply.style.width = '80%';
-    reply.style.borderLeftWidth = '8px';
-    reply.style.borderSpacing = '10px';
-    reply.id = replyPost.id.toString();
-    const replyHeader = document.createElement("p");
-    replyHeader.textContent = replyPost.author.name + ":";
-    reply.appendChild(replyHeader);
-    /*
-    let stringArray = Array.from(replyPost.content);
-    let start = 0;
-    for (let i = 0; i < replyPost.content.length; i++) {
-      if (stringArray[i] == "/") {
-        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
-          let replyLine = document.createElement("div");
-          replyLine.textContent = replyPost.content.substring(start, i);
-          reply.appendChild(replyLine)
-          //console.log("line thats added : " + replyLine.textContent)
-          i = i + 3;
-          start = i;
-        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
-          for (let j = i + 3; j < replyPost.content.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "r") {
-              i = j + 2;
-              start = i + 1;
-              break;
-            }
-          }
-        }
-      }
-    }
-     */
-    let rsplit = replyPost.content.split("/r?");
-    let filteredOfReply: string[] = new Array(0);
-    for(let i = 0; i < rsplit.length; i++){
-      if((Array.from(rsplit[i])[0] + Array.from(rsplit[i])[1]) == '/a'){
-
-      }else{
-        //console.log("splitpart: " + rsplit[i])
-        filteredOfReply.push(rsplit[i]);
-      }
-    }
-    let filteredOfB: string[] = new Array(0);
-    for(let i = 0; i < filteredOfReply.length; i++){
-      let firstFilter = filteredOfReply[i].split("/b?");
-      for(let j = 0; j < firstFilter.length; j++){
-        filteredOfB.push(firstFilter[j])
-      }
-    }
-    for(let i = 0; i < filteredOfB.length; i++){
-      let line = document.createElement("div");
-      line.textContent = filteredOfB[i];
-      reply.appendChild(line);
-    }
-    const above = document.createElement("div");
-    const under = document.createElement("div");
-    const linebreak = document.createElement("br");
-    const linebreak2 = document.createElement("br");
-    above.appendChild(linebreak);
-    under.appendChild(linebreak2);
-    if(box!.children[0] == null && !addedToEdit){
-      //console.log("addcase 0");
-      let firsline = document.createElement("div");
-      firsline.textContent = box!.textContent;
-      box!.textContent = null;
-      box!.appendChild(firsline);
-      box!.appendChild(above);
-      box!.appendChild(reply);
-      box!.appendChild(under);
-      return;
-    }
-    if (box!.children[0].textContent == "" && this.editId == -1) {
-      //console.log("addcase1")
-      box!.appendChild(reply)
-    } else {
-      if(addedToEdit && !this.vEnabledFrontend){
-        tag.parentNode!.insertBefore(under, tag.nextSibling);
-      }
-      if(addedToEdit && tag.parentNode!.children.length == 1 && !this.vEnabledFrontend){
-        //console.log("addcase 3")
-        let addBox = document.getElementById("replyBox" + this.editId);
-        addBox!.appendChild(above);
-        addBox!.appendChild(reply);
-      }else if(tag.nextSibling != null) {
-        //console.log("addcase 2")
-        //console.log(tag)
-        tag.parentNode!.insertBefore(reply, tag.nextSibling);
-        reply.parentNode!.insertBefore(above, reply);
-      }else{
-        /*
-      }
-        if(addedToEdit && !this.vEnabledFrontend){
-          //console.log("addcase 3")
-          let addBox = document.getElementById("replyBox" + this.editId);
-          addBox!.appendChild(above);
-          addBox!.appendChild(reply);
-        }else{
-        */
-          //console.log("addcase 4")
-          tag.parentNode!.insertBefore(reply, tag.nextSibling);
-          reply.parentNode!.insertBefore(above, reply);
-          /*
-        }
-           */
-      }
-    }
-    if(!addedToEdit){
-      box!.appendChild(under);
-    }
+      myElement.value = myElement.value.substring(0, startPosition)
+        +"[quote=" + replyPost.author.name + ":" + replyPost.id + "]"
+        + myValue
+        +"[/quote]"
+        + myElement.value.substring(endPosition, myElement.value.length);
   }
 
   createPost(threadObject: Thread): void {
+    console.log(Date.now())
     if (!this.checkLoggedIn()) return;
-    let fullReply = document.getElementById('replyBox' + threadObject.id);
-    let replyString: string = "";
-    for (let i = 0; i < fullReply!.children.length; i++) {
-      let child = fullReply!.children[i];
-      if (child.children.length != 0 && child.tagName != "BLOCKQUOTE") {
-        let rest = "";
-        for (let k = 0; k < child.children.length; k++) {
-          rest = rest + child.children[k].textContent;
-        }
-        let test = child.textContent!.replace(rest, "");
-        replyString = replyString + test + "/b?";
-        for (let j = 0; j < child.children.length; j++) {
-          if (child.children[j].tagName == "BLOCKQUOTE") {
-            let infos: string = "/a?" + child.children[j].id + "/a?";
-            let header: string = child.children[j].children[0].textContent! + "/b?"
-            let body: string = "";
-            for (let k = 1; k < child.children[j].children.length; k++) {
-              body = body + child.children[j].children[k].textContent! + "/b?"
-            }
-            replyString = replyString + "/r?" + infos + header + body + "/r?";
-          } else {
-            replyString = replyString + child.children[j].textContent + "/b?";
-          }
-        }
-      } else if (child.tagName == "BLOCKQUOTE") {
-        let infos: string = "/a?" + child.id + "/a?";
-        let header: string = child.children[0].textContent! + "/b?"
-        let body: string = "";
-        for (let k = 1; k < child.children.length; k++) {
-          body = body + child.children[k].textContent! + "/b?"
-        }
-        replyString = replyString + "/r?" + infos + header + body + "/r?";
-      } else {
-        replyString = replyString + child.textContent + "/b?";
-      }
-    }
-    //console.log("pushed stuff: " + replyString);
-    if (replyString == "/b?/b?") {
-      return;
-    }
-    while (fullReply!.children.length > 0) {
-      fullReply!.removeChild(fullReply!.lastChild!);
-    }
-    if (fullReply!.textContent != "") {
-      replyString = fullReply!.textContent + "/b?" + replyString
-    }
-    replyString = "/b?" + replyString;
-    //console.log("hier")
+    let fullReply = <HTMLTextAreaElement> document.getElementById('replyBox' + threadObject.id);
+    let replyString = fullReply.value;
     if (this.vEnabledPost == 1) replyString = this.diffPicker.frontendFilterTagsNormal(replyString)
     else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)
     this.backendServiceCom.postPost(threadObject.id, this.authenticate.getCurrentUserId(), replyString).subscribe((value: Data) => {
@@ -382,91 +196,7 @@ export class UserThreadViewComponent implements OnInit {
         this.didAThing.sendMessage();
       }
     })
-    fullReply!.textContent = "";
-    let newLine = document.createElement("div");
-    let linebreak = document.createElement("br");
-    newLine.appendChild(linebreak);
-    fullReply!.appendChild(newLine);
-  }
-
-
-  deserializePost(postString: string): void {
-    let stringArray = Array.from(postString);
-    let start = 0;
-    let content: any[] = new Array(0);
-    for (let i = 0; i < stringArray.length; i++) {
-      if (stringArray[i] == "/") {
-        if (stringArray[i + 1] == "b" && stringArray[i + 2] == "?") {
-          let replyLine = document.createElement("div");
-          replyLine.textContent = postString.substring(start, i);
-          content.push(replyLine);
-          i = i + 2;
-          start = i + 1;
-        } else if (stringArray[i + 1] == "r" && stringArray[i + 2] == "?") {
-          let replyFull = document.createElement("blockquote")
-          replyFull.className = "testReply";
-          replyFull.style.borderRadius = '1px';
-          replyFull.style.border = 'solid #0643b8';
-          replyFull.style.marginLeft = '3%';
-          replyFull.style.width = '80%';
-          replyFull.style.borderLeftWidth = '8px';
-          replyFull.style.borderSpacing = '10px';
-          i = i + 13;
-          start = i;
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
-              replyFull.setAttribute("replyPostId", postString.substring(start, j));
-              start = j + 8;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "&") {
-              replyFull.setAttribute("replyUserId", postString.substring(start, j))
-              start = j + 10;
-              i = start
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "a") {
-              replyFull.setAttribute("replyUserName", postString.substring(start, j))
-              start = j + 2;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/" && stringArray[j + 1] == "b") {
-              let header = document.createElement("p");
-              header.textContent = postString.substring(start, j);
-              replyFull.appendChild(header);
-              start = j + 3;
-              i = start - 1;
-              break;
-            }
-          }
-          for (let j = i; j < stringArray.length; j++) {
-            if (stringArray[j] == "/") {
-              if (stringArray[j + 1] == "b") {
-                let line = document.createElement("div");
-                line.textContent = postString.substring(start, j);
-                replyFull.appendChild(line);
-                start = j + 3;
-                i = start - 1;
-              } else if (stringArray[j + 1] == "r") {
-                start = j + 2;
-                i = start - 1;
-                break;
-              }
-            }
-          }
-          content.push(replyFull);
-        }
-      }
-    }
-    this.testcontent = content;
+    fullReply.value = "";
   }
 
   currentEdit(post: Post) {

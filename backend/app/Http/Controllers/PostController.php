@@ -86,7 +86,7 @@ class PostController extends Controller
         if (!$post) // just in case
             return response("", 404);
 
-        if (!self::isThisTheRightUser($post->author_id, $request))
+        if (!self::isThisTheRightUser($post->author, $request))
             return response("User not allowed to delete this Post", 403);
 
         self::deletePostFromThread($thread_id, $post_id);
@@ -128,7 +128,7 @@ class PostController extends Controller
         if (!$post || $post->id != $post_id || $post->thread_id != $thread_id)
             return response()->json('!$post || $post->id != $post_id || $post->thread_id != $thread_id', 422);
 
-        if (!self::isThisTheRightUser($post->author_id, $request))
+        if (!self::isThisTheRightUser($post->author, $request))
             return response()->json('You are not allowed to edit this post!', 403);
 
         $post = $request->all();

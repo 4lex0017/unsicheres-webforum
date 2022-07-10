@@ -88,9 +88,9 @@ Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLogin
  */
 Route::post('/admin/login', ['as' => 'login', 'uses' => 'App\Http\Controllers\AdminLoginController@login']);
 /**
- * @uses App\Http\Controllers\AdminController::putAttackerName()
+ * @uses App\Http\Controllers\AdminController::createAttacker()
  */
-Route::put('attackername', 'App\Http\Controllers\AdminController@putAttackerName');
+Route::post('attacker', 'App\Http\Controllers\AdminController@createAttacker');
 
 /**
  * @uses App\Http\Controllers\ProfileCommentController::getAllCommentsOfProfile()

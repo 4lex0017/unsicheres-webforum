@@ -10,7 +10,8 @@
         "laravel/framework": "^9.11",
         "laravel/installer": "^4.2",
         "laravel/sanctum": "^2.15",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+      "ext-openssl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
