@@ -216,21 +216,9 @@ export class ReactivePostComponent implements OnInit {
    */
 
   editRework(): void{
-    let edit = document.getElementById("postBox" + this.postObject.id)
-    edit!.contentEditable = "false"
     this.editPostEvent.emit(this.postObject)
-    let fullreply = document.getElementById("postBox" + this.postObject.id)
-    let editString = "";
-    for(let i = 0; i < fullreply!.children.length; i++){
-      let current = fullreply!.children[i].children[0]
-      if(current.nodeName == "DIV"){
-        editString = editString + current.textContent
-      }else{
-        console.log("inQuote")
-        let id = fullreply!.id.replace("postBox", "");
-        editString = editString + "[quote=" + current.children[0].textContent + ":" + id + "]" + current.children[1].textContent + "[/quote]"
-      }
-    }
+    let fullreply =<HTMLTextAreaElement> document.getElementById("editBox" + this.postObject.id)
+    let editString = fullreply.value;
     this.editing = false
     if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(editString)
     else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(editString)
@@ -339,6 +327,7 @@ export class ReactivePostComponent implements OnInit {
   }
    */
   deserializePost(postContent: string): void{
+    postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
     const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let current;
     let lastMatchIndex = 0;
@@ -358,19 +347,23 @@ export class ReactivePostComponent implements OnInit {
       dividedContent.push(postContent.substring(lastMatchIndex))
     }
     let contentArray: HTMLElement[] = new Array(0)
-    const replyInfoRegex = /\[quote=(.*?)]/gmid;
-    const userNameRegex = /(?<=\=)(.*?)(?=\:)/gmid
-    const postIdRegex = /(?<=\:)(.*?)(?=\])/gmid
+    const replyInfoRegex = /\[quote=(.*?)]/mid;
+    const userNameRegex = /(?<=\=)(.*?)(?=\:)/mid
+    const postIdRegex = /(?<=\:)(.*?)(?=\])/mid
     for(let i = 0; i < dividedContent.length; i++){
+      console.log(dividedContent[i])
       if(dividedContent[i].startsWith("[")){
-        let infos: string = replyInfoRegex.exec(dividedContent[i])![0];
-        let userName = userNameRegex.exec(infos);
-        let postId = postIdRegex.exec(infos)
+        let infos = replyInfoRegex.exec(dividedContent[i]);
+        console.log(infos)
+        let info = infos![0];
+        let userName = userNameRegex.exec(info);
+        let postId = postIdRegex.exec(info)
         let blockElement = document.createElement("blockquote");
         blockElement.setAttribute("id",postId![1])
         let p = document.createElement("p");
         let div = document.createElement("div");
-        let blockContent = splitRegex.exec(dividedContent[i])
+        const blockRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+        let blockContent = blockRegex.exec(dividedContent[i])
         if(this.vEnabledFrontend){
           console.log("Filter on")
           p.appendChild(document.createRange().createContextualFragment(userName![1]))

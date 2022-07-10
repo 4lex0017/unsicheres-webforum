@@ -33,7 +33,7 @@ export class UserThreadViewComponent implements OnInit {
   vEnabledFrontend: boolean;
   content: string = "";
   testcontent: any[];
-  editId: number;
+  editId: number = -1;
   url: string = "http://localhost:4200/forum";
 
 
@@ -153,6 +153,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
+    console.log("editId: " + this.editId)
     let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let currentFilter;
     let myValue = replyPost.content
@@ -168,8 +169,12 @@ export class UserThreadViewComponent implements OnInit {
       }
       lastMatchIndex = regex.lastIndex
     }
-
-    var myElement = <HTMLTextAreaElement> document.getElementById("replyBox" + threadObject.id);
+    var myElement;
+    if(this.editId != -1){
+      myElement = <HTMLTextAreaElement> document.getElementById("editBox" + this.editId);
+    }else {
+      myElement = <HTMLTextAreaElement>document.getElementById("replyBox" + threadObject.id);
+    }
     var startPosition = myElement!.selectionStart;
     var endPosition = myElement!.selectionEnd;
 

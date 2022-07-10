@@ -26,7 +26,7 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="replyBox" id="postBox{{postObject.id}}" contenteditable="false">
+    <div *ngIf="!editing" class="replyBox" id="postBox{{postObject.id}}" contenteditable="false">
       <div *ngFor="let element of contentArray">
         <div *ngIf="isDiv(element)" [textContent]="element.textContent" style="white-space: pre-line">
         </div>
@@ -41,20 +41,11 @@
         </blockquote>
       </div>
     </div>
-    <!--<div *ngIf="editing" class="replyBox" id="replyBox{{postObject.id}}" contenteditable="true">
-      <div *ngFor="let element of contentArray">
-        <div *ngIf="isDiv(element)" [textContent]="element.textContent">
-        </div>
-        <blockquote class="repBlockquote" *ngIf="isBlock(element)" [id]=element.id>
-          <div *ngFor="let subelement of element.children">
-            <p *ngIf="isP(subelement)" [textContent]="subelement.textContent">
-            </p>
-            <div *ngIf="isDiv(subelement)" [textContent]="subelement.textContent" style="white-space: pre-line">
-            </div>
-          </div>
-        </blockquote>
-      </div>
-    </div>-->
+    <div *ngIf="editing">
+      <textarea class="editBox" id="editBox{{postObject.id}}" [textContent]="postObject.content" rows="8">
+
+      </textarea>
+    </div>
     <button *ngIf="editing" mat-raised-button (click)="editRework()">DONE</button>
     <!--<p *ngIf="vEnabled" #content></p>
     <p *ngIf="!vEnabled"> {{postObject.content}} </p>-->
