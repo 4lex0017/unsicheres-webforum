@@ -179,7 +179,31 @@
                     "checked": false
                 }
             ]
+        },
+        {
+            "id": 7,
+            "name": "user enumeration",
+            "description": "provide unnecessary info for failed logins",
+            "subtasks":[
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "users are listed in side bar, frontend shows if username exists",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "users are not listed in side bar, frontend shows if username exists",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Off",
+                    "description": "frontend doesn't show if username exists",
+                    "checked": false
+                }
+            ]
         }
     ]
 }
-
