@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('sxss_difficulty');
             $table->integer('rxss_difficulty');
             $table->integer('sqli_difficulty');
-            $table->integer('cmdi_difficulty');
+            $table->integer('file_difficulty');
             $table->integer('fend_difficulty');
             $table->timestamps();
         });
