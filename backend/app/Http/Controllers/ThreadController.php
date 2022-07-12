@@ -268,7 +268,13 @@ class ThreadController extends Controller
         $category->save();
     }
 
-    public static function buildSidebarThreadArray($threads): array
+    /**
+     * Build Threads for Sidebar
+     *
+     * @param Thread|array $threads
+     * @return array
+     */
+    public static function buildSidebarThreadArray(Thread|array $threads): array
     {
         $thread_array = array();
         foreach ($threads as $thread) {
