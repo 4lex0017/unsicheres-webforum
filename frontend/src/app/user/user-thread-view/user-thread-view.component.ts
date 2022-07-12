@@ -186,7 +186,6 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   createPost(threadObject: Thread): void {
-    console.log(Date.now())
     if (!this.checkLoggedIn()) return;
     let fullReply = <HTMLTextAreaElement> document.getElementById('replyBox' + threadObject.id);
     let replyString = fullReply.value;
@@ -210,18 +209,22 @@ export class UserThreadViewComponent implements OnInit {
     } else {
       this.editId = post.id;
     }
+    console.log("currentEditId: " + this.editId)
   }
 
   moveToPost(id: number) {
     window.location.hash = id.toString();
   }
 
-  openDeletePostConsumer(threadObject: Thread, postObjectId: number) {
+  openDeletePostConsumer(threadObject: Thread,editId: number, postObjectId: number) {
     //console.log(postObjectId)
     this.threadObjectArrayModel.data.forEach((thread, index) => {
       if (thread.id == threadObject.id) {
         for (let z = 0; z < threadObject.posts.length; z++) {
           if (threadObject.posts[z].id == postObjectId) {
+            if(postObjectId == editId){
+              this.editId = -1
+            }
             threadObject.posts.splice(z, 1);
             this.threadObjectArrayModel.data[index] = threadObject;
             this.backendServiceCom.deletePost(threadObject.id, postObjectId).subscribe()

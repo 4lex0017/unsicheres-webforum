@@ -109,6 +109,11 @@ export class ReactivePostComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        if(this.editing){
+          console.log("editWhileDelete")
+          this.allowEditService.finishEdit();
+          this.editPostEvent.emit(this.postObject)
+        }
         this.deletePostEvent.emit(this.postObject.id);
       }
     });
@@ -233,10 +238,10 @@ export class ReactivePostComponent implements OnInit {
           //console.log("found vuln in userprofile")
           this.didAThing.sendMessage();
         }
-        this.allowEditService.finishEdit();
-        this.deserializePost(this.postObject.content);
       }
     )
+    this.allowEditService.finishEdit();
+    this.deserializePost(this.postObject.content);
   }
   /*
   deserializePostRegex(postString: string): void {
@@ -351,10 +356,8 @@ export class ReactivePostComponent implements OnInit {
     const userNameRegex = /(?<=\=)(.*?)(?=\:)/mid
     const postIdRegex = /(?<=\:)(.*?)(?=\])/mid
     for(let i = 0; i < dividedContent.length; i++){
-      console.log(dividedContent[i])
       if(dividedContent[i].startsWith("[")){
         let infos = replyInfoRegex.exec(dividedContent[i]);
-        console.log(infos)
         let info = infos![0];
         let userName = userNameRegex.exec(info);
         let postId = postIdRegex.exec(info)
@@ -387,7 +390,6 @@ export class ReactivePostComponent implements OnInit {
       }
     }
     this.contentArray = contentArray;
-    console.log(Date.now());
   }
 
   isDiv(element: HTMLElement) {
