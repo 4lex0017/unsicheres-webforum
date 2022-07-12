@@ -45,6 +45,27 @@ class ThreadController extends Controller
     }
 
     /**
+     * Gets a small representation of 10 random Threads
+     *
+     * @return JsonResponse
+     */
+    public function getRandSmallTreads(): JsonResponse
+    {
+        $threads = Thread::all();
+        $ten_threads = array();
+        while (sizeof($ten_threads) < 11 && sizeof($threads) > 0) {
+            $currsize = sizeof($threads);
+            $random =  rand(0, $currsize - 1);
+            $ten_threads[] = $threads[$random];
+            $threads->splice($random);
+        }
+        $thread_array = self::buildSidebarThreadArray($ten_threads);
+
+
+        return response()->json(['threads' => $thread_array])->setStatusCode(200);
+    }
+
+    /**
      * gets a Thread
      *
      * @param string|int $id
@@ -245,6 +266,22 @@ class ThreadController extends Controller
 
         $category['threads'] = $thread_array;
         $category->save();
+    }
+
+    public static function buildSidebarThreadArray($threads): array
+    {
+        $thread_array = array();
+        foreach ($threads as $thread) {
+            $tmp_thread = [
+                'id' => $thread->id,
+                'title' => $thread->title,
+                'date' => $thread->created_at,
+            ];
+
+            $thread_array[] = $tmp_thread;
+        }
+
+        return $thread_array;
     }
 
     /**
