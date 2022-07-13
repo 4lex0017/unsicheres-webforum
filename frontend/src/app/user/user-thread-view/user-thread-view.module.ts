@@ -15,7 +15,6 @@ import {MatRadioModule} from "@angular/material/radio";
 import {DialogEditPostComponent} from './dialog-edit-post/dialog-edit-post.component';
 import {DialogDeletePostComponent} from './dialog-delete-post/dialog-delete-post.component';
 import {DialogDeleteThreadComponent} from './dialog-delete-thread/dialog-delete-thread.component';
-import {PostComponent} from './post/post.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -32,13 +31,11 @@ import {DialogReportPostComponent} from "./dialog-report-post/dialog-report-post
     DialogDeletePostComponent,
     DialogDeleteThreadComponent,
     DialogReportPostComponent,
-    PostComponent,
     ReactivePostComponent
   ],
-    exports: [
-        PostComponent,
-        ReactivePostComponent
-    ],
+  exports: [
+    ReactivePostComponent
+  ],
   imports: [
     CommonModule,
     UserThreadViewRoutingModule,

@@ -20,8 +20,5 @@ export class ErrorComponent implements OnInit {
       },
     );
     snackBarRef.afterDismissed().subscribe(value => this.router.navigate(['/forum']))
-
   }
-
-
 }

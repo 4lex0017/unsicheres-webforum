@@ -4,15 +4,11 @@ import {
   Input,
 
 } from '@angular/core';
-import {Category} from "../../../data-access/models/category";
 import {MatTableDataSource} from "@angular/material/table";
 import {Thread} from "../../../data-access/models/thread";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
 import {Router} from "@angular/router";
-import {BackendService} from "../../../data-access/services/backend.service";
 import {CategoryBackend} from "../../../data-access/models/accessBackend";
-import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
-import {shareReplay} from "rxjs";
 
 
 @Component({

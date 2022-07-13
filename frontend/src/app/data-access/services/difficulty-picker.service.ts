@@ -35,12 +35,6 @@ export class DifficultyPickerService {
     return false;
   }
 
-
-  // async isEnabledInConfigSingle(str: string): Promise<number> {
-  //   return await this.backendCom.getVulnerabilitySingle(str)
-  // }
-
-
   frontendFilterTagsNormal(content: string): string {
     return content.replace("<script>", "");
   }

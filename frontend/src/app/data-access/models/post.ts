@@ -1,5 +1,4 @@
 import {User} from "./user";
-import {PostReply} from "./postReply";
 
 export interface Post {
   id: number;
@@ -7,5 +6,4 @@ export interface Post {
   date: string;
   author: User;
   likedFrom: number[];
-  repliedTo?: PostReply;
 }

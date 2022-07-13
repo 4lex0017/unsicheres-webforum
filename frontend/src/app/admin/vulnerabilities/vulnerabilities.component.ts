@@ -3,7 +3,6 @@ import {
   VulnerabilityDifficultyOverview,
   VulnerabilityDifficultyOverviewPackage
 } from "../../data-access/models/vulnerabilityDifficultyOverview";
-import {BackendService} from "../../data-access/services/backend.service";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
@@ -29,7 +28,6 @@ export class VulnerabilitiesComponent implements OnInit {
   curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
 
   constructor(private dialog: MatDialog,
-              private backend: BackendService,
               private router: Router,
               private backendCom: BackendCommunicationService,
               private diffPicker: DifficultyPickerService,
@@ -82,10 +80,7 @@ export class VulnerabilitiesComponent implements OnInit {
 
     for (let v of this.curVulnerabilities.vulnerabilities) {
       if (v.id == data.id) {
-        console.log(data)
-        console.log(v)
         v = data;
-        console.log(v)
         break;
       }
     }

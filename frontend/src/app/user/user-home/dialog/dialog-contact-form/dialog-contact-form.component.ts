@@ -1,13 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
-import {BackendService} from "../../../../data-access/services/backend.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, Validators} from "@angular/forms";
 import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
-import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 import {DialogContactFormDismissComponent} from "../dialog-contact-form-dismiss/dialog-contact-form-dismiss.component";
 
 @Component({
@@ -18,7 +16,6 @@ import {DialogContactFormDismissComponent} from "../dialog-contact-form-dismiss/
 export class DialogContactFormComponent {
   constructor(
     public dialogRef: MatDialogRef<ForumComponent>,
-    private backend: BackendService,
     private _snackBar: MatSnackBar,
     private dialog: MatDialog) {
   }
@@ -29,11 +26,6 @@ export class DialogContactFormComponent {
 
   public checkFile(): void {
     if (this.email && this.topic && this.message) {
-      this.sendFile(this.email, this.topic, this.message);
-      // this._snackBar.openFromComponent(SnackBarNotificationComponent, {
-      //   duration: 5000,
-      //   data: 'Success! We will message you as soon as possible.'
-      // });
       this.dialogRef.close();
       this.openDismissMessage();
     } else {
@@ -52,9 +44,6 @@ export class DialogContactFormComponent {
     return this.email.hasError('email') ? 'Not a valid email' : '';
   }
 
-  public sendFile(username, topic, message) {
-    this.backend.contactForms.Forms.push(username, topic, message);
-  }
 
   public close(): void {
     this.dialogRef.close();

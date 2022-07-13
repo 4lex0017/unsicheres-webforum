@@ -1,14 +1,11 @@
-import {Component, Inject, ViewEncapsulation} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-
-import {BackendService} from "../../../../data-access/services/backend.service";
+import {Component} from "@angular/core";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
-import {DifficultyPickerService} from "../../../../data-access/services/difficulty-picker.service";
 import {ToolbarComponent} from "../../sidenav/toolbar/toolbar.component";
 
 
@@ -25,11 +22,9 @@ export class DialogLoginComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogLoginComponent>,
-    private backend: BackendService,
     private _snackBar: MatSnackBar,
     private authenticate: AuthenticationService,
-    private dialog: MatDialog,
-    private diffPicker: DifficultyPickerService
+    private dialog: MatDialog
   ) {
   }
 
@@ -56,31 +51,6 @@ export class DialogLoginComponent {
     }
   }
 
-  // authenticateUser(userName, password) {
-  //   let response = this.backend.checkLoginData(userName, password);
-  //   if (response == 1) {
-  //     sessionStorage.setItem("user", userName);
-  //     this.authenticate.loginJwt(userName, password);
-  //     this.dialogRef.close();
-  //   } else if (response == -1) {
-  //     let responseMessage = "User doesn't exist.";
-  //     if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) responseMessage = "Invalid data.";
-  //     this.username = "";
-  //     this.password = "";
-  //     this._snackBar.openFromComponent(SnackBarNotificationComponent, {duration: 5000, data: responseMessage});
-  //   } else {
-  //     let responseMessage = "Wrong password.";
-  //     if (!this.diffPicker.isEnabled(2, 1) && !this.diffPicker.isEnabled(2, 2)) {
-  //       responseMessage = "Invalid data.";
-  //       this.username = "";
-  //     }
-  //     this.password = "";
-  //     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
-  //       duration: 5000,
-  //       data: responseMessage
-  //     });
-  //   }
-  // }
 
   authenticateUserNew(userName, password) {
     this.authenticate.loginJwt(userName, password).subscribe(data => {
@@ -94,15 +64,6 @@ export class DialogLoginComponent {
         data: "Invalid data."
       });
     });
-
-
-    // this.username = "";
-    // this.password = "";
-    // this._snackBar.openFromComponent(SnackBarNotificationComponent, {
-    //   duration: 5000,
-    //   data: "Invalid data."
-    // });
-
   }
 
 

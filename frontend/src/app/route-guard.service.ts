@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, ActivatedRouteSnapshot} from '@angular/router';
 import {SnackBarNotificationComponent} from "./shared/snack-bar-notification/snack-bar-notification.component";
-import {BackendService} from "./data-access/services/backend.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RouteGuardService implements CanActivate {
-  constructor(private backend: BackendService,
-              private _snackBar: MatSnackBar) {
+  constructor(private _snackBar: MatSnackBar) {
   }
 
 

@@ -10,7 +10,7 @@ export interface Config {
   sxss_difficulty?: number;
   rxss_difficulty?: number;
   fend_difficulty?: number;
-  cmdi_difficulty?: number;
+  file_difficulty?: number;
 
 }
 

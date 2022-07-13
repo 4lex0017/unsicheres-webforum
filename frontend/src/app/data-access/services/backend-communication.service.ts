@@ -3,16 +3,13 @@ import {Thread} from "../models/thread";
 import {Post} from "../models/post";
 import {catchError, Observable} from "rxjs";
 import {UserFull} from "../models/userFull";
-import {PostReply} from "../models/postReply";
-import {User} from "../models/user";
 import {
-
   VulnerabilityDifficultyOverviewPackage
 } from "../models/vulnerabilityDifficultyOverview";
 import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {AdminUser} from "../models/scoreboard";
 import {AccessBackend} from "../models/accessBackend";
-import {Data, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {
@@ -24,7 +21,7 @@ import {
 import {Search} from "../models/search";
 import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
-import {UserComment, UserCommentWrapper} from "../models/comment";
+import {UserCommentWrapper} from "../models/comment";
 import {constant} from "../static/url";
 
 
@@ -36,7 +33,9 @@ export class BackendCommunicationService {
   readonly url: string = constant.url;
 
 
-  constructor(private httpClient: HttpClient, private router: Router, private _snackBar: MatSnackBar) {
+  constructor(private httpClient: HttpClient,
+              private router: Router,
+              private _snackBar: MatSnackBar) {
   }
 
 
@@ -107,7 +106,6 @@ export class BackendCommunicationService {
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
-    ;
   }
 
   //For Userprofile view
@@ -138,7 +136,6 @@ export class BackendCommunicationService {
   getUser(userId: number): Observable<HttpResponse<UserFull>> {
     return this.httpClient.get<UserFull>('/users/' + userId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
-        // this.errorBreadCrumb(error.status.toString())
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
@@ -158,7 +155,6 @@ export class BackendCommunicationService {
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
-    ;
   }
 
   putUserPassword(userId: number, newPassword: string): Observable<HttpResponse<UserFull>> {
@@ -174,7 +170,6 @@ export class BackendCommunicationService {
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
-    ;
   }
 
   //post comment
@@ -205,11 +200,11 @@ export class BackendCommunicationService {
       }));
   }
 
-  postThread(categoryId: number, thread: Thread): Observable<HttpResponse<Thread>> {
+  postThread(categoryId: number, threadTitle: string, authorId: number): Observable<HttpResponse<Thread>> {
     let threadPayload = {
-      "title": thread.title,
+      "title": threadTitle,
       "categoryId": categoryId,
-      "author": thread.author.id
+      "author": authorId
     };
     return this.httpClient.post<Thread>(this.url + '/categories/' + categoryId + '/threads', threadPayload, {observe: 'response'})
       .pipe(catchError((error: Response) => {
@@ -389,7 +384,6 @@ export class BackendCommunicationService {
     if (value[0].rxss_difficulty < 4) return value[0].rxss_difficulty;
     else return 0;
   }
-
 
   // Search
   search(search: string, scope: string): Observable<HttpResponse<Search>> {

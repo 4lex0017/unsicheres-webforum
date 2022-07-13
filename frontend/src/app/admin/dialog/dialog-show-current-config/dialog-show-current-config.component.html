@@ -1,6 +1,5 @@
 <div class="outer-container">
   <h2 mat-dialog-title>Current Config:</h2>
-
   <mat-dialog-content class="mat-typography">
     <mat-grid-list cols="4" rowHeight="200px">
       <mat-grid-tile>
@@ -30,9 +29,9 @@
               <span> SQL Injection </span>
               <span class="demo-2"> ({{config.sqli_difficulty}})</span>
             </p>
-            <p *ngIf=" config.cmdi_difficulty &&  config.cmdi_difficulty < 3">
+            <p *ngIf=" config.file_difficulty &&  config.file_difficulty < 3">
               <span> Command Injection </span>
-              <span class="demo-2"> ({{config.cmdi_difficulty}})</span>
+              <span class="demo-2"> ({{config.file_difficulty}})</span>
             </p>
           </mat-card-content>
         </mat-card>

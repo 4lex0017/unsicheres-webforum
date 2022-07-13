@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Observer, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,6 @@ export class DidAThingServiceService {
   sendMessage() {
     this.subject.next(true);
   }
-
 
   onMessage(): Observable<any> {
     return this.subject.asObservable();

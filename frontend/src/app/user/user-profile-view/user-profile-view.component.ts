@@ -1,22 +1,18 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from "@angular/router";
-import {UserFull} from "../../data-access/models/userFull";
-import {Post} from "../../data-access/models/post";
-import {BackendService} from "../../data-access/services/backend.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {async, NotFoundError, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBackendModel";
 import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../../data-access/models/PostsSmallBackendModel";
-import {animate} from "@angular/animations";
-import {UserComment, UserCommentWrapper} from "../../data-access/models/comment";
+import {UserCommentWrapper} from "../../data-access/models/comment";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -34,7 +30,6 @@ export class UserProfileViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private backendService: BackendService,
               private backendServiceCom: BackendCommunicationService,
               private dialog: MatDialog,
               public authenticate: AuthenticationService,
@@ -106,8 +101,7 @@ export class UserProfileViewComponent implements OnInit {
         },
     });
     dialogRef.afterClosed().subscribe(result => {
-      let newDataModel = {}
-      console.log(this.vEnabled)
+      let newDataModel;
       if (this.vEnabled == 1) newDataModel = this.filterDataModelInFrontendNormal(result, userFullObject.id)
       else if (this.vEnabled == 2) newDataModel = this.filterDataModelInFrontendHard(result, userFullObject.id)
       else {
@@ -210,12 +204,6 @@ export class UserProfileViewComponent implements OnInit {
   getSlugFromTitle(title: string): string {
     return title.replace(/\s+/g, '-').toLowerCase();
   }
-
-
-  getThreadFromPost(id: number): string {
-    return this.backendService.getThreadSlugFromPostId(id)
-  }
-
 
   parseDate(date: string): string {
     let dateObj: Date = new Date(date);

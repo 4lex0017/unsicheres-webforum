@@ -1,9 +1,6 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Config, VulnerabilitiesConfig} from "../../../data-access/models/vulnerabilitiesConfig";
-import {Observable} from "rxjs";
-import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
+import {VulnerabilitiesConfig} from "../../../data-access/models/vulnerabilitiesConfig";
 
 @Component({
   selector: 'app-dialog-show-current-config',
@@ -13,10 +10,7 @@ import {BackendCommunicationService} from "../../../data-access/services/backend
 export class DialogShowCurrentConfigComponent {
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private diffPicker: DifficultyPickerService,
     public dialogRef: MatDialogRef<string>,
-    private backendCom: BackendCommunicationService,
     @Inject(MAT_DIALOG_DATA) public data: VulnerabilitiesConfig = {data: [], hash_difficulty: -1},
   ) {
   }

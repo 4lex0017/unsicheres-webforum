@@ -1,12 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {BackendService} from "../../../data-access/services/backend.service";
-import {Access} from "../../../data-access/models/access";
 import {MatDialog} from "@angular/material/dialog";
-import {Thread} from "../../../data-access/models/thread";
-
-import {Category} from "../../../data-access/models/category";
 import {ActivatedRoute, Data, Router} from "@angular/router";
-
 import {AuthenticationService} from "../../../data-access/services/authentication.service";
 import {DialogCreateThreadComponent} from "../dialog/dialog-create-thread/dialog-create-thread.component";
 import {
@@ -14,9 +8,8 @@ import {
 } from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
 import {DialogLoginComponent} from "../dialog/dialog-login/dialog-login.component";
 import {Observable} from "rxjs";
-import {Post} from "../../../data-access/models/post";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
-import {AccessBackend, CategoryBackend} from "../../../data-access/models/accessBackend";
+import {AccessBackend} from "../../../data-access/models/accessBackend";
 
 
 @Component({
@@ -26,8 +19,7 @@ import {AccessBackend, CategoryBackend} from "../../../data-access/models/access
 })
 export class ForumComponent implements OnInit {
 
-  constructor(public backEndService: BackendService,
-              private backendComService: BackendCommunicationService,
+  constructor(private backendComService: BackendCommunicationService,
               private dialog: MatDialog,
               private router: Router,
               private activeRoute: ActivatedRoute,
@@ -92,13 +84,11 @@ export class ForumComponent implements OnInit {
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      let newThread = this.backEndService.createThreadObject(this.authenticate.getCurrentUserId(), this.authenticate.getCurrentUsername(), result.title);
-      this.backendComService.postThread(this.categoryMap.get(result.category.toLowerCase())!, newThread).subscribe((resp: Data) => {
+      this.backendComService.postThread(this.categoryMap.get(result.category.toLowerCase())!, result.title, this.authenticate.getCurrentUserId()).subscribe((resp: Data) => {
         this.router.navigate(['forum/home'], {queryParams: {view: result.category.toLowerCase()}});
       });
     });
   }
-
 
   clickSearch() {
     if (this.searchQuery == "") {

@@ -1,10 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Component} from '@angular/core';
+import {MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
-import {BackendService} from "../../../../data-access/services/backend.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
-import {DatePipe} from "@angular/common";
 import {BackendCommunicationService} from "../../../../data-access/services/backend-communication.service";
 import {
   SnackBarNotificationComponent
@@ -18,7 +16,6 @@ import {
 export class DialogChangePasswordComponent {
 
   constructor(public dialogref: MatDialogRef<ForumComponent>,
-              private backend: BackendService,
               private _snackBar: MatSnackBar,
               private backendCom: BackendCommunicationService,
               private auth: AuthenticationService) {

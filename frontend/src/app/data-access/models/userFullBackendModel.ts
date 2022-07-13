@@ -6,7 +6,6 @@ export interface UserFullBackendModel {
 
 export interface UserFullBackend {
   id: number;
-
   name: string;
   joined: string;
   birthDate: string;

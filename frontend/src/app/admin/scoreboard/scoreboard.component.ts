@@ -26,8 +26,6 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['score', 'ipaddress', 'username', 'vulnFound'];
   displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel'];
   dataSource
-  // = new MatTableDataSource(this.scoreboard);
-  // = new MatTableDataSource(ELEMENT_DATA);
   scoreboard: AdminUser[] = [];
 
   constructor(private _liveAnnouncer: LiveAnnouncer,
@@ -72,10 +70,6 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
   }
 
   toggleRow(element: { expanded: boolean; }) {
-    // Uncommnet to open only single row at once
-    // ELEMENT_DATA.forEach(row => {
-    //   row.expanded = false;
-    // })
     element.expanded = !element.expanded
   }
 
@@ -116,10 +110,6 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
 
 
   announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
