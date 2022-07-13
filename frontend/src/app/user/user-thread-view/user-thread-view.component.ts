@@ -1,8 +1,10 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
 import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
+import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
+import {BackendService} from "../../data-access/services/backend.service";
 import {Post} from "../../data-access/models/post";
 import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
 import {DataManagementService} from "../../data-access/services/data-management.service";
@@ -14,6 +16,9 @@ import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-serv
 import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {addBodyClass} from "@angular/cdk/schematics";
+import {HttpClientModule, HttpResponse} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-user-thread-view',
@@ -21,18 +26,21 @@ import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification
   styleUrls: ['./user-thread-view.component.scss']
 })
 export class UserThreadViewComponent implements OnInit {
+  // threadObject: Thread;
   threadObjectArrayModel: ThreadArrayModel = {data: []};
   vEnabled: number
   vEnabledPost: number
   vEnabledFrontend: boolean;
   content: string = "";
   testcontent: any[];
-  editId: number;
+  editId: number = -1;
   url: string = "http://localhost:4200/forum";
+
 
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
+              private backEndService: BackendService,
               private backendServiceCom: BackendCommunicationService,
               private router: Router,
               private dataManagement: DataManagementService,
@@ -43,6 +51,9 @@ export class UserThreadViewComponent implements OnInit {
               private _snackBar: MatSnackBar) {
   }
 
+  // async setVuln() {
+  //   this.vEnabled = this.diffPicker.isEnabledInConfig("/threads/{int}");
+  // }
   async setVuln() {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}").then(value => {
         this.vEnabled = value
@@ -78,7 +89,9 @@ export class UserThreadViewComponent implements OnInit {
   async ngOnInit() {
     await this.setVuln();
     this.route.data.subscribe((resp: Data) => {
+        //console.log(resp["thread"].body)
         this.threadObjectArrayModel = resp["thread"].body;
+        //console.log(this.threadObjectArrayModel)
         if (this.vEnabled != 0) this.injectContentToDomStartup()
       }
     );
@@ -112,6 +125,7 @@ export class UserThreadViewComponent implements OnInit {
           });
           if (this.vEnabled != 0) this.injectContentToDom(threadObject)
           if (resp["headers"].get('VulnFound') == "true") {
+            //console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
@@ -123,39 +137,57 @@ export class UserThreadViewComponent implements OnInit {
     document.getElementById("replyBox" + id)!.focus();
   }
 
+  openCreateDialog(threadObject: Thread): void {
+    if (!this.checkLoggedIn()) return;
+    const dialogRef = this.dialog.open(DialogCreatePostComponent, {
+      width: '65%',
+      data: {
+        reply: "",
+        content: "",
+        showReply: false,
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      threadObject.posts.push(this.backEndService.createPostObject(this.authenticate.getCurrentUserId(), result.content));
+    });
+  }
 
   addReply(threadObject: Thread, replyPost: Post): void {
+    console.log("editId: " + this.editId)
     let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let currentFilter;
     let myValue = replyPost.content
     let lastMatchIndex = 0
-    while ((currentFilter = regex.exec(replyPost.content)) != null) {
-      if (currentFilter.index === regex.lastIndex) {
+    while((currentFilter = regex.exec(replyPost.content)) != null){
+      if(currentFilter.index === regex.lastIndex){
         regex.lastIndex++;
       }
-      if (currentFilter.index === lastMatchIndex) {
-        myValue = myValue.replace(currentFilter[0], '')
-      } else {
+      if(currentFilter.index === lastMatchIndex){
+        myValue = myValue.replace(currentFilter[0],'')
+      }else {
         myValue = myValue.replace(currentFilter[0], '\n')
       }
       lastMatchIndex = regex.lastIndex
     }
-
-    var myElement = <HTMLTextAreaElement>document.getElementById("replyBox" + threadObject.id);
+    var myElement;
+    if(this.editId != -1){
+      myElement = <HTMLTextAreaElement> document.getElementById("editBox" + this.editId);
+    }else {
+      myElement = <HTMLTextAreaElement>document.getElementById("replyBox" + threadObject.id);
+    }
     var startPosition = myElement!.selectionStart;
     var endPosition = myElement!.selectionEnd;
 
-    myElement.value = myElement.value.substring(0, startPosition)
-      + "[quote=" + replyPost.author.name + ":" + replyPost.id + "]"
-      + myValue
-      + "[/quote]"
-      + myElement.value.substring(endPosition, myElement.value.length);
+      myElement.value = myElement.value.substring(0, startPosition)
+        +"[quote=" + replyPost.author.name + ":" + replyPost.id + "]"
+        + myValue
+        +"[/quote]"
+        + myElement.value.substring(endPosition, myElement.value.length);
   }
 
   createPost(threadObject: Thread): void {
-    console.log(Date.now())
     if (!this.checkLoggedIn()) return;
-    let fullReply = <HTMLTextAreaElement>document.getElementById('replyBox' + threadObject.id);
+    let fullReply = <HTMLTextAreaElement> document.getElementById('replyBox' + threadObject.id);
     let replyString = fullReply.value;
     if (this.vEnabledPost == 1) replyString = this.diffPicker.frontendFilterTagsNormal(replyString)
     else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)
@@ -177,18 +209,22 @@ export class UserThreadViewComponent implements OnInit {
     } else {
       this.editId = post.id;
     }
+    console.log("currentEditId: " + this.editId)
   }
 
   moveToPost(id: number) {
     window.location.hash = id.toString();
   }
 
-  openDeletePostConsumer(threadObject: Thread, postObjectId: number) {
+  openDeletePostConsumer(threadObject: Thread,editId: number, postObjectId: number) {
     //console.log(postObjectId)
     this.threadObjectArrayModel.data.forEach((thread, index) => {
       if (thread.id == threadObject.id) {
         for (let z = 0; z < threadObject.posts.length; z++) {
           if (threadObject.posts[z].id == postObjectId) {
+            if(postObjectId == editId){
+              this.editId = -1
+            }
             threadObject.posts.splice(z, 1);
             this.threadObjectArrayModel.data[index] = threadObject;
             this.backendServiceCom.deletePost(threadObject.id, postObjectId).subscribe()

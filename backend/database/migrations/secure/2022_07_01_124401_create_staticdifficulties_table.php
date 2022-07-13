@@ -17,8 +17,14 @@ return new class extends Migration
         Schema::connection('secure')->create('staticdifficulties', function (Blueprint $table) {
             $table->id();
             $table->integer('hash_difficulty');
+            $table->integer('user_difficulty');
         });
-        DB::connection('secure')->table('staticdifficulties')->insert(['hash_difficulty' => 4]);
+        DB::connection('secure')
+            ->table('staticdifficulties')
+            ->insert([
+                'hash_difficulty' => 4,
+                'user_difficulty' => 3,
+                ]);
     }
 
     /**

@@ -34,6 +34,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'cmdi', 3, $config);
         $this->updateChecked($content, 'fend', 4, $config);
         $this->updateCheckedStatic($content, 'hash', 5);
+        $this->updateCheckedStatic($content, 'user', 6);
 
         return response()->json($content);
     }
@@ -124,6 +125,7 @@ class AdminController extends Controller
         $data = json_decode($request->getContent(), true);
 
         $this->updateStaticDifficulty('hash', $data['hash_difficulty']);
+        $this->updateStaticDifficulty('user', $data['user_difficulty']);
         (new PasswordSeeder)->run();
 
         $this->updateRoutesFromJson($data['data']);
@@ -186,7 +188,7 @@ class AdminController extends Controller
         foreach ($data as $element) {
             $type = $this->getType($element['id']);
 
-            if ($element['id'] == 6) {
+            if ($element['id'] == 6 || $element['id'] == 7) {
                 $this->updateStaticConfig($element['difficulty'], $type);
             } else {
                 $this->updateRouteConfig($type, $config, $element['difficulty'], $stored);
@@ -282,6 +284,9 @@ class AdminController extends Controller
                 break;
             case 6:
                 $type = 'hash';
+                break;
+            case 7:
+                $type = 'user';
                 break;
             default:
                 abort(400);
@@ -469,6 +474,7 @@ class AdminController extends Controller
         return [
             'data' => ConfigResource::collection(Vulnerability::all())->jsonSerialize(),
             'hash_difficulty' => DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty'),
+            'user_difficulty' => DB::connection('secure')->table('staticdifficulties')->value('user_difficulty'),
         ];
     }
 
