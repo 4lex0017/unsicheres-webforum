@@ -328,7 +328,6 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
    */
   deserializePost(postContent: string): void {
     let contentBox = document.getElementById("postBox" + this.postObject.id)
-    //console.log(contentBox)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
     const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let current;
@@ -348,7 +347,6 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     if (lastMatchIndex != postContent.length) {
       dividedContent.push(postContent.substring(lastMatchIndex))
     }
-    let contentArray: HTMLElement[] = new Array(0)
     const replyInfoRegex = /\[quote=(.*?)]/mid;
     const userNameRegex = /(?<=\=)(.*?)(?=\:)/mid
     const postIdRegex = /(?<=\:)(.*?)(?=\])/mid
@@ -380,7 +378,6 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         }
         blockElement.appendChild(p);
         blockElement.appendChild(div);
-        //contentArray.push(blockElement);
         contentBox!.appendChild(blockElement)
       } else {
         let divElement = document.createElement("div")
@@ -393,12 +390,9 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
           console.log("Filter off")
           divElement.textContent = dividedContent[i]
         }
-        //contentArray.push(divElement);
         contentBox!.appendChild(divElement);
       }
     }
-
-    //this.contentArray = contentArray;
   }
 
   moveToPost(id: string) {
