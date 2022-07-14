@@ -6,6 +6,7 @@
         <mat-card class="cards">
           <mat-card-title><h3><b>General </b></h3></mat-card-title>
           <p>Password-hash ({{data.hash_difficulty}})</p>
+          <p>User Enumeration ({{data.user_difficulty}})</p>
         </mat-card>
       </mat-grid-tile>
       <mat-grid-tile *ngFor="let config of data.data">
@@ -30,7 +31,7 @@
               <span class="demo-2"> ({{config.sqli_difficulty}})</span>
             </p>
             <p *ngIf=" config.file_difficulty &&  config.file_difficulty < 3">
-              <span> Command Injection </span>
+              <span> Insecure File Upload </span>
               <span class="demo-2"> ({{config.file_difficulty}})</span>
             </p>
           </mat-card-content>

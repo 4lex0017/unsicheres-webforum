@@ -53,7 +53,7 @@ export class DialogRegisterComponent {
           this.dialogref.close()
         }, error => {
           let errorMsg = "Bad request.";
-          if (error.status == 500) {
+          if (error.value == 500) {
             errorMsg = "User already exists.";
           }
           this.username = "";
@@ -101,7 +101,7 @@ export class DialogRegisterComponent {
 
   openLogin(): void {
     this.dialogref.close();
-    const dialogRef = this.dialog.open(DialogLoginComponent, {
+    this.dialog.open(DialogLoginComponent, {
       width: '30%'
     });
   }

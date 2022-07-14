@@ -1,6 +1,7 @@
 export interface VulnerabilitiesConfig {
   data: Config[]
   hash_difficulty: number
+  user_difficulty?: number;
 }
 
 
@@ -11,7 +12,6 @@ export interface Config {
   rxss_difficulty?: number;
   fend_difficulty?: number;
   file_difficulty?: number;
-
 }
 
 export interface PutConfig {

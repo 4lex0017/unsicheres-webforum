@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
 import {UserThreadViewRoutingModule} from './user-thread-view-routing.module';
 import {DialogEditThreadComponent} from './dialog-edit-thread/dialog-edit-thread.component';
 import {MatFormFieldModule} from "@angular/material/form-field";

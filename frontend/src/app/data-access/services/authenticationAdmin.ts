@@ -17,7 +17,8 @@ export class AuthenticationServiceAdmin {
     return this.httpClient.post<any>(this.url + '/admin/login', {
       name,
       password
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res), error => console.log(error)), shareReplay());
+    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res), error => {
+    }), shareReplay());
   }
 
   private setSession(authResult) {

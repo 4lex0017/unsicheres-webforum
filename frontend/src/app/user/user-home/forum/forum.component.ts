@@ -42,9 +42,6 @@ export class ForumComponent implements OnInit {
     return this.authenticate.isLoggedIn();
   }
 
-  where(cst: string) {
-    console.log(cst)
-  }
 
   ngOnInit(): void {
     this.accessBackend = this.backendComService.getCategories();
@@ -54,8 +51,6 @@ export class ForumComponent implements OnInit {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');
         this.showFull = true;
-        console.log(para);
-
         this.accessBackend.subscribe(data => {
           let cat = data.categories.find(cat => cat.title.toLowerCase() == para);
           this.accessBackend = this.backendComService.getCategory(cat!.id);
@@ -73,7 +68,7 @@ export class ForumComponent implements OnInit {
 
   openCreateThreadDialog(): void {
     if (!this.authenticate.isLoggedIn()) {
-      const dialogRef = this.dialog.open(DialogLoginComponent, {
+      this.dialog.open(DialogLoginComponent, {
         width: '30%',
       });
       return;
@@ -108,7 +103,6 @@ export class ForumComponent implements OnInit {
       });
     } else {
       this.router.navigate(['forum/search'], {queryParams: {scope: this.whereToSearch, query: this.searchQuery}});
-      // .replace(/ /g, "_")
     }
   }
 

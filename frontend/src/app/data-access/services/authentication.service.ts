@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable, shareReplay, tap} from "rxjs";
+import {catchError, Observable, shareReplay, tap} from "rxjs";
 import {constant} from "../static/url";
 
 @Injectable({
@@ -26,7 +26,9 @@ export class AuthenticationService {
     return this.httpClient.post<any>(this.url + '/login', {
       name,
       password
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name), error => console.log(error)), shareReplay());
+    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name),
+      error => {
+      }), shareReplay());
   }
 
   private setSession(authResult, username) {
@@ -52,7 +54,10 @@ export class AuthenticationService {
         birthDate
       }
     }
-    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name)), shareReplay());
+    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})})
+      .pipe(tap(res => this.setSession(res, name)), shareReplay(), catchError((error: Response) => {
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   public logout() {

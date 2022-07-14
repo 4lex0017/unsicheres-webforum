@@ -30,7 +30,7 @@ export class DialogLoginComponent {
 
   openRegister(): void {
     this.dialogRef.close();
-    const dialogRef = this.dialog.open(DialogRegisterComponent, {
+    this.dialog.open(DialogRegisterComponent, {
       width: '30%'
     });
   }
@@ -54,7 +54,6 @@ export class DialogLoginComponent {
 
   authenticateUserNew(userName, password) {
     this.authenticate.loginJwt(userName, password).subscribe(data => {
-      console.log(data)
       this.dialogRef.close();
     }, error => {
       this.username = "";

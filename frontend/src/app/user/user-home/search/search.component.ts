@@ -66,7 +66,6 @@ export class SearchComponent implements OnInit {
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
         }
         if (data["headers"].get('VulnFound') == "true") {
-          console.log("found vuln in userprofile")
           this.didAThing.sendMessage();
         }
       });

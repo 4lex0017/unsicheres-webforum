@@ -45,7 +45,6 @@ export class DialogChangePasswordComponent {
       this.passwordRepeat = "";
     } else {
       this.backendCom.putUserPassword(this.auth.getCurrentUserId(), this.password).subscribe(value => {
-        console.log(value.status)
         if (value.status == 200) {
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,

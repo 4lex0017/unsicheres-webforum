@@ -1,9 +1,8 @@
-import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Thread} from "../../data-access/models/thread";
 import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditThreadComponent} from "./dialog-edit-thread/dialog-edit-thread.component";
-import {DialogCreatePostComponent} from "./dialog-create-post/dialog-create-post.component";
 import {Post} from "../../data-access/models/post";
 import {DialogDeleteThreadComponent} from "./dialog-delete-thread/dialog-delete-thread.component";
 import {DataManagementService} from "../../data-access/services/data-management.service";
@@ -86,8 +85,8 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   canEditThread(id: number): boolean {
-    if (id == this.authenticate.getCurrentUserId()) return true;
-    return false;
+    return id == this.authenticate.getCurrentUserId();
+
   }
 
 
@@ -113,7 +112,6 @@ export class UserThreadViewComponent implements OnInit {
           });
           if (this.vEnabled != 0) this.injectContentToDom(threadObject)
           if (resp["headers"].get('VulnFound') == "true") {
-            //console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
@@ -126,7 +124,6 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
-    console.log("editId: " + this.editId)
     let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let currentFilter;
     let myValue = replyPost.content
@@ -166,10 +163,8 @@ export class UserThreadViewComponent implements OnInit {
     else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)
     this.backendServiceCom.postPost(threadObject.id, this.authenticate.getCurrentUserId(), replyString).subscribe((value: Data) => {
       let newPost = value["body"];
-      //console.log(newPost);
       threadObject.posts.push(newPost)
       if (value["headers"].get('VulnFound') == "true") {
-        //console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
     })
@@ -182,7 +177,6 @@ export class UserThreadViewComponent implements OnInit {
     } else {
       this.editId = post.id;
     }
-    console.log("currentEditId: " + this.editId)
   }
 
   moveToPost(id: number) {
@@ -190,7 +184,6 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   openDeletePostConsumer(threadObject: Thread, editId: number, postObjectId: number) {
-    //console.log(postObjectId)
     this.threadObjectArrayModel.data.forEach((thread, index) => {
       if (thread.id == threadObject.id) {
         for (let z = 0; z < threadObject.posts.length; z++) {
@@ -233,7 +226,6 @@ export class UserThreadViewComponent implements OnInit {
     if (i != -1) {
       threadObject.likedFrom.splice(i, 1)
     } else {
-      //console.log(this.authenticate.getCurrentUserId())
       threadObject.likedFrom.push(this.authenticate.getCurrentUserId());
     }
   }
@@ -250,17 +242,12 @@ export class UserThreadViewComponent implements OnInit {
 
   checkLoggedIn(): boolean {
     if (!this.authenticate.isLoggedIn()) {
-      const dialogRef = this.dialog.open(DialogLoginComponent, {
+      this.dialog.open(DialogLoginComponent, {
         width: '30%',
       });
       return false;
     }
     return true;
   }
-
-  // getUserPicture(userId: number): string | undefined {
-  //   return this.backEndService.getUserPicture(userId);
-  // }
-
 
 }

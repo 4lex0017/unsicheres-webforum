@@ -1,6 +1,5 @@
-import {ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DifficultyPickerService} from "../../../../data-access/services/difficulty-picker.service";
 import {interval} from "rxjs";
 
 @Component({
@@ -16,20 +15,12 @@ export class DialogContactFormDismissComponent implements OnInit {
   sub: any;
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private diffPicker: DifficultyPickerService,
     public dialogRef: MatDialogRef<string>,
     @Inject(MAT_DIALOG_DATA) public data: string,
   ) {
   }
 
   ngOnInit(): void {
-    // this.vEnabled = this.diffPicker.isEnabledInConfig("add later");
-    // if (this.vEnabled) {
-    //   this.changeDetectorRef.detectChanges();
-    //   this.content.nativeElement.replaceChildren();
-    //   this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.data));
-    // }
     this.timer();
   }
 

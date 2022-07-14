@@ -42,7 +42,6 @@ export class AdminLoginComponent {
 
   authenticateAdmin() {
     this.authAdmin.loginJwtAdmin(this.adminName, this.password).subscribe(data => {
-      console.log(data)
       this.router.navigate(['/adminPanel']);
     }, error => {
       this.adminName = "";

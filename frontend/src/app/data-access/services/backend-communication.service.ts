@@ -111,7 +111,6 @@ export class BackendCommunicationService {
   getSideContentThreads(): Observable<any> {
     return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/threads')
       .pipe(catchError((error: Response) => {
-        console.log(error)
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
@@ -349,7 +348,6 @@ export class BackendCommunicationService {
 
   putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverviewPackage): Observable<VulnerabilitiesConfig> {
     let vulnerabilityPayload: PutConfig = {data: []};
-    console.log(vulnerabilities.vulnerabilities)
     for (let i = 0; i < vulnerabilities.vulnerabilities.length; i++) {
       let curStateDiff: PutConfigStatesDifficulty = {
         1: vulnerabilities.vulnerabilities[i].subtasks[0].checked,
@@ -363,7 +361,6 @@ export class BackendCommunicationService {
       let curState: PutConfigStates = {id: vulnerabilities.vulnerabilities[i].id, difficulty: curStateDiff};
       vulnerabilityPayload.data.push(curState);
     }
-    console.log(vulnerabilityPayload)
     return this.httpClient.put<VulnerabilitiesConfig>(this.url + '/admin/config', vulnerabilityPayload, {headers: {admin: "true"}})
       .pipe(catchError((error: Response) => {
         this.errorManagement(error);
@@ -381,7 +378,6 @@ export class BackendCommunicationService {
 
   async getVulnerabilitySingle(apiUri: string): Promise<number> {
     const value = await this.httpClient.get<any>(this.url + '/c?r=' + apiUri).toPromise();
-    console.log(value)
     if (value[0].fend_difficulty == 2) return 1;
     else if (value[0].fend_difficulty == 3) return 2;
     else if (value[0].sxss_difficulty < 4 || value[0].fend_difficulty == 1) return 5;

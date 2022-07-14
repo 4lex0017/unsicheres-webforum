@@ -55,11 +55,8 @@ export class UserProfileViewComponent implements OnInit {
     await this.setVuln()
     this.route.data.subscribe((resp: Data) => {
       this.userFullArrayModel = resp["user"].body;
-      console.log(this.userFullArrayModel)
       if (this.vEnabled != 0) this.injectContentToDomStartup();
-      console.log("is it?" + resp["user"]["headers"].get('VulnFound'))
       if (resp["user"]["headers"].get('VulnFound') == "true") {
-        console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
       this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullArrayModel.data[0].id);
@@ -115,7 +112,6 @@ export class UserProfileViewComponent implements OnInit {
       }
       this.backendServiceCom.putUser(newDataModel).subscribe(
         (resp: Data) => {
-          console.log(resp)
           userFullObject = resp["body"].data[0];
           this.userFullArrayModel.data.forEach((user, index) => {
             if (user.id === userFullObject.id) {
@@ -123,9 +119,7 @@ export class UserProfileViewComponent implements OnInit {
             }
           });
           if (this.vEnabled != 0) this.injectContentToDom(userFullObject);
-          console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
-            console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
@@ -169,7 +163,6 @@ export class UserProfileViewComponent implements OnInit {
 
   injectContentToDom(user: UserFullBackend): void {
     this.changeDetectorRef.detectChanges();
-    console.log("content" + user.id.toString())
     let content = document.getElementById("content" + user.id);
     content!.replaceChildren();
     content!.appendChild(document.createRange().createContextualFragment(user.about));

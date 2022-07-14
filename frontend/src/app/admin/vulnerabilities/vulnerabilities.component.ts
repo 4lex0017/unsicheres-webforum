@@ -47,10 +47,7 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   updateToDatabase(): void {
-    console.log("in update")
-    console.log(this.curVulnerabilities)
     this.backendCom.putVulnerabilitiesConfig(this.curVulnerabilities).subscribe(resp => {
-      console.log(resp)
       this.currentConfig = resp;
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
@@ -70,7 +67,7 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   showCurrentConfig() {
-    const dialogRef = this.dialog.open(DialogShowCurrentConfigComponent, {
+    this.dialog.open(DialogShowCurrentConfigComponent, {
       width: '70%',
       data: this.currentConfig
     });
