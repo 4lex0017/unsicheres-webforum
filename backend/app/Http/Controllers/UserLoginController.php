@@ -6,6 +6,7 @@ use App\Http\Middleware\VulnerabilityMonitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -78,9 +79,7 @@ class UserLoginController extends Controller
                 'user_id' => $user->id,
             ], 200)->header('VulnFound', $is_premade ? "true" : "false");
         } else {
-            return response()->json([
-                'error' => 'Login failed',
-            ], 401);
+            return $this->chooseReturnedError($request);
         }
     }
 
@@ -91,6 +90,28 @@ class UserLoginController extends Controller
         return [
             'message' => 'Logged out'
         ];
+    }
+
+    /**
+     * read difficulty for user enumeration
+     *
+     * @return int
+     */
+    protected function getUserDifficulty(): int
+    {
+        return DB::connection('secure')
+            ->table('staticdifficulties')
+            ->value('user_difficulty');
+    }
+
+    protected function nameExists(string $name): bool
+    {
+        return sizeof(DB::connection('insecure')
+            ->table('users')
+            ->where('name', $name)
+            ->select('name')
+            ->get()
+        ) > 0;
     }
 
     protected function checkUserIsPremade(User $user, Request $request, $tracker): bool
@@ -112,5 +133,38 @@ class UserLoginController extends Controller
             }
         }
         return false;
+    }
+
+    /**
+     * choose and return error code according to difficulty and whether username exists
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function chooseReturnedError(Request $request): \Illuminate\Http\JsonResponse
+    {
+        if ($this->getUserDifficulty() > 2) {
+            return $this->wrongLoginReturnCode(400, 'Login failed!');
+        } else {
+            if ($this->nameExists($request->name)) {
+                return $this->wrongLoginReturnCode(401, 'Wrong password!');
+            } else {
+                return $this->wrongLoginReturnCode(400, 'Unknown user!');
+            }
+        }
+    }
+
+    /**
+     * generate response
+     *
+     * @param int $code
+     * @param string $error
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function wrongLoginReturnCode(int $code, string $error)
+    {
+        return response()->json([
+            'error' => $error,
+        ], $code);
     }
 }
