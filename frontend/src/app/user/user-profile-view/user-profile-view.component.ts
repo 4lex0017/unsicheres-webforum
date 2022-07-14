@@ -201,17 +201,9 @@ export class UserProfileViewComponent implements OnInit {
     return title.replace(/\s+/g, '-').toLowerCase();
   }
 
+
   parseDate(date: string): string {
-    let dateObj: Date = new Date(date);
-    return (
-      [
-        this.padTo2Digits(dateObj.getDate()),
-        this.padTo2Digits(dateObj.getMonth() + 1),
-        dateObj.getFullYear(),
-      ].join('.'));
+    return this.backendServiceCom.formatDate(date);
   }
 
-  padTo2Digits(num: number) {
-    return num.toString().padStart(2, '0');
-  }
 }

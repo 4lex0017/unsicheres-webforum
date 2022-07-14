@@ -92,6 +92,10 @@ export class UserThreadViewComponent implements OnInit {
     );
   }
 
+  formatDate(date: string): string {
+    return this.backendServiceCom.formatDate(date);
+  }
+
   canEditThread(id: number): boolean {
     return id == this.authenticate.getCurrentUserId();
 
@@ -132,7 +136,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
-    let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+    let regex = new RegExp("\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]", 'gmids');
     let currentFilter;
     let myValue = replyPost.content
     let lastMatchIndex = 0

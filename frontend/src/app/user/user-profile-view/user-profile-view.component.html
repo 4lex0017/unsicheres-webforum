@@ -78,7 +78,7 @@
             <mat-list-item *ngFor="let thread of userThreadsObj.data">
               <a [routerLink]="['/forum/threads',thread.id]">
                 <div mat-line>{{thread.title}}</div>
-                <div mat-line>Date: {{thread.date}}</div>
+                <div mat-line>Date: {{parseDate(thread.date)}}</div>
               </a>
               <mat-divider></mat-divider>
             </mat-list-item>
@@ -98,7 +98,7 @@
             <mat-list-item *ngFor="let post of userPostsObj.data">
               <a [routerLink]="['/forum/threads', post.threadId]">
                 <div mat-line>{{cutPostContent(post.content)}}</div>
-                <div mat-line>Date: {{post.date}}</div>
+                <div mat-line>Date: {{parseDate(post.date)}}</div>
               </a>
               <mat-divider></mat-divider>
             </mat-list-item>

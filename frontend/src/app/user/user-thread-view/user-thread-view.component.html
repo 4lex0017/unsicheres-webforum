@@ -30,7 +30,7 @@
           <span class="spacer"> <a
             [routerLink]="['/forum/users', threadObject.author.id]">{{threadObject.author.name}}</a></span>
           <mat-icon class="thread-date-icon">access_time</mat-icon>
-          <span> {{threadObject.date}}</span>
+          <span> {{this.formatDate(threadObject.date)}}</span>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions class="thread-actions">
