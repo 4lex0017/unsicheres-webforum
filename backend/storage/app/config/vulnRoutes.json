@@ -70,7 +70,7 @@
             "route": "/threads/{int}/posts/{int}"
         }
     ],
-    "cmdi": [
+    "file": [
         {
             "route": "/users/{int}"
         },
