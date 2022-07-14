@@ -29,12 +29,14 @@ export class AdminLoginComponent {
     } else if (this.adminName && !this.password) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Please enter a password."
       });
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
-        data: "Please enter adminname & password."
+        panelClass: ['snack-bar-background'],
+        data: "Please enter admin name & password."
       });
 
     }
@@ -48,6 +50,7 @@ export class AdminLoginComponent {
       this.password = "";
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Invalid data."
       });
     })

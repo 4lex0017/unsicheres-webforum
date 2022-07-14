@@ -61,6 +61,7 @@ export class DialogRegisterComponent {
           this.passwordRepeat = "";
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,
+            panelClass: ['snack-bar-background'],
             data: errorMsg,
           });
         });
@@ -70,12 +71,14 @@ export class DialogRegisterComponent {
         this.passwordRepeat = "";
         this._snackBar.openFromComponent(SnackBarNotificationComponent, {
           duration: 5000,
+          panelClass: ['snack-bar-background'],
           data: "Passwords do not match",
         })
       }
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Please fill out all fields",
       })
     }

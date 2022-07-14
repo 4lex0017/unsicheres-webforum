@@ -1,74 +1,84 @@
-
-#toolbarMenu {
-  cursor: pointer;
-  margin-right: 20px;
-}
-
-#mainToolbar .toolbar-spacer {
-  flex: 1 1 auto;
-}
-
-#mainToolbar .toolbar-icon {
-  cursor: pointer;
-  margin: 0 8px;
-}
-
 .example-spacer {
   flex: 1 1 auto;
 }
 
-.example-container {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #555;
+.toolbar-icon {
+  margin-left: 10px;
+  margin-right: 10px;
+  transform: scale(1.5);
 }
 
-#sidenavContainer {
-  margin-top: 64px;
+.sidenav-icon {
+  margin-right: 7px;
 }
 
-#sidenav {
-  width: 240px;
+.menu-header {
+  justify-content: center;
+  float: left;
+  font-size: 17px;
 }
 
-#sidenav.menu-close {
-  width: 70px
+.menu-header-consecutive {
+  justify-content: center;
+  float: left;
+  font-size: 17px;
+  padding-top: 10px;
 }
 
-#sidenav.menu-open {
-  width: 210px
+
+.mat-sidenav button {
+  width: 180px;
+
 }
 
-#sidenav .mat-list-item-content {
-  padding: 0;
+.mat-sidenav button mat-icon {
+  float: left;
 }
 
-#sidenav .menu-item {
-  width: 100%;
-  border-radius: 0;
-  text-align: left;
-  padding: 10px;
+.mat-sidenav button span {
+  float: left;
 }
 
-#sidenav .menu-item:hover {
-  background: #eee;
-}
 
-#sidenav .menu-item mat-icon {
-  margin-right: 20px;
-  margin-left: -3px;
+mat-sidenav {
+  margin: 16px;
+  width: 220px;
+  border-right: none;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
 }
 
 .content {
-  padding: 12px;
+  height: calc(100vh - 98px);
+  border-radius: 10px;
+  margin: 16px;
+  margin-left: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
 }
 
-body {
-  font-family: Roboto, Arial, sans-serif;
-  padding: 0;
-  margin: 0;
+mat-sidenav-container {
+  height: calc(100vh - 65px) !important;
 }
 
+.menu-button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 1rem;
 
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+mat-divider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
 
 

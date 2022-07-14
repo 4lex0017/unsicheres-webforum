@@ -26,6 +26,7 @@ export class DialogCreateCommentComponent {
     if (this.data.length < 5) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Content length must be at least 5 characters."
       });
     } else {

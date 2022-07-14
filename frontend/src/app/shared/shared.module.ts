@@ -13,6 +13,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatDividerModule} from "@angular/material/divider";
 import {DialogHasCookieComponent} from './dialog/dialog-has-cookie/dialog-has-cookie.component';
 import {DialogFirstLoginComponent} from "./dialog/dialog-first-login/dialog-first-login.component";
+import {MatCardModule} from "@angular/material/card";
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {DialogFirstLoginComponent} from "./dialog/dialog-first-login/dialog-firs
     MatButtonModule,
     MatProgressBarModule,
     MatDialogModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule
   ],
   exports: [
     LoginComponent,

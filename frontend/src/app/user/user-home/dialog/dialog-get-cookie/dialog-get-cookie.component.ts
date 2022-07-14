@@ -29,6 +29,7 @@ export class DialogGetCookieComponent implements OnInit {
     if (!this.cookieService.check('tracker')) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "How did you get here? Login first."
       });
       this.router.navigate(['/userLogin']);
@@ -41,6 +42,7 @@ export class DialogGetCookieComponent implements OnInit {
     this.clipboard.copy(copyText);
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
+      panelClass: ['snack-bar-background'],
       data: "Copied to clipboard."
     });
   }

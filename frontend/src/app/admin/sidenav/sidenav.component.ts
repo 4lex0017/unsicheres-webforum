@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ThemeService} from "../../theme.service";
 import {AuthenticationServiceAdmin} from "../../data-access/services/authenticationAdmin";
+import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'admin-sidenav',
@@ -9,23 +12,46 @@ import {AuthenticationServiceAdmin} from "../../data-access/services/authenticat
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent {
-  title = 'Admin';
+  title = 'Admin Panel';
   sideNavigationMaximized = true;
   contentMargin = 240;
+  darkMode: boolean;
 
-  constructor(private router: Router, private themeService: ThemeService, private authAdmin: AuthenticationServiceAdmin) {
+  constructor(private router: Router,
+              private themeService: ThemeService,
+              private authAdmin: AuthenticationServiceAdmin,
+              private backendCom: BackendCommunicationService,
+              private _snackBar: MatSnackBar) {
     this.themeService.initTheme();
+    this.darkMode = this.themeService.isDarkMode();
 
   }
 
-  toggleSideNav() {
-    this.sideNavigationMaximized = !this.sideNavigationMaximized;
-    if (!this.sideNavigationMaximized) {
-      this.contentMargin = 70;
-    } else {
-      this.contentMargin = 210;
-    }
+  toggleDarkMode() {
+    this.darkMode = this.themeService.isDarkMode();
+    this.darkMode ? this.themeService.update('light-mode') : this.themeService.update('dark-mode');
   }
+
+  resetDatabase() {
+    this.backendCom.resetDatabase().subscribe(value => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        panelClass: ['snack-bar-background'],
+        data: "Database has been reset.",
+      })
+    });
+  }
+
+  resetScoreboard() {
+    this.backendCom.resetScoreboard().subscribe(value => {
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        panelClass: ['snack-bar-background'],
+        data: "Scoreboard has been reset.",
+      })
+    });
+  }
+
 
   logout() {
     this.authAdmin.logoutAdmin();

@@ -48,6 +48,7 @@ export class BackendCommunicationService {
   errorBreadCrumbTemplate(text: string): void {
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
+      panelClass: ['snack-bar-background'],
       data: text,
     })
   }

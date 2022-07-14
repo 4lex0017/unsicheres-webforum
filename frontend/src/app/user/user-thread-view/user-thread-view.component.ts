@@ -235,6 +235,7 @@ export class UserThreadViewComponent implements OnInit {
     navigator.clipboard.writeText(url[0] + "#" + postId);
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
+      panelClass: ['snack-bar-background'],
       data: "Copied Link"
     })
   }

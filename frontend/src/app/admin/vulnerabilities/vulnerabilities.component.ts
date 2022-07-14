@@ -51,12 +51,14 @@ export class VulnerabilitiesComponent implements OnInit {
       this.currentConfig = resp;
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "New config loaded successfully",
       })
 
     }, error => {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Failed loading config.",
       })
     })
@@ -87,6 +89,7 @@ export class VulnerabilitiesComponent implements OnInit {
     this.backendCom.resetDatabase().subscribe(value => {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Database has been reset.",
       })
     });
