@@ -16,6 +16,7 @@ export class ErrorComponent implements OnInit {
   ngOnInit(): void {
     let snackBarRef = this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "You will be redirected shortly."
       },
     );

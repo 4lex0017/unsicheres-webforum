@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
         if (error.value == 422) {
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,
+            panelClass: ['snack-bar-background'],
             data: "This Username is already taken."
           });
           this.username = "";
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Choose a Username."
       });
     }

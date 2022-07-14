@@ -34,11 +34,13 @@ export class DialogChangePasswordComponent {
     if (!this.password) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Please enter a new password.",
       });
     } else if (this.password != this.passwordRepeat) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Passwords do not match.",
       });
       this.password = "";
@@ -48,6 +50,7 @@ export class DialogChangePasswordComponent {
         if (value.status == 200) {
           this._snackBar.openFromComponent(SnackBarNotificationComponent, {
             duration: 5000,
+            panelClass: ['snack-bar-background'],
             data: "Password changed successfully!",
           });
           this.dialogref.close();
@@ -55,6 +58,7 @@ export class DialogChangePasswordComponent {
       }, error => {
         this._snackBar.openFromComponent(SnackBarNotificationComponent, {
           duration: 5000,
+          panelClass: ['snack-bar-background'],
           data: "Ooops, something went wrong.",
         });
         this.password = "";

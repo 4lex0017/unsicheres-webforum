@@ -17,6 +17,7 @@ export class RouteGuardService implements CanActivate {
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "You don't have permission to view this page."
       });
       return false;

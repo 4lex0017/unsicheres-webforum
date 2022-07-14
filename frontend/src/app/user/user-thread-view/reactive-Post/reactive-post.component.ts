@@ -137,9 +137,11 @@ export class ReactivePostComponent implements OnInit {
 
   editPost(): void {
     if (this.allowEditService.askForEdit()) {
+      let contentBox = document.getElementById("postBox" + this.postObject.id)
+      while (contentBox!.firstChild){
+        contentBox!.removeChild(contentBox!.lastChild!)
+      }
       this.editing = true;
-      let edit = document.getElementById("postBox" + this.postObject.id)
-      edit!.contentEditable = "true"
       this.editPostEvent.emit(this.postObject)
     }
   }
@@ -328,7 +330,9 @@ export class ReactivePostComponent implements OnInit {
     }
   }
    */
-  deserializePost(postContent: string): void {
+  deserializePost(postContent: string): void{
+    let contentBox = document.getElementById("postBox" + this.postObject.id)
+    console.log(contentBox)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
     const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let current;
@@ -360,33 +364,51 @@ export class ReactivePostComponent implements OnInit {
         let postId = postIdRegex.exec(info)
         let blockElement = document.createElement("blockquote");
         blockElement.setAttribute("id", postId![1])
+        blockElement.setAttribute("id",this.postObject.id + "rep" + postId![1])
+        blockElement.addEventListener("click", (e:Event) => this.moveToPost(blockElement.id))
+        blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 3% ; width : 80% ; border-Left-Width : 8px; border-Spacing : 10px");
+
         let p = document.createElement("p");
+        p.style.whiteSpace = "pre-line"
         let div = document.createElement("div");
+        div.style.whiteSpace = "pre-line"
+        div.style.overflowWrap = "break-word"
         const blockRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
         let blockContent = blockRegex.exec(dividedContent[i])
         if (this.vEnabledFrontend) {
-          console.log("Filter on")
           p.appendChild(document.createRange().createContextualFragment(userName![1]))
           div.appendChild(document.createRange().createContextualFragment(blockContent![1]))
         } else {
-          console.log("Filter off")
           p.textContent = userName![1];
           div.textContent = blockContent![1];
         }
         blockElement.appendChild(p);
         blockElement.appendChild(div);
-        contentArray.push(blockElement);
-      } else {
+        //contentArray.push(blockElement);
+        contentBox!.appendChild(blockElement)
+      }else{
         let divElement = document.createElement("div")
-        if (this.vEnabledFrontend) {
+        divElement.style.whiteSpace = "pre-line"
+        divElement.style.overflowWrap = "break-word"
+        if(this.vEnabledFrontend){
+          console.log("Filter on")
           divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
         } else {
+          console.log("Filter off")
           divElement.textContent = dividedContent[i]
         }
-        contentArray.push(divElement);
+        //contentArray.push(divElement);
+        contentBox!.appendChild(divElement);
       }
     }
-    this.contentArray = contentArray;
+
+    //this.contentArray = contentArray;
+  }
+
+  moveToPost(id: string){
+    let str = this.postObject.id + "rep"
+    let cleanId = id.replace(str, "")
+    this.moveToPostEvent.emit(+cleanId)
   }
 
   isDiv(element: HTMLElement) {

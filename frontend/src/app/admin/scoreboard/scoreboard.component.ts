@@ -48,6 +48,7 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
     this.backendCom.resetDatabase().subscribe(value => {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Database has been reset.",
       })
     });
@@ -57,6 +58,7 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
     this.backendCom.resetScoreboard().subscribe(value => {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Scoreboard has been reset.",
       })
     });

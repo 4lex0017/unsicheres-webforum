@@ -41,11 +41,13 @@ export class DialogLoginComponent {
     } else if (this.username && !this.password) {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Please enter a password."
       });
     } else {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Please enter username & password."
       });
     }
@@ -60,6 +62,7 @@ export class DialogLoginComponent {
       this.password = "";
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
+        panelClass: ['snack-bar-background'],
         data: "Invalid data."
       });
     });
