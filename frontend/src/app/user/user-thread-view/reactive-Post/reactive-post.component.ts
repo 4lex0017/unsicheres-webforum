@@ -76,18 +76,9 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   }
 
   parseDate(date: string): string {
-    let dateObj: Date = new Date(date);
-    return (
-      [
-        this.padTo2Digits(dateObj.getDate()),
-        this.padTo2Digits(dateObj.getMonth() + 1),
-        dateObj.getFullYear(),
-      ].join('.'));
+    return this.backendServiceCom.formatDate(date);
   }
 
-  padTo2Digits(num: number) {
-    return num.toString().padStart(2, '0');
-  }
 
   canEditPost(): boolean {
     if (this.postObject.author.id == this.authenticate.getCurrentUserId()) return true;
@@ -329,7 +320,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   deserializePost(postContent: string): void {
     let contentBox = document.getElementById("postBox" + this.postObject.id)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
-    const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+    const splitRegex = new RegExp("\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]", 'gmids');
     let current;
     let lastMatchIndex = 0;
     let dividedContent: string[] = new Array(0)
@@ -347,9 +338,10 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     if (lastMatchIndex != postContent.length) {
       dividedContent.push(postContent.substring(lastMatchIndex))
     }
-    const replyInfoRegex = /\[quote=(.*?)]/mid;
-    const userNameRegex = /(?<=\=)(.*?)(?=\:)/mid
-    const postIdRegex = /(?<=\:)(.*?)(?=\])/mid
+    let contentArray: HTMLElement[] = new Array(0)
+    const replyInfoRegex = new RegExp("\[quote=(.*?)]", 'mid');
+    const userNameRegex = new RegExp("(?<=\=)(.*?)(?=\:)", 'mid');
+    const postIdRegex = new RegExp("(?<=\:)(.*?)(?=\])", 'mid');
     for (let i = 0; i < dividedContent.length; i++) {
       if (dividedContent[i].startsWith("[")) {
         let infos = replyInfoRegex.exec(dividedContent[i]);
@@ -367,7 +359,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         let div = document.createElement("div");
         div.style.whiteSpace = "pre-line"
         div.style.overflowWrap = "break-word"
-        const blockRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+        const blockRegex = new RegExp("/\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]", 'gmids');
         let blockContent = blockRegex.exec(dividedContent[i])
         if (this.vEnabledFrontend) {
           p.appendChild(document.createRange().createContextualFragment(userName![1]))

@@ -44,7 +44,6 @@ export class ForumComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.accessBackend = this.backendComService.getCategories();
     this.sideContentUsers = this.backendComService.getSideContentUsers();
     this.sideContentThreads = this.backendComService.getSideContentThreads();
     this.activeRoute.queryParamMap.subscribe((params) => {
