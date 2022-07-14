@@ -19,7 +19,7 @@
       <!--Column 2: Category Title + #Threads + Thread Title + Author Name-->
       <ng-container matColumnDef="general-information">
         <th mat-header-cell *matHeaderCellDef>
-          <div class="category-title">{{categoryObject.title}} </div>
+          <div class="category-title">{{cutOffThreadTitle(categoryObject.title)}} </div>
 
           <div class="category-replies">Threads: {{categoryObject.numberOfThreads}}</div>
         </th>

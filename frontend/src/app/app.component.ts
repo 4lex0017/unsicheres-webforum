@@ -1,8 +1,6 @@
 import {Component} from '@angular/core';
-import {Router} from '@angular/router';
 import {ThemeService} from "./theme.service";
 import {DifficultyPickerService} from "./data-access/services/difficulty-picker.service";
-import {BackendService} from "./data-access/services/backend.service";
 
 
 @Component({

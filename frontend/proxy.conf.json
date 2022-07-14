@@ -47,6 +47,12 @@
     "logLevel": "debug",
     "changeOrigin": false
   },
+  "/sitecontent/threads": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
   "/users": {
     "target": "http://localhost:80",
     "secure": false,

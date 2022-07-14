@@ -1,22 +1,17 @@
 import {Component, ElementRef, Inject, OnInit, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ForumComponent} from "../../forum/forum.component";
-import {BackendService} from "../../../../data-access/services/backend.service";
 import {
   SnackBarNotificationComponent
 } from "../../../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarRef} from "@angular/material/snack-bar";
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 import {DialogLoginComponent} from "../dialog-login/dialog-login.component";
-import {ToolbarComponent} from "../../sidenav/toolbar/toolbar.component";
 import {DatePipe} from "@angular/common";
 import {FormControl, Validators} from "@angular/forms";
-import {UserFull} from "../../../../data-access/models/userFull";
-import {BackendCommunicationService} from "../../../../data-access/services/backend-communication.service";
 import {interval} from "rxjs";
 import {Router} from "@angular/router";
-import {DialogEditProfileComponent} from "../../../user-profile-view/dialog-edit-profile/dialog-edit-profile.component";
-import {UserProfileViewComponent} from "../../../user-profile-view/user-profile-view.component";
+
 
 @Component({
   selector: 'app-dialog-register',
@@ -37,12 +32,10 @@ export class DialogRegisterComponent {
 
   constructor(
     public dialogref: MatDialogRef<ForumComponent>,
-    private backend: BackendService,
     private _snackBar: MatSnackBar,
     private authenticate: AuthenticationService,
     private dialog: MatDialog,
-    private datePipe: DatePipe,
-    private backendCom: BackendCommunicationService) {
+    private datePipe: DatePipe) {
   }
 
   isPicked() {
@@ -60,7 +53,7 @@ export class DialogRegisterComponent {
           this.dialogref.close()
         }, error => {
           let errorMsg = "Bad request.";
-          if (error.status == 500) {
+          if (error.value == 500) {
             errorMsg = "User already exists.";
           }
           this.username = "";
@@ -93,8 +86,6 @@ export class DialogRegisterComponent {
       this.fileAttr = imgFile.target.files[0].name;
       let reader = new FileReader();
       reader.onload = (e: any) => {
-        let image = new Image();
-        console.log("The Name" + e.target.result)
         this.profilePicture = e.target.result
       };
       reader.readAsDataURL(imgFile.target.files[0]);
@@ -110,7 +101,7 @@ export class DialogRegisterComponent {
 
   openLogin(): void {
     this.dialogref.close();
-    const dialogRef = this.dialog.open(DialogLoginComponent, {
+    this.dialog.open(DialogLoginComponent, {
       width: '30%'
     });
   }

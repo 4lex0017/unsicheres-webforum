@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {DialogFirstLoginComponent} from "../dialog-first-login/dialog-first-login.component";
@@ -14,7 +14,6 @@ export class DialogHasCookieComponent {
               private dialog: MatDialog,
               private router: Router) {
   }
-
 
   goToForum() {
     this.router.navigate(['/forum'])

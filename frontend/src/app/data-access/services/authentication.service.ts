@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {BackendService} from "./backend.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable, shareReplay, tap} from "rxjs";
+import {catchError, Observable, shareReplay, tap} from "rxjs";
 import {constant} from "../static/url";
 
 @Injectable({
@@ -9,7 +8,7 @@ import {constant} from "../static/url";
 })
 export class AuthenticationService {
 
-  constructor(private backend: BackendService, private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   readonly url: string = constant.url;
@@ -22,19 +21,14 @@ export class AuthenticationService {
     return parseInt(localStorage.getItem("currentUserId")!);
   }
 
-  // public login(username: string, password: string) {
-  //   if (this.backend.checkLoginData(username, password) == 1) {
-  //     // this.currentUserId = this.backend.getLoginId(username, password);
-  //   } else {
-  //     console.log("not in file")
-  //   }
-  // }
 
   public loginJwt(name: string, password: string) {
     return this.httpClient.post<any>(this.url + '/login', {
       name,
       password
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name), error => console.log(error)), shareReplay());
+    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name),
+      error => {
+      }), shareReplay());
   }
 
   private setSession(authResult, username) {
@@ -60,7 +54,10 @@ export class AuthenticationService {
         birthDate
       }
     }
-    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name)), shareReplay());
+    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})})
+      .pipe(tap(res => this.setSession(res, name)), shareReplay(), catchError((error: Response) => {
+        throw {message: 'Bad response', value: error.status}
+      }));
   }
 
   public logout() {
@@ -69,7 +66,6 @@ export class AuthenticationService {
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")
         localStorage.removeItem("bearerToken")
-        //  Catch this in backend (Peters job)
       }, error => {
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")

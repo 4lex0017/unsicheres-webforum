@@ -1,5 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UserThreadViewComponent} from "../user-thread-view.component";
 import {Post} from "../../../data-access/models/post";
 
@@ -8,12 +8,13 @@ import {Post} from "../../../data-access/models/post";
   templateUrl: './dialog-delete-post.component.html',
   styleUrls: ['./dialog-delete-post.component.scss']
 })
-export class DialogDeletePostComponent  {
+export class DialogDeletePostComponent {
 
   constructor(
     public dialogRef: MatDialogRef<UserThreadViewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Post,
-  ) {}
+  ) {
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

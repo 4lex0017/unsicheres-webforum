@@ -1,6 +1,23 @@
 .container {
   min-width: 85%;
+}
 
+.sidecontent-thread-text {
+  color: #0c5fcb;
+}
+
+.sidecontent-users-list {
+  word-wrap: break-word
+}
+
+.sidecontent-users-list-container {
+  padding-left: 7px;
+}
+
+mat-list-item {
+  //height: 2px !important;
+  //width: 100px !important;
+  left: -7px
 }
 
 .side-content-container {
@@ -26,6 +43,7 @@
 .userlist {
   font-weight: normal;
   font-style: normal;
+  margin-bottom: 20px;
 }
 
 .sidecontent-users {

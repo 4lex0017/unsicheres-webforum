@@ -1,5 +1,4 @@
 <div mat-dialog-content>
-
   <mat-form-field appearance="fill" class="user-edit-input-container">
     <mat-label>Title</mat-label>
     <input matInput [(ngModel)]="data.title">
@@ -7,7 +6,7 @@
   <p></p>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" (keyup.enter)=data [mat-dialog-close]="data" cdkFocusInitial>Save changes
+  <button mat-raised-button color="primary" (keyup.enter)=data [mat-dialog-close]="data">Save changes
   </button>
   <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
 </div>

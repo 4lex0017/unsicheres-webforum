@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {ThemeService} from "../../theme.service";
-import {BackendService} from "../../data-access/services/backend.service";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 import {SnackBarNotificationComponent} from "../snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";

@@ -1,6 +1,5 @@
 <div mat-dialog-content>
   <p></p>
-
   <mat-form-field appearance="fill" class="user-edit-textarea-container">
     <mat-label>Your Post</mat-label>
     <textarea matInput
@@ -8,11 +7,10 @@
               cdkAutosizeMinRows="3"
               cdkAutosizeMaxRows="10"
               [(ngModel)]="data.content">
-
     </textarea>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" [mat-dialog-close]="data" cdkFocusInitial>Save changes</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data">Save changes</button>
   <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
 </div>

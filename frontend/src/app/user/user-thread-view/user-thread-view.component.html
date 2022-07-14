@@ -1,6 +1,4 @@
 <div *ngFor="let threadObject of threadObjectArrayModel.data ">
-
-
   <div class="thread-container">
     <mat-card class="thread-card">
       <mat-card-header>
@@ -58,7 +56,7 @@
 
     <div class="thread-newReply">
       <mat-card>
-          <textarea [disabled]="editId !== -1" id="replyBox{{threadObject.id}}" class="replyBox" rows ="8">
+          <textarea [disabled]="editId !== -1" id="replyBox{{threadObject.id}}" class="replyBox" rows="8">
 
           </textarea>
         <button mat-raised-button (click)="createPost(threadObject)">POST</button>

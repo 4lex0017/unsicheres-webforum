@@ -1,22 +1,18 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Data, Router} from "@angular/router";
-import {UserFull} from "../../data-access/models/userFull";
-import {Post} from "../../data-access/models/post";
-import {BackendService} from "../../data-access/services/backend.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogEditProfileComponent} from "./dialog-edit-profile/dialog-edit-profile.component";
 import {AuthenticationService} from "../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../data-access/services/difficulty-picker.service";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
-import {async, NotFoundError, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {DialogCreateCommentComponent} from "./dialog-create-comment/dialog-create-comment.component";
 import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-service.service";
 
 import {ThreadsSmallBackendModel} from "../../data-access/models/threadsSmallBackendModel";
 import {UserFullBackend, UserFullBackendModel} from "../../data-access/models/userFullBackendModel";
 import {PostsSmallBackendModel} from "../../data-access/models/PostsSmallBackendModel";
-import {animate} from "@angular/animations";
-import {UserComment, UserCommentWrapper} from "../../data-access/models/comment";
+import {UserCommentWrapper} from "../../data-access/models/comment";
 
 @Component({
   selector: 'app-user-profile-view',
@@ -34,7 +30,6 @@ export class UserProfileViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private backendService: BackendService,
               private backendServiceCom: BackendCommunicationService,
               private dialog: MatDialog,
               public authenticate: AuthenticationService,
@@ -60,11 +55,8 @@ export class UserProfileViewComponent implements OnInit {
     await this.setVuln()
     this.route.data.subscribe((resp: Data) => {
       this.userFullArrayModel = resp["user"].body;
-      console.log(this.userFullArrayModel)
       if (this.vEnabled != 0) this.injectContentToDomStartup();
-      console.log("is it?" + resp["user"]["headers"].get('VulnFound'))
       if (resp["user"]["headers"].get('VulnFound') == "true") {
-        console.log("found vuln in userprofile")
         this.didAThing.sendMessage();
       }
       this.userThreads = this.backendServiceCom.getThreadsFromUser(this.userFullArrayModel.data[0].id);
@@ -106,8 +98,7 @@ export class UserProfileViewComponent implements OnInit {
         },
     });
     dialogRef.afterClosed().subscribe(result => {
-      let newDataModel = {}
-      console.log(this.vEnabled)
+      let newDataModel;
       if (this.vEnabled == 1) newDataModel = this.filterDataModelInFrontendNormal(result, userFullObject.id)
       else if (this.vEnabled == 2) newDataModel = this.filterDataModelInFrontendHard(result, userFullObject.id)
       else {
@@ -121,7 +112,6 @@ export class UserProfileViewComponent implements OnInit {
       }
       this.backendServiceCom.putUser(newDataModel).subscribe(
         (resp: Data) => {
-          console.log(resp)
           userFullObject = resp["body"].data[0];
           this.userFullArrayModel.data.forEach((user, index) => {
             if (user.id === userFullObject.id) {
@@ -129,9 +119,7 @@ export class UserProfileViewComponent implements OnInit {
             }
           });
           if (this.vEnabled != 0) this.injectContentToDom(userFullObject);
-          console.log(resp["headers"].get('VulnFound'))
           if (resp["headers"].get('VulnFound') == "true") {
-            console.log("found vuln in userprofile")
             this.didAThing.sendMessage();
           }
         });
@@ -175,7 +163,6 @@ export class UserProfileViewComponent implements OnInit {
 
   injectContentToDom(user: UserFullBackend): void {
     this.changeDetectorRef.detectChanges();
-    console.log("content" + user.id.toString())
     let content = document.getElementById("content" + user.id);
     content!.replaceChildren();
     content!.appendChild(document.createRange().createContextualFragment(user.about));
@@ -184,9 +171,12 @@ export class UserProfileViewComponent implements OnInit {
     name!.replaceChildren();
     name!.appendChild(document.createRange().createContextualFragment(user.name));
 
-    let location = document.getElementById("location" + user.id);
-    location!.replaceChildren();
-    location!.appendChild(document.createRange().createContextualFragment(user.location));
+    if (user.location) {
+      let location = document.getElementById("location" + user.id);
+      location!.replaceChildren();
+      location!.appendChild(document.createRange().createContextualFragment(user.location));
+    }
+
   }
 
   cutPostContent(content: string): string {
@@ -210,12 +200,6 @@ export class UserProfileViewComponent implements OnInit {
   getSlugFromTitle(title: string): string {
     return title.replace(/\s+/g, '-').toLowerCase();
   }
-
-
-  getThreadFromPost(id: number): string {
-    return this.backendService.getThreadSlugFromPostId(id)
-  }
-
 
   parseDate(date: string): string {
     let dateObj: Date = new Date(date);

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {ThemeService} from "../../../../theme.service";
@@ -32,19 +32,19 @@ export class ToolbarComponent {
   }
 
   openLogin(): void {
-    const dialogRef = this.dialog.open(DialogLoginComponent, {
+    this.dialog.open(DialogLoginComponent, {
       width: '30%',
     });
   }
 
   changePassword() {
-    const dialogRef = this.dialog.open(DialogChangePasswordComponent, {
+    this.dialog.open(DialogChangePasswordComponent, {
       width: '30%',
     });
   }
 
   openRegister(): void {
-    const dialogRef = this.dialog.open(DialogRegisterComponent, {
+    this.dialog.open(DialogRegisterComponent, {
       width: '40%'
     });
   }

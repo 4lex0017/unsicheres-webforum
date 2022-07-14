@@ -1,15 +1,11 @@
 import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Post} from "../../../data-access/models/post";
-import {DialogEditPostComponent} from "../dialog-edit-post/dialog-edit-post.component";
 import {DialogDeletePostComponent} from "../dialog-delete-post/dialog-delete-post.component";
 import {ActivatedRoute, Data, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
-import {BackendService} from "../../../data-access/services/backend.service";
 import {DataManagementService} from "../../../data-access/services/data-management.service";
 import {AuthenticationService} from "../../../data-access/services/authentication.service";
 import {DifficultyPickerService} from "../../../data-access/services/difficulty-picker.service";
-
-import {DialogCreatePostComponent} from "../dialog-create-post/dialog-create-post.component";
 import {DialogLoginComponent} from "../../user-home/dialog/dialog-login/dialog-login.component";
 import {AllowEditService} from "../../../data-access/services/allowEdit.service";
 import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
@@ -27,7 +23,6 @@ export class ReactivePostComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
-              private backEndService: BackendService,
               private allowEditService: AllowEditService,
               private router: Router,
               private dataManagement: DataManagementService,
@@ -51,8 +46,8 @@ export class ReactivePostComponent implements OnInit {
   vEnabledFrontend: boolean;
   editing: boolean = false;
   contentArray: any[]
-  url: string = "http://localhost:4200/forum";
-  @ViewChild('content', {static: false}) content: ElementRef;
+
+  // @ViewChild('content', {static: false}) content: ElementRef;
 
 
   async setVuln() {
@@ -109,7 +104,7 @@ export class ReactivePostComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if(this.editing){
+        if (this.editing) {
           console.log("editWhileDelete")
           this.allowEditService.finishEdit();
           this.editPostEvent.emit(this.postObject)
@@ -148,6 +143,7 @@ export class ReactivePostComponent implements OnInit {
       this.editPostEvent.emit(this.postObject)
     }
   }
+
   /*
   editContent(): void {
     //console.log("edit");
@@ -220,16 +216,16 @@ export class ReactivePostComponent implements OnInit {
   }
    */
 
-  editRework(): void{
+  editRework(): void {
     this.editPostEvent.emit(this.postObject)
-    let fullreply =<HTMLTextAreaElement> document.getElementById("editBox" + this.postObject.id)
+    let fullreply = <HTMLTextAreaElement>document.getElementById("editBox" + this.postObject.id)
     let editString = fullreply.value;
     this.editing = false
     if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(editString)
     else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(editString)
     else this.postObject.content = editString;
-    this.backendServiceCom.putPost(this.threadId,this.postObject.author.id, this.postObject.id,  this.postObject.content).subscribe(
-      (value: Data) =>{
+    this.backendServiceCom.putPost(this.threadId, this.postObject.author.id, this.postObject.id, this.postObject.content).subscribe(
+      (value: Data) => {
         //console.log("nowEdited: ")
         //console.log(value)
         let editedContent = value["body"].content;
@@ -243,6 +239,7 @@ export class ReactivePostComponent implements OnInit {
     this.allowEditService.finishEdit();
     this.deserializePost(this.postObject.content);
   }
+
   /*
   deserializePostRegex(postString: string): void {
     let stringArray = postString.split("/r?");
@@ -331,7 +328,7 @@ export class ReactivePostComponent implements OnInit {
     }
   }
    */
-  deserializePost(postContent: string): void{
+  deserializePost(postContent: string): void {
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
     const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let current;
@@ -341,37 +338,37 @@ export class ReactivePostComponent implements OnInit {
       if (current.index === splitRegex.lastIndex) {
         splitRegex.lastIndex++;
       }
-      if((postContent.substring(lastMatchIndex, current.index)) != ""){
+      if ((postContent.substring(lastMatchIndex, current.index)) != "") {
         dividedContent.push(postContent.substring(lastMatchIndex, current.index))
       }
       dividedContent.push(postContent.substring(current.index, splitRegex.lastIndex))
       lastMatchIndex = splitRegex.lastIndex;
     }
 
-    if(lastMatchIndex != postContent.length){
+    if (lastMatchIndex != postContent.length) {
       dividedContent.push(postContent.substring(lastMatchIndex))
     }
     let contentArray: HTMLElement[] = new Array(0)
     const replyInfoRegex = /\[quote=(.*?)]/mid;
     const userNameRegex = /(?<=\=)(.*?)(?=\:)/mid
     const postIdRegex = /(?<=\:)(.*?)(?=\])/mid
-    for(let i = 0; i < dividedContent.length; i++){
-      if(dividedContent[i].startsWith("[")){
+    for (let i = 0; i < dividedContent.length; i++) {
+      if (dividedContent[i].startsWith("[")) {
         let infos = replyInfoRegex.exec(dividedContent[i]);
         let info = infos![0];
         let userName = userNameRegex.exec(info);
         let postId = postIdRegex.exec(info)
         let blockElement = document.createElement("blockquote");
-        blockElement.setAttribute("id",postId![1])
+        blockElement.setAttribute("id", postId![1])
         let p = document.createElement("p");
         let div = document.createElement("div");
         const blockRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
         let blockContent = blockRegex.exec(dividedContent[i])
-        if(this.vEnabledFrontend){
+        if (this.vEnabledFrontend) {
           console.log("Filter on")
           p.appendChild(document.createRange().createContextualFragment(userName![1]))
           div.appendChild(document.createRange().createContextualFragment(blockContent![1]))
-        }else{
+        } else {
           console.log("Filter off")
           p.textContent = userName![1];
           div.textContent = blockContent![1];
@@ -379,11 +376,11 @@ export class ReactivePostComponent implements OnInit {
         blockElement.appendChild(p);
         blockElement.appendChild(div);
         contentArray.push(blockElement);
-      }else{
+      } else {
         let divElement = document.createElement("div")
-        if(this.vEnabledFrontend){
+        if (this.vEnabledFrontend) {
           divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
-        }else{
+        } else {
           divElement.textContent = dividedContent[i]
         }
         contentArray.push(divElement);

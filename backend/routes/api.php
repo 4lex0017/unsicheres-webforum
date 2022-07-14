@@ -64,6 +64,11 @@ Route::get('threads/small', 'App\Http\Controllers\ThreadController@getAllSmallTh
 Route::get('threads/{id}', 'App\Http\Controllers\ThreadController@getThreadById');
 
 /**
+ * @uses App\Http\Controllers\ThreadController::getRandSmallTreads()
+ */
+Route::get('sitecontent/threads', 'App\Http\Controllers\ThreadController@getRandSmallTreads');
+
+/**
  * @uses App\Http\Controllers\CategoryController::getAllCategories()
  */
 Route::get('categories', 'App\Http\Controllers\CategoryController@getAllCategories');

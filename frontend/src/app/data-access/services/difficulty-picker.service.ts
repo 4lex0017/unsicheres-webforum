@@ -14,14 +14,12 @@ export class DifficultyPickerService {
   updateConfig(): void {
     this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
       DifficultyPickerService.curConfig = data
-      console.log(DifficultyPickerService.curConfig)
     });
   }
 
 
   isEnabledInConfig(str: string): boolean {
     this.updateConfig()
-
     for (let i = 0; i < DifficultyPickerService.curConfig.data.length; i++) {
       if (DifficultyPickerService.curConfig.data[i].uri == str) {
         if (DifficultyPickerService.curConfig.data[i].rxss_difficulty != null) {
@@ -34,12 +32,6 @@ export class DifficultyPickerService {
     }
     return false;
   }
-
-
-  // async isEnabledInConfigSingle(str: string): Promise<number> {
-  //   return await this.backendCom.getVulnerabilitySingle(str)
-  // }
-
 
   frontendFilterTagsNormal(content: string): string {
     return content.replace("<script>", "");

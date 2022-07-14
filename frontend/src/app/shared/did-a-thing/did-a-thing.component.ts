@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {trigger, state, style, animate, transition, stagger, query} from '@angular/animations';
-import {timer} from "rxjs";
 import {DidAThingServiceService} from "./did-a-thing-service.service";
 
 @Component({
@@ -100,6 +99,7 @@ import {DidAThingServiceService} from "./did-a-thing-service.service";
     ])
   ]
 })
+
 export class DidAThingComponent implements OnInit {
   show = false;
   timeLeft: number = 60;
@@ -113,7 +113,6 @@ export class DidAThingComponent implements OnInit {
     return this.show ? 'show' : 'hide'
   }
 
-
   toggleOver() {
     this.show = true;
     setTimeout(() => {
@@ -123,9 +122,7 @@ export class DidAThingComponent implements OnInit {
 
   ngOnInit(): void {
     this.didAThing.onMessage().subscribe(bool => {
-      console.log("In did a thing now")
       this.toggleOver();
-
     })
   }
 

@@ -2,7 +2,6 @@
   <mat-form-field appearance="fill" class="username-register-input-container">
     <mat-label>Enter username</mat-label>
     <input matInput [(ngModel)]="this.username" required>
-    <!--    <mat-error *ngIf="this.fillError">{{this.usernameErrorMessage}}</mat-error>-->
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Choose your Birthdate</mat-label>
@@ -34,7 +33,6 @@
             [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <!--    <mat-error *ngIf="this.passwordError">{{this.passwordErrorMessage}}</mat-error>-->
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="repeatPassword-register-input-container">

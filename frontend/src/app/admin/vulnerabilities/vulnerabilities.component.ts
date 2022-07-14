@@ -3,7 +3,6 @@ import {
   VulnerabilityDifficultyOverview,
   VulnerabilityDifficultyOverviewPackage
 } from "../../data-access/models/vulnerabilityDifficultyOverview";
-import {BackendService} from "../../data-access/services/backend.service";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
@@ -29,7 +28,6 @@ export class VulnerabilitiesComponent implements OnInit {
   curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
 
   constructor(private dialog: MatDialog,
-              private backend: BackendService,
               private router: Router,
               private backendCom: BackendCommunicationService,
               private diffPicker: DifficultyPickerService,
@@ -49,10 +47,7 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   updateToDatabase(): void {
-    console.log("in update")
-    console.log(this.curVulnerabilities)
     this.backendCom.putVulnerabilitiesConfig(this.curVulnerabilities).subscribe(resp => {
-      console.log(resp)
       this.currentConfig = resp;
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
@@ -72,7 +67,7 @@ export class VulnerabilitiesComponent implements OnInit {
   }
 
   showCurrentConfig() {
-    const dialogRef = this.dialog.open(DialogShowCurrentConfigComponent, {
+    this.dialog.open(DialogShowCurrentConfigComponent, {
       width: '70%',
       data: this.currentConfig
     });
@@ -82,10 +77,7 @@ export class VulnerabilitiesComponent implements OnInit {
 
     for (let v of this.curVulnerabilities.vulnerabilities) {
       if (v.id == data.id) {
-        console.log(data)
-        console.log(v)
         v = data;
-        console.log(v)
         break;
       }
     }

@@ -52,23 +52,47 @@
             </mat-radio-group>
           </mat-menu>
         </div>
-        <mat-card class="userlist">
-          <mat-card-title class="sidecontent-users">
-            Registered Users
-          </mat-card-title>
-          <div *ngIf="sideContent | async as sideContentObj; else loadingComments">
-          <span *ngFor="let user of sideContentObj.data; let i = index"
-                [routerLink]="['/forum/users', user.id]"
-                style="word-wrap: break-word">
-            <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
-            ,
-          </span>
+        <div *ngIf="sideContentUsers | async as sideContentObj; else loadingUsers"
+             class="sidecontent-users-list-container">
+          <mat-card class="userlist" *ngIf="sideContentObj.data.length > 0">
+            <mat-card-title class="sidecontent-users">
+              Registered Users
+            </mat-card-title>
+            <span *ngFor="let user of sideContentObj.data; let i = index"
+                  [routerLink]="['/forum/users', user.id]"
+                  class="sidecontent-users-list">
+              <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
+              ,
+            </span>
             ...
-          </div>
-          <ng-template #loadingComments>
-            <p>Loading ...</p>
-          </ng-template>
-        </mat-card>
+          </mat-card>
+        </div>
+        <ng-template #loadingUsers>
+          <mat-card class="userlist">
+            <mat-card-title class="sidecontent-users">
+              Loading content ...
+            </mat-card-title>
+            <!--            <p>Loading content...</p>-->
+          </mat-card>
+        </ng-template>
+        <div *ngIf="sideContentThreads | async as sideContentObj;">
+          <mat-card class="threadList">
+            <mat-card-title class="sidecontent-thread">
+              Threads
+            </mat-card-title>
+            <mat-nav-list>
+              <mat-list-item *ngFor="let thread of sideContentObj.threads" [routerLink]="['/forum/threads', thread.id]">
+                <div class="sidecontent-thread-text" mat-line>{{thread.title}}</div>
+                <div class="sidecontent-thread-text" mat-line>Date: {{formatDate(thread.date)}}</div>
+                <mat-divider></mat-divider>
+              </mat-list-item>
+            </mat-nav-list>
+            <ng-template #loadingThreads>
+              <p>Loading ...</p>
+            </ng-template>
+          </mat-card>
+        </div>
+
       </div>
     </div>
   </div>

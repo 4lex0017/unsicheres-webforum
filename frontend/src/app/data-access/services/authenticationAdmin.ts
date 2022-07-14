@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {BackendService} from "./backend.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable, shareReplay, tap} from "rxjs";
 import {constant} from "../static/url";
@@ -9,7 +8,7 @@ import {constant} from "../static/url";
 })
 export class AuthenticationServiceAdmin {
 
-  constructor(private backend: BackendService, private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   readonly url: string = constant.url;
@@ -18,7 +17,8 @@ export class AuthenticationServiceAdmin {
     return this.httpClient.post<any>(this.url + '/admin/login', {
       name,
       password
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res), error => console.log(error)), shareReplay());
+    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res), error => {
+    }), shareReplay());
   }
 
   private setSession(authResult) {

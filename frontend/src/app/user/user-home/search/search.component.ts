@@ -1,9 +1,4 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Thread} from "../../../data-access/models/thread";
-import {Post} from "../../../data-access/models/post";
-import {BackendService} from "../../../data-access/services/backend.service";
-import {UserFull} from "../../../data-access/models/userFull";
-
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -12,12 +7,8 @@ import {
   DialogSearchErrorMessageComponent
 } from "../dialog/dialog-search-error-message/dialog-search-error-message.component";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
-import {Observable} from "rxjs";
 import {Search} from "../../../data-access/models/search";
-import {DidAThingComponent} from "../../../shared/did-a-thing/did-a-thing.component";
 import {DidAThingServiceService} from "../../../shared/did-a-thing/did-a-thing-service.service";
-
-declare var jQuery: any;
 
 @Component({
   selector: 'app-search',
@@ -26,8 +17,7 @@ declare var jQuery: any;
 })
 export class SearchComponent implements OnInit {
 
-  constructor(private backendService: BackendService,
-              private backendCom: BackendCommunicationService,
+  constructor(private backendCom: BackendCommunicationService,
               private router: Router,
               private dialog: MatDialog,
               private route: ActivatedRoute,
@@ -53,7 +43,6 @@ export class SearchComponent implements OnInit {
     if (str != "") str = "/" + str;
     await this.backendCom.getVulnerabilityReflectedSingle("/search" + str).then(value => {
         this.vEnabled = value
-        console.log(this.vEnabled)
         this.vEnabledFrontend = this.isActive();
       }
     );
@@ -70,17 +59,13 @@ export class SearchComponent implements OnInit {
       this.backendCom.search(params.get('query') || "", params.get('scope') || "").subscribe(data => {
         this.setVuln(params.get('scope') || "");
         this.currentSearchQuery = decodeURIComponent(this.getParaFromResponseUrl(data["headers"].get("self")!))
-        console.log("cur query" + this.currentSearchQuery);
-        console.log("is vuln enabled?: " + this.vEnabled);
         this.search = data["body"]!
         if (this.vEnabled != 0) {
           this.changeDetectorRef.detectChanges();
           this.content.nativeElement.replaceChildren();
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
         }
-        console.log(data["headers"].get('VulnFound') == "true")
         if (data["headers"].get('VulnFound') == "true") {
-          console.log("found vuln in userprofile")
           this.didAThing.sendMessage();
         }
       });

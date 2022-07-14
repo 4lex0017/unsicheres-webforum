@@ -31,7 +31,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'sqli', 0, $config);
         $this->updateChecked($content, 'rxss', 1, $config);
         $this->updateChecked($content, 'sxss', 2, $config);
-        $this->updateChecked($content, 'cmdi', 3, $config);
+        $this->updateChecked($content, 'file', 3, $config);
         $this->updateChecked($content, 'fend', 4, $config);
         $this->updateCheckedStatic($content, 'hash', 5);
         $this->updateCheckedStatic($content, 'user', 6);
@@ -150,7 +150,7 @@ class AdminController extends Controller
                     'sqli_difficulty' => $route['sqli_difficulty'],
                     'rxss_difficulty' => $route['rxss_difficulty'],
                     'sxss_difficulty' => $route['sxss_difficulty'],
-                    'cmdi_difficulty' => $route['cmdi_difficulty'],
+                    'file_difficulty' => $route['file_difficulty'],
                     'fend_difficulty' => $route['fend_difficulty'],
                 ]);
         }
@@ -237,7 +237,7 @@ class AdminController extends Controller
      */
     public function updateRouteConfig(string $type, mixed &$config, $difficulty, array &$stored): void
     {
-        $max_difficulty = $type == 'cmdi' ? 3 : 4;
+        $max_difficulty = $type == 'file' ? 3 : 4;
 
         $this->resetDifficulty($type, $max_difficulty);
 
@@ -277,7 +277,7 @@ class AdminController extends Controller
                 $type = 'sxss';
                 break;
             case 4:
-                $type = 'cmdi';
+                $type = 'file';
                 break;
             case 5:
                 $type = 'fend';

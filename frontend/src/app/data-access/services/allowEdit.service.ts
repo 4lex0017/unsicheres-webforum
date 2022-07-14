@@ -4,23 +4,22 @@ import {Injectable} from "@angular/core";
   providedIn: 'root'
 })
 
-export class AllowEditService{
+export class AllowEditService {
   allowEdit: boolean = true;
 
   constructor() {
   }
 
-  askForEdit(): boolean{
-    console.log(this.allowEdit);
-    if(!this.allowEdit){
+  askForEdit(): boolean {
+    if (!this.allowEdit) {
       return false;
-    }else{
+    } else {
       this.allowEdit = false;
       return true;
     }
   }
 
-  finishEdit():void{
+  finishEdit(): void {
     this.allowEdit = true;
   }
 }

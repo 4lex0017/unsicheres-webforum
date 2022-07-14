@@ -17,7 +17,6 @@
     </a>
     <button class="resetDatabase" mat-raised-button color="warn" (click)="resetDatabase()">Reset Database</button>
   </h1>
-  <!--  <div *ngIf="this.vulnerabilities$ | async as vulnerabilities; else loadingAccess">-->
   <mat-card>
     <mat-tab-group mat-align-tabs="start">
       <mat-tab *ngFor="let vulnerability of this.curVulnerabilities.vulnerabilities" label="{{vulnerability.name}}">
@@ -40,13 +39,4 @@
       </mat-tab>
     </mat-tab-group>
   </mat-card>
-  <!--  </div>-->
-  <!--  <ng-template #loadingAccess>-->
-  <!--    <div class="loading-container">-->
-  <!--      <div class="loading-spinner-container">-->
-  <!--        <mat-spinner class="loading-spinner"></mat-spinner>-->
-  <!--        <h2 class="loading-text">Loading ...</h2>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </ng-template>-->
 </div>

@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_SNACK_BAR_DATA, MatSnackBarRef} from "@angular/material/snack-bar";
 import {interval} from "rxjs";
 
@@ -20,7 +20,6 @@ export class SnackBarNotificationComponent implements OnInit {
   ngOnInit(): void {
     const time = 45;
     const timer$ = interval(100);
-
     this.sub = timer$.subscribe((sec) => {
       this.progressbarValue = 100 - sec * 100 / time;
       this.curSec = sec;
