@@ -56,19 +56,43 @@
           <mat-card-title class="sidecontent-users">
             Registered Users
           </mat-card-title>
-          <div *ngIf="sideContent | async as sideContentObj; else loadingComments">
-          <span *ngFor="let user of sideContentObj.data; let i = index"
-                [routerLink]="['/forum/users', user.id]"
-                style="word-wrap: break-word">
-            <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
-            ,
-          </span>
+          <div *ngIf="sideContentUsers | async as sideContentObj; else loadingComments"
+               class="sidecontent-users-list-container">
+            <span *ngFor="let user of sideContentObj.data; let i = index"
+                  [routerLink]="['/forum/users', user.id]"
+                  class="sidecontent-users-list">
+              <a [routerLink]="['/forum/users', user.id]"> {{user.name}}</a>
+              ,
+            </span>
             ...
           </div>
           <ng-template #loadingComments>
             <p>Loading ...</p>
           </ng-template>
         </mat-card>
+
+        <mat-card class="threadList">
+          <mat-card-title class="sidecontent-thread">
+            Threads
+          </mat-card-title>
+          <div *ngIf="sideContentThreads | async as sideContentObj; else loadingComments">
+            <mat-nav-list>
+              <mat-list-item *ngFor="let thread of sideContentObj.threads" [routerLink]="['/forum/threads', thread.id]">
+                <div class="sidecontent-thread-text" mat-line>{{thread.title}}</div>
+                <div class="sidecontent-thread-text" mat-line>Date: {{formatDate(thread.date)}}</div>
+                <mat-divider></mat-divider>
+              </mat-list-item>
+
+
+            </mat-nav-list>
+
+          </div>
+          <ng-template #loadingComments>
+            <p>Loading ...</p>
+          </ng-template>
+        </mat-card>
+
+
       </div>
     </div>
   </div>

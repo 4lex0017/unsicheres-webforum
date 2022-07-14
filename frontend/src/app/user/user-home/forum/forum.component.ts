@@ -29,7 +29,8 @@ export class ForumComponent implements OnInit {
 
   curId: number = -1;
   curTitle: string = "";
-  sideContent: Observable<any>;
+  sideContentUsers: Observable<any>;
+  sideContentThreads: Observable<any>;
   accessBackend: Observable<AccessBackend>;
   showFull = false;
   searchQuery: string = "";
@@ -47,7 +48,8 @@ export class ForumComponent implements OnInit {
 
   ngOnInit(): void {
     this.accessBackend = this.backendComService.getCategories();
-    this.sideContent = this.backendComService.getSideContent();
+    this.sideContentUsers = this.backendComService.getSideContentUsers();
+    this.sideContentThreads = this.backendComService.getSideContentThreads();
     this.activeRoute.queryParamMap.subscribe((params) => {
       if (params.get('view') != "all" && params.get('view') != null) {
         let para = params.get('view');
@@ -108,5 +110,9 @@ export class ForumComponent implements OnInit {
       this.router.navigate(['forum/search'], {queryParams: {scope: this.whereToSearch, query: this.searchQuery}});
       // .replace(/ /g, "_")
     }
+  }
+
+  formatDate(date: string) {
+    return this.backendComService.formatDate(date);
   }
 }

@@ -79,9 +79,7 @@ export class UserThreadViewComponent implements OnInit {
   async ngOnInit() {
     await this.setVuln();
     this.route.data.subscribe((resp: Data) => {
-        //console.log(resp["thread"].body)
         this.threadObjectArrayModel = resp["thread"].body;
-        //console.log(this.threadObjectArrayModel)
         if (this.vEnabled != 0) this.injectContentToDomStartup()
       }
     );

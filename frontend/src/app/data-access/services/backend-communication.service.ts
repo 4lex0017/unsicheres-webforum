@@ -100,9 +100,18 @@ export class BackendCommunicationService {
       );
   }
 
-  getSideContent(): Observable<any> {
+  getSideContentUsers(): Observable<any> {
     return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/users')
       .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
+  }
+
+  getSideContentThreads(): Observable<any> {
+    return this.httpClient.get<AccessBackend>(this.url + '/sitecontent/threads')
+      .pipe(catchError((error: Response) => {
+        console.log(error)
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));
@@ -414,8 +423,8 @@ export class BackendCommunicationService {
     return num.toString().padStart(2, '0');
   }
 
-  formatDate(): string {
-    let date: Date = new Date();
+  formatDate(dateStr: string): string {
+    let date: Date = new Date(dateStr);
     return (
       [
         this.padTo2Digits(date.getDate()),

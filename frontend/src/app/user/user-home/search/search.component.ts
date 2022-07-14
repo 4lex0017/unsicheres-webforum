@@ -43,7 +43,6 @@ export class SearchComponent implements OnInit {
     if (str != "") str = "/" + str;
     await this.backendCom.getVulnerabilityReflectedSingle("/search" + str).then(value => {
         this.vEnabled = value
-        console.log(this.vEnabled)
         this.vEnabledFrontend = this.isActive();
       }
     );
@@ -60,15 +59,12 @@ export class SearchComponent implements OnInit {
       this.backendCom.search(params.get('query') || "", params.get('scope') || "").subscribe(data => {
         this.setVuln(params.get('scope') || "");
         this.currentSearchQuery = decodeURIComponent(this.getParaFromResponseUrl(data["headers"].get("self")!))
-        console.log("cur query" + this.currentSearchQuery);
-        console.log("is vuln enabled?: " + this.vEnabled);
         this.search = data["body"]!
         if (this.vEnabled != 0) {
           this.changeDetectorRef.detectChanges();
           this.content.nativeElement.replaceChildren();
           this.content.nativeElement.appendChild(document.createRange().createContextualFragment(this.currentSearchQuery));
         }
-        console.log(data["headers"].get('VulnFound') == "true")
         if (data["headers"].get('VulnFound') == "true") {
           console.log("found vuln in userprofile")
           this.didAThing.sendMessage();
