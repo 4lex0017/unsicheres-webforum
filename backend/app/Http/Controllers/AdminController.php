@@ -35,6 +35,7 @@ class AdminController extends Controller
         $this->updateChecked($content, 'fend', 4, $config);
         $this->updateCheckedStatic($content, 'hash', 5);
         $this->updateCheckedStatic($content, 'user', 6);
+        $this->updateCheckedStatic($content, 'rate', 7);
 
         return response()->json($content);
     }
@@ -188,7 +189,7 @@ class AdminController extends Controller
         foreach ($data as $element) {
             $type = $this->getType($element['id']);
 
-            if ($element['id'] == 6 || $element['id'] == 7) {
+            if ($element['id'] == 6 || $element['id'] == 7 || $element['id'] == 8) {
                 $this->updateStaticConfig($element['difficulty'], $type);
             } else {
                 $this->updateRouteConfig($type, $config, $element['difficulty'], $stored);
@@ -287,6 +288,9 @@ class AdminController extends Controller
                 break;
             case 7:
                 $type = 'user';
+                break;
+            case 8:
+                $type = 'rate';
                 break;
             default:
                 abort(400);
@@ -473,9 +477,23 @@ class AdminController extends Controller
     {
         return [
             'data' => ConfigResource::collection(Vulnerability::all())->jsonSerialize(),
-            'hash_difficulty' => DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty'),
-            'user_difficulty' => DB::connection('secure')->table('staticdifficulties')->value('user_difficulty'),
+            'hash_difficulty' => $this->getStaticDifficulty('hash'),
+            'user_difficulty' => $this->getStaticDifficulty('user'),
+            'rate_difficulty' => $this->getStaticDifficulty('rate'),
         ];
+    }
+
+    /**
+     * get one static difficulty
+     *
+     * @param string $type
+     * @return int
+     */
+    protected function getStaticDifficulty(string $type): int
+    {
+        return DB::connection('secure')
+            ->table('staticdifficulties')
+            ->value($type . '_difficulty');
     }
 
     /**
@@ -526,7 +544,7 @@ class AdminController extends Controller
     {
         return DB::connection('secure')
             ->table('attackers')
-            ->select(['ip_address', 'name', 'attacker_id'])
+            ->select(['tracker', 'name', 'attacker_id'])
             ->get();
     }
 
@@ -545,7 +563,7 @@ class AdminController extends Controller
             $vulns_of_attacker = $this->addUriToFoundVulns($found_vulns);
 
             $attackers_with_values[] = [
-                'ipaddress' => $attacker->ip_address,
+                'tracker' => $attacker->tracker,
                 'username' => $attacker->name,
                 'vulnerabilities' => $vulns_of_attacker,
             ];

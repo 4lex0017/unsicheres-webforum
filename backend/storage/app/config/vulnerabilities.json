@@ -182,7 +182,7 @@
         },
         {
             "id": 7,
-            "name": "user enumeration",
+            "name": "User Enumeration",
             "description": "provide unnecessary info for failed logins",
             "subtasks":[
                 {
@@ -201,6 +201,31 @@
                     "id": 3,
                     "state": "Off",
                     "description": "frontend doesn't show if username exists",
+                    "checked": false
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Rate Limiting",
+            "description": "Limit rate at which one user can send requests to prevent brute force attacks",
+            "subtasks":[
+                {
+                    "id": 1,
+                    "state": "Easy",
+                    "description": "No rate limiting whatsoever",
+                    "checked": false
+                },
+                {
+                    "id": 2,
+                    "state": "Medium",
+                    "description": "Request rate limited to 120 per minute, or 2 per second",
+                    "checked": false
+                },
+                {
+                    "id": 3,
+                    "state": "Hard",
+                    "description": "Request rate limited to 60 per minute, or 2 per second",
                     "checked": false
                 }
             ]

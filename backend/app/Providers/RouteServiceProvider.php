@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use Exception;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -49,8 +51,33 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting()
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+        try {
+            $difficulty = DB::connection('secure')
+                ->table('staticdifficulties')
+                ->value('rate_difficulty');
+        }
+        catch (Exception) {
+            $difficulty = 1;
+        }
+
+        switch($difficulty) {
+            //not a pretty implementation, but has to be like this as you can't pass maxAttempts at runtime
+            case 1:
+                RateLimiter::for('api', function (Request $request) {
+                    return Limit::perMinute(10000)->by($request->cookie('tracker')? : $request->ip());
+                });
+                break;
+            case 2:
+                RateLimiter::for('api', function (Request $request) {
+                    return Limit::perMinute(120)->by($request->cookie('tracker')? : $request->ip());
+                });
+                break;
+            default:
+                RateLimiter::for('api', function (Request $request) {
+                    return Limit::perMinute(60)->by($request->cookie('tracker')? : $request->ip());
+                });
+                break;
+        }
+
     }
 }

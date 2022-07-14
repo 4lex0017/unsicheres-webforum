@@ -18,12 +18,14 @@ return new class extends Migration
             $table->id();
             $table->integer('hash_difficulty');
             $table->integer('user_difficulty');
+            $table->integer('rate_difficulty');
         });
         DB::connection('secure')
             ->table('staticdifficulties')
             ->insert([
                 'hash_difficulty' => 4,
                 'user_difficulty' => 3,
+                'rate_difficulty' => 3,
                 ]);
     }
 
