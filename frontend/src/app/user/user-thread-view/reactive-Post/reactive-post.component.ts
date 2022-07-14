@@ -332,7 +332,7 @@ export class ReactivePostComponent implements OnInit {
    */
   deserializePost(postContent: string): void{
     let contentBox = document.getElementById("postBox" + this.postObject.id)
-    console.log(contentBox)
+    //console.log(contentBox)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
     const splitRegex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
     let current;
