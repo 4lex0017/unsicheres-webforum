@@ -45,6 +45,7 @@
     <div class="thread-posts" *ngFor="let post of threadObject.posts" id="{{post.id.toString()}}">
       <app-reactive-post [postObject]="post"
                          [threadId]="threadObject.id"
+                         [vEnabled]="vEnabledPost"
                          (createPostEvent)="createPostConsumer(threadObject, $event)"
                          (replyPostEvent)="addReply(threadObject, $event)"
                          (deletePostEvent)="openDeletePostConsumer(threadObject,editId , $event)"
@@ -55,7 +56,7 @@
     </div>
     <div class="thread-newReply">
       <mat-card>
-          <textarea [disabled]="editId !== -1" id="replyBox{{threadObject.id}}" class="replyBox" rows="8"></textarea>
+        <textarea [disabled]="editId !== -1" id="replyBox{{threadObject.id}}" class="replyBox" rows="8"></textarea>
         <button mat-raised-button (click)="createPost(threadObject)">POST</button>
       </mat-card>
     </div>

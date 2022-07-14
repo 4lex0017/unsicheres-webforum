@@ -43,12 +43,15 @@ export class UserThreadViewComponent implements OnInit {
               private _snackBar: MatSnackBar) {
   }
 
-  async setVuln() {
+  async setVulnThread() {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}").then(value => {
         this.vEnabled = value
         this.vEnabledFrontend = this.isActive();
       }
     );
+  }
+
+  async setVulnPost() {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}/posts").then(value => {
         this.vEnabledPost = value
       }
@@ -76,10 +79,15 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.setVuln();
+    await this.setVulnPost();
+    await this.setVulnThread();
+
     this.route.data.subscribe((resp: Data) => {
         this.threadObjectArrayModel = resp["thread"].body;
         if (this.vEnabled != 0) this.injectContentToDomStartup()
+        if (resp["thread"]["headers"].get('VulnFound') == "true") {
+          this.didAThing.sendMessage();
+        }
       }
     );
   }

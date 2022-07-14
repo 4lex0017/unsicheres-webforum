@@ -1,4 +1,6 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output
+} from '@angular/core';
 import {Post} from "../../../data-access/models/post";
 import {DialogDeletePostComponent} from "../dialog-delete-post/dialog-delete-post.component";
 import {ActivatedRoute, Data, Router} from "@angular/router";
@@ -11,7 +13,6 @@ import {AllowEditService} from "../../../data-access/services/allowEdit.service"
 import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 import {DidAThingServiceService} from "../../../shared/did-a-thing/did-a-thing-service.service";
-import {Observable} from "rxjs";
 
 
 @Component({
@@ -19,7 +20,7 @@ import {Observable} from "rxjs";
   templateUrl: './reactive-post.component.html',
   styleUrls: ['./reactive-post.component.scss']
 })
-export class ReactivePostComponent implements OnInit {
+export class ReactivePostComponent implements OnInit, AfterViewInit {
 
   constructor(private route: ActivatedRoute,
               private dialog: MatDialog,
@@ -34,6 +35,7 @@ export class ReactivePostComponent implements OnInit {
   }
 
   @Input() threadId: number;
+  @Input() vEnabled: number;
   @Input() postObject: Post;
   @Output() deletePostEvent = new EventEmitter<number>();
   @Output() createPostEvent = new EventEmitter<Post>();
@@ -42,29 +44,19 @@ export class ReactivePostComponent implements OnInit {
   @Output() editPostEvent = new EventEmitter<Post>();
   @Output() moveToReplyBoxEvent = new EventEmitter;
   @Output() shareEvent = new EventEmitter<number>();
-  vEnabled: number
   vEnabledFrontend: boolean;
   editing: boolean = false;
   contentArray: any[]
 
-  // @ViewChild('content', {static: false}) content: ElementRef;
-
-
-  async setVuln() {
-    await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}/posts").then(value => {
-        this.vEnabled = value
-        this.vEnabledFrontend = this.isActive();
-      }
-    );
-  }
 
   isActive(): boolean {
     return this.vEnabled != 0;
   }
 
-  async ngOnInit() {
-    await this.setVuln();
-    this.deserializePost(this.postObject.content)
+  ngOnInit() {
+
+    this.vEnabledFrontend = this.isActive();
+
     /*
     this.vEnabledFrontend = true
     this.deserializePostRegexUnsafe(this.postObject.content);
@@ -77,6 +69,10 @@ export class ReactivePostComponent implements OnInit {
       content!.appendChild(document.createRange().createContextualFragment(this.postObject.content));
     }
      */
+  }
+
+  ngAfterViewInit(): void {
+    this.deserializePost(this.postObject.content)
   }
 
   parseDate(date: string): string {
@@ -138,7 +134,7 @@ export class ReactivePostComponent implements OnInit {
   editPost(): void {
     if (this.allowEditService.askForEdit()) {
       let contentBox = document.getElementById("postBox" + this.postObject.id)
-      while (contentBox!.firstChild){
+      while (contentBox!.firstChild) {
         contentBox!.removeChild(contentBox!.lastChild!)
       }
       this.editing = true;
@@ -330,7 +326,7 @@ export class ReactivePostComponent implements OnInit {
     }
   }
    */
-  deserializePost(postContent: string): void{
+  deserializePost(postContent: string): void {
     let contentBox = document.getElementById("postBox" + this.postObject.id)
     //console.log(contentBox)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
@@ -364,8 +360,8 @@ export class ReactivePostComponent implements OnInit {
         let postId = postIdRegex.exec(info)
         let blockElement = document.createElement("blockquote");
         blockElement.setAttribute("id", postId![1])
-        blockElement.setAttribute("id",this.postObject.id + "rep" + postId![1])
-        blockElement.addEventListener("click", (e:Event) => this.moveToPost(blockElement.id))
+        blockElement.setAttribute("id", this.postObject.id + "rep" + postId![1])
+        blockElement.addEventListener("click", (e: Event) => this.moveToPost(blockElement.id))
         blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 3% ; width : 80% ; border-Left-Width : 8px; border-Spacing : 10px");
 
         let p = document.createElement("p");
@@ -386,11 +382,11 @@ export class ReactivePostComponent implements OnInit {
         blockElement.appendChild(div);
         //contentArray.push(blockElement);
         contentBox!.appendChild(blockElement)
-      }else{
+      } else {
         let divElement = document.createElement("div")
         divElement.style.whiteSpace = "pre-line"
         divElement.style.overflowWrap = "break-word"
-        if(this.vEnabledFrontend){
+        if (this.vEnabledFrontend) {
           console.log("Filter on")
           divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
         } else {
@@ -405,7 +401,7 @@ export class ReactivePostComponent implements OnInit {
     //this.contentArray = contentArray;
   }
 
-  moveToPost(id: string){
+  moveToPost(id: string) {
     let str = this.postObject.id + "rep"
     let cleanId = id.replace(str, "")
     this.moveToPostEvent.emit(+cleanId)
@@ -441,4 +437,6 @@ export class ReactivePostComponent implements OnInit {
   copyUrl(): void {
     this.shareEvent.emit(this.postObject.id);
   }
+
+
 }
