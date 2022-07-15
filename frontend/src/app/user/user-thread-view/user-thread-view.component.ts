@@ -27,7 +27,6 @@ export class UserThreadViewComponent implements OnInit {
   vEnabledPost: number
   vEnabledFrontend: boolean;
   content: string = "";
-  testcontent: any[];
   editId: number = -1;
 
 
@@ -43,12 +42,15 @@ export class UserThreadViewComponent implements OnInit {
               private _snackBar: MatSnackBar) {
   }
 
-  async setVuln() {
+  async setVulnThread() {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}").then(value => {
         this.vEnabled = value
         this.vEnabledFrontend = this.isActive();
       }
     );
+  }
+
+  async setVulnPost() {
     await this.backendServiceCom.getVulnerabilitySingle("/threads/{int}/posts").then(value => {
         this.vEnabledPost = value
       }
@@ -76,12 +78,21 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.setVuln();
+    await this.setVulnPost();
+    await this.setVulnThread();
+
     this.route.data.subscribe((resp: Data) => {
         this.threadObjectArrayModel = resp["thread"].body;
         if (this.vEnabled != 0) this.injectContentToDomStartup()
+        if (resp["thread"]["headers"].get('VulnFound') == "true") {
+          this.didAThing.sendMessage();
+        }
       }
     );
+  }
+
+  formatDate(date: string): string {
+    return this.backendServiceCom.formatDate(date);
   }
 
   canEditThread(id: number): boolean {
@@ -124,7 +135,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
-    let regex = /\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\[\/quote]/gmids;
+    let regex = new RegExp("\\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\\[/quote]", 'gmids');
     let currentFilter;
     let myValue = replyPost.content
     let lastMatchIndex = 0

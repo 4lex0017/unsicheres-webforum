@@ -25,18 +25,16 @@
       </button>
     </mat-card-title>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content style="margin-top: 1%">
     <div class="replyBox" id="postBox{{postObject.id}}" contenteditable="false">
 
     </div>
     <div *ngIf="editing">
-      <textarea class="editBox" id="editBox{{postObject.id}}" [textContent]="postObject.content" rows="8">
+      <textarea matInput class="editBox" id="editBox{{postObject.id}}" [textContent]="postObject.content" rows="8">
 
       </textarea>
     </div>
     <button *ngIf="editing" mat-raised-button (click)="editRework()">DONE</button>
-    <!--<p *ngIf="vEnabled" #content></p>
-    <p *ngIf="!vEnabled"> {{postObject.content}} </p>-->
   </mat-card-content>
   <mat-card-actions class="spacer">
         <span class="stretch-badge" matBadge="{{postObject.likedFrom.length}}" matBadgeSize="small"
