@@ -89,10 +89,6 @@ Route::post('register', 'App\Http\Controllers\UserLoginController@register');
 Route::post('login', ['as' => 'login', 'uses' => 'App\Http\Controllers\UserLoginController@login']);
 
 /**
- * @uses App\Http\Controllers\AdminLoginController::login()
- */
-Route::post('/admin/login', ['as' => 'login', 'uses' => 'App\Http\Controllers\AdminLoginController@login']);
-/**
  * @uses App\Http\Controllers\AdminController::createAttacker()
  */
 Route::post('attacker', 'App\Http\Controllers\AdminController@createAttacker');
