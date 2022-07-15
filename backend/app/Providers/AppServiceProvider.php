@@ -26,8 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $secure = './database/secure.sqlite';
-        $insecure = './database/insecure.sqlite';
+        $secure = '/var/www/html/database/secure.sqlite';
+        $insecure = '/var/www/html/database/insecure.sqlite';
 
         if (!file_exists($secure)) {
             info('secure.sqlite created.');
