@@ -66,7 +66,7 @@ Route::get('threads/{id}', 'App\Http\Controllers\ThreadController@getThreadById'
 /**
  * @uses App\Http\Controllers\ThreadController::getRandSmallTreads()
  */
-Route::get('sitecontent/threads', 'App\Http\Controllers\ThreadController@getRandSmallTreads');
+Route::get('sitecontent/threads', 'App\Http\Controllers\SiteController@getLastSmallTreads');
 
 /**
  * @uses App\Http\Controllers\CategoryController::getAllCategories()
