@@ -28,15 +28,12 @@ class UserLoginController extends Controller
             ], 422);
         }
 
-        //TODO
-        /*
-        if(User::where('name', $request->name)->first() != null)
+        if(self::nameExists($request->name))
         {
-            return [
-                'message' => 'User already exists'
-            ];
+            return response()->json([
+                'error' => 'username already exists'
+            ], 400);
         }
-        */
 
         $user = User::create([
             'name' => $request->name,
@@ -85,7 +82,7 @@ class UserLoginController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return [
             'message' => 'Logged out'
