@@ -120,6 +120,7 @@ img {
   font-size: 20px !important;
   box-shadow: none !important;
   background-color: transparent;
+  min-width: 600px;
 }
 
 .replyPost{
@@ -134,7 +135,7 @@ img {
   border-radius: 1px;
   background-color: inherit;
   color: inherit;
-  min-width: 600px
+  min-width: 570px
 }
 
 [contenteditable]{
