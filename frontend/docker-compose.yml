@@ -2,19 +2,14 @@ version: '3.7'
 
 services:
   app:
-    build: .
-    command: sh -c "npm run start"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: angular-prod
     ports:
-      - "4200:4200"
-    working_dir: /home/node/app
-    volumes:
-      - ./:/home/node/app
-      - node_modules:/home/node/app/node_modules
+      - "80:80"
     networks:
       - backend_laravel
-
-volumes:
-  node_modules:
 
 networks:
   backend_laravel:
