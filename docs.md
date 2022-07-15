@@ -1,37 +1,42 @@
-# Insecure Web Forum for Teaching - Documentation
-
+# Unsicheres Web-Forum für die Lehre - Dokumentation
 Daniel Becker
 
 Chris Reichel
 
-## Filtering, Monitoring and the Scoreboard
+## Filtering, Monitoring und das Scoreboard
 
-### Supported vulnerabilities and settings
+### Unterstützte Schwachstellen und Einstellungen
 
-As this application is intended for a classroom setting, the administrator (usually a professor) can configure the difficulty of certain vulnerabilities to their liking.
+Da diese Anwendung für Vorlesungen gedacht ist, kann ein\*e Administrator\*in (im Regelfall der/die Professor\*in) die Schwierigkeit für bestimmte Verwundbarkeiten nach Wunsch einstellen.
 
-The following vulnerabilities and difficulty settings are provided:
+Die folgenden Verwundbarkeiten und anderweitigen Schwierigkeitseinstellungen werden unterstützt:
 
 #### SQL Injection
 
-As the backend uses an SQL database, it is possible for attackers to create requests exploiting the SQL syntax to execute arbitrary database queries.
-As an example, if you were to request the user with the ID 1, the SQL statement would look something  like "SELECT * FROM  users WHERE id = 1".
-Now if you request the user with the ID "1 OR 1=1", the statement's WHERE clause would suddenly read "WHERE id = 1 OR 1=1", and as that is always true, every user record is returned.
+Da das Back-End eine SQL-Datenbank nutzt, kann ein Angreifer die SQL-Grammatik in Anfragen ausnutzen, um eigene Datenbankanfragen auszuführen.
+Würde man beispielsweise den Nutzer mit der ID 1 anfordern, würde das SQL-Statement, das an die Datenbank geschickt wird, etwa "SELECT * FROM users WHERE id = 1" lauten.
+Fragt man nun stattdessen den Nutzer mit der ID "1 OR 1=1" an, so liest sich der WHERE-Teil des Statements als "WHERE id = 1 OR 1=1", was überall wahr ist, weshalb dann jeder Eintrag zurückgegeben wird.
 
-The different supported difficulty settings are covered in detail in the "Filtering" section.
+Die verschiedenen unterstützten Schwierigkeitsgrade werden in der "Filtering"-Sektion genauer behandelt.
 
-#### Cross-Site-Scripting
+#### Blind SQL Injection
 
-As the forum contains user-generated content, an attacker can include HTML tags in the content they post to execute arbitrary code on the website.
-For instance, they could choose a username like ``Albert<script>alert('Hello!')</script>``, which on an insecure website would create a pop-up with the text "Hello!" whenever their username is shown.
+Blind SQL Injection ist eine Unterart von SQL Injection, bei der keine Informationen direkt herausgezogen werden, sondern indirekt herausgefunden werden, indem Antworten beispielsweise verzögert werden, wenn bestimmte Bedingungen erfüllt werden.
 
-The different supported difficulty settings are covered in detail in the "Filtering" section.
+Blind SQLI hat keine eigenen Schwierigkeitsstufen oder Filter, sondern wird bei SQL Injection mitgefiltert.
 
-#### Insecure File Upload
+#### Cross-Site-Scripting(XSS)
 
-As users can upload profile pictures for their accounts, it is possible for an attacker to upload non-image files (such as malicious executable files) rather than images.
+Da das Forum nutzergenerierte Inhalte enthält, kann ein Angreifer in veröffentlichte Inhalte HTML-Tags einfügen, um eigenen Code ausführen zu können.
+So könnte man beispielsweise einen Nutzernamen wie ``Albert<script>alert('Hallo!')</script>`` wählen, was auf einer unsicheren Webseite ein Pop-Up mit dem Text "Hallo!" erzeugen würde, wann immer der Nutzername angezeigt wird.
 
-The different supported difficulty settings for this are covered in detail in the "Filtering" section.
+Die verschiedenen unterstützten Schwierigkeitsgrade werden in der "Filtering"-Sektion genauer behandelt.
+
+#### Unsicherer File Upload
+
+Da Nutzer für ihre Konten Profilbilder hochladen können, kann man versuchen, nicht-Bilddateien (wie z.B. ausführbare Dateien mit böswilligem Code) statt Bildern hochzuladen.
+
+Die verschiedenen unterstützten Schwierigkeitsgrade werden in der "Filtering"-Sektion genauer behandelt.
 
 #### Password Hashing
 
@@ -39,12 +44,16 @@ Passwords aren't (always) stored in plain text - for security reasons, most webs
 The administrator can choose between different algorithms, most of which are reversible by now.
 These hashed passwords can then be extracted via other means, such as SQL injection.
 
-##### Difficulties:
+Passwörter werden (meistens) nicht als Klartext gespeichert, sondern mit einer Hashfunktion verschlüsselt, die im Idealfall nicht reversibel sein sollte.
+Diese gehashten Passwörter können von Angreifern auf andere Methoden, wie beispielsweise SQL Injection, aus der Datenbank geholt werden und bei einem reversiblen Algorithmus wieder in Klartextpasswörter übersetzt werden.
+Die folgenden (größtenteils) reversiblen Hash-Algorithmen werden unterstützt:
 
-- 1: No hashing. Passwords are stored in plain text.
-- 2: The Message-Digest 5 (MD5) hashing algorithm is used to hash the passwords.
-- 3: The Salted Hash Algorithm 1 (SHA-1) hashing algorithm is used to hash the passwords.
-- 4: The Salted Hash Algorithm 256 (SHA-256) hashing algorithm is used to hash the passwords. This algorithm is hard to reverse - especially in the classroom setting this web app is intended for.
+##### Schwierigkeitsgrade:
+
+- 1: Keine Hash-Funktion. Passwörter werden als Klartext gespeichert.
+- 2: Der (veraltete) Message-Digest 5 (MD5) Hash-algorithmus wird verwendet, um Passwörter zu verschlüsseln.
+- 3: Der (veraltete) Salted Hash Algorithm 1 (SHA-1) Hash-algorithmus wird verwendet, um Passwörter zu verschlüsseln.
+- 4: Der Salted Hash Algorithm 256 (SHA-256) Hash-algorithmus wird verwendet, um Passwörter zu verschlüsseln. Dieser Algorithmus ist zwar nicht unmöglich, aber schwer rückgängig zu machen, gerade im Kontext einer Vorlesung.
 
 #### User Enumeration
 
@@ -52,105 +61,177 @@ Attempting to find log-ins via brute force is easier when an attacker knows whet
 as they might otherwise spend time and energy trying to brute force the password to a non-existent account.
 Thus, the administrator can choose different ways of how attackers know about whether an account exists.
 
-##### Difficulties:
+Versuche, sich via Brute-Force-Attacke einzuloggen, sind einfacher, wenn ein Angreifer weiß, ob ein Konto überhaupt existiert.
+Ansonsten kann es passieren, dass mit viel Zeit und Energie versucht wird, das Passwort eines nichtexistenten Kontos zu erraten.
+Daher gibt es verschiedene Optionen, wie Angreifer wissen können, ob ein Konto existiert:
 
-- 1: Users are listed on the side of the website. Upon a failed login attempt, the user is informed whether the password they put in was wrong or the username doesn't exist.
-- 2: Upon a failed login attempt, the user is informed whether the password they put in was wrong or the username doesn't exist.
-- 3: Upon a failed login attempt, only a generic "Login Failed!" message is displayed.
+##### Schwierigkeitsgrade:
+
+- 1: Einige Nutzer werden an der Seite der Website aufgelistet. Bei fehlgeschlagenen Anmeldeversuchen wird dem Nutzer mitgeteilt, ob der Nutzername oder das Passwort falsch war.
+- 2: Bei fehlgeschlagenen Anmeldeversuchen wird dem Nutzer mitgeteilt, ob der Nutzername oder das Passwort falsch war.
+- 3: Bei fehlgeschlagenen Anmeldeversuchen wird dem Nutzer eine generische "Login fehlgeschlagen!"-Nachricht ausgegeben.
 
 #### Rate Limiting
 
 Attempting to find log-ins via brute force is harder when the rate at which requests are sent to a server is limited.
 The administrator can choose different levels of rate limiting - none of these should limit a legitimate user scrolling the site.
 
-##### Difficulties:
+Brute-Force-Attacken können ausgebremst werden, indem die Geschwindigkeit, in der Anfragen geschickt werden dürfen, limitiert wird.
+Daher werden verschiedene Stufen an Rate-Limiting unterstützt - keine davon sollte einen legitimen Nutzer beeinträchtigen.
 
-- 1: Each user is allowed 10000 requests per minute. As this number is unrealistically high for the scale of this system, this can be considered infinite requests.
-- 2: Each user is allowed 120 requests per minute.
-- 3: Each user is allowed 60 requests per minute.
+##### Schwierigkeitsgrade:
+
+- 1: Jeder Nutzer darf bis zu 10000 Anfragen pro Minute schicken. Da diese Zahl unrealistisch hoch ist, kann das als "unbegrenzt" verstanden werden.
+- 2: Jeder Nutzer darf bis zu 120 Anfragen pro Minute schicken.
+- 3: Jeder Nutzer darf bis zu 60 Anfragen pro Minute schicken.
 
 ### Middleware
 
-For the difficulty settings and scoreboard to work, all incoming requests need to be filtered and monitored for things like SQL keywords.
+Damit die Schwierigkeitseinstellungen und das Scoreboard funktionieren können, müssen alle gesendeten Anfragen nach den entsprechenden Verwundbarkeiten gefiltert und geprüft werden.
 
-This is done using Laravel's middleware feature:
-Each request is sent through a set of middlewares processing it before it is then passed on to the controllers, which do the actual database commands and such as explained in other parts of this document.
+Umgesetzt wird das mit Laravels "Middleware"-Feature:
+Jede Anfrage geht eine Sammlung an Middlewares durch, die sie verarbeiten, bevor sie an die Controller durchgereicht wird, die dann die gesendeten Daten in der Datenbank speichern o.Ä., wie an anderen Orten in dieser Dokumentation erklärt wird.
 
-For filtering and monitoring, there are two middlewares: A dedicated filter and a dedicated monitor.
-Each of them check for SQL Injection, Cross-Site-Scripting as well as checking uploaded profile pictures.
+Für Filtering und Monitoring wurden zwei Middlewares geschrieben, ein dedizierter Filter und ein dedizierter Monitor.
 
-### Filtering of vulnerabilities
+### Filtering von Anfragen
 
 #### SQL Injection
-SQL injection is filtered in two different ways - the filter and monitor check for "--" as an escape string as well as certain SQLite keywords, such as "or".
 
-##### Difficulties:
+SQL injection is filtered in two different ways - the filter and monitor check for "--" and "##" as an escape string as well as certain SQLite keywords.
 
-- 1: No filtering at all.
-- 2: The filter checks the request's body content and query parameters for the escape string "--" once. A request containing "----" instead is allowed to pass through.
-- 3: The filter checks the request's body content and query parameters for the escape string "--" repeatedly. The request URI is checked for SQLite keywords such as "and" or "union" once - a request containing "anandd" would contain "and" in that place after filtering.
-- 4: The filter checks the request's body content and query parameters for the escape string "--" repeatedly, the request URI is checked for SQLite keywords repeatedly.
+The "--" and "##" strings are used to comment out the end of a line in SQL - for some forms of SQL Injection, it's necessary to do so in order for the resulting arbitrary SQL to not throw syntax errors.
 
-#### Cross-Site-Scripting
+SQL Injection wird auf zweierlei Arten gefiltert:
 
-Cross-Site-Scripting is filtered in two ways, filtering for both ``<script>``/``</script>`` tags specifically and < characters alone depending on difficulty.
+Erstens prüft der Filter nach den Zeichenfolgen "--" und "##" - diese kommentieren in SQLite das Ende einer Zeile aus, was bei manchen Formen von SQL Injection notwendig ist, damit das resultierende SQL-Statement noch syntaktisch korrekt ist.
 
-There are three different XSS filters:
-One checking the request body("stored XSS"),
-one checking the query parameters("reflected XSS" - this only applies to the search function)
-and one checking the request body, but in the front-end, so it could be circumvented via so-called Man-In-The-Middle attacks,
-where requests are sent from a third-party client rather than the website itself.
+Zweitens wird nach der untenstehenden Liste von SQLite-Schlüsselwörtern gefiltert:
 
-##### Difficulties:
+"and", "or", "not", "union", "benchmark", "sleep"
 
-- 1: No filtering at all.
-- 2: The filter checks for ``<script>`` and ``</script>`` tags once - a request containing ``<scr<script>ipt>`` would thus contain ``<script>`` after the filtering.
-- 3: The filter checks for ``<script>`` and ``</script>`` tags repeatedly. However, other tags such as ``<button>`` are still ignored.
+Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen zu ziehen.
+
+##### Schwierigkeitsgrade:
+
+- 1: Keinerlei Filter.
+- 2: Der Filter durchsucht den Textkörper der Anfrage sowie die Query-Parameter einmal nach "--" und "##" und entfernt den entsprechenden Text einmal. Eine Anfrage mit "----" würde nach dem Filter also wieder korrekt "--" beinhalten.
+- 3: Der Filter durchsucht den Textkörper der Anfrage sowie die Query-Parameter wiederholt nach "--" und "##" und entfernt alle Vorkommnisse davon. Die URI der Anfrage wird einmalig nach SQLite-Schlüsselwörtern gefiltert - eine Anfrage mit "oorr" würde also an dieser Stelle nach dem Filter "or" beinhalten.
+- 4: Der Filter durchsucht den Textkörper der Anfrage sowie die Query-Parameter wiederholt nach "--" und "##" sowie die URI wiederholt nach SQLite-Schlüsselwörtern und entfernt alle Vorkommnisse davon.
+
+Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder "##"), lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend abändert.
+
+#### Cross-Site-Scripting(XSS)
+
+Cross-Site-Scripting wird auf zwei Arten gefiltert, sowohl nur nach ``<script>``- bzw. ``</script>``-Tags spezifisch als auch nach allen ``<``/``>``-Zeichen, je nach Schwierigkeit.
+
+Es gibt insgesamt drei XSS-Filter:
+- Einer, der den Textkörper einer Anfrage prüft, falls z.B. ein Nutzer mit XSS im Nutzernamen erstellt werden soll ("stored XSS")
+- Einer, der die Query-Parameter durchsucht, falls z.B. eine Suchanfrage XSS enthält ("reflected XSS")
+- Einer, der im Front-End den Textkörper überprüft - dieser Filter könnte mithilfe von Man-In-The-Middle-Attacken, bei denen eine Anfrage über einen Client wie Postman statt über die Website selbst geschickt wird, vermieden werden.
+
+##### Schwierigkeitsgrade:
+
+- 1: Keinerlei Filter.
+- 2: Der Filter durchsucht den Text einmal nach ``<script>``- und ``</script>``-Tags und entfernt sie einmal - eine Anfrage, die ``<scr<script>ipt>`` enthält, würde nach dem Filter also ``<script>`` enthalten, ein einfacher ``<script>``-Tag würde herausgefiltert werden.
+- 3: Der Filter durchsucht den Text wiederholt nach ``<script>``- und ``</script>``-Tags und entfernt sie wiederholt. Andere HTML-Tags wie ``<button>`` werden weiterhin ignoriert.
 - 4: All ``<`` and ``>`` characters are filtered out. Additionally, the frontend prevents tags being injected into the website.
+- 4: Alle ``<`` und ``>`` werden ausgefiltert und das Front-End verhindert, dass Tags in die DOM eingefügt werden, wie im Frontend-Teil dieser Dokumentation genauer erklärt.
 
 #### Insecure File Upload
 
-Profile pictures are filtered in different ways, depending on the difficulty.
-The monitor will always check the uploaded file's "magic bytes", which are the first few bytes of each file that define the actual file type,
-to find out whether this vulnerability has been exploited.
-
-If the filter detects an illegal file (i.e. a file that is neither a GIF, JPEG nor PNG image), an error is returned and the request is no longer processed.
+Profilbilder werden je nach Schwierigkeit auf verschiedene Arten gefiltert.
+Erkennt der Filter eine illegale Datei (die also weder vom Typ GIF, noch JPEG, noch PNG ist), wird eine Fehlermeldung zurückgegeben und die Anfrage nicht weiter bearbeitet.
 
 ##### Difficulties:
 
-- 1: No filtering at all. Users are free to upload any file as their profile picture.
+- 1: Keinerlei Filter.
 - 2: The filter checks for the data type of the encoded file using the file ending.
-- 3: The filter checks the magic bytes (as explained above) of the encoded file.
+- 2: Der Filter prüft den Datentyp der versendeten Datei, indem die Dateiendung überprüft wird.
+- 3: Der Filter überprüft die Magic Bytes der Datei, also die ersten paar Bytes - diese definieren den tatsächlichen Datentyp unabhängig von der Dateiendung.
 
-### Monitoring of vulnerabilities
+### Monitoring ausgenutzter Schwachstellen
 
 #### SQL Injection
 
-When keywords that could break the database such as "DROP" (which would delete an entire database table) are detected,
-points are awarded to the attacker, but the request isn't processed.
+Eingehende Anfragen werden wie beim Filter nach "##", "--" sowie SQLite-Schlagwörtern durchsucht.
+Dadurch kann es zwar theoretisch zu falsch positiven Ergebnissen bei fehlschlagenden Versuchen von SQL-Injection kommen, das zu verhindern würde allerdings eine weitaus komplexere Lösung außerhalb des Scopes dieses Projekts erfordern - 
+entweder durch Ausführen der Anfrage ohne tatsächlichen Effekt auf die Datenbank und Abgleich mit erwarteten Ergebnissen oder durch einen komplexeren SQL-Parser.
+
+Werden in einer Anfrage mit SQL Injection Schlagwörter wie "DROP", die die Datenbank kaputt machen könnten, erkannt, 
+kriegt der Angreifer zwar Punkte, allerdings wird die Anfrage nicht weiter bearbeitet, damit die Datenbank nicht durchgängig zurückgesetzt werden muss.
 
 #### Blind SQL Injection
 
-#### Cross-Site-Scripting
+Bei jeder Anfrage, die keine SQL Injection enthält, wird die Bearbeitungszeit der Anfrage in der sicheren Datenbank gespeichert.
 
-#### Insecure File Upload
+Enthält eine Anfrage SQL Injection und eins der für blind SQL Injection wichtigen Schlüsselworte "SLEEP" oder "BENCHMARK" wird verwendet, wird die Bearbeitungszeit der Anfrage mit dem durchschnitt der Anfragen ohne SQL Injection abgeglichen.
+Dauert die Bearbeitung der Anfrage mehr als das fünffache der durchschnittlichen Zeit, so geht der Monitor davon aus, dass es sich um erfolgreiche Blind SQL Injection handelt.
 
-#### Log-ins to pre-made users
+#### Cross-Site-Scripting (XSS)
 
-#### Tracking attackers
+Für Cross-Site-Scripting wird mithilfe von zwei Regular Expressions nach validen HTML-Tags gesucht:
 
-As the front-end server uses a reverse proxy, which obfuscates an incoming request's sender IP address, a cookie is used to track attackers.
-This cookie is generated when first accessing the website and entering a name. The name and cookie then show up on the scoreboard.
+``<.*>.*</.*>`` erkennt Tags, die einen öffnenden und schließenden Tag haben, wie zum Beispiel ``<script>alert('Hallo!')</script>``.
+
+``<.*/>`` erkennt Tags, die nur aus einem Tag bestehen, wie zum Beispiel ``<button onClick="alert('Hallo!')">``
+
+#### Unsicherer File Upload
+
+Dateien werden wie bei maximaler Schwierigkeit beim Filter auf ihre Magic Bytes überprüft.
+
+#### Log-ins in vorgefertigte Konten
+
+Dieses Tracking passiert nicht in der Monitor-Middleware, sondern im für Logins verantwortlichen Controller -
+bei erfolgreichem Login wird geprüft, ob der eingeloggte Nutzer einer der vordefinierten Nutzer ist.
+Dadurch wird Scoring für Fälle wie erfolgreiches Brute-Forcing realisiert - da es hier keine direkt filter- oder erkennbare Aktion gibt (wie z.B. bei XSS),
+werden diese Fälle dadurch abgefangen.
 
 ### Scoreboard
 
-#### Identifying attackers
+Damit das Scoreboard angezeigt werden kann, müssen zwei Aufgaben vom Back-End erfüllt werden: Ausnutzung von Schwachstellen muss gespeichert und einem Angreifer zugeordnet werden können.
 
-#### Storing found vulnerabilities
+#### Angreifer identifizieren
 
-### Configuration
+Ursprünglich sollten Angreifer mithilfe ihrer IP-Adresse identifiziert werden, da diese praktisch einzigartig ist.
+Da der Frontend-Server von Angular allerdings einen Reverse-Proxy nutzt und damit die IP-Adresse von Nutzern maskiert,
+war das keine Option. Stattdessen wird nun ein Cookie verwendet, der Angreifern beim ersten Betreten der Webseite zugeteilt wird.
 
-#### Retrieving current configuration
+Sämtliche Anfragen ohne diesen Cookie werden vom Back-End ignoriert, um nicht zuzuordnende Angriffe zu vermeiden.
+
+#### Ausnutzung von Schwachstellen speichern
+
+Wird im Monitor eine Schwachstelle erkannt, so wird der Erfolg in die Datenbank geschrieben. Hierbei wird der Angreifer, die Route, die Schwierigkeit und die Art der Schwachstelle vermerkt.
+Fürs Scoreboard selbst relevant sind dabei nur Angreifer, Schwierigkeit und Art der Schwachstelle - die Route wird noch hinzugegeben, damit Doppelungen zwar verhindert werden können
+(ein Angreifer also nicht unendlich Punkte erhalten kann, indem er wiederholt die gleiche Schwachstelle ausnutzt), allerdings die gleiche Verwundbarkeit mit der gleichen Schwierigkeit an verschiedenen Stellen ausgenutzt werden kann.
+
+#### Ausgabe des Scoreboards
+
+Die Ausgabe des Scoreboards läuft relativ simpel ab - Der Controller geht alle eingetragenen Attacker durch, lädt die spezifischen Informationen zu ihren gefundenen Verwundbarkeiten
+(so wird z.B. die ID einer Route, mit der sie gespeichert wird, aufgelöst und mit der URI ersetzt) und gibt diese dann zurück.
+
+### Konfiguration
+
+Die Einstellungen für Administratoren werden in zwei Gruppen unterteilt: routenabhängige Schwierigkeiten wie zum Beispiel die SQL-Schwierigkeit und routenunabhängige Schwierigkeiten wie das Passwort-Hashing.
+Für routenabhängige Schwierigkeiten sind mehrere Optionen gleichzeitig möglich - so kann z.B. stored XSS für Nutzereinstellungen auf "1" und für Thread-Titel auf "3" gestellt sein.
+
+#### Konfiguration laden
+
+Es gibt zwei Arten, die Konfiguration zu laden:
+
+##### admin/vulnerabilities
+
+Hier wird Information über alle Verwundbarkeiten, die in backend\storage\app\config\vulnerabilities.json hardcoded ist, ausgegeben.
+Im Feld "checked" wird dafür gespeichert, welche Schwierigkeiten aktuell aktiv sind. Dafür werden alle Routen, für die eine bestimmte
+Verwundbarkeit eine Option ist (gespeichert in backend\storage\app\config\vulnRoutes.json), durchgegangen und die entsprechenden Schwierigkeiten
+auf "true" gesetzt. Für routenunabhängige ("statische") Schwierigkeiten, bei denen nur eine Option gleichzeitig aktiv sein kann, wird diese stattdessen
+einfach aus der Datenbank gezogen.
+
+##### admin/config
+
+Hier wird spezifische Information darüber, auf welchen Routen welche Verwundbarkeiten aktiv sind, geladen.
+Die Logik hierfür ist simpler als für admin/vulnerabilities - es werden einfach alle Routen durchgegangen und die
+Schwierigkeiten geladen, danach werden die statischen Schwierigkeiten geladen und angehängt.
 
 #### Setting configuration
 
