@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SmallUserResource;
 use App\Models\User;
+use App\Models\Thread;
+
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
 
 class SiteController extends Controller
 {
@@ -30,5 +33,41 @@ class SiteController extends Controller
         }
 
         file_put_contents(storage_path() . "/app/config/smallUsers.json", json_encode($ret_arr, JSON_PRETTY_PRINT));
+    }
+
+    /**
+     * Gets a small representation of 10 last Threads
+     *
+     * @return JsonResponse
+     */
+    public function getLastSmallTreads(): JsonResponse
+    {
+        $threads = Thread::orderBy('created_at', 'desc')->take('10')->get();
+
+        $thread_array = self::buildSidebarThreadArray($threads);
+
+        return response()->json(['threads' => $thread_array])->setStatusCode(200);
+    }
+
+    /**
+     * Build Threads for Sidebar
+     *
+     * @param Thread|array $threads
+     * @return array
+     */
+    public static function buildSidebarThreadArray($threads): array
+    {
+        $thread_array = array();
+        foreach ($threads as $thread) {
+            $tmp_thread = [
+                'id' => $thread->id,
+                'title' => $thread->title,
+                'date' => $thread->created_at,
+            ];
+
+            $thread_array[] = $tmp_thread;
+        }
+
+        return $thread_array;
     }
 }
