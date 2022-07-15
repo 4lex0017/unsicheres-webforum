@@ -625,16 +625,16 @@ class AdminController extends Controller
      * reset the scoreboard. attackers and config are not affected.
      * ROUTE POST /admin/reset/scoreboard
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function resetScoreboard(): \Illuminate\Http\Response
+    public function resetScoreboard(): JsonResponse
     {
         DB::connection('secure')
             ->table('found_vulnerabilities')
             ->delete();
         DB::connection('secure')
             ->unprepared("VACUUM;");
-        return response()->noContent();
+        return $this->getScoreboard();
     }
 
     /**
