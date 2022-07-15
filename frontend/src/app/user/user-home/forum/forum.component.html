@@ -75,13 +75,14 @@
             <!--            <p>Loading content...</p>-->
           </mat-card>
         </ng-template>
-        <div *ngIf="sideContentThreads | async as sideContentObj;">
-          <mat-card class="threadList">
+        <div *ngIf="sideContentThreads | async as sideContentObj;" class="threadList">
+          <mat-card>
             <mat-card-title class="sidecontent-thread">
-              Threads
+              Newest Threads
             </mat-card-title>
             <mat-nav-list>
-              <mat-list-item *ngFor="let thread of sideContentObj.threads" [routerLink]="['/forum/threads', thread.id]">
+              <mat-list-item *ngFor="let thread of sideContentObj.threads | slice:0:8"
+                             [routerLink]="['/forum/threads', thread.id]">
                 <div class="sidecontent-thread-text" mat-line>{{thread.title}}</div>
                 <div class="sidecontent-thread-text" mat-line>Date: {{formatDate(thread.date)}}</div>
                 <mat-divider></mat-divider>

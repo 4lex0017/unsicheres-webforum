@@ -34,11 +34,13 @@ export class DifficultyPickerService {
   }
 
   frontendFilterTagsNormal(content: string): string {
+    content = content.replace("</script>", "");
     return content.replace("<script>", "");
   }
 
   frontendFilterTagsHard(content: string): string {
-    if (content.includes("<script>")) {
+    if (content.includes("<script>") || content.includes("</script>")) {
+      content = content.replace("</script>", "");
       return this.frontendFilterTagsHard(content.replace("<script>", ""));
     } else {
       return content;

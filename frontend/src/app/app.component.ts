@@ -11,7 +11,8 @@ import {DifficultyPickerService} from "./data-access/services/difficulty-picker.
 export class AppComponent {
   title = 'Forum';
 
-  constructor(private themeService: ThemeService, private diffPicker: DifficultyPickerService) {
+  constructor(private themeService: ThemeService) {
     this.themeService.initTheme();
+    this.themeService.update('dark-mode');
   }
 }

@@ -10,6 +10,7 @@ import {DialogLoginComponent} from "../dialog/dialog-login/dialog-login.componen
 import {Observable} from "rxjs";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 import {AccessBackend} from "../../../data-access/models/accessBackend";
+import {SideContentThreadObject} from "../../../data-access/models/sidecontent";
 
 
 @Component({
@@ -30,7 +31,7 @@ export class ForumComponent implements OnInit {
   curId: number = -1;
   curTitle: string = "";
   sideContentUsers: Observable<any>;
-  sideContentThreads: Observable<any>;
+  sideContentThreads: Observable<SideContentThreadObject>;
   accessBackend: Observable<AccessBackend>;
   showFull = false;
   searchQuery: string = "";
@@ -44,6 +45,7 @@ export class ForumComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.accessBackend = this.backendComService.getCategories();
     this.sideContentUsers = this.backendComService.getSideContentUsers();
     this.sideContentThreads = this.backendComService.getSideContentThreads();
     this.activeRoute.queryParamMap.subscribe((params) => {

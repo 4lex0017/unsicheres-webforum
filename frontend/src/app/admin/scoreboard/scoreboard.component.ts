@@ -23,7 +23,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class ScoreboardComponent implements AfterViewInit, OnInit {
   allRowToggle = false;
-  displayedColumns: string[] = ['score', 'ipaddress', 'username', 'vulnFound'];
+  displayedColumns: string[] = ['score', 'tracker', 'username', 'vulnFound'];
   displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel'];
   dataSource
   scoreboard: AdminUser[] = [];
@@ -56,6 +56,7 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
 
   resetScoreboard() {
     this.backendCom.resetScoreboard().subscribe(value => {
+      this.dataSource = new MatTableDataSource(value);
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],
@@ -124,5 +125,26 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
     return name;
   }
 
+  sortData(sort: Sort) {
+    this.dataSource = new MatTableDataSource(this.scoreboard.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'tracker':
+          return this.compare(a.tracker, b.tracker, isAsc);
+        case 'username':
+          return this.compare(a.username, b.username, isAsc);
+        case 'score':
+          return this.compare(this.getPoints(a.vulnerabilities), this.getPoints(b.vulnerabilities), isAsc);
+        case 'vulnFound':
+          return this.compare(a.vulnerabilities.length, b.vulnerabilities.length, isAsc);
+        default:
+          return 0;
+      }
+    }));
+  }
+
+  compare(a: number | string, b: number | string, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
 
 }

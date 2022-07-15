@@ -7,6 +7,7 @@ import {
 import {AuthenticationService} from "../../../../data-access/services/authentication.service";
 import {DialogRegisterComponent} from "../dialog-register/dialog-register.component";
 import {ToolbarComponent} from "../../sidenav/toolbar/toolbar.component";
+import {DidAThingServiceService} from "../../../../shared/did-a-thing/did-a-thing-service.service";
 
 
 @Component({
@@ -24,7 +25,8 @@ export class DialogLoginComponent {
     public dialogRef: MatDialogRef<DialogLoginComponent>,
     private _snackBar: MatSnackBar,
     private authenticate: AuthenticationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private didAThing: DidAThingServiceService
   ) {
   }
 
@@ -56,6 +58,9 @@ export class DialogLoginComponent {
 
   authenticateUserNew(userName, password) {
     this.authenticate.loginJwt(userName, password).subscribe(data => {
+      if (data['headers'].get('vulnfound') == "true") {
+        this.didAThing.sendMessage();
+      }
       this.dialogRef.close();
     }, error => {
       this.username = "";

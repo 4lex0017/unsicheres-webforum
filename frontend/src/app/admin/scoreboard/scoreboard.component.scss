@@ -33,6 +33,11 @@ th.mat-sort-header-sorted {
   width: 30%;
 }
 
+.scoreboard-button {
+  position: relative;
+  top: -25px;
+}
+
 .collapse-expand-button {
   position: relative;
   top: -3px;
@@ -45,6 +50,11 @@ th.mat-sort-header-sorted {
 
 .resetDatabase {
   float: right
+}
+
+.resetScoreboard {
+  float: right;
+  margin-right: 15px;
 }
 
 //::ng-deep .snack-bar-background {

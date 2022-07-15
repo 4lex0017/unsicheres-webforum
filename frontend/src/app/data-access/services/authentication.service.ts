@@ -26,7 +26,10 @@ export class AuthenticationService {
     return this.httpClient.post<any>(this.url + '/login', {
       name,
       password
-    }, {headers: new HttpHeaders({'Content-Type': 'application/json'})}).pipe(tap(res => this.setSession(res, name),
+    }, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    }).pipe(tap(res => this.setSession(res['body'], name),
       error => {
       }), shareReplay());
   }
@@ -54,8 +57,11 @@ export class AuthenticationService {
         birthDate
       }
     }
-    return this.httpClient.post<any>(this.url + '/register', userPayload, {headers: new HttpHeaders({'Content-Type': 'application/json'})})
-      .pipe(tap(res => this.setSession(res, name)), shareReplay(), catchError((error: Response) => {
+    return this.httpClient.post<any>(this.url + '/register', userPayload, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    })
+      .pipe(tap(res => this.setSession(res['body'], name)), shareReplay(), catchError((error: Response) => {
         throw {message: 'Bad response', value: error.status}
       }));
   }

@@ -1,40 +1,37 @@
 <div class="outer-container">
   <h2>
     Scoreboard
-    <button class="collapse-expand-button" mat-icon-button color="primary" (click)="resetScoreboard()"
-            matTooltip="Reset scoreboard">
-      <mat-icon>lock_reset</mat-icon>
-    </button>
     <button class="collapse-expand-button" mat-icon-button color="primary" (click)="manageAllRows()"
             matTooltip="Expand / Collapse table">
       <mat-icon>sort</mat-icon>
     </button>
+
     <button class="resetDatabase" mat-raised-button color="warn" (click)="resetDatabase()">Reset Database</button>
+    <button class="resetScoreboard" mat-raised-button color="primary" (click)="resetScoreboard()">Reset Scoreboard
+    </button>
   </h2>
-
-
   <div class="wrapper">
     <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8"
-           matSort (matSortChange)="announceSortChange($event)">
+           matSort (matSortChange)="sortData($event)">
 
       <ng-container matColumnDef="score">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Score">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="score" sortActionDescription="Sort by Score">
           Score
         </th>
         <td mat-cell *matCellDef="let element"> {{getPoints(element.vulnerabilities)}} </td>
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="ipaddress">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by IP-Address">
-          IP-Address
+      <ng-container matColumnDef="tracker">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="tracker" sortActionDescription="Sort by Tracker">
+          Tracker
         </th>
-        <td mat-cell *matCellDef="let element"> {{element.ipaddress}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.tracker}} </td>
       </ng-container>
 
       <!-- Weight Column -->
       <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="username" sortActionDescription="Sort by Username">
           Username
         </th>
         <td mat-cell *matCellDef="let element"> {{getUsername(element.username)}} </td>
@@ -42,7 +39,8 @@
 
       <!-- Symbol Column -->
       <ng-container matColumnDef="vulnFound">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by Vulnerabilities">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="vulnFound"
+            sortActionDescription="Sort by Vulnerabilities">
           Vulnerabilities found
 
         </th>
@@ -90,10 +88,10 @@
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 15, 20]"
-                   showFirstLastButtons
-                   aria-label="Select page of users">
-    </mat-paginator>
+    <!--    <mat-paginator [pageSizeOptions]="[10, 15, 20]"-->
+    <!--                   showFirstLastButtons-->
+    <!--                   aria-label="Select page of users">-->
+    <!--    </mat-paginator>-->
 
   </div>
 </div>

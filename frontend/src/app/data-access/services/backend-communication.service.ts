@@ -60,7 +60,7 @@ export class BackendCommunicationService {
         errorResponseString = 'Please login before using the site.'
         this.router.navigate(['/userLogin'])
         break;
-      case 200:
+      case 204:
         errorResponseString = 'An application breaking sqlInjection was triggered.'
         break;
       case 418:
@@ -203,7 +203,6 @@ export class BackendCommunicationService {
   getThread(threadId: number): Observable<HttpResponse<Thread>> {
     return this.httpClient.get<Thread>(this.url + '/threads/' + threadId, {observe: 'response'})
       .pipe(catchError((error: Response) => {
-        // this.errorBreadCrumb(error.status.toString())
         this.errorManagement(error);
         throw {message: 'Bad response', value: error.status}
       }));

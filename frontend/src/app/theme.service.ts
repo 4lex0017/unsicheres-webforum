@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import {Injectable, Renderer2, RendererFactory2} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +10,32 @@ export class ThemeService {
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
-  initTheme(){
+
+  initTheme() {
     this.getColorTheme();
     this.renderer.addClass(document.body, this.colorTheme);
   }
-  update(theme: 'dark-mode' | 'light-mode'){
+
+  update(theme: 'dark-mode' | 'light-mode') {
     this.setColorTheme(theme);
     const previousColorTheme = (theme === 'dark-mode' ? 'light-mode' : 'dark-mode');
     this.renderer.removeClass(document.body, previousColorTheme);
     this.renderer.addClass(document.body, theme);
   }
-  isDarkMode(){
+
+  isDarkMode() {
     return this.colorTheme === 'dark-mode';
   }
-  private setColorTheme(theme:string){
+
+  private setColorTheme(theme: string) {
     this.colorTheme = theme;
     localStorage.setItem('userDefinedTheme', theme);
   }
-  private getColorTheme(){
-    if(localStorage.hasOwnProperty('userDefinedTheme') ){
+
+  private getColorTheme() {
+    if (localStorage.hasOwnProperty('userDefinedTheme')) {
       this.colorTheme = (<string>localStorage.getItem('userDefinedTheme'));
-    }else{
+    } else {
       this.colorTheme = 'light-mode';
     }
   }

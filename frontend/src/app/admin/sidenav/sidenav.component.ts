@@ -34,6 +34,7 @@ export class SidenavComponent {
 
   resetDatabase() {
     this.backendCom.resetDatabase().subscribe(value => {
+
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],

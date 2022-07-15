@@ -132,7 +132,9 @@ export class UserProfileViewComponent implements OnInit {
       data: ""
     });
     dialogRef.afterClosed().subscribe(content => {
-      this.backendServiceCom.postCommentOnProfile(profileId, this.authenticate.getCurrentUserId(), content).subscribe()
+      this.backendServiceCom.postCommentOnProfile(profileId, this.authenticate.getCurrentUserId(), content).subscribe(value => {
+        this.userComments = this.backendServiceCom.getCommentsFromUser(this.userFullArrayModel.data[0].id);
+      })
     });
   }
 

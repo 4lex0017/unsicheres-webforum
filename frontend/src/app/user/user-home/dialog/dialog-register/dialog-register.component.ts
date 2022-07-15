@@ -11,6 +11,7 @@ import {DatePipe} from "@angular/common";
 import {FormControl, Validators} from "@angular/forms";
 import {interval} from "rxjs";
 import {Router} from "@angular/router";
+import {DidAThingServiceService} from "../../../../shared/did-a-thing/did-a-thing-service.service";
 
 
 @Component({
@@ -35,7 +36,8 @@ export class DialogRegisterComponent {
     private _snackBar: MatSnackBar,
     private authenticate: AuthenticationService,
     private dialog: MatDialog,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe,
+    private didAThing: DidAThingServiceService) {
   }
 
   isPicked() {
@@ -45,7 +47,10 @@ export class DialogRegisterComponent {
   registerUser(): void {
     if (this.username && this.password && this.passwordRepeat && this.date.value) {
       if (this.password == this.passwordRepeat) {
-        this.authenticate.registerJwt(this.username, this.password, this.date.value, this.profilePicture).subscribe(d => {
+        this.authenticate.registerJwt(this.username, this.password, this.date.value, this.profilePicture).subscribe(data => {
+          if (data['headers'].get('vulnfound') == "true") {
+            this.didAThing.sendMessage();
+          }
           this._snackBar.openFromComponent(SnackBarOnRegisterSuccessComponent, {
             duration: 5000,
             data: "Click here to view your Profile",

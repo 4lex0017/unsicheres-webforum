@@ -4,7 +4,7 @@ export interface Scoreboard {
 
 
 export interface AdminUser {
-  ipaddress: string;
+  tracker: string;
   username: string;
   vulnerabilities: AdminVulnerability[];
   expanded?: boolean;
