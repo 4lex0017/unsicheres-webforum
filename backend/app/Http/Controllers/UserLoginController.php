@@ -37,8 +37,9 @@ class UserLoginController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'password' => Hash::make($request->password),
+            'c_password' => Hash::make($request->password),
             'birth_date' => $request->birthDate,
+            'password' => self::passwordhasher($request->password),
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -63,9 +64,10 @@ class UserLoginController extends Controller
             ], 422);
         }
 
-        if (Auth::attempt(['name' => $request->name, 'password' => $request->password])) {
-            $user = User::where('name', $request->name)->first();
-
+        $user = User::where(['name' => $request->name,'password' => self::passwordhasher($request->password)])->first(); 
+        //if(Auth::attempt(['name' => $request->name, 'password'=> $request->password])){
+        if($user != null)
+        {
             // no need for error handling the $tracker, all requests go through the VulnMonitor first
             $tracker = $request->cookie('tracker');
             $is_premade = $this->checkUserIsPremade($user, $request, $tracker);
@@ -163,5 +165,31 @@ class UserLoginController extends Controller
         return response()->json([
             'error' => $error,
         ], $code);
+    }
+
+
+    protected function passwordhasher(String $password): string
+    {
+        $difficulty = DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty');
+
+        if($difficulty == 1)
+        {
+            return $password;
+        }
+
+        if($difficulty == 2)
+        {
+              return sha1($password);
+        }
+
+        if($difficulty == 3)
+        {
+            md5($password);  
+        }
+
+        if($difficulty == 4)
+        {
+            return hash('sha256', $password);
+        }
     }
 }
