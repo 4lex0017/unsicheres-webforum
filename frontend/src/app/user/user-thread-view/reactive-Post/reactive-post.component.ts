@@ -173,7 +173,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         blockElement.setAttribute("id", postId![1])
         blockElement.setAttribute("id", this.postObject.id + "rep" + postId![1])
         blockElement.addEventListener("click", (e: Event) => this.moveToPost(blockElement.id))
-        blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 3% ; width : 80% ; border-Left-Width : 8px; border-Spacing : 10px");
+        blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 20px ; width : 80% ; border-Left-Width : 8px; border-Spacing : 10px");
         let p = document.createElement("p");
         p.style.whiteSpace = "pre-line"
         let div = document.createElement("div");
@@ -196,10 +196,8 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         divElement.style.whiteSpace = "pre-line"
         divElement.style.overflowWrap = "break-word"
         if (this.vEnabledFrontend) {
-          console.log("Filter on")
           divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
         } else {
-          console.log("Filter off")
           divElement.textContent = dividedContent[i]
         }
         contentBox!.appendChild(divElement);
