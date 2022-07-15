@@ -58,22 +58,6 @@ class VulnSeeder extends Seeder
                 'fend_difficulty' => 4,
             ],
             [
-                'uri' => '/sitecontent/users',
-                'sxss_difficulty' => 4,
-                'rxss_difficulty' => 4,
-                'sqli_difficulty' => 4,
-                'file_difficulty' => 3,
-                'fend_difficulty' => 4,
-            ],
-            [
-                'uri' => '/categories',
-                'sxss_difficulty' => 4,
-                'rxss_difficulty' => 4,
-                'sqli_difficulty' => 4,
-                'file_difficulty' => 3,
-                'fend_difficulty' => 4,
-            ],
-            [
                 'uri' => '/categories/{int}',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
@@ -115,14 +99,6 @@ class VulnSeeder extends Seeder
             ],
             [
                 'uri' => '/register',
-                'sxss_difficulty' => 4,
-                'rxss_difficulty' => 4,
-                'sqli_difficulty' => 4,
-                'file_difficulty' => 3,
-                'fend_difficulty' => 4,
-            ],
-            [
-                'uri' => '/login',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,
