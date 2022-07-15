@@ -115,7 +115,7 @@ img {
 
 .thread-newReply{
   max-width: 58.5%;
-  margin-left: 2.5%;
+  margin-left: 45px;
   margin-top: 1%;
   font-size: 20px !important;
   box-shadow: none !important;
@@ -132,12 +132,9 @@ img {
   width: 100%;
   border: solid #5c5c5c;
   border-radius: 1px;
-
-}
-
-.replyBox blockquote{
-  border-radius: 1px;
-  border: #5c5c5c;
+  background-color: inherit;
+  color: inherit;
+  min-width: 600px
 }
 
 [contenteditable]{
