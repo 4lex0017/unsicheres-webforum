@@ -3,6 +3,7 @@
   //height: 100%;
   background-color: inherit;
   //  Fix: inherit won't work. Maybe import from service
+  min-width: 600px;
 }
 
 .thread-user-icon {
@@ -137,15 +138,6 @@ img {
 .replyBox blockquote{
   border-radius: 1px;
   border: #5c5c5c;
-}
-
-.repBlockquote{
-  border-radius: 1px;
-  border: solid #0643b8;
-  margin-left: 10%;
-  width: 80%;
-  border-left-width: 8px;
-  border-spacing: 10px;
 }
 
 [contenteditable]{

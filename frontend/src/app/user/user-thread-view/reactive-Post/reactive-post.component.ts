@@ -196,10 +196,8 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         divElement.style.whiteSpace = "pre-line"
         divElement.style.overflowWrap = "break-word"
         if (this.vEnabledFrontend) {
-          console.log("Filter on")
           divElement.appendChild(document.createRange().createContextualFragment(dividedContent[i]))
         } else {
-          console.log("Filter off")
           divElement.textContent = dividedContent[i]
         }
         contentBox!.appendChild(divElement);

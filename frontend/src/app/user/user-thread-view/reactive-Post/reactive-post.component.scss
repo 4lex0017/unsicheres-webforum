@@ -1,6 +1,7 @@
 .post-card {
   max-width: 60%;
   align-self: center;
+  min-width: 600px;
 }
 
 .footer-spacer {
@@ -54,15 +55,6 @@ img {
 
 [contenteditable]{
   outline: 0px solid transparent;
-}
-
-.repBlockquote{
-  border-radius: 1px;
-  border: solid #0643b8;
-  margin-left: 3%;
-  width: 80%;
-  border-left-width: 8px;
-  border-spacing: 10px;
 }
 
 .editBox{
