@@ -57,7 +57,7 @@
     <div class="thread-newReply">
       <mat-card>
           <textarea [disabled]="editId !== -1" id="replyBox{{threadObject.id}}" class="replyBox" rows="8"></textarea>
-        <button mat-raised-button (click)="createPost(threadObject)">POST</button>
+        <button mat-raised-button (click)="createPost(threadObject)" style="top: 7px">POST</button>
       </mat-card>
     </div>
   </div>
