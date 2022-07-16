@@ -9,18 +9,21 @@ export class AuthInterceptor implements HttpInterceptor {
             next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.headers.get("admin"))
       return next.handle(req);
-    
+
     const idToken = localStorage.getItem("bearerToken");
 
     if (idToken) {
       const cloned = req.clone({
         headers: req.headers.set("Authorization",
-          "Bearer " + idToken)
+          "Bearer " + idToken).set('Accept', 'application/json')
       });
 
       return next.handle(cloned);
     } else {
-      return next.handle(req);
+      const cloned = req.clone({
+        headers: req.headers.set('Accept', 'application/json')
+      });
+      return next.handle(cloned);
     }
   }
 }
