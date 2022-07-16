@@ -16,7 +16,9 @@ class VulnSeeder extends Seeder
     public function run()
     {
 
-        DB::connection('secure')->table('vulnerabilities')->insertOrIgnore([
+        DB::connection('secure')
+            ->table('vulnerabilities')
+            ->insertOrIgnore([
             [
                 'uri' => '/search',
                 'sxss_difficulty' => 4,
@@ -99,6 +101,14 @@ class VulnSeeder extends Seeder
             ],
             [
                 'uri' => '/register',
+                'sxss_difficulty' => 4,
+                'rxss_difficulty' => 4,
+                'sqli_difficulty' => 4,
+                'file_difficulty' => 3,
+                'fend_difficulty' => 4,
+            ],
+            [
+                'uri' => '/login',
                 'sxss_difficulty' => 4,
                 'rxss_difficulty' => 4,
                 'sqli_difficulty' => 4,

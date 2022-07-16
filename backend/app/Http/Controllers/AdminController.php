@@ -475,8 +475,15 @@ class AdminController extends Controller
      */
     public function getConfiguration(): array
     {
+        $data = ConfigResource::collection(Vulnerability::all())->jsonSerialize();
+        foreach($data as $key => $value) {
+            if($value['uri'] == '/login') {
+                unset($data[$key]);
+                break;
+            }
+        }
         return [
-            'data' => ConfigResource::collection(Vulnerability::all())->jsonSerialize(),
+            'data' => $data,
             'hash_difficulty' => $this->getStaticDifficulty('hash'),
             'user_difficulty' => $this->getStaticDifficulty('user'),
             'rate_difficulty' => $this->getStaticDifficulty('rate'),
