@@ -20,7 +20,10 @@ export class AuthInterceptorAdmin implements HttpInterceptor {
 
       return next.handle(cloned);
     } else {
-      return next.handle(req);
+      const cloned = req.clone({
+        headers: req.headers.set('Accept', 'application/json')
+      });
+      return next.handle(cloned);
     }
   }
 }
