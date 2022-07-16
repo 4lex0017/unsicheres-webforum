@@ -76,7 +76,6 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (this.editing) {
-          console.log("editWhileDelete")
           this.allowEditService.finishEdit();
           this.editPostEvent.emit(this.postObject)
         }
@@ -117,7 +116,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  editRework(): void {
+  editContent(): void {
     this.editPostEvent.emit(this.postObject)
     let fullreply = <HTMLTextAreaElement>document.getElementById("editBox" + this.postObject.id)
     let editString = fullreply.value;
@@ -159,7 +158,6 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     if (lastMatchIndex != postContent.length) {
       dividedContent.push(postContent.substring(lastMatchIndex))
     }
-    let contentArray: HTMLElement[] = new Array(0)
     const replyInfoRegex = new RegExp("\\[quote=(.*?)]", 'mid');
     const userNameRegex = new RegExp("(?<=\=)(.*?)(?=\:)", 'mid');
     const postIdRegex = new RegExp("(?<=\:)(.*?)(?=\])", 'mid');
@@ -173,7 +171,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         blockElement.setAttribute("id", postId![1])
         blockElement.setAttribute("id", this.postObject.id + "rep" + postId![1])
         blockElement.addEventListener("click", (e: Event) => this.moveToPost(blockElement.id))
-        blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 20px ; width : 80% ; border-Left-Width : 8px; border-Spacing : 10px");
+        blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 20px ; width : 95% ; border-Left-Width : 8px; border-Spacing : 10px");
         let p = document.createElement("p");
         p.style.whiteSpace = "pre-line"
         let div = document.createElement("div");

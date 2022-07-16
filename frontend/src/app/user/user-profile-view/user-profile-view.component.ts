@@ -182,9 +182,16 @@ export class UserProfileViewComponent implements OnInit {
   }
 
   cutPostContent(content: string): string {
-    const rExp: RegExp = new RegExp("(?<=\\/b\\?)(.*?)(?=\\/b?)");
-    let test = content.match(rExp) || ["Invalid content"];
-    content = test[0];
+    content = content.replace(/\r?\n|\r/g, " ");
+    const rExp: RegExp = new RegExp("\\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9-_]*][A-Za-z0-9 $&+,:;=?@#|'<>.^*/()%!-]*\\[/quote]", "gmids");
+    let test = content.split(rExp);
+    content = " ";
+    for(let i = 0; i < test.length; i++){
+      if(test[i] != ""){
+        content = test[i]
+        break;
+      }
+    }
     if (content.length > 35) {
       let subStr = content.slice(0, 32);
       subStr += "...";
