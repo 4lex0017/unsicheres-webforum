@@ -113,7 +113,7 @@ img {
   border-radius: 50%;
 }
 
-.thread-newReply{
+.thread-newReply {
   max-width: 58.5%;
   margin-left: 45px;
   margin-top: 1%;
@@ -123,33 +123,33 @@ img {
   min-width: 600px;
 }
 
-.replyPost{
+.replyPost {
   font-size: 0.8em;
   background: #797979;
 }
 
-.replyBox{
+.replyBox {
+  border: solid rgba(128, 128, 128, 0.25);
   font-size: 0.8em;
   width: 100%;
-  border: solid #5c5c5c;
   border-radius: 1px;
   background-color: inherit;
   color: inherit;
   min-width: 570px
 }
 
-[contenteditable]{
+[contenteditable] {
   outline: 0px solid transparent;
 }
 
-.testrep{
+.testrep {
   margin-top: 1%;
 
   max-width: 60%;
   align-self: center;
 }
 
-.testReply{
+.testReply {
   border-radius: 1px;
   border: solid #0643b8;
   margin-left: 3%;

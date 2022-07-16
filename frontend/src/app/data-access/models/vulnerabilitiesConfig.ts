@@ -1,8 +1,8 @@
 export interface VulnerabilitiesConfig {
   data: Config[]
   hash_difficulty: number
-  user_difficulty?: number;
-  rate_difficulty?: number;
+  user_difficulty: number;
+  rate_difficulty: number;
 }
 
 

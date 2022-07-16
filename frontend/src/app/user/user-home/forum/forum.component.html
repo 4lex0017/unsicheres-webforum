@@ -81,7 +81,7 @@
               Newest Threads
             </mat-card-title>
             <mat-nav-list>
-              <mat-list-item *ngFor="let thread of sideContentObj.threads | slice:0:8"
+              <mat-list-item *ngFor="let thread of sideContentObj.threads | slice:0:7"
                              [routerLink]="['/forum/threads', thread.id]">
                 <div class="sidecontent-thread-text" mat-line>{{thread.title}}</div>
                 <div class="sidecontent-thread-text" mat-line>Date: {{formatDate(thread.date)}}</div>

@@ -7,7 +7,7 @@ import {BackendCommunicationService} from "../../data-access/services/backend-co
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
-  selector: 'admin-sidenav',
+  selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })

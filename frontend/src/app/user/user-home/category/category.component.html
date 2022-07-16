@@ -53,7 +53,7 @@
       </ng-container>
 
       <ng-container matColumnDef="showLess">
-        <td mat-footer-cell *matFooterCellDef colspan="2">
+        <td mat-footer-cell *matFooterCellDef colspan="4">
           <button mat-raised-button
                   (click)="showMoreNav('all')"
                   matTooltip="Show all categories"
@@ -63,7 +63,7 @@
       </ng-container>
 
       <ng-container matColumnDef="showMore">
-        <td mat-footer-cell *matFooterCellDef colspan="2">
+        <td mat-footer-cell *matFooterCellDef colspan="4">
           <button mat-raised-button
                   (click)="showMoreNav(categoryObject.title.toLowerCase())"
                   matTooltip="Show whole category"

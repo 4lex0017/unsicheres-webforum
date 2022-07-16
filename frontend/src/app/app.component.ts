@@ -13,6 +13,6 @@ export class AppComponent {
 
   constructor(private themeService: ThemeService) {
     this.themeService.initTheme();
-    this.themeService.update('dark-mode');
+    // this.themeService.update('dark-mode');
   }
 }

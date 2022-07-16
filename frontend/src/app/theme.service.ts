@@ -36,7 +36,8 @@ export class ThemeService {
     if (localStorage.hasOwnProperty('userDefinedTheme')) {
       this.colorTheme = (<string>localStorage.getItem('userDefinedTheme'));
     } else {
-      this.colorTheme = 'light-mode';
+      this.colorTheme = 'dark-mode';
+      localStorage.setItem('userDefinedTheme', 'dark-mode');
     }
   }
 }

@@ -53,12 +53,12 @@ img {
   right: unset !important;
 }
 
-[contenteditable]{
+[contenteditable] {
   outline: 0px solid transparent;
 }
 
-.editBox{
+.editBox {
+  border: solid rgba(128, 128, 128, 0.56);;
   width: 100%;
-  border: solid #5c5c5c;
   border-radius: 1px;
 }

@@ -29,6 +29,11 @@ export class LoginComponent implements OnInit {
   handleLoginClick() {
     if (this.cookieService.check('tracker')) {
       this.router.navigate(['/forum']);
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        panelClass: ['snack-bar-background'],
+        data: "Already logged in, skipped login."
+      });
       return;
     }
     if (this.username) {

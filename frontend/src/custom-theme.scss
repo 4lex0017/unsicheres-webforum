@@ -88,7 +88,7 @@ $mat-dark-theme-foreground: (
 
 // Background config
 // Light bg
-$light-background: #fafafa;
+$light-background: #e0e0e0;
 $light-bg-darker-5: darken($light-background, 5%);
 $light-bg-darker-10: darken($light-background, 10%);
 $light-bg-darker-20: darken($light-background, 20%);
@@ -243,6 +243,7 @@ $altTheme: (
 }
 
 .light-mode {
+  background-color: #E0E0E0FF;
   @include mat.all-component-themes($altTheme);
 
 }
