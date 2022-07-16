@@ -64,7 +64,7 @@ class UserLoginController extends Controller
             ], 422);
         }
 
-        $user = User::where(['name' => $request->name,'password' => self::passwordhasher($request->password)])->first(); 
+        $user = User::where(['name' => $request->name,'password' => self::passwordhasher($request->password)])->first();
         //if(Auth::attempt(['name' => $request->name, 'password'=> $request->password])){
         if($user != null)
         {
@@ -184,7 +184,7 @@ class UserLoginController extends Controller
 
         if($difficulty == 3)
         {
-            md5($password);  
+            return md5($password);
         }
 
         if($difficulty == 4)
