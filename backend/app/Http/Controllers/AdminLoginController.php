@@ -53,7 +53,14 @@ class AdminLoginController extends Controller
         
         $admin = DB::connection('secure')->table('admins')->where('name', $request->name)->first();  
         $model = Admin::where('name', $request->name)->first();
-            if(Hash::check($request->password, $admin->password)){
+        if($admin == null)
+        {
+            return response()->json([
+                'message' => 'incorrect login credentials'
+            ], 401);
+        }
+
+        if(Hash::check($request->password, $admin->password)){
             return response()->json([
                 'access_token' =>  $model->createToken('adminToken', ['isAdmin'])->plainTextToken,
                 'token_type' => 'Bearer',

@@ -23,6 +23,7 @@ import {ThreadsSmallBackendModel} from "../models/threadsSmallBackendModel";
 import {PostsSmallBackendModel} from "../models/PostsSmallBackendModel";
 import {UserCommentWrapper} from "../models/comment";
 import {constant} from "../static/url";
+import {CookieService} from "ngx-cookie-service";
 
 
 @Injectable({
@@ -35,7 +36,8 @@ export class BackendCommunicationService {
 
   constructor(private httpClient: HttpClient,
               private router: Router,
-              private _snackBar: MatSnackBar) {
+              private _snackBar: MatSnackBar,
+              private cookie: CookieService) {
   }
 
 
@@ -58,7 +60,7 @@ export class BackendCommunicationService {
     switch (error.status) {
       case 409:
         errorResponseString = 'Please login before using the site.'
-        this.router.navigate(['/userLogin'])
+        this.router.navigate(['/userLogin']);
         break;
       case 204:
         errorResponseString = 'An application breaking sqlInjection was triggered.'
@@ -70,10 +72,15 @@ export class BackendCommunicationService {
         errorResponseString = 'Too many requests! Slow down.'
         break;
       case 403:
-        errorResponseString = 'Forbidden. Not allowed to access resource'
+        errorResponseString = 'Forbidden. Not allowed to access resource.'
         break;
       case 404:
         errorResponseString = 'Content not found!'
+        break;
+      case 410:
+        errorResponseString = 'Your cookie is invalid and has been deleted!'
+        this.router.navigate(['/userLogin']);
+        this.cookie.delete('tracker');
         break;
       default:
         return;

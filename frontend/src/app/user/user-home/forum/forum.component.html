@@ -52,8 +52,7 @@
             </mat-radio-group>
           </mat-menu>
         </div>
-        <div *ngIf="sideContentUsers | async as sideContentObj; else loadingUsers"
-             class="sidecontent-users-list-container">
+        <div *ngIf="sideContentUsers | async as sideContentObj; else loadingUsers">
           <mat-card class="userlist" *ngIf="sideContentObj.data.length > 0">
             <mat-card-title class="sidecontent-users">
               Registered Users
