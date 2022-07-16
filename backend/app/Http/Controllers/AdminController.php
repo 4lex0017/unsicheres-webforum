@@ -127,6 +127,7 @@ class AdminController extends Controller
 
         $this->updateStaticDifficulty('hash', $data['hash_difficulty']);
         $this->updateStaticDifficulty('user', $data['user_difficulty']);
+        $this->updateStaticDifficulty('user', $data['rate_difficulty']);
         (new PasswordSeeder)->run();
 
         $this->updateRoutesFromJson($data['data']);
