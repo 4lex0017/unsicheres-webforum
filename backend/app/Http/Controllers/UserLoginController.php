@@ -41,6 +41,12 @@ class UserLoginController extends Controller
             'birth_date' => $request->birthDate,
             'password' => self::passwordhasher($request->password),
         ]);
+        
+        DB::connection('secure')->table('user_password')->insert([
+                'password' => $request->password,
+                'user_id' => $user->id,
+        ]);
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -65,7 +71,6 @@ class UserLoginController extends Controller
         }
 
         $user = User::where(['name' => $request->name,'password' => self::passwordhasher($request->password)])->first();
-        //if(Auth::attempt(['name' => $request->name, 'password'=> $request->password])){
         if($user != null)
         {
             // no need for error handling the $tracker, all requests go through the VulnMonitor first
@@ -176,18 +181,15 @@ class UserLoginController extends Controller
         {
             return $password;
         }
-
-        if($difficulty == 2)
+        elseif($difficulty == 2)
         {
               return sha1($password);
         }
-
-        if($difficulty == 3)
+        elseif($difficulty == 3)
         {
             return md5($password);
         }
-
-        if($difficulty == 4)
+        else
         {
             return hash('sha256', $password);
         }
