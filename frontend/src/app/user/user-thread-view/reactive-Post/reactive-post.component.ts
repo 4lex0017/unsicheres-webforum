@@ -150,7 +150,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   deserializePost(postContent: string): void {
     let contentBox = document.getElementById("postBox" + this.postObject.id)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
-    const splitRegex = new RegExp("\\[quote=.*?:[0-9]*](.*?)\\[/quote]", 'gmids');
+    const splitRegex = new RegExp("\\[quote=.*?](.*?)\\[/quote]", 'gmids');
     let current;
     let lastMatchIndex = 0;
     let dividedContent: string[] = new Array(0)
@@ -171,15 +171,26 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
     const replyInfoRegex = new RegExp("\\[quote=(.*?)]", 'mid');
     const userNameRegex = new RegExp("(?<=\=)(.*?)(?=\:)", 'mid');
     const postIdRegex = new RegExp("(?<=\:)(.*?)(?=\])", 'mid');
+    const noIdRegex = new RegExp("(?<==)(.*?)(?=])",'mid');
     for (let i = 0; i < dividedContent.length; i++) {
       if (dividedContent[i].startsWith("[")) {
         let infos = replyInfoRegex.exec(dividedContent[i]);
         let info = infos![0];
-        let userName = userNameRegex.exec(info);
-        let postId = postIdRegex.exec(info)
+        let userName;
+        let postId;
+        if(info.includes(":")){
+          userName = userNameRegex.exec(info);
+          postId = postIdRegex.exec(info)
+        }else {
+          userName = noIdRegex.exec(info);
+          postId = "-1";
+        }
         let blockElement = document.createElement("blockquote");
-        blockElement.setAttribute("id", postId![1])
-        blockElement.setAttribute("id", this.postObject.id + "rep" + postId![1])
+        if(postId != -1) {
+          blockElement.setAttribute("id", this.postObject.id + "rep" + postId![1])
+        }else{
+          blockElement.setAttribute("id", postId);
+        }
         blockElement.addEventListener("click", (e: Event) => this.moveToPost(blockElement.id))
         blockElement.setAttribute("style", "borderRadius: 1px ; border : solid #0643b8; margin-Left: 20px ; width : 95% ; border-Left-Width : 8px; border-Spacing : 10px");
         let p = document.createElement("p");
@@ -187,7 +198,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         let div = document.createElement("div");
         div.style.whiteSpace = "pre-line"
         div.style.overflowWrap = "break-word"
-        const blockRegex = new RegExp("\\[quote=.*?:[0-9]*](.*?)\\[/quote]", 'gmids');
+        const blockRegex = new RegExp("\\[quote=.*?](.*?)\\[/quote]", 'gmids');
         let blockContent = blockRegex.exec(dividedContent[i])
         if (this.vEnabledFrontend) {
           p.appendChild(document.createRange().createContextualFragment(userName![1]))
@@ -214,6 +225,9 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   }
 
   moveToPost(id: string) {
+    if(id == "-1"){
+      return;
+    }
     let str = this.postObject.id + "rep"
     let cleanId = id.replace(str, "")
     this.moveToPostEvent.emit(+cleanId)
