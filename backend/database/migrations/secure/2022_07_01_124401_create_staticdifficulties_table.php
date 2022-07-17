@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('hash_difficulty');
             $table->integer('user_difficulty');
             $table->integer('rate_difficulty');
+            $table->integer('hint_difficulty');
         });
         DB::connection('secure')
             ->table('staticdifficulties')
@@ -26,6 +27,7 @@ return new class extends Migration
                 'hash_difficulty' => 4,
                 'user_difficulty' => 3,
                 'rate_difficulty' => 3,
+                'hint_difficulty' => 1,
                 ]);
     }
 

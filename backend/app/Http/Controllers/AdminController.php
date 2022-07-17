@@ -36,7 +36,7 @@ class AdminController extends Controller
         $this->updateCheckedStatic($content, 'hash', 5);
         $this->updateCheckedStatic($content, 'user', 6);
         $this->updateCheckedStatic($content, 'rate', 7);
-
+        $this->updateCheckedStatic($content, 'hint', 8);
         return response()->json($content);
     }
 
@@ -192,7 +192,7 @@ class AdminController extends Controller
 
             if ($element['id'] == 6 || $element['id'] == 7 || $element['id'] == 8) {
                 $this->updateStaticConfig($element['difficulty'], $type);
-            } else {
+            } else if ($element['id'] != 9) {
                 $this->updateRouteConfig($type, $config, $element['difficulty'], $stored);
             }
         }
@@ -292,6 +292,9 @@ class AdminController extends Controller
                 break;
             case 8:
                 $type = 'rate';
+                break;
+            case 9:
+                $type = 'hint';
                 break;
             default:
                 abort(400);
@@ -488,6 +491,7 @@ class AdminController extends Controller
             'hash_difficulty' => $this->getStaticDifficulty('hash'),
             'user_difficulty' => $this->getStaticDifficulty('user'),
             'rate_difficulty' => $this->getStaticDifficulty('rate'),
+            'hint_difficulty' => $this->getStaticDifficulty('hint'),
         ];
     }
 
