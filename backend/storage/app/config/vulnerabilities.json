@@ -229,25 +229,6 @@
                     "checked": false
                 }
             ]
-        },
-        {
-            "id": 9,
-            "name": "Hint posts",
-            "description": "Create hint posts containing advice on vulnerabilities",
-            "subtasks":[
-                {
-                    "id": 1,
-                    "state": "Off",
-                    "description": "No hint posts",
-                    "checked": false
-                },
-                {
-                    "id": 2,
-                    "state": "On",
-                    "description": "Hint posts are submitted to the forum",
-                    "checked": false
-                }
-            ]
         }
     ]
 }
