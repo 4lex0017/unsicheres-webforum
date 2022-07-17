@@ -2,6 +2,8 @@
 !defaults/
 !defaults/defaultHome.json
 !defaults/defaultUsers.json
+!defaults/defaultHinweise.json
+!defaults/defaultHinweisauthor.json
 !public/
 !config/
 !config/smallUsers.json
