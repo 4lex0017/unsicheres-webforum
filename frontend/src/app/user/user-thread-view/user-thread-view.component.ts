@@ -135,7 +135,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   addReply(threadObject: Thread, replyPost: Post): void {
-    let regex = new RegExp("\\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\\[/quote]", 'gmids');
+    let regex = new RegExp("\\[quote=.*?:[0-9]*](.*?)\\[/quote]", 'gmids');
     let currentFilter;
     let myValue = replyPost.content
     let lastMatchIndex = 0

@@ -140,7 +140,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   deserializePost(postContent: string): void {
     let contentBox = document.getElementById("postBox" + this.postObject.id)
     postContent = postContent.replace(/quote]\r?\n|\r/g, "quote]")
-    const splitRegex = new RegExp("\\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\\[/quote]", 'gmids');
+    const splitRegex = new RegExp("\\[quote=.*?:[0-9]*](.*?)\\[/quote]", 'gmids');
     let current;
     let lastMatchIndex = 0;
     let dividedContent: string[] = new Array(0)
@@ -177,7 +177,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
         let div = document.createElement("div");
         div.style.whiteSpace = "pre-line"
         div.style.overflowWrap = "break-word"
-        const blockRegex = new RegExp("\\[quote=[A-Za-z0-9-_]*:[A-Za-z0-9]*](.*?)\\[/quote]", 'gmids');
+        const blockRegex = new RegExp("\\[quote=.*?:[0-9]*](.*?)\\[/quote]", 'gmids');
         let blockContent = blockRegex.exec(dividedContent[i])
         if (this.vEnabledFrontend) {
           p.appendChild(document.createRange().createContextualFragment(userName![1]))
