@@ -96,8 +96,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   canEditThread(id: number): boolean {
-    return id == this.authenticate.getCurrentUserId();
-
+    return id == this.authenticate.getCurrentUserId() || this.authenticate.isAdmin();
   }
 
 

@@ -65,8 +65,7 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
 
 
   canEditPost(): boolean {
-    if (this.postObject.author.id == this.authenticate.getCurrentUserId()) return true;
-    return false;
+    return this.postObject.author.id == this.authenticate.getCurrentUserId() || this.authenticate.isAdmin();
   }
 
   openDeletePostDialog() {

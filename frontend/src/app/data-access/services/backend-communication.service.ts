@@ -325,6 +325,15 @@ export class BackendCommunicationService {
       }));
   }
 
+  activateHelperPost(): Observable<any> {
+    return this.httpClient.post<any>(this.url + '/admin/reset/scoreboard', null, {
+      headers: {admin: "true"}
+    })
+      .pipe(catchError((error: Response) => {
+        this.errorManagement(error);
+        throw {message: 'Bad response', value: error.status}
+      }));
+  }
 
   resetDatabase(): Observable<any> {
     return this.httpClient.post<any>(this.url + '/admin/reset/db', null, {
