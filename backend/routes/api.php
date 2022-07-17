@@ -103,6 +103,11 @@ Route::get('profileComments/{profile_id}', 'App\Http\Controllers\ProfileCommentC
  */
 Route::get('/c', 'App\Http\Controllers\AdminController@getSingleRoute');
 
+/**
+ * @uses \App\Http\Controllers\SiteController::getWiki()
+ */
+Route::get('wiki', 'App\Http\Controllers\SiteController@getWiki');
+
 // Routegruppe für nur authenticated User state
 Route::group(['middleware' => ['auth:sanctum']], function () {
     /**
