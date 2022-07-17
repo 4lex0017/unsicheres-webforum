@@ -89,23 +89,27 @@ class UserController extends Controller
 
     public function updatePassword($id, Request $request)
     {
-        if(self::isThisTheRightUser($id, $request))
-        {
-            Db::connection('insecure')->table('users')->where('id' , $request->user()->id)->update([
-                'c_password' => Hash::make($request->password),
-                'password' => self::passwordhasher($request->password)
-            ]);
-            Db::connection('secure')->table('user_password')->where('user_id' , $request->user()->id)->update([
-                'password' => $request->password
-            ]);
-            return response()->json(200);
+        $validator = Validator::make($request->all(), [
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['error' => $errors], 422);
         }
-        else
-        {
-            return response()->json([
-                'message' => 'You are not allowed to update this Users password'
-            ], 403);
-        }
+
+        if(!self::isThisTheRightUser($id, $request))
+            return response()->json(['message' => 'You are not allowed to update this Users password'], 403);
+
+        Db::connection('insecure')->table('users')->where('id' , $request->user()->id)->update([
+            'c_password' => Hash::make($request->password),
+            'password' => self::passwordhasher($request->password)
+        ]);
+        Db::connection('secure')->table('user_password')->where('user_id' , $request->user()->id)->update([
+            'password' => $request->password
+        ]);
+            
+        return response()->json(['message' => 'password changed succesfully'],200);
     }
 
     /**
