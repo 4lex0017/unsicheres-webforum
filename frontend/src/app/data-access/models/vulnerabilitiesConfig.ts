@@ -3,6 +3,7 @@ export interface VulnerabilitiesConfig {
   hash_difficulty: number
   user_difficulty: number;
   rate_difficulty: number;
+  hint_difficulty: number;
 }
 
 

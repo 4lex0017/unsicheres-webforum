@@ -16,8 +16,12 @@
       Go to Forum
     </a>
     <button class="resetDatabase" mat-raised-button color="warn" (click)="resetDatabase()">Reset Database</button>
+    <button class="activateHelper" mat-raised-button [style.background-color]="btnColour"
+            [disabled]="helperPostStatus === -1 || helperPostStatus === 1"
+            (click)="activateHelperPost()">{{mapOThree.get(helperPostStatus)}}
+    </button>
   </h1>
-  <mat-card>
+  <mat-card class="card-container">
     <mat-tab-group mat-align-tabs="start">
       <mat-tab *ngFor="let vulnerability of this.curVulnerabilities.vulnerabilities" label="{{vulnerability.name}}">
         <div class="inner-container">

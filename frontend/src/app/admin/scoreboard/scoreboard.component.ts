@@ -8,6 +8,8 @@ import {AdminUser, AdminVulnerability} from "../../data-access/models/scoreboard
 import {BackendCommunicationService} from "../../data-access/services/backend-communication.service";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthenticationServiceAdmin} from "../../data-access/services/authenticationAdmin";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-scoreboard',
@@ -30,7 +32,9 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
 
   constructor(private _liveAnnouncer: LiveAnnouncer,
               private backendCom: BackendCommunicationService,
-              private _snackBar: MatSnackBar) {
+              private _snackBar: MatSnackBar,
+              private authAdmin: AuthenticationServiceAdmin,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -45,12 +49,19 @@ export class ScoreboardComponent implements AfterViewInit, OnInit {
   }
 
   resetDatabase() {
+    this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+      duration: 5000,
+      panelClass: ['snack-bar-background'],
+      data: "Resetting database, please wait ...",
+    })
     this.backendCom.resetDatabase().subscribe(value => {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],
-        data: "Database has been reset.",
+        data: "Scoreboard has been reset. Logging out ...",
       })
+      this.authAdmin.logoutAdmin();
+      this.router.navigate(['/userLogin'])
     });
   }
 

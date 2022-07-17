@@ -58,7 +58,9 @@ img {
 }
 
 .editBox {
-  border: solid rgba(128, 128, 128, 0.56);;
+  border: solid rgba(128, 128, 128, 0.25);
   width: 100%;
   border-radius: 1px;
+  color: inherit;
+  background-color: inherit;
 }

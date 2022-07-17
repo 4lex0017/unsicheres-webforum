@@ -479,13 +479,17 @@ class AdminController extends Controller
      */
     public function getConfiguration(): array
     {
-        $data = ConfigResource::collection(Vulnerability::all())->jsonSerialize();
-        foreach($data as $key => $value) {
-            if($value['uri'] == '/login') {
-                unset($data[$key]);
-                break;
+        $vulns = ConfigResource::collection(Vulnerability::all());
+
+        $data = array();
+        foreach ($vulns as $value) {
+            if ($value['uri'] == '/login' || $value['uri'] == '/wiki') {
+                continue;
             }
+
+            $data[] = $value;
         }
+
         return [
             'data' => $data,
             'hash_difficulty' => $this->getStaticDifficulty('hash'),

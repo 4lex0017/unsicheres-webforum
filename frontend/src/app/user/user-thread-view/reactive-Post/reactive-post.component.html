@@ -34,7 +34,7 @@
 
       </textarea>
     </div>
-    <button *ngIf="editing" mat-raised-button (click)="editContent()">DONE</button>
+    <button *ngIf="editing" mat-raised-button (click)="editContent()" style="top:5px">DONE</button>
   </mat-card-content>
   <mat-card-actions class="spacer">
         <span class="stretch-badge" matBadge="{{postObject.likedFrom.length}}" matBadgeSize="small"

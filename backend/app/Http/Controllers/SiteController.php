@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\VulnerabilityMonitor;
 use App\Http\Resources\SmallUserResource;
 use App\Models\User;
 use App\Models\Thread;
-
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
@@ -76,5 +80,14 @@ class SiteController extends Controller
         }
 
         return $thread_array;
+    }
+
+    public function getWiki(Request $request): Response|Application|ResponseFactory
+    {
+        $tracker = $request->cookie('tracker');
+
+        (new VulnerabilityMonitor)->writeSuccess($tracker, $request->getRequestUri(), 'secret_api_endpoint');
+
+        return response("Sadly there is no wiki here ¯\_(⊙︿⊙)_/¯ - Have some points instead ( ͡° ͜ʖ ͡°)");
     }
 }

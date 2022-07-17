@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 help_fn() {
     echo -e "Usage:  backend [OPTION]\n"
     echo -e "Script to start and stop the backend.\n"
