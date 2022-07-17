@@ -63,12 +63,18 @@ export class DialogLoginComponent {
       }
       this.dialogRef.close();
     }, error => {
-      this.username = "";
-      this.password = "";
+      let errorMessage = "Invalid data.";
+      if (error.status == 400) {
+        this.username = "";
+        this.password = "";
+      } else {
+        errorMessage = "Wrong password.";
+        this.password = "";
+      }
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],
-        data: "Invalid data."
+        data: errorMessage
       });
     });
   }
