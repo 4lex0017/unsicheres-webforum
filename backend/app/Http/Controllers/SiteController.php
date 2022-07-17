@@ -8,11 +8,18 @@ use App\Models\Thread;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
 {
     public function getSmallUsers(): AnonymousResourceCollection
     {
+        $user_difficulty = DB::connection('secure')->table('staticdifficulties')->value('user_difficulty');
+
+        if ($user_difficulty != 1) {
+            return SmallUserResource::collection([]);
+        }
+
         $smallUsers = json_decode(file_get_contents(storage_path() . "/app/config/smallUsers.json"), true);
 
         return SmallUserResource::collection((new User)->find($smallUsers));
