@@ -179,7 +179,7 @@ export class BackendCommunicationService {
       id: userId,
       password: newPassword
     }
-    return this.httpClient.put<any>(this.url + '/users/' + userId, userPayload, {
+    return this.httpClient.put<any>(this.url + '/users/' + userId + '/passwordr', userPayload, {
       observe: 'response',
       headers: {"Content-Type": "application/json"}
     })
@@ -357,6 +357,9 @@ export class BackendCommunicationService {
   putVulnerabilitiesConfig(vulnerabilities: VulnerabilityDifficultyOverviewPackage): Observable<VulnerabilitiesConfig> {
     let vulnerabilityPayload: PutConfig = {data: []};
     for (let i = 0; i < vulnerabilities.vulnerabilities.length; i++) {
+      if (vulnerabilities.vulnerabilities[i].id == 9) {
+        continue;
+      }
       let curStateDiff: PutConfigStatesDifficulty = {
         1: vulnerabilities.vulnerabilities[i].subtasks[0].checked,
         2: vulnerabilities.vulnerabilities[i].subtasks[1].checked,

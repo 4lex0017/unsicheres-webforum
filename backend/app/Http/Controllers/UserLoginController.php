@@ -28,8 +28,7 @@ class UserLoginController extends Controller
             ], 422);
         }
 
-        if(self::nameExists($request->name))
-        {
+        if (self::nameExists($request->name)) {
             return response()->json([
                 'error' => 'username already exists'
             ], 400);
@@ -41,10 +40,10 @@ class UserLoginController extends Controller
             'birth_date' => $request->birthDate,
             'password' => self::passwordhasher($request->password),
         ]);
-        
+
         DB::connection('secure')->table('user_password')->insert([
-                'password' => $request->password,
-                'user_id' => $user->id,
+            'password' => $request->password,
+            'user_id' => $user->id,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -70,20 +69,18 @@ class UserLoginController extends Controller
             ], 422);
         }
 
-        $user = User::where(['name' => $request->name,'password' => self::passwordhasher($request->password)])->first();
-        if($user != null)
-        {
+        $user = User::where(['name' => $request->name, 'password' => self::passwordhasher($request->password)])->first();
+        if ($user != null) {
             // no need for error handling the $tracker, all requests go through the VulnMonitor first
             $tracker = $request->cookie('tracker');
             $is_premade = $this->checkUserIsPremade($user, $request, $tracker);
-            
-            if(in_array("Admin", $user->groups))
-            {
+
+            if (in_array("Admin", $user->groups)) {
                 return response()->json([
                     'access_token' => $user->createToken('auth_token', ['isUser'])->plainTextToken,
                     'token_type' => 'Bearer',
                     'user_id' => $user->id,
-                    'admin' => 'yes',
+                    'admin' => true,
                 ], 200)->header('VulnFound', $is_premade ? "true" : "false");
             }
             return response()->json([
@@ -120,11 +117,11 @@ class UserLoginController extends Controller
     protected function nameExists(string $name): bool
     {
         return sizeof(DB::connection('insecure')
-            ->table('users')
-            ->where('name', $name)
-            ->select('name')
-            ->get()
-        ) > 0;
+                ->table('users')
+                ->where('name', $name)
+                ->select('name')
+                ->get()
+            ) > 0;
     }
 
     protected function checkUserIsPremade(User $user, Request $request, $tracker): bool
@@ -182,24 +179,17 @@ class UserLoginController extends Controller
     }
 
 
-    protected function passwordhasher(String $password): string
+    protected function passwordhasher(string $password): string
     {
         $difficulty = DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty');
 
-        if($difficulty == 1)
-        {
+        if ($difficulty == 1) {
             return $password;
-        }
-        elseif($difficulty == 2)
-        {
-              return sha1($password);
-        }
-        elseif($difficulty == 3)
-        {
+        } elseif ($difficulty == 2) {
+            return sha1($password);
+        } elseif ($difficulty == 3) {
             return md5($password);
-        }
-        else
-        {
+        } else {
             return hash('sha256', $password);
         }
     }

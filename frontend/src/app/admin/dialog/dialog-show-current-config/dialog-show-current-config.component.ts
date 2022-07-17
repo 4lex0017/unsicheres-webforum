@@ -15,12 +15,14 @@ export class DialogShowCurrentConfigComponent {
       data: [],
       hash_difficulty: -1,
       user_difficulty: -1,
-      rate_difficulty: -1
+      rate_difficulty: -1,
+      hint_difficulty: -1
     },
   ) {
   }
 
   mapOfFour = new Map<number, string>([[1, "Easy"], [2, 'Medium'], [3, 'Hard'], [4, 'Impossible']]);
+  mapOfTwo = new Map<number, string>([[1, "Not Active"], [2, 'Active']]);
   mapOThreeHard = new Map<number, string>([[1, "Easy"], [2, 'Medium'], [3, 'Hard']]);
   mapOThreeOff = new Map<number, string>([[1, "Easy"], [2, 'Medium'], [3, 'Off']]);
   mapOThreeImp = new Map<number, string>([[1, "Easy"], [2, 'Medium'], [3, 'Impossible']]);

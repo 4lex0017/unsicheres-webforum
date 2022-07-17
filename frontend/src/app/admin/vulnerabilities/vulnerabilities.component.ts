@@ -23,9 +23,9 @@ import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification
   styleUrls: ['./vulnerabilities.component.scss']
 })
 export class VulnerabilitiesComponent implements OnInit {
-  vulnerabilities$: Observable<VulnerabilityDifficultyOverviewPackage>;
   currentConfig: VulnerabilitiesConfig;
   curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
+  helperPostsEnabled: boolean = false;
 
   constructor(private dialog: MatDialog,
               private router: Router,
@@ -36,15 +36,20 @@ export class VulnerabilitiesComponent implements OnInit {
 
 
   async setVuln() {
-    this.backendCom.getVulnerabilities().subscribe((data) => this.curVulnerabilities = data);
+    this.backendCom.getVulnerabilities().subscribe((data) => {
+      this.curVulnerabilities = data;
+      this.helperPostsEnabled = this.curVulnerabilities.vulnerabilities[8].subtasks[1].checked;
+    });
   }
 
   ngOnInit(): void {
     this.setVuln()
     this.backendCom.getVulnerabilitiesConfig().subscribe(data => {
       this.currentConfig = data;
+
     })
   }
+
 
   updateToDatabase(): void {
     this.backendCom.putVulnerabilitiesConfig(this.curVulnerabilities).subscribe(resp => {

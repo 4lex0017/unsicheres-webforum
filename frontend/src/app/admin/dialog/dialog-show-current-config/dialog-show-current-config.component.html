@@ -6,16 +6,20 @@
         <mat-card class="cards">
           <mat-card-title><h3><b>General </b></h3></mat-card-title>
           <p>
-            <span class="state-description-name">Password-hash</span>
-            <span class="demo-2">({{mapOfFour.get(data.hash_difficulty)}})</span>
-          </p>
-          <p>
             <span class="state-description-name">User Enumeration</span>
             <span class="demo-2">({{mapOThreeOff.get(data.user_difficulty)}})</span>
           </p>
           <p>
+            <span class="state-description-name">Password-hash</span>
+            <span class="demo-2">({{mapOfFour.get(data.hash_difficulty)}})</span>
+          </p>
+          <p>
             <span class="state-description-name">Rate Limiting</span>
             <span class="demo-2">({{mapOThreeHard.get(data.rate_difficulty)}})</span>
+          </p>
+          <p>
+            <span class="state-description-name">Hints</span>
+            <span class="demo-2">({{mapOfTwo.get(data.hint_difficulty)}})</span>
           </p>
         </mat-card>
       </mat-grid-tile>

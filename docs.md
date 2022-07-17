@@ -11,7 +11,9 @@
 Wie durch den Projekttitel „Unsicheres Web-Forum“ beschrieben, wird ein Forum benötigt. Mit Blick auf das GitHub Projekt
 „DAMN VULNERABLE WEB APPLICATION“ – ein Projekt das, ähnlich unserem, Schwachstellen in einer Webseite integrierte, um
 einen sehr Praxisnahen Lernprozess zu ermöglichen – wurde auch schnell ersichtlich, dass eine unserer Anforderungen ein
-deutlich moderneres Design sein sollte. [BILD DVWA vs Unser projekt]
+deutlich moderneres Design sein sollte. [ Mehr VERGLEICHSBILD]
+
+<img src="assetsDocumentation/danielB/DVWA_comparsinon.png" alt="DVWA" width="800"/>
 
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
@@ -20,8 +22,17 @@ von https://xenforo.com/. XenForo ist ein Anbieter, der auch vorgefertigte Foren
 übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet. [VERGLEICHSBILD] (andere Seiten, die
 wir uns anschauten und warum hinzufügen)
 
-Hieraus konnte sich ein grober Überblick über die nötigen Features und Designelemente gemacht werden, die in unserem
-Endresultat benötigt werden. Hierdurch konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
+<img src="assetsDocumentation/danielB/xenforo_comparison.png" alt="XenForo" width="800"/>
+
+Hieraus konnte sich ein grober Überblick über die nötigen Features, Struktur und Designelemente gemacht werden, die in
+unserem Endresultat benötigt werden. Die Forum Funktionen sollten eine vereinfachtere Version des XenForo Forums werden.
+Intuitives und Modernes Design standen an erster Stelle. Das Feature Set, bezogen auf die Modellierung, sollte
+vereinfacht sein, weshalb sich auf eine Aufteilung in Kategorien, Threads und Posts geeinigt wurde. Bei allen anderen
+Funktionalitäten, wie z.B. Userprofile, Navigation der Seite, gegebene Zusatz Informationen wurde sich stehts an XenForo
+und [DAS ANDERE] orientiert. Da das Forum nur einen Teil des endgültigen Produkts wiedergibt hielten wir es für kein
+Problem uns stärker hieran zu orientieren.
+
+Durch das sammeln der Anforderugen konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
 werden.
 
 ## Verwendete Technologien
@@ -80,8 +91,17 @@ Absatz genauer eingegangen wird.
 ### Error Management
 
 Es wurde ein generelles Error Management eingeführt, gekoppelt mit Benachrichtigungen die die Nutzer über Responses des
-Backends informiert. Das generelle Management wird in machen Komponenten nochmal aufgebrochen, um spezifisch auf
-gewissen Schwachstellen einzugehen. [BILD Benachrichtigung mit usersuchen offen und zeigen des requests.]
+Backends informiert.
+
+Abgedeckt werden 403, 404, 409, 410, 418, und 429. Wobei hier manche HTTP Response Status Codes eine andere Bedeutung
+haben als in ihrer Spezifikation vorgegeben.
+
+Das generelle Management wird in machen Komponenten nochmal aufgebrochen, um spezifisch auf gewissen Schwachstellen
+einzugehen.
+<p float="left">
+  <img src="assetsDocumentation/danielB/error_management_user_notification.gif" alt="user_notification" width="800"/>
+  <img src="assetsDocumentation/danielB/errorManagement.png" alt="user_notification" width="400"/>
+</p>
 
 ### User und Admin Authentication mit  Interceptorn
 
@@ -102,13 +122,17 @@ werden verwendet, um dem User zu signalisieren, dass der Request eingegangen ist
 Ein Cookie wird genutzt, um dem Professor eine klare Zuweisung der Studenten zu ermöglichen. Um zu signalisieren, dass
 der Cookie auch wirklich nur zum Tracken genutzt wird, wurden folgende Schritte unternommen:
 
-- Einmalige Benachrichtigung beim setzen der Cookies. [Bild Benachrichtigung]
+- Einmalige Benachrichtigung beim setzen des Cookies.
 
+  <img src="assetsDocumentation/danielB/cookieNotification.gif" alt="DVWA" width="900"/>
 
-- Professor kann Studenten Cookie wiedergeben. [Bild Scoreboard]
+- Professor kann Studenten Cookie wiedergeben.
 
+  <img src="assetsDocumentation/danielB/scoreboardCookieFocus.png" alt="scoreboard" width="900"/>
 
-- Einfache Möglichkeit Cookie für Drittanwendungen zu extrahieren.  [Bild Button in Interface]
+- Einfache Möglichkeit Cookie für Drittanwendungen zu extrahieren.
+
+  <img src="assetsDocumentation/danielB/getCookieOnSite.gif" alt="getCookieOnSite" width="900"/>
 
 ### Das Admin Panel
 
@@ -117,26 +141,27 @@ aktuelle Konfig ausgegeben und die Studierenden getracked werden.
 
 - Schwachstellen: In dieser Komponente kann der Professor die Schwierigkeit(en) der jeweiligen Schwachstelle wählen und
   erhält weitere Informationen darüber was die Schwierigkeitsstufen beeinflussen. Hier bestehet auch die Möglichkeit die
-  Datenbank auf den Startzustand zurückzusetzen. [ BILD Schwachstellen]
+  Datenbank auf den Startzustand zurückzusetzen.
 
+  <img src="assetsDocumentation/danielB/adminPanel_Vulnerabilities_v2.png" alt="vulnerabilities" width="900"/>
 
 - Konfiguration: Es kann sich auch eine Ansicht ueber die Zurzeit aktive Konfiguration ausgegeben werden. Hier wird
-  genau beschrieben auf welchem API Endpunkt welche Schwachstelle auf welchem Schwierigkeitsgrad aktiv
-  ist. [ BILD KONFIG]
+  genau beschrieben auf welchem API Endpunkt welche Schwachstelle auf welchem Schwierigkeitsgrad aktiv ist.
 
+  <img src="assetsDocumentation/danielB/adminPanel_curConfig_v2.png" alt="vulnerabilities" width="900"/>
 
 - Scoreboard: Hier werden alle Informationen zu den Studierenden ausgegeben. Der gewählte Name, Cookie, Gesamtpunktzahl
   und welche spezifischen Schwachstellen gefunden wurden [ BILD Scoreboard]
 
 
 - Toolbar: Die Toolbar bietet neben der Navigation zwischen Scoreboard und Schwachstellen auch Aktionen aus den
-  jeweiligen Komponenten, die häufig benötigt werden. [ BILD Toolbar?]
+  jeweiligen Komponenten, die häufig benötigt werden.
 
-### Design mit Angular Material und Fluidity des Frontends
+### [Design mit Angular Material und Fluidity des Frontends]
 
-### Benachrichtigungen
+### [Benachrichtigungen]
 
-### Fazit
+### [Fazit]
 
 Chris Reichel
 
@@ -243,9 +268,8 @@ Für Filtering und Monitoring wurden zwei Middlewares geschrieben, ein dediziert
 SQL Injection wird auf zweierlei Arten gefiltert:
 
 Erstens prüft der Filter nach den Zeichenfolgen "--" und "##" - diese kommentieren in SQLite das Ende eines Statements
-aus,
-was bei manchen Formen von SQL Injection notwendig ist, damit das resultierende SQL-Statement noch syntaktisch korrekt
-ist.
+aus, was bei manchen Formen von SQL Injection notwendig ist, damit das resultierende SQL-Statement noch syntaktisch
+korrekt ist.
 
 Zweitens wird nach der untenstehenden Liste von SQLite-Schlüsselwörtern gefiltert:
 
@@ -265,7 +289,9 @@ Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen z
   URI wiederholt nach SQLite-Schlüsselwörtern und entfernt alle Vorkommnisse davon.
 
 Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder "
-##"),
+
+## "),
+
 lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
 abändert.
 
@@ -415,19 +441,18 @@ unterstützt werden sollen. Für statische (routenunabhängige) Einstellungen wi
 übernommen, da hier immer nur eine aktiv sein kann.
 
 Für routenabhängige Einstellungen wird zuerst für jede gewählte Schwierigkeit eine Route ausgewählt, um sicherzustellen,
-dass für jede gewählte Schwierigkeit mindestens eine Route verfügbar ist. Die einzige Ausnahme hier ist der unsichere 
-File-Upload - hier sind nur zwei Routen für drei Schwierigkeiten verfügbar, bei Anwählen aller Schwierigkeiten wird also 
+dass für jede gewählte Schwierigkeit mindestens eine Route verfügbar ist. Die einzige Ausnahme hier ist der unsichere
+File-Upload - hier sind nur zwei Routen für drei Schwierigkeiten verfügbar, bei Anwählen aller Schwierigkeiten wird also
 eine der Schwierigkeiten nicht verwendet.
 
 Danach werden sämtliche verbleibenden Routen durchgegangen und eine der ausgewählten Schwierigkeiten wird zugewiesen.
 
-Für XSS wird hier zusätzlich sichergestellt, dass nicht auf der gleichen Route der Front- und Back-End-Filter für 
-Stored XSS aktiv sind. Hierfür wird zuerst wie oben je eine Route pro Schwierigkeit für Back-end Filter zugewiesen, 
-danach wird je eine Route pro Schwierigkeit für den Front-end Filter zugewiesen, wobei hier geprüft wird, ob die 
-Schwierigkeit des Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route bereits für den Back-end 
-Filter genutzt. Für Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden
-nur für den Back-end Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine
-Route.
+Für XSS wird hier zusätzlich sichergestellt, dass nicht auf der gleichen Route der Front- und Back-End-Filter für Stored
+XSS aktiv sind. Hierfür wird zuerst wie oben je eine Route pro Schwierigkeit für Back-end Filter zugewiesen, danach wird
+je eine Route pro Schwierigkeit für den Front-end Filter zugewiesen, wobei hier geprüft wird, ob die Schwierigkeit des
+Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route bereits für den Back-end Filter genutzt. Für
+Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden nur für den Back-end
+Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine Route.
 
 Lukas Hein
 
