@@ -249,7 +249,9 @@ entsprechenden Verwundbarkeiten gefiltert und geprüft werden.
 Umgesetzt wird das mit Laravels "Middleware"-Feature:
 Jede Anfrage geht eine Sammlung an Middlewares durch, die sie verarbeiten, bevor sie an die Controller durchgereicht
 wird, die dann die gesendeten Daten in der Datenbank speichern o.Ä., wie an anderen Orten in dieser Dokumentation
-erklärt wird. [BILD MIDDLEWARE]
+erklärt wird.
+
+<img src="assetsDocumentation/chrisR/Middleware.jpg" alt="Middleware UML sequence diagram" width="800"/>
 
 Für Filtering und Monitoring wurden zwei Middlewares geschrieben, ein dedizierter Filter und ein dedizierter Monitor.
 
@@ -281,9 +283,7 @@ Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen z
   URI wiederholt nach SQLite-Schlüsselwörtern und entfernt alle Vorkommnisse davon.
 
 Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder
-"##"),
-
-lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
+"##"), lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
 abändert.
 
 #### Cross-Site-Scripting(XSS)
