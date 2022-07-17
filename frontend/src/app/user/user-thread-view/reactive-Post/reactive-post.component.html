@@ -30,11 +30,11 @@
 
     </div>
     <div *ngIf="editing">
-      <textarea matInput class="editBox" id="editBox{{postObject.id}}" [textContent]="postObject.content" rows="8">
+      <textarea matInput class="editBox" id="editBox{{postObject.id}}" [textContent]="postObject.content" rows="8" style="color: inherit">
 
       </textarea>
     </div>
-    <button *ngIf="editing" mat-raised-button (click)="editContent()">DONE</button>
+    <button *ngIf="editing" mat-raised-button (click)="editContent()" style="top:5px">DONE</button>
   </mat-card-content>
   <mat-card-actions class="spacer">
         <span class="stretch-badge" matBadge="{{postObject.likedFrom.length}}" matBadgeSize="small"
