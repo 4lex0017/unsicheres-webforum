@@ -33,12 +33,16 @@ export class SidenavComponent {
   }
 
   resetDatabase() {
+    this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+      duration: 5000,
+      panelClass: ['snack-bar-background'],
+      data: "Resetting database, please wait ...",
+    })
     this.backendCom.resetDatabase().subscribe(value => {
-
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],
-        data: "Database has been reset.",
+        data: "Database has been reset. Logging out ...",
       })
     });
   }
@@ -48,8 +52,10 @@ export class SidenavComponent {
       this._snackBar.openFromComponent(SnackBarNotificationComponent, {
         duration: 5000,
         panelClass: ['snack-bar-background'],
-        data: "Scoreboard has been reset.",
+        data: "Scoreboard has been reset. Logging out ...",
       })
+      this.authAdmin.logoutAdmin();
+      this.router.navigate(['/userLogin'])
     });
   }
 

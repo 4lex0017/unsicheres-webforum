@@ -1,5 +1,6 @@
 .outer-container {
   padding: 30px;
+  min-width: 730px;
 }
 
 .inner-container {
@@ -39,4 +40,13 @@ h2.loading-text {
 
 .resetDatabase {
   float: right
+}
+
+.activateHelper {
+  float: right;
+  margin-right: 15px;
+}
+
+.mat-raised-button.mat-button-disabled.mat-button-disabled {
+  color: #FFFFFF;
 }

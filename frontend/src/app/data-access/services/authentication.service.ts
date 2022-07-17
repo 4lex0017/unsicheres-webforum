@@ -21,6 +21,13 @@ export class AuthenticationService {
     return parseInt(localStorage.getItem("currentUserId")!);
   }
 
+  isAdmin(): boolean {
+    if (localStorage.getItem("isAdmin")) {
+      return localStorage.getItem("isAdmin") == "1"
+    }
+    return false;
+  }
+
 
   public loginJwt(name: string, password: string) {
     return this.httpClient.post<any>(this.url + '/login', {
@@ -35,8 +42,12 @@ export class AuthenticationService {
   }
 
   private setSession(authResult, username) {
-    localStorage.setItem("currentUsername", username)
+
+    if (authResult.admin) {
+      localStorage.setItem("isAdmin", "1")
+    }
     localStorage.setItem("currentUserId", authResult.user_id)
+    localStorage.setItem("currentUsername", username)
     localStorage.setItem("bearerToken", authResult.access_token)
 
   }
@@ -69,10 +80,12 @@ export class AuthenticationService {
   public logout() {
     this.logoutUserBackend().subscribe(
       value => {
+        localStorage.removeItem("isAdmin")
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")
         localStorage.removeItem("bearerToken")
       }, error => {
+        localStorage.removeItem("isAdmin")
         localStorage.removeItem("currentUsername")
         localStorage.removeItem("currentUserId")
         localStorage.removeItem("bearerToken")

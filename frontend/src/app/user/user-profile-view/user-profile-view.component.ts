@@ -186,8 +186,8 @@ export class UserProfileViewComponent implements OnInit {
     const rExp: RegExp = new RegExp("\\[quote=.*?:[0-9]*].*?\\[/quote]", "gmids");
     let test = content.split(rExp);
     content = " ";
-    for(let i = 0; i < test.length; i++){
-      if(test[i] != ""){
+    for (let i = 0; i < test.length; i++) {
+      if (test[i] != "") {
         content = test[i]
         break;
       }
@@ -203,7 +203,7 @@ export class UserProfileViewComponent implements OnInit {
 
 
   canEdit(id: number): boolean {
-    return id == this.authenticate.getCurrentUserId();
+    return id == this.authenticate.getCurrentUserId() || this.authenticate.isAdmin();
   }
 
   getSlugFromTitle(title: string): string {
