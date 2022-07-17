@@ -76,7 +76,16 @@ class UserLoginController extends Controller
             // no need for error handling the $tracker, all requests go through the VulnMonitor first
             $tracker = $request->cookie('tracker');
             $is_premade = $this->checkUserIsPremade($user, $request, $tracker);
-
+            
+            if(in_array("Admin", $user->groups))
+            {
+                return response()->json([
+                    'access_token' => $user->createToken('auth_token', ['isUser'])->plainTextToken,
+                    'token_type' => 'Bearer',
+                    'user_id' => $user->id,
+                    'admin' => 'yes',
+                ], 200)->header('VulnFound', $is_premade ? "true" : "false");
+            }
             return response()->json([
                 'access_token' => $user->createToken('auth_token', ['isUser'])->plainTextToken,
                 'token_type' => 'Bearer',

@@ -116,6 +116,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('users/{id}', 'App\Http\Controllers\UserController@updateUser');
 
     /**
+     * @uses App\Http\Controllers\UserController::updatePassword()
+     */
+    Route::put('users/{id}/passwordr', 'App\Http\Controllers\UserController@updatePassword');
+
+    /**
      * @uses App\Http\Controllers\ThreadController::createThread()
      */
     Route::post('categories/{id}/threads', 'App\Http\Controllers\ThreadController@createThread');
