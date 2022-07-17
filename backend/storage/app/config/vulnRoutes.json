@@ -1,18 +1,6 @@
 {
     "sqli": [
         {
-            "route": "/search"
-        },
-        {
-            "route": "/search/users"
-        },
-        {
-            "route": "/search/posts"
-        },
-        {
-            "route": "/search/threads"
-        },
-        {
             "route": "/categories/{int}/threads"
         },
         {
