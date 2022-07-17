@@ -79,8 +79,9 @@ export class BackendCommunicationService {
         break;
       case 410:
         errorResponseString = 'Your cookie is invalid and has been deleted!'
-        this.router.navigate(['/userLogin']);
         this.cookie.delete('tracker');
+        this.cookie.delete('tracker', '/');
+        this.router.navigate(['/userLogin']);
         break;
       default:
         return;

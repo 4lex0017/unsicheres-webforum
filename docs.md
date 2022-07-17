@@ -11,7 +11,9 @@
 Wie durch den Projekttitel „Unsicheres Web-Forum“ beschrieben, wird ein Forum benötigt. Mit Blick auf das GitHub Projekt
 „DAMN VULNERABLE WEB APPLICATION“ – ein Projekt das, ähnlich unserem, Schwachstellen in einer Webseite integrierte, um
 einen sehr Praxisnahen Lernprozess zu ermöglichen – wurde auch schnell ersichtlich, dass eine unserer Anforderungen ein
-deutlich moderneres Design sein sollte. [BILD DVWA vs Unser projekt]
+deutlich moderneres Design sein sollte. [ Mehr VERGLEICHSBILD]
+
+<img src="assetsDocumentation/danielB/DVWA_comparsinon.png" alt="DVWA" width="800"/>
 
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
@@ -20,8 +22,17 @@ von https://xenforo.com/. XenForo ist ein Anbieter, der auch vorgefertigte Foren
 übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet. [VERGLEICHSBILD] (andere Seiten, die
 wir uns anschauten und warum hinzufügen)
 
-Hieraus konnte sich ein grober Überblick über die nötigen Features und Designelemente gemacht werden, die in unserem
-Endresultat benötigt werden. Hierdurch konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
+<img src="assetsDocumentation/danielB/xenforo_comparison.png" alt="XenForo" width="800"/>
+
+Hieraus konnte sich ein grober Überblick über die nötigen Features, Struktur und Designelemente gemacht werden, die in
+unserem Endresultat benötigt werden. Die Forum Funktionen sollten eine vereinfachtere Version des XenForo Forums werden.
+Intuitives und Modernes Design standen an erster Stelle. Das Feature Set, bezogen auf die Modellierung, sollte
+vereinfacht sein, weshalb sich auf eine Aufteilung in Kategorien, Threads und Posts geeinigt wurde. Bei allen anderen
+Funktionalitäten, wie z.B. Userprofile, Navigation der Seite, gegebene Zusatz Informationen wurde sich stehts an XenForo
+und [DAS ANDERE] orientiert. Da das Forum nur einen Teil des endgültigen Produkts wiedergibt hielten wir es für kein
+Problem uns stärker hieran zu orientieren.
+
+Durch das sammeln der Anforderugen konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
 werden.
 
 ## Verwendete Technologien
@@ -80,8 +91,17 @@ Absatz genauer eingegangen wird.
 ### Error Management
 
 Es wurde ein generelles Error Management eingeführt, gekoppelt mit Benachrichtigungen die die Nutzer über Responses des
-Backends informiert. Das generelle Management wird in machen Komponenten nochmal aufgebrochen, um spezifisch auf
-gewissen Schwachstellen einzugehen. [BILD Benachrichtigung mit usersuchen offen und zeigen des requests.]
+Backends informiert.
+
+Abgedeckt werden 403, 404, 409, 410, 418, und 429. Wobei hier manche HTTP Response Status Codes eine andere Bedeutung
+haben als in ihrer Spezifikation vorgegeben.
+
+Das generelle Management wird in machen Komponenten nochmal aufgebrochen, um spezifisch auf gewissen Schwachstellen
+einzugehen.
+<p float="left">
+  <img src="assetsDocumentation/danielB/error_management_user_notification.gif" alt="user_notification" width="800"/>
+  <img src="assetsDocumentation/danielB/errorManagement.png" alt="user_notification" width="400"/>
+</p>
 
 ### User und Admin Authentication mit  Interceptorn
 
@@ -102,13 +122,17 @@ werden verwendet, um dem User zu signalisieren, dass der Request eingegangen ist
 Ein Cookie wird genutzt, um dem Professor eine klare Zuweisung der Studenten zu ermöglichen. Um zu signalisieren, dass
 der Cookie auch wirklich nur zum Tracken genutzt wird, wurden folgende Schritte unternommen:
 
-- Einmalige Benachrichtigung beim setzen der Cookies. [Bild Benachrichtigung]
+- Einmalige Benachrichtigung beim setzen der Cookies.
 
+  <img src="assetsDocumentation/danielB/cookieNotification.gif" alt="DVWA" width="900"/>
 
-- Professor kann Studenten Cookie wiedergeben. [Bild Scoreboard]
+- Professor kann Studenten Cookie wiedergeben.
 
+  <img src="assetsDocumentation/danielB/scoreboardCookieFocus.png" alt="scoreboard" width="900"/>
 
-- Einfache Möglichkeit Cookie für Drittanwendungen zu extrahieren.  [Bild Button in Interface]
+- Einfache Möglichkeit Cookie für Drittanwendungen zu extrahieren.
+
+  <img src="assetsDocumentation/danielB/getCookieOnSite.gif" alt="getCookieOnSite" width="900"/>
 
 ### Das Admin Panel
 
@@ -117,26 +141,27 @@ aktuelle Konfig ausgegeben und die Studierenden getracked werden.
 
 - Schwachstellen: In dieser Komponente kann der Professor die Schwierigkeit(en) der jeweiligen Schwachstelle wählen und
   erhält weitere Informationen darüber was die Schwierigkeitsstufen beeinflussen. Hier bestehet auch die Möglichkeit die
-  Datenbank auf den Startzustand zurückzusetzen. [ BILD Schwachstellen]
+  Datenbank auf den Startzustand zurückzusetzen.
 
+  <img src="assetsDocumentation/danielB/adminPanel_Vulnerabilities_v2.png" alt="vulnerabilities" width="900"/>
 
 - Konfiguration: Es kann sich auch eine Ansicht ueber die Zurzeit aktive Konfiguration ausgegeben werden. Hier wird
-  genau beschrieben auf welchem API Endpunkt welche Schwachstelle auf welchem Schwierigkeitsgrad aktiv
-  ist. [ BILD KONFIG]
+  genau beschrieben auf welchem API Endpunkt welche Schwachstelle auf welchem Schwierigkeitsgrad aktiv ist.
 
+  <img src="assetsDocumentation/danielB/adminPanel_curConfig_v2.png" alt="vulnerabilities" width="900"/>
 
 - Scoreboard: Hier werden alle Informationen zu den Studierenden ausgegeben. Der gewählte Name, Cookie, Gesamtpunktzahl
   und welche spezifischen Schwachstellen gefunden wurden [ BILD Scoreboard]
 
 
 - Toolbar: Die Toolbar bietet neben der Navigation zwischen Scoreboard und Schwachstellen auch Aktionen aus den
-  jeweiligen Komponenten, die häufig benötigt werden. [ BILD Toolbar?]
+  jeweiligen Komponenten, die häufig benötigt werden.
 
-### Design mit Angular Material und Fluidity des Frontends
+### [Design mit Angular Material und Fluidity des Frontends]
 
-### Benachrichtigungen
+### [Benachrichtigungen]
 
-### Fazit
+### [Fazit]
 
 Chris Reichel
 
