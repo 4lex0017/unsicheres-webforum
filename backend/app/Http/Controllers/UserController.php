@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -86,6 +87,27 @@ class UserController extends Controller
         abort(404);
     }
 
+    public function updatePassword($id, Request $request)
+    {
+        if(self::isThisTheRightUser($id, $request))
+        {
+            Db::connection('insecure')->table('users')->where('id' , $request->user()->id)->update([
+                'c_password' => Hash::make($request->password),
+                'password' => self::passwordhasher($request->password)
+            ]);
+            Db::connection('secure')->table('user_password')->where('user_id' , $request->user()->id)->update([
+                'password' => $request->password
+            ]);
+            return response()->json(200);
+        }
+        else
+        {
+            return response()->json([
+                'message' => 'You are not allowed to update this Users password'
+            ], 403);
+        }
+    }
+
     /**
      * Find User with id
      *
@@ -126,5 +148,27 @@ class UserController extends Controller
     public function isThisTheRightUser(string|int $id, Request $request): bool
     {
         return $id == $request->user()->id || in_array("Admin", $request->user()->groups);
+    }
+
+    protected function passwordhasher(String $password): string
+    {
+        $difficulty = DB::connection('secure')->table('staticdifficulties')->value('hash_difficulty');
+
+        if($difficulty == 1)
+        {
+            return $password;
+        }
+        elseif($difficulty == 2)
+        {
+              return sha1($password);
+        }
+        elseif($difficulty == 3)
+        {
+            return md5($password);
+        }
+        else
+        {
+            return hash('sha256', $password);
+        }
     }
 }
