@@ -80,6 +80,9 @@ class HinweisController extends Controller
             ]);
             }
         }
+        DB::connection('secure')
+            ->table('staticdifficulties')
+            ->update(['hint' . '_difficulty' => 2]);
     } 
       
     protected function passwordhasher(String $password)
