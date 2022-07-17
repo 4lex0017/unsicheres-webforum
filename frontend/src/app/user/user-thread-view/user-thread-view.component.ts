@@ -169,6 +169,14 @@ export class UserThreadViewComponent implements OnInit {
     if (!this.checkLoggedIn()) return;
     let fullReply = <HTMLTextAreaElement>document.getElementById('replyBox' + threadObject.id);
     let replyString = fullReply.value;
+    if(replyString.length <= 4){
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        panelClass: ['snack-bar-background'],
+        data: "Message must contain at least 5 characters"
+      })
+      return;
+    }
     if (this.vEnabledPost == 1) replyString = this.diffPicker.frontendFilterTagsNormal(replyString)
     else if (this.vEnabledPost == 2) replyString = this.diffPicker.frontendFilterTagsHard(replyString)
     this.backendServiceCom.postPost(threadObject.id, this.authenticate.getCurrentUserId(), replyString).subscribe((value: Data) => {

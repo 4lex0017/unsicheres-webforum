@@ -13,6 +13,8 @@ import {AllowEditService} from "../../../data-access/services/allowEdit.service"
 import {DialogReportPostComponent} from "../dialog-report-post/dialog-report-post.component";
 import {BackendCommunicationService} from "../../../data-access/services/backend-communication.service";
 import {DidAThingServiceService} from "../../../shared/did-a-thing/did-a-thing-service.service";
+import {SnackBarNotificationComponent} from "../../../shared/snack-bar-notification/snack-bar-notification.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -31,7 +33,8 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
               private diffPicker: DifficultyPickerService,
               private changeDetectorRef: ChangeDetectorRef,
               private backendServiceCom: BackendCommunicationService,
-              private didAThing: DidAThingServiceService) {
+              private didAThing: DidAThingServiceService,
+              private _snackBar: MatSnackBar) {
   }
 
   @Input() threadId: number;
@@ -116,9 +119,17 @@ export class ReactivePostComponent implements OnInit, AfterViewInit {
   }
 
   editContent(): void {
-    this.editPostEvent.emit(this.postObject)
     let fullreply = <HTMLTextAreaElement>document.getElementById("editBox" + this.postObject.id)
     let editString = fullreply.value;
+    if(editString.length <= 4){
+      this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+        duration: 5000,
+        panelClass: ['snack-bar-background'],
+        data: "Message must contain at least 5 characters"
+      })
+      return;
+    }
+    this.editPostEvent.emit(this.postObject)
     this.editing = false
     if (this.vEnabled == 1) this.postObject.content = this.diffPicker.frontendFilterTagsNormal(editString)
     else if (this.vEnabled == 2) this.postObject.content = this.diffPicker.frontendFilterTagsHard(editString)
