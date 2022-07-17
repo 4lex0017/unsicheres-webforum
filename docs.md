@@ -185,10 +185,6 @@ Die verschiedenen unterstützten Schwierigkeitsgrade werden in der "Filtering"-S
 
 #### Password Hashing
 
-Passwords aren't (always) stored in plain text - for security reasons, most websites store encrypted("hashed") versions.
-The administrator can choose between different algorithms, most of which are reversible by now. These hashed passwords
-can then be extracted via other means, such as SQL injection.
-
 Passwörter werden (meistens) nicht als Klartext gespeichert, sondern mit einer Hashfunktion verschlüsselt, die im
 Idealfall nicht reversibel sein sollte. Diese gehashten Passwörter können von Angreifern auf andere Methoden, wie
 beispielsweise SQL Injection, aus der Datenbank geholt werden und bei einem reversiblen Algorithmus wieder in
@@ -204,10 +200,6 @@ Klartextpasswörter übersetzt werden. Die folgenden (größtenteils) reversible
 
 #### User Enumeration
 
-Attempting to find log-ins via brute force is easier when an attacker knows whether the account they are trying to log
-into exists, as they might otherwise spend time and energy trying to brute force the password to a non-existent account.
-Thus, the administrator can choose different ways of how attackers know about whether an account exists.
-
 Versuche, sich via Brute-Force-Attacke einzuloggen, sind einfacher, wenn ein Angreifer weiß, ob ein Konto überhaupt
 existiert. Ansonsten kann es passieren, dass mit viel Zeit und Energie versucht wird, das Passwort eines nichtexistenten
 Kontos zu erraten. Daher gibt es verschiedene Optionen, wie Angreifer wissen können, ob ein Konto existiert:
@@ -220,10 +212,6 @@ Kontos zu erraten. Daher gibt es verschiedene Optionen, wie Angreifer wissen kö
 - 3: Bei fehlgeschlagenen Anmeldeversuchen wird dem Nutzer eine generische "Login fehlgeschlagen!"-Nachricht ausgegeben.
 
 #### Rate Limiting
-
-Attempting to find log-ins via brute force is harder when the rate at which requests are sent to a server is limited.
-The administrator can choose different levels of rate limiting - none of these should limit a legitimate user scrolling
-the site.
 
 Brute-Force-Attacken können ausgebremst werden, indem die Geschwindigkeit, in der Anfragen geschickt werden dürfen,
 limitiert wird. Daher werden verschiedene Stufen an Rate-Limiting unterstützt - keine davon sollte einen legitimen
@@ -244,7 +232,7 @@ entsprechenden Verwundbarkeiten gefiltert und geprüft werden.
 Umgesetzt wird das mit Laravels "Middleware"-Feature:
 Jede Anfrage geht eine Sammlung an Middlewares durch, die sie verarbeiten, bevor sie an die Controller durchgereicht
 wird, die dann die gesendeten Daten in der Datenbank speichern o.Ä., wie an anderen Orten in dieser Dokumentation
-erklärt wird.
+erklärt wird. [BILD MIDDLEWARE]
 
 Für Filtering und Monitoring wurden zwei Middlewares geschrieben, ein dedizierter Filter und ein dedizierter Monitor.
 
@@ -252,15 +240,10 @@ Für Filtering und Monitoring wurden zwei Middlewares geschrieben, ein dediziert
 
 #### SQL Injection
 
-SQL injection is filtered in two different ways - the filter and monitor check for "--" and "##" as an escape string as
-well as certain SQLite keywords.
-
-The "--" and "##" strings are used to comment out the end of a line in SQL - for some forms of SQL Injection, it's
-necessary to do so in order for the resulting arbitrary SQL to not throw syntax errors.
-
 SQL Injection wird auf zweierlei Arten gefiltert:
 
-Erstens prüft der Filter nach den Zeichenfolgen "--" und "##" - diese kommentieren in SQLite das Ende einer Zeile aus,
+Erstens prüft der Filter nach den Zeichenfolgen "--" und "##" - diese kommentieren in SQLite das Ende eines Statements
+aus,
 was bei manchen Formen von SQL Injection notwendig ist, damit das resultierende SQL-Statement noch syntaktisch korrekt
 ist.
 
@@ -282,9 +265,8 @@ Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen z
   URI wiederholt nach SQLite-Schlüsselwörtern und entfernt alle Vorkommnisse davon.
 
 Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder "
-
-## "), lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
-
+##"),
+lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
 abändert.
 
 #### Cross-Site-Scripting(XSS)
@@ -319,7 +301,7 @@ Profilbilder werden je nach Schwierigkeit auf verschiedene Arten gefiltert. Erke
 also weder vom Typ GIF, noch JPEG, noch PNG ist), wird eine Fehlermeldung zurückgegeben und die Anfrage nicht weiter
 bearbeitet.
 
-##### Difficulties:
+##### Schwierigkeitsgrade:
 
 - 1: Keinerlei Filter.
 - 2: The filter checks for the data type of the encoded file using the file ending.
@@ -340,16 +322,6 @@ einen komplexeren SQL-Parser.
 Werden in einer Anfrage mit SQL Injection Schlagwörter wie "DROP", die die Datenbank kaputt machen könnten, erkannt,
 kriegt der Angreifer zwar Punkte, allerdings wird die Anfrage nicht weiter bearbeitet, damit die Datenbank nicht
 durchgängig zurückgesetzt werden muss.
-
-#### Blind SQL Injection
-
-Bei jeder Anfrage, die keine SQL Injection enthält, wird die Bearbeitungszeit der Anfrage in der sicheren Datenbank
-gespeichert.
-
-Enthält eine Anfrage SQL Injection und eins der für blind SQL Injection wichtigen Schlüsselworte "SLEEP" oder "
-BENCHMARK" wird verwendet, wird die Bearbeitungszeit der Anfrage mit dem durchschnitt der Anfragen ohne SQL Injection
-abgeglichen. Dauert die Bearbeitung der Anfrage mehr als das fünffache der durchschnittlichen Zeit, so geht der Monitor
-davon aus, dass es sich um erfolgreiche Blind SQL Injection handelt.
 
 #### Cross-Site-Scripting (XSS)
 
@@ -416,10 +388,10 @@ Es gibt zwei Arten, die Konfiguration zu laden:
 
 Hier wird Information über alle Verwundbarkeiten, die in backend\storage\app\config\vulnerabilities.json hardcoded ist,
 ausgegeben. Im Feld "checked" wird dafür gespeichert, welche Schwierigkeiten aktuell aktiv sind. Dafür werden alle
-Routen, für die eine bestimmte Verwundbarkeit eine Option ist (gespeichert in
-backend\storage\app\config\vulnRoutes.json), durchgegangen und die entsprechenden Schwierigkeiten auf "true" gesetzt.
-Für routenunabhängige ("statische") Schwierigkeiten, bei denen nur eine Option gleichzeitig aktiv sein kann, wird diese
-stattdessen einfach aus der Datenbank gezogen.
+Routen, für die eine bestimmte Verwundbarkeit eine Option ist
+(gespeichert in backend\storage\app\config\vulnRoutes.json), durchgegangen und die entsprechenden Schwierigkeiten auf
+"true" gesetzt. Für routenunabhängige ("statische") Schwierigkeiten, bei denen nur eine Option gleichzeitig aktiv sein
+kann, wird diese stattdessen einfach aus der Datenbank gezogen.
 
 ##### admin/config
 
@@ -427,7 +399,35 @@ Hier wird spezifische Information darüber, auf welchen Routen welche Verwundbar
 hierfür ist simpler als für admin/vulnerabilities - es werden einfach alle Routen durchgegangen und die Schwierigkeiten
 geladen, danach werden die statischen Schwierigkeiten geladen und angehängt.
 
-#### Setting configuration
+#### Konfiguration ändern
+
+Die Konfiguration kann auf zwei Arten verändert werden, wobei eine nur zum Debuggen gedacht ist.
+
+##### admin/config/premade
+
+Diese Methode ist nur zum Debuggen gedacht - hier kann eine fertige Konfiguration, bei der für jede Route die gewählten
+Schwierigkeiten angegeben sind, übergeben werden, die dann die in der Datenbank gespeicherte Konfiguration überschreibt.
+
+##### admin/config
+
+Diese Methode wird auch vom Front-end genutzt. Hier wird für jede Einstellung angegeben, welche Schwierigkeiten
+unterstützt werden sollen. Für statische (routenunabhängige) Einstellungen wird dann je die erste Schwierigkeit
+übernommen, da hier immer nur eine aktiv sein kann.
+
+Für routenabhängige Einstellungen wird zuerst für jede gewählte Schwierigkeit eine Route ausgewählt, um sicherzustellen,
+dass für jede gewählte Schwierigkeit mindestens eine Route verfügbar ist. Die einzige Ausnahme hier ist der unsichere 
+File-Upload - hier sind nur zwei Routen für drei Schwierigkeiten verfügbar, bei Anwählen aller Schwierigkeiten wird also 
+eine der Schwierigkeiten nicht verwendet.
+
+Danach werden sämtliche verbleibenden Routen durchgegangen und eine der ausgewählten Schwierigkeiten wird zugewiesen.
+
+Für XSS wird hier zusätzlich sichergestellt, dass nicht auf der gleichen Route der Front- und Back-End-Filter für 
+Stored XSS aktiv sind. Hierfür wird zuerst wie oben je eine Route pro Schwierigkeit für Back-end Filter zugewiesen, 
+danach wird je eine Route pro Schwierigkeit für den Front-end Filter zugewiesen, wobei hier geprüft wird, ob die 
+Schwierigkeit des Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route bereits für den Back-end 
+Filter genutzt. Für Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden
+nur für den Back-end Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine
+Route.
 
 Lukas Hein
 
