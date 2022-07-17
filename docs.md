@@ -184,14 +184,6 @@ weshalb dann jeder Eintrag zurückgegeben wird.
 
 Die verschiedenen unterstützten Schwierigkeitsgrade werden in der "Filtering"-Sektion genauer behandelt.
 
-#### Blind SQL Injection
-
-Blind SQL Injection ist eine Unterart von SQL Injection, bei der keine Informationen direkt herausgezogen werden,
-sondern indirekt herausgefunden werden, indem Antworten beispielsweise verzögert werden, wenn bestimmte Bedingungen
-erfüllt werden.
-
-Blind SQLI hat keine eigenen Schwierigkeitsstufen oder Filter, sondern wird bei SQL Injection mitgefiltert.
-
 #### Cross-Site-Scripting(XSS)
 
 Da das Forum nutzergenerierte Inhalte enthält, kann ein Angreifer in veröffentlichte Inhalte HTML-Tags einfügen, um
@@ -288,9 +280,8 @@ Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen z
 - 4: Der Filter durchsucht den Textkörper der Anfrage sowie die Query-Parameter wiederholt nach "--" und "##" sowie die
   URI wiederholt nach SQLite-Schlüsselwörtern und entfernt alle Vorkommnisse davon.
 
-Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder "
-
-## "),
+Findet man andere für bestimmte Arten von Anfragen (z.B. POST-Anfragen) relevante Escape-Strings (wie hier "--" oder
+"##"),
 
 lassen sich diese im Filter und Monitor recht einfach einfügen, indem man das $escape_strings-Array entsprechend
 abändert.
