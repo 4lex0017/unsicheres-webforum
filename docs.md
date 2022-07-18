@@ -18,7 +18,7 @@ deutlich moderneres Design sein sollte. [ Mehr VERGLEICHSBILD]
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
 Userexperience und generelles Design. Das vielversprechendste Forum, das gefunden wurde, war das
-von https://xenforo.com/. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
+von <https://xenforo.com/>. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
 übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet. [VERGLEICHSBILD] (andere Seiten, die
 wir uns anschauten und warum hinzufügen)
 
@@ -153,7 +153,6 @@ aktuelle Konfig ausgegeben und die Studierenden getracked werden.
 - Scoreboard: Hier werden alle Informationen zu den Studierenden ausgegeben. Der gewählte Name, Cookie, Gesamtpunktzahl
   und welche spezifischen Schwachstellen gefunden wurden [ BILD Scoreboard]
 
-
 - Toolbar: Die Toolbar bietet neben der Navigation zwischen Scoreboard und Schwachstellen auch Aktionen aus den
   jeweiligen Komponenten, die häufig benötigt werden.
 
@@ -207,7 +206,7 @@ Idealfall nicht reversibel sein sollte. Diese gehashten Passwörter können von 
 beispielsweise SQL Injection, aus der Datenbank geholt werden und bei einem reversiblen Algorithmus wieder in
 Klartextpasswörter übersetzt werden. Die folgenden (größtenteils) reversiblen Hash-Algorithmen werden unterstützt:
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Keine Hash-Funktion. Passwörter werden als Klartext gespeichert.
 - 2: Der (veraltete) Message-Digest 5 (MD5) Hash-algorithmus wird verwendet, um Passwörter zu verschlüsseln.
@@ -221,7 +220,7 @@ Versuche, sich via Brute-Force-Attacke einzuloggen, sind einfacher, wenn ein Ang
 existiert. Ansonsten kann es passieren, dass mit viel Zeit und Energie versucht wird, das Passwort eines nichtexistenten
 Kontos zu erraten. Daher gibt es verschiedene Optionen, wie Angreifer wissen können, ob ein Konto existiert:
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Einige Nutzer werden an der Seite der Website aufgelistet. Bei fehlgeschlagenen Anmeldeversuchen wird dem Nutzer
   mitgeteilt, ob der Nutzername oder das Passwort falsch war.
@@ -234,7 +233,7 @@ Brute-Force-Attacken können ausgebremst werden, indem die Geschwindigkeit, in d
 limitiert wird. Daher werden verschiedene Stufen an Rate-Limiting unterstützt - keine davon sollte einen legitimen
 Nutzer beeinträchtigen.
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Jeder Nutzer darf bis zu 10000 Anfragen pro Minute schicken. Da diese Zahl unrealistisch hoch ist, kann das als "
   unbegrenzt" verstanden werden.
@@ -271,7 +270,7 @@ Zweitens wird nach der untenstehenden Liste von SQLite-Schlüsselwörtern gefilt
 
 Diese könnten genutzt werden, um aus einer Anfrage zusätzliche Informationen zu ziehen.
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Keinerlei Filter.
 - 2: Der Filter durchsucht den Textkörper der Anfrage sowie die Query-Parameter einmal nach "--" und "##" und entfernt
@@ -299,7 +298,7 @@ Es gibt insgesamt drei XSS-Filter:
 - Einer, der im Front-End den Textkörper überprüft - dieser Filter könnte mithilfe von Man-In-The-Middle-Attacken, bei
   denen eine Anfrage über einen Client wie Postman statt über die Website selbst geschickt wird, vermieden werden.
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Keinerlei Filter.
 - 2: Der Filter durchsucht den Text einmal nach ``<script>``- und ``</script>``-Tags und entfernt sie einmal - eine
@@ -318,7 +317,7 @@ Profilbilder werden je nach Schwierigkeit auf verschiedene Arten gefiltert. Erke
 also weder vom Typ GIF, noch JPEG, noch PNG ist), wird eine Fehlermeldung zurückgegeben und die Anfrage nicht weiter
 bearbeitet.
 
-##### Schwierigkeitsgrade:
+##### Schwierigkeitsgrade
 
 - 1: Keinerlei Filter.
 - 2: The filter checks for the data type of the encoded file using the file ending.
@@ -449,7 +448,189 @@ Lukas Hein
 
 Alexander Kern
 
+## Routing und Datenbankanbindung mit Laravel
+
+### Probleme mit Laravel und SQl injection
+
+Laravel ist ein gutes Framework, welches für die Datenbankanbindung standardmäßig Prepared Statements in den Eloquent Modellen (siehe Beschreibeung Daniel K.) nutzt.
+Diese sind Perfekt für normale Anwendungen, wenn man dagegen SQL injection explizit erlauben möchte muss man das irgendwie umgehen.
+
+#### Injection bei SELECT Statements
+
+##### Mögliche Injections
+
+Bei SELECT Statements sind zwei Arten von Injectons möglich:
+Zum Einen kann mann sich mit `SELECT (*) FROM users WHERE id = 1 or 1=1;` alle User ausgeben lassen, obwohl mann die IDs dieser nicht kennt.
+Zum Anderen ist es möglich ein Union statement zu formen um sich Daten von andenen Tabellen oder Werte die nicht ausgegeben werden, sich ausgeben zu lassen.
+
+##### Probleme in Laravel
+
+Laravel hat die Funktion `find()` mit welcher man ein Eloquent model in der passenden Datenbank suchen kann. Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten String mitgeben, welcher auch andere Statements enthalten kann.
+
+#### Injection bei INSERT Statements
+
+##### Mögliche Injection
+
+In INSERT Statements ist möglich mit einer Subquery, einer Anfrage in einer Anfrage, Passwörter oder andere Daten in vorhandene Felder zu schreiben.
+Ein solches Statement würde ungefähr so aussehen:
+`INSERT into users (name , password, info) VALUES ('Alex', 'Secret', (SELECT password FROM users where id = 5)); --`
+Nun steht in dem fled info das Passwort des Users mit der ID 5.
+
+##### Probleme in Laravel
+
+Für ein INSERT mit Eloquent ist es nur nötig den einkommenden Body in ein `insert()` zu stecken. Mit einem Validator kann man davor noch Bedingungen prüfen.
+Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
+Hierbei sind folgenden Dinge zu beachten:
+    1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
+    2. Der String sollte Allgemeingültg für alle Ressoucen sein.
+    3. Json Arrays müssen als String encoded werden.
+
+Desweitern muss noch folgendes beachtet werden:
+    1. Der Nutzer muss berechtigt sein die Ressource zu erstellen.
+    2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
+
+Das Restultat ist eine Funktion, die den Tablenamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der name des Feldes und den Wert an Verschiedene Strings angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Erstellzeitpunk und der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+
+Bestimmte Werte müssen voher mit einem Validator überprüft werden.
+
+#### Injection bei UPDATE Statements
+
+##### Mögliche Injections
+
+In UPDATE Statements ist es möglich Werte von allen Zeilen einer Tabelle zu verändern. Hierbei darf in der Tabelle keine Einzigartigern Werte geben.
+Desweiteren ist eine Subquery ebenfalls möglich.
+
+Um Daten in alle Zeilen zu schreiben muss man aus `UPDATE threads SET title="New Title" WHERE id = 5;` `UPDATE threads SET title="New Title"` machen. Nun existiert keine Beschränkung für das und jeder Thred title wird zu "New Title" geändert.
+Dies ist einfach zu erreichen in dem man `;--` oder andere syntax für SQL kommentare anhängt.
+
+##### Probleme in Laravel
+
+Für ein UPDATE mit Eloquent ist es nur nötig das aktuelle Model zu suchen und anschließend den einkommenden Body in ein `->update()` zu stecken. Damit dies in der Datenbank gespeichert wird sollte man ein `-save()` ausführen. Mit einem Validator kann man davor noch Bedingungen prüfen.
+
+Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
+Hierbei sind folgenden Dinge zu beachten:
+    1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
+    2. Der String sollte Allgemeingültg für alle Ressoucen sein.
+    3. Json Arrays müssen als String encoded werden.
+
+Desweitern muss noch folgendes beachtet werden:
+    1. Der Nutzer muss berechtigt sein die Ressource zu bearbeiten.
+    2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
+
+Das Restultat ist eine Funktion, die den Tablenamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der name des Feldes und den Wert an einen String angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+
+Bestimmte Werte müssen voher mit einem Validator überprüft werden.
+
+#### Injection bei DELETE Statements
+
+##### Mögliche Injection
+
+Bei einem DELETE Statement ist eine Injection möglich. Mann kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle daten zu Löschen.
+
+##### Probleme in Laravel
+
+Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten String mitgeben, welcher auch andere Befehle enthalten kann.
+
+### Routing mit Laravel
+
+Routing in Laravel ist simpel.
+
+Zuerst muss man die Routen im RouteServiceProvider registrieren. Für die Routen kann man hier ein Prefix vergeben. Sobald dies geschehen ist Kann mann in der registrieten Route Funktionen und Endpunkte definieren.
+
+Als Beispiel:
+`Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');`
+
+Hier wird in der api.php eine Endpunkt definiert, der auf `users/id` endet, und die Guntion getUserById in der Klasse UserController aufruft.
+Die Funktion kann nun `id` und `request` als Werte übergeben bekommen.
+
+Beispiel:
+
+```php
+    public function getUserById($id): UserResource|Response|AnonymousResourceCollection|Application|ResponseFactory
+    {
+        $user = UserController::findUser($id);
+        if (!$user)
+            return response('', 404);
+
+        return UserResource::collection($user);
+    }
+```
+
+Diese funktion sucht nach einem User mit der Injectable Funktion.
+Sollte hier kein Resultat kommen wird ein response mit 404 gesendet.
+ansonsten wird die UserRessurce aufgerufen.
+
+#### Ressourcen
+
+Ressurcen in Laravel benutzt man um Objecte in eine Form zu bringen, die man ausgibt. Hier kann zum Beispiel bei einem User das Password versteckt werden, oder man baut sich Subressurcen aus übergebenen Arrays.
+
+Beispiel:
+(aus ThreadRessurce.php)
+
+```php
+    public function toArray($request): array|JsonSerializable|Arrayable
+    {
+        $data = $this;
+
+        $author = (new User)->find($data->author);
+        $data->author = [
+            'id' => $data->author,
+            'profile_picture' => $author->profile_picture,
+            'name' => $author->name,
+        ];
+
+        $posts = Post::all()->where('thread_id', '=', $data->id);
+        $data->posts = PostResource::collection($posts);
+
+        return self::convertData($data);
+    }
+```
+
+Hier wird der Author und alle Posts überschrieben um in der Ausgabe die Daten aus anderen Tabellen darzustellen.
+
+Beispiel Resultat:
+
+```json
+{
+   "id": 21,
+   "title": "Community Thread 1",
+   "date": "01.01.0001",
+   "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+   "author":
+     {
+       "id": 11,
+       "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
+       "name": "TestUsername1"
+     },
+   "posts": [
+     {
+       "id": 31,
+       "content": "this is a test post",
+       "date": "04.01.0001",
+       "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+       "author":
+         {
+           "id": 12,
+           "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
+           "name": "TestUsername2"
+         }
+     },
+     {
+       "id": 32,
+       "content": "this is a 2nd answer test post",
+       "date": "06.01.0001",
+       "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+       "author":
+         {
+           "id": 135,
+           "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
+           "name": "test_test_testuser"
+         }
+     }
+   ]
+ }
+```
+
 Daniel Katzenberger
 
 Peter Weiß
-
