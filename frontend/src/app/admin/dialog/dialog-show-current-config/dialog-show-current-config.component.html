@@ -1,23 +1,24 @@
 <div class="outer-container">
   <h2 mat-dialog-title>Current Config:</h2>
   <mat-dialog-content class="mat-typography">
-    <mat-grid-list cols="3" rowHeight="200px" minlength="200px">
+    <mat-grid-list cols="3" rowHeight="220px" minlength="200px">
+
       <mat-grid-tile>
         <mat-card class="cards">
           <mat-card-title><h3><b>General </b></h3></mat-card-title>
-          <p>
+          <p class="paragraph">
             <span class="state-description-name">User Enumeration</span>
             <span class="demo-2">({{mapOThreeOff.get(data.user_difficulty)}})</span>
           </p>
-          <p>
-            <span class="state-description-name">Password-hash</span>
+          <p class="paragraph">
+            <span class="state-description-name">Password-Hash</span>
             <span class="demo-2">({{mapOfFour.get(data.hash_difficulty)}})</span>
           </p>
-          <p>
+          <p class="paragraph">
             <span class="state-description-name">Rate Limiting</span>
             <span class="demo-2">({{mapOThreeHard.get(data.rate_difficulty)}})</span>
           </p>
-          <p>
+          <p class="paragraph">
             <span class="state-description-name">Hints</span>
             <span class="demo-2">({{mapOfTwo.get(data.hint_difficulty)}})</span>
           </p>
@@ -27,27 +28,36 @@
         <mat-card class="cards">
           <mat-card-title><h3><b>{{config.uri}} </b></h3></mat-card-title>
           <mat-card-content>
-            <p *ngIf="config.rxss_difficulty && config.rxss_difficulty < 4">
+            <p *ngIf="config.rxss_difficulty && config.rxss_difficulty < 4" class="paragraph">
               <span class="state-description-name"> Reflected XSS </span>
               <span class="demo-2"> ({{mapOfFour.get(config.rxss_difficulty)}}) </span>
             </p>
 
-            <p *ngIf="config.sxss_difficulty &&  config.sxss_difficulty < 4">
+            <p *ngIf="config.sxss_difficulty &&  config.sxss_difficulty < 4" class="paragraph">
               <span class="state-description-name"> Stored XSS </span>
               <span class="demo-2"> ({{mapOfFour.get(config.sxss_difficulty)}}) </span>
             </p>
-            <p *ngIf="config.fend_difficulty &&  config.fend_difficulty < 4">
+            <p *ngIf="config.fend_difficulty &&  config.fend_difficulty < 4" class="paragraph">
               <span class="state-description-name"> Frontend XSS </span>
               <span class="demo-2"> ({{mapOfFour.get(config.fend_difficulty)}})</span>
             </p>
-            <p *ngIf="config.sqli_difficulty &&  config.sqli_difficulty < 4">
+            <p *ngIf="config.sqli_difficulty &&  config.sqli_difficulty < 4" class="paragraph">
               <span class="state-description-name"> SQL Injection </span>
               <span class="demo-2"> ({{mapOfFour.get(config.sqli_difficulty)}})</span>
             </p>
-            <p *ngIf=" config.file_difficulty &&  config.file_difficulty < 3">
+            <p *ngIf=" config.file_difficulty &&  config.file_difficulty < 3" class="paragraph">
               <span class="state-description-name"> File Upload </span>
               <span class="demo-2"> ({{mapOThreeImp.get(config.file_difficulty)}})</span>
             </p>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card class="cards">
+          <mat-card-title><h3><b>/wiki</b></h3></mat-card-title>
+          <mat-card-content>
+            This is always active. If a user navigates to this page they will be awarded 2
+            points.
           </mat-card-content>
         </mat-card>
       </mat-grid-tile>

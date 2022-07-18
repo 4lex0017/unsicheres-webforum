@@ -7,7 +7,6 @@ import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
-import {DialogCreatePostComponent} from './dialog-create-post/dialog-create-post.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
@@ -25,7 +24,6 @@ import {DialogReportPostComponent} from "./dialog-report-post/dialog-report-post
 @NgModule({
   declarations: [
     DialogEditThreadComponent,
-    DialogCreatePostComponent,
     DialogEditPostComponent,
     DialogDeletePostComponent,
     DialogDeleteThreadComponent,

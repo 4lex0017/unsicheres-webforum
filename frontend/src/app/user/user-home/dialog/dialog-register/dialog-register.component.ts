@@ -46,6 +46,23 @@ export class DialogRegisterComponent {
 
   registerUser(): void {
     if (this.username && this.password && this.passwordRepeat && this.date.value) {
+      let error = "";
+      if (this.username.length < 5) {
+        error = "Name too short! At least 5 characters.";
+      }
+      if (this.username.length > 150) {
+        error = "Name too long! < 150 characters!"
+        this.username = "";
+      }
+      if (error != "") {
+        this._snackBar.openFromComponent(SnackBarNotificationComponent, {
+          duration: 5000,
+          panelClass: ['snack-bar-background'],
+          data: error,
+        });
+        return;
+      }
+
       if (this.password == this.passwordRepeat) {
         this.authenticate.registerJwt(this.username, this.password, this.date.value, this.profilePicture).subscribe(data => {
           if (data['headers'].get('vulnfound') == "true") {

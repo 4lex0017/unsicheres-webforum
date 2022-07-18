@@ -21,25 +21,28 @@
       </div>
       <div class="col-xs-2 col-md-3 col-lg-4">
         <div class="side-content-container">
+
           <button color="primary" (click)="openCreateThreadDialog()" mat-raised-button *ngIf="canCreate()">Create
             Thread
           </button>
 
           <span class="spacer"></span>
-          <mat-form-field>
-            <input type="search" matInput placeholder="Search"
-                   [(ngModel)]="searchQuery"
-                   (keyup.enter)="clickSearch()"
-            >
-          </mat-form-field>
-          <button mat-icon-button color="primary"
-                  aria-label="Example icon button with a home icon"
-                  (click)="clickSearch()">
-            <mat-icon>search</mat-icon>
-          </button>
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
-            <mat-icon>expand_more</mat-icon>
-          </button>
+          <span style="white-space: nowrap ">
+            <mat-form-field>
+              <input type="search" matInput placeholder="Search"
+                     [(ngModel)]="searchQuery"
+                     (keyup.enter)="clickSearch()"
+              >
+            </mat-form-field>
+            <button mat-icon-button color="primary"
+                    aria-label="Example icon button with a home icon"
+                    (click)="clickSearch()">
+              <mat-icon>search</mat-icon>
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="menu">
+              <mat-icon>expand_more</mat-icon>
+            </button>
+          </span>
           <mat-menu #menu="matMenu" class="settings-menu" xPosition="before">
             <mat-radio-group [(ngModel)]="whereToSearch" color="primary"
                              aria-labelledby="example-radio-group-label"
@@ -52,7 +55,7 @@
             </mat-radio-group>
           </mat-menu>
         </div>
-        <div *ngIf="sideContentUsers | async as sideContentObj; else loadingUsers">
+        <div *ngIf="sideContentUsers | async as sideContentObj; else loadingUsers" style="min-width: 296px">
           <mat-card class="userlist" *ngIf="sideContentObj.data.length > 0">
             <mat-card-title class="sidecontent-users">
               Registered Users
@@ -66,7 +69,7 @@
             ...
           </mat-card>
         </div>
-        <ng-template #loadingUsers>
+        <ng-template #loadingUsers style="min-width: 296px">
           <mat-card class="userlist">
             <mat-card-title class="sidecontent-users">
               Loading content ...

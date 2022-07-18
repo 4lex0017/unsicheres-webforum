@@ -26,7 +26,7 @@ export class VulnerabilitiesComponent implements OnInit {
   currentConfig: VulnerabilitiesConfig;
   curVulnerabilities: VulnerabilityDifficultyOverviewPackage = {vulnerabilities: []};
   helperPostStatus: number = -1;
-  mapOThree = new Map<number, string>([[-1, "Loading status"], [0, 'Helper Posts not active'], [1, 'Helper Posts active']]);
+  mapOThree = new Map<number, string>([[-1, "Loading status"], [0, 'Activate Helper Posts'], [1, 'Helper Posts active']]);
   btnColour = '#0c5fcb';
 
   constructor(private dialog: MatDialog,
@@ -95,6 +95,7 @@ export class VulnerabilitiesComponent implements OnInit {
   showCurrentConfig() {
     this.dialog.open(DialogShowCurrentConfigComponent, {
       width: '70%',
+      minWidth: 950,
       data: this.currentConfig
     });
   }

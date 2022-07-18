@@ -23,6 +23,12 @@
     "logLevel": "debug",
     "changeOrigin": false
   },
+  "/admin/activatehints": {
+    "target": "http://localhost:80",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": false
+  },
   "/admin/logout": {
     "target": "http://localhost:80",
     "secure": false,

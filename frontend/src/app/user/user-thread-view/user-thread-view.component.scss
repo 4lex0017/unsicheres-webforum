@@ -2,6 +2,7 @@
   padding: 40px 0 0 125px;
   background-color: inherit;
   min-width: 600px;
+  max-width: 80%;
 }
 
 .thread-user-icon {
@@ -23,6 +24,11 @@
 
 .title {
   font-size: 25px;
+  line-height: 33px;
+  width: 100%;
+  word-wrap: break-word;
+  display: block;
+  overflow: clip;
 }
 
 .thread-card {
