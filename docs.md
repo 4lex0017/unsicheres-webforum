@@ -18,7 +18,7 @@ deutlich moderneres Design sein sollte.
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
 Userexperience und generelles Design. Das vielversprechendste Forum, das gefunden wurde, war das
-von https://xenforo.com/. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
+von <https://xenforo.com/>. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
 übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet.
 
 <p float="left">
@@ -102,7 +102,6 @@ folgende Schritte unternommen:
 
 - Es gibt eine besondere Route (`GET .../c?r=`) um spezifische Schwachstellen abzufragen und deren Schwierigkeitsstufe
   zu erhalten. Hierdurch werden die XSS Frontendfilter eingestellt und der oben erwähnte XSS Workaround aktiviert.
-
 
 - Backend sendet einen Header mit, durch den festgestellt wird, ob eine Schwachstelle ausgelöst wurde. Falls das der
   Fall ist, wird eine Animation abgespielt, um den User zu benachrichtigen.
@@ -203,11 +202,9 @@ Auch sehr wichtig war es den Usern, als auch den Admins Benachrichtigungen zu se
     <img src="assetsDocumentation/danielB/informationNotification4.gif" alt="user_notification" width="250"/>
   </p>
 
-
 - Seitennutzer über Aktivitäten hinzuweisen, die im Backend stattfinden, bzw. längere Wartezeiten beinhalten
 
   <img src="assetsDocumentation/danielB/resetDBNotification.gif" alt="user_notification" width="300"/>
-
 
 - Kontextmenü-Optionen anzubieten
 
@@ -674,18 +671,6 @@ Beispiel Resultat:
            "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
            "name": "TestUsername2"
          }
-     },
-     {
-       "id": 32,
-       "content": "this is a 2nd answer test post",
-       "date": "06.01.0001",
-       "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-       "author":
-         {
-           "id": 135,
-           "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
-           "name": "test_test_testuser"
-         }
      }
    ]
  }
@@ -706,4 +691,3 @@ Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgend
 Daniel Katzenberger
 
 Peter Weiß
-
