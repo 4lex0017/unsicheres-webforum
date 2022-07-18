@@ -16,9 +16,12 @@
                         "id": 700,
                         "content": "What kind of Database do you use for the Forum? And how do prevent attackers from attacking it?",
                         "date": "2022-05-05 00:02:02",
-                        "likedFrom": [],
+                        "likedFrom": [
+                            701,
+                            702
+                        ],
                         "author" : {
-                            "id" : "700"
+                            "id" : 700
                         }
                     },
                     {
@@ -27,7 +30,7 @@
                         "date": "2022-05-05 00:05:02",
                         "likedFrom": [],
                         "author" : {
-                            "id" : "701"
+                            "id" : 701
                         }
                     },
                     {
@@ -36,7 +39,7 @@
                         "date": "2022-05-05 00:05:30",
                         "likedFrom": [],
                         "author" : {
-                            "id" : "700"
+                            "id" : 700
                         }
                     },
                     {
@@ -45,7 +48,7 @@
                         "date": "2022-05-05 00:06:30",
                         "likedFrom": [],
                         "author" : {
-                            "id" : "702"
+                            "id" : 702
                         }
                     }
                 ]
