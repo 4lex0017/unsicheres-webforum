@@ -452,7 +452,7 @@ Alexander Kern
 
 ### Probleme mit Laravel und SQl injection
 
-Laravel ist ein gutes Framework, welches für die Datenbankanbindung standardmäßig Prepared Statements in den Eloquent Modellen (siehe Beschreibeung Daniel K.) nutzt.
+Laravel ist ein gutes Framework, welches für die Datenbankanbindung standardmäßig Prepared Statements in den Eloquent Modellen (siehe Beschreibung Daniel K.) nutzt.
 Diese sind Perfekt für normale Anwendungen, wenn man dagegen SQL injection explizit erlauben möchte muss man das irgendwie umgehen.
 
 #### Injection bei SELECT Statements
@@ -461,7 +461,7 @@ Diese sind Perfekt für normale Anwendungen, wenn man dagegen SQL injection expl
 
 Bei SELECT Statements sind zwei Arten von Injectons möglich:
 Zum Einen kann mann sich mit `SELECT (*) FROM users WHERE id = 1 or 1=1;` alle User ausgeben lassen, obwohl mann die IDs dieser nicht kennt.
-Zum Anderen ist es möglich ein Union statement zu formen um sich Daten von andenen Tabellen oder Werte die nicht ausgegeben werden, sich ausgeben zu lassen.
+Zum Anderen ist es möglich ein Union Statement zu formen um sich Daten von andenen Tabellen oder Werte die nicht ausgegeben werden, sich ausgeben zu lassen.
 
 ##### Probleme in Laravel
 
@@ -482,26 +482,26 @@ Für ein INSERT mit Eloquent ist es nur nötig den einkommenden Body in ein `ins
 Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
 Hierbei sind folgenden Dinge zu beachten:
     1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
-    2. Der String sollte Allgemeingültg für alle Ressoucen sein.
+    2. Der String sollte Allgemeingültig für alle Ressourcen sein.
     3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
     1. Der Nutzer muss berechtigt sein die Ressource zu erstellen.
     2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
 
-Das Restultat ist eine Funktion, die den Tablenamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der name des Feldes und den Wert an Verschiedene Strings angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Erstellzeitpunk und der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name des Feldes und den Wert an Verschiedene Strings angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Erstellzeitpunk und der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
 
-Bestimmte Werte müssen voher mit einem Validator überprüft werden.
+Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
 #### Injection bei UPDATE Statements
 
 ##### Mögliche Injections
 
-In UPDATE Statements ist es möglich Werte von allen Zeilen einer Tabelle zu verändern. Hierbei darf in der Tabelle keine Einzigartigern Werte geben.
-Desweiteren ist eine Subquery ebenfalls möglich.
+In UPDATE Statements ist es möglich Werte von allen Zeilen einer Tabelle zu verändern. Hierbei darf in der Tabelle keine Einzigartigen Werte geben.
+Des weiteren ist eine Subquery ebenfalls möglich.
 
 Um Daten in alle Zeilen zu schreiben muss man aus `UPDATE threads SET title="New Title" WHERE id = 5;` `UPDATE threads SET title="New Title"` machen. Nun existiert keine Beschränkung für das und jeder Thred title wird zu "New Title" geändert.
-Dies ist einfach zu erreichen in dem man `;--` oder andere syntax für SQL kommentare anhängt.
+Dies ist einfach zu erreichen in dem man `;--` oder andere Syntax für SQL Kommentare anhängt.
 
 ##### Probleme in Laravel
 
@@ -510,22 +510,22 @@ Für ein UPDATE mit Eloquent ist es nur nötig das aktuelle Model zu suchen und 
 Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
 Hierbei sind folgenden Dinge zu beachten:
     1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
-    2. Der String sollte Allgemeingültg für alle Ressoucen sein.
+    2. Der String sollte Allgemeingültig für alle Ressourcen sein.
     3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
     1. Der Nutzer muss berechtigt sein die Ressource zu bearbeiten.
     2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
 
-Das Restultat ist eine Funktion, die den Tablenamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der name des Feldes und den Wert an einen String angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name des Feldes und den Wert an einen String angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
 
-Bestimmte Werte müssen voher mit einem Validator überprüft werden.
+Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
 #### Injection bei DELETE Statements
 
 ##### Mögliche Injection
 
-Bei einem DELETE Statement ist eine Injection möglich. Mann kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle daten zu Löschen.
+Bei einem DELETE Statement ist eine Injection möglich. Man kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle daten zu Löschen.
 
 ##### Probleme in Laravel
 
@@ -535,12 +535,12 @@ Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. I
 
 Routing in Laravel ist simpel.
 
-Zuerst muss man die Routen im RouteServiceProvider registrieren. Für die Routen kann man hier ein Prefix vergeben. Sobald dies geschehen ist Kann mann in der registrieten Route Funktionen und Endpunkte definieren.
+Zuerst muss man die Routen im RouteServiceProvider registrieren. Für die Routen kann man hier ein Prefix vergeben. Sobald dies geschehen ist kann man in der registrierten Route Funktionen und Endpunkte definieren.
 
 Als Beispiel:
 `Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');`
 
-Hier wird in der api.php eine Endpunkt definiert, der auf `users/id` endet, und die Guntion getUserById in der Klasse UserController aufruft.
+Hier wird in der api.php ein Endpunkt definiert, der auf `users/id` endet, und die Funtion getUserById in der Klasse UserController aufruft.
 Die Funktion kann nun `id` und `request` als Werte übergeben bekommen.
 
 Beispiel:
@@ -556,13 +556,13 @@ Beispiel:
     }
 ```
 
-Diese funktion sucht nach einem User mit der Injectable Funktion.
+Diese Funktion sucht nach einem User mit der Injectable Funktion.
 Sollte hier kein Resultat kommen wird ein response mit 404 gesendet.
 ansonsten wird die UserRessurce aufgerufen.
 
 #### Ressourcen
 
-Ressurcen in Laravel benutzt man um Objecte in eine Form zu bringen, die man ausgibt. Hier kann zum Beispiel bei einem User das Password versteckt werden, oder man baut sich Subressurcen aus übergebenen Arrays.
+Ressourcen in Laravel benutzt man um Objekte in eine Form zu bringen, die man ausgibt. Hier kann zum Beispiel bei einem User das Password versteckt werden, oder man baut sich Subressourcen aus übergebenen Arrays.
 
 Beispiel:
 (aus ThreadRessurce.php)
@@ -586,7 +586,7 @@ Beispiel:
     }
 ```
 
-Hier wird der Author und alle Posts überschrieben um in der Ausgabe die Daten aus anderen Tabellen darzustellen.
+Hier wird der Autor und alle Posts überschrieben, um in der Ausgabe die Daten aus anderen Tabellen darzustellen.
 
 Beispiel Resultat:
 
@@ -628,6 +628,18 @@ Beispiel Resultat:
          }
      }
    ]
+ }
+```
+
+Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgende Json entstanden:
+
+```json
+{
+   "id": 21,
+   "title": "Community Thread 1",
+   "date": "01.01.0001",
+   "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
+   "author": 11
  }
 ```
 
