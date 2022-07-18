@@ -11,25 +11,27 @@
 Wie durch den Projekttitel „Unsicheres Web-Forum“ beschrieben, wird ein Forum benötigt. Mit Blick auf das GitHub Projekt
 „DAMN VULNERABLE WEB APPLICATION“ – ein Projekt das, ähnlich unserem, Schwachstellen in einer Webseite integrierte, um
 einen sehr Praxisnahen Lernprozess zu ermöglichen – wurde auch schnell ersichtlich, dass eine unserer Anforderungen ein
-deutlich moderneres Design sein sollte. [ Mehr VERGLEICHSBILD]
+deutlich moderneres Design sein sollte.
 
 <img src="assetsDocumentation/danielB/DVWA_comparsinon.png" alt="DVWA" width="800"/>
 
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
 Userexperience und generelles Design. Das vielversprechendste Forum, das gefunden wurde, war das
-von <https://xenforo.com/>. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
-übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet. [VERGLEICHSBILD] (andere Seiten, die
-wir uns anschauten und warum hinzufügen)
+von https://xenforo.com/. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
+übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet.
 
-<img src="assetsDocumentation/danielB/xenforo_comparison.png" alt="XenForo" width="800"/>
+<p float="left">
+<img src="assetsDocumentation/danielB/xenforo_comparison.png" alt="XenForo" width="500"/>
+<img src="assetsDocumentation/danielB/vBulletin_comparison.png" alt="vBulletin" width="555"/>
+</p>
 
 Hieraus konnte sich ein grober Überblick über die nötigen Features, Struktur und Designelemente gemacht werden, die in
 unserem Endresultat benötigt werden. Die Forum Funktionen sollten eine vereinfachtere Version des XenForo Forums werden.
 Intuitives und Modernes Design standen an erster Stelle. Das Feature Set, bezogen auf die Modellierung, sollte
 vereinfacht sein, weshalb sich auf eine Aufteilung in Kategorien, Threads und Posts geeinigt wurde. Bei allen anderen
 Funktionalitäten, wie z.B. Userprofile, Navigation der Seite, gegebene Zusatz Informationen wurde sich stehts an XenForo
-und [DAS ANDERE] orientiert. Da das Forum nur einen Teil des endgültigen Produkts wiedergibt hielten wir es für kein
+und vBulletin orientiert. Da das Forum nur einen Teil des endgültigen Produkts wiedergibt hielten wir es für kein
 Problem uns stärker hieran zu orientieren.
 
 Durch das sammeln der Anforderugen konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
@@ -58,8 +60,13 @@ umzugehen. Selbst auf Tablets und kleineren Displays ist das Frontend ohne Probl
 Als sich grob auf die verwendeten Technologien geeinigt wurde erstellte ich mehrere Prototypen, in denen auch weitere
 Librarys und Frameworks getestet wurden. Da man es aber vermeiden wollte zu viele verschiedene externe Bibliotheken und
 Frameworks für minimale Verbesserungen und Vereinfachungen einzubinden wurde hier auch vieles wieder gestrichen.
-Erwähnenswert waren noch [wie auch immer die Charts library hieß], um die Auswertung der gefundenen Schachstellen
-schöner zu visualisieren [Bsp aus den Prototypen, charts, jsirgendwas, etc].
+Erwähnenswert waren noch *ngx-charts* und *ng2-charts*, um die Auswertung der gefundenen Schwachstellen schöner zu
+visualisieren, als auch *ngx-virtual-scroller* für ein deutlich einfacheres Tabellensystem.
+
+<p float="left">
+  <img src="assetsDocumentation/danielB/prototype_1.png" alt="panelBasedAdminOverview" width="700"/>
+  <img src="assetsDocumentation/danielB/prototype_2.png" alt="oldThreadDesign" width="490"/>
+</p>
 
 ## Das Endprodukt
 
@@ -88,6 +95,19 @@ in einem einheitlichen Service gemanaged. Dieser Service sorgt fuer das passende
 Daten, falls nötig, in das richtige Frontend Model Format und bietet ein generelles Error Management auf das im nächsten
 Absatz genauer eingegangen wird.
 
+### Schwachstellenbezogene Kommunikation
+
+Um Schwachstellen zu tracken, User zu informieren und Schwachstellen im Frontend scharfzuschalten oder zu ändern werden
+folgende Schritte unternommen:
+
+- Es gibt eine besondere Route (`GET .../c?r=`) um spezifische Schwachstellen abzufragen und deren Schwierigkeitsstufe
+  zu erhalten. Hierdurch werden die XSS Frontendfilter eingestellt und der oben erwähnte XSS Workaround aktiviert.
+
+
+- Backend sendet einen Header mit, durch den festgestellt wird, ob eine Schwachstelle ausgelöst wurde. Falls das der
+  Fall ist, wird eine Animation abgespielt, um den User zu benachrichtigen.
+  <img src="assetsDocumentation/danielB/iDidAThing.gif" alt="scoreboard" width="900"/>
+
 ### Error Management
 
 Es wurde ein generelles Error Management eingeführt, gekoppelt mit Benachrichtigungen die die Nutzer über Responses des
@@ -103,7 +123,7 @@ einzugehen.
   <img src="assetsDocumentation/danielB/errorManagement.png" alt="user_notification" width="400"/>
 </p>
 
-### User und Admin Authentication mit  Interceptorn
+### User und Admin Authentication mit Interceptorn
 
 Angular bietet Interceptor, um routenspezifisch Header mitzusenden. Dies wird für das generelle Managen von Tokens
 verwendet. User und Admin haben unterschiedliche lokale Tokens welche im Backend zur Authentication von Requests genutzt
@@ -114,8 +134,6 @@ werden.
 Angular returned bei Backend Calls Observables. Diese können Asynchron aufgerufen werden um Platzhaltercontent während
 des Ladens anzuzeigen. Dies wird in diesem Projekt vielfältig eingesetzt. „Loading“ Messages, als auch Loading Rotator
 werden verwendet, um dem User zu signalisieren, dass der Request eingegangen ist und gerade verarbeitet wird.
-
-### [Schwachstellenbezogene Kommunikation]
 
 ### Tracking mit Cookies
 
@@ -151,16 +169,58 @@ aktuelle Konfig ausgegeben und die Studierenden getracked werden.
   <img src="assetsDocumentation/danielB/adminPanel_curConfig_v2.png" alt="vulnerabilities" width="900"/>
 
 - Scoreboard: Hier werden alle Informationen zu den Studierenden ausgegeben. Der gewählte Name, Cookie, Gesamtpunktzahl
-  und welche spezifischen Schwachstellen gefunden wurden [ BILD Scoreboard]
+  und welche spezifischen Schwachstellen gefunden wurden
+
+  <img src="assetsDocumentation/danielB/adminPanel_scoreboard_v22.png" alt="vulnerabilities" width="900"/>
 
 - Toolbar: Die Toolbar bietet neben der Navigation zwischen Scoreboard und Schwachstellen auch Aktionen aus den
   jeweiligen Komponenten, die häufig benötigt werden.
 
-### [Design mit Angular Material und Fluidity des Frontends]
+### Design mit Angular Material
 
-### [Benachrichtigungen]
+Angular Material bietet ein einheitliches und globales Styling-Pattern, welches die Integration eines sauberen und
+einheitlichen Designs einfacher gestaltet. Durch das *css* Superset *scss* kann dies mit Funktionen so weit vereinfacht
+werden, dass auch Globale Style Änderung im Livebetrieb, wie z.B. ein togglebarer Dark-Mode, sehr einfach umgesetzt
+werden können.
 
-### [Fazit]
+<img src="assetsDocumentation/danielB/dark-mode.gif" alt="vulnerabilities" width="900"/>
+
+Des weiteren bietet Angular Material ein breiter repartuar an einfach integrierbaren Komponenten, wie Tabellen, Buttons,
+Panels, Fortschrittsindikatoren, Effekte und Icons.
+
+<img src="assetsDocumentation/danielB/angularMaterial.png" alt="vulnerabilities" width="900"/>
+
+### Benachrichtigungen
+
+Auch sehr wichtig war es den Usern, als auch den Admins Benachrichtigungen zu senden um:
+
+- genauere Informationen anzuzeigen
+
+  <p float="left">
+    <img src="assetsDocumentation/danielB/informationNotification1.gif" alt="user_notification" width="250"/>
+    <img src="assetsDocumentation/danielB/informationNotification2.gif" alt="user_notification" width="250"/>
+    <img src="assetsDocumentation/danielB/informationNotification3.gif" alt="user_notification" width="250"/>
+    <img src="assetsDocumentation/danielB/informationNotification4.gif" alt="user_notification" width="250"/>
+  </p>
+
+
+- Seitennutzer über Aktivitäten hinzuweisen, die im Backend stattfinden, bzw. längere Wartezeiten beinhalten
+
+  <img src="assetsDocumentation/danielB/resetDBNotification.gif" alt="user_notification" width="300"/>
+
+
+- Kontextmenü-Optionen anzubieten
+
+  <img src="assetsDocumentation/danielB/contextMenuCreateProfileNotification.gif" alt="user_notification" width="800"/>
+
+### Fazit
+
+Im Großen und Ganzen war es für ein erstes selbstgemanagtes Teamprojekt zumindest kein totaler Flugzeugabsturz. Die
+wichtigste Lektion, die ich persönlich aus dem Projekt mitnehmen konnte, war, dass der Managementfaktor viel größer ist
+als gedacht. Der hohe Zeitaufwand der mit Besprechungen, Aufgabenverteilung, einhalten von Deadlines und Kommunikation
+bzw. Konfliktlösung innerhalb des Teams einhergeht wurde absolut unterschätzt. Auch Aufgaben, die nur in Abhängigkeit zu
+anderen Teammitgliedern gelöst werden konnten und die dadurch entstandenen Wartezeiten waren bedenklich hoch und
+Fehlkalkuliert. In der Zukunft werden Managementfaktoren genauer und großzügiger einkalkuliert.
 
 Chris Reichel
 
@@ -646,3 +706,4 @@ Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgend
 Daniel Katzenberger
 
 Peter Weiß
+

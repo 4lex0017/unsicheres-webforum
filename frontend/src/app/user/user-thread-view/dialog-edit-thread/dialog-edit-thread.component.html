@@ -6,7 +6,7 @@
   <p></p>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="primary" (keyup.enter)=data [mat-dialog-close]="data">Save changes
+  <button mat-raised-button color="primary" (keyup.enter)=onYesClick() (click)="onYesClick()">Save changes
   </button>
   <button mat-raised-button color="warn" (click)="onNoClick()">Abort</button>
 </div>
