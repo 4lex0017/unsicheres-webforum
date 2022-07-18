@@ -52,6 +52,11 @@ Route::middleware(['auth:sanctum', 'ability:isAdmin'])->group(function () {
     Route::post('reset/scoreboard', 'App\Http\Controllers\AdminController@resetScoreboard');
 
     /**
+     * @uses database\seeders\HinweisSeeder::run()
+     */
+    Route::post('activatehints', 'App\Http\Controllers\HinweisController@seed');
+
+    /**
      * @uses App\Http\Controllers\AdminController::getScoreboard()
      */
     Route::get('scoreboard', 'App\Http\Controllers\AdminController@getScoreboard');
