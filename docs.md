@@ -582,7 +582,7 @@ Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
 ##### Mögliche Injection
 
-Bei einem DELETE Statement ist eine Injection möglich. Man kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle daten zu Löschen.
+Bei einem DELETE Statement ist eine Injection möglich. Man kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle Daten zu Löschen.
 
 ##### Probleme in Laravel
 
