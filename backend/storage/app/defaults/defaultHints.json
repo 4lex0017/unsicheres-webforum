@@ -1,0 +1,105 @@
+[
+    {
+        "id": 500,
+        "title": "Forum-related",
+        "threads": [
+            {
+                "id": 600,
+                "title": "Database",
+                "date": "2022-05-05 00:01:01",
+                "likedFrom": [],
+                "author": {
+                    "id": 700
+                },
+                "posts": [
+                    {
+                        "id": 700,
+                        "content": "What kind of Database do you use for the Forum? And how do prevent attackers from attacking it?",
+                        "date": "2022-05-05 00:02:02",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 700
+                        }
+                    },
+                    {
+                        "id": 701,
+                        "content": "Why and HOW would anyone ever attack the database? I mean the passwords should be hashed shouldn't they be?",
+                        "date": "2022-05-05 00:05:02",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 701
+                        }
+                    },
+                    {
+                        "id": 702,
+                        "content": "[quote=Larry_the_Lobster:701]Why and HOW would anyone ever attack the database? I mean the passwords should be hashed shouldn't they be?[/quote]Have you ever heard of SQL Injection? And depending on the used hashing algorythm the passwords can be reassembled",
+                        "date": "2022-05-05 00:05:30",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 700
+                        }
+                    },
+                    {
+                        "id": 703,
+                        "content": "Don't worry, we filter most request we send to the database from SQL keywords, and our passwords are use hashing md5 or sha1... don't remember that exactly",
+                        "date": "2022-05-05 00:06:30",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 702
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 601,
+                "title": "Weird Interactions with a Post",
+                "date": "2022-05-05 00:01:01",
+                "likedFrom": [],
+                "author": {
+                    "id": 701
+                },
+                "posts": [
+                    {
+                        "id": 710,
+                        "content": "I found a weird interaction with a post that opened a popup with the text 1 by clicking it. As I viewed the profile picture of the author I got the same issue. Is this a thing with my browser or is this some sort of troll?",
+                        "date": "2022-08-08 00:02:02",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 701
+                        }
+                    },
+                    {
+                        "id": 711,
+                        "content": "I guess someone uploaded a file that is not a picture and used Cross-Site-Scripting in the Post... I wonder how they did that... Most likely the admins will fix this problem immediately and will start filtering for special key words.",
+                        "date": "2022-08-08 00:05:10",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 700
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 602,
+                "title": "Bruteforce Attacks on the Forum",
+                "date": "2022-07-07 10:05:05",
+                "likedFrom": [],
+                "author": {
+                    "id": 702
+                },
+                "posts": [
+                    {
+                        "id": 720,
+                        "content": "Apparently someone is brute force attacking the login of this forum to identify usernames and eventually guess a password... We are working to fix it so don't worry.",
+                        "date": "2022-07-07 10:06:06",
+                        "likedFrom": [],
+                        "author" : {
+                            "id" : 702
+                        }
+                    }
+                ]
+            }
+        ]
+        
+    }
+]

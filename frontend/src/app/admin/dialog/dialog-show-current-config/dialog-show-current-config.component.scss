@@ -4,11 +4,27 @@
 
 .cards {
   min-width: 90% !important;
+  max-width: 90%;
   min-height: 90% !important;
   border: 2px solid rgba(180, 180, 180, 0.3);
+
 }
 
 .state-description-name {
   display: inline-block;
   min-width: 120px;
+}
+
+.paragraph {
+  margin-top: -7px;
+}
+
+.paragraphStatic {
+  min-width: 120px;
+  //max-width: 90%;
+  display: inline-block;
+}
+
+.outer-container {
+  //min-width: 950px !important;
 }

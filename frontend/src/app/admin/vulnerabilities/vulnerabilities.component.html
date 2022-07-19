@@ -23,7 +23,8 @@
   </h1>
   <mat-card class="card-container">
     <mat-tab-group mat-align-tabs="start">
-      <mat-tab *ngFor="let vulnerability of this.curVulnerabilities.vulnerabilities" label="{{vulnerability.name}}">
+      <mat-tab *ngFor="let vulnerability of this.curVulnerabilities.vulnerabilities |slice:0:8 "
+               label="{{vulnerability.name}}">
         <div class="inner-container">
           <div class="container">
             <div class="row">

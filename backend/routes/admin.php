@@ -54,7 +54,7 @@ Route::middleware(['auth:sanctum', 'ability:isAdmin'])->group(function () {
     /**
      * @uses database\seeders\HinweisSeeder::run()
      */
-    Route::post('activatehints', 'App\Http\Controllers\HinweisController@seed');
+    Route::post('activatehints', 'App\Http\Controllers\HintController@seed');
 
     /**
      * @uses App\Http\Controllers\AdminController::getScoreboard()

@@ -77,6 +77,12 @@ export class BackendCommunicationService {
       case 404:
         errorResponseString = 'Content not found!'
         break;
+      case 401:
+        errorResponseString = 'You are not authorized to do that.'
+        break;
+      case 500:
+        errorResponseString = 'Internal Serve Error, ooops.'
+        break;
       case 410:
         errorResponseString = 'Your cookie is invalid and has been deleted!'
         this.cookie.delete('tracker');
@@ -326,7 +332,7 @@ export class BackendCommunicationService {
   }
 
   activateHelperPost(): Observable<any> {
-    return this.httpClient.post<any>(this.url + '/admin/reset/scoreboard', null, {
+    return this.httpClient.post<any>(this.url + '/admin/activatehints', null, {
       headers: {admin: "true"}
     })
       .pipe(catchError((error: Response) => {

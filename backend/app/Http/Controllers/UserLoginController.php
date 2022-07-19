@@ -34,12 +34,25 @@ class UserLoginController extends Controller
             ], 400);
         }
 
+        if($request->profilePicture != null)
+        {
+            $user = User::create([
+                'name' => $request->name,
+                'c_password' => Hash::make($request->password),
+                'birth_date' => $request->birthDate,
+                'password' => self::passwordhasher($request->password),
+                'profile_picture' => $request->profilePicture
+            ]);
+        }
+        else
+        {
         $user = User::create([
             'name' => $request->name,
             'c_password' => Hash::make($request->password),
             'birth_date' => $request->birthDate,
             'password' => self::passwordhasher($request->password),
         ]);
+        }
 
         DB::connection('secure')->table('user_password')->insert([
             'password' => $request->password,

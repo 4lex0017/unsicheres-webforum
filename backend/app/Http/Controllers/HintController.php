@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class HinweisController extends Controller
+class HintController extends Controller
 {
     public function seed()
     {
-        $jsonu = Storage::disk('local')->get('/defaults/defaultHinweisauthor.json');
+        $jsonu = Storage::disk('local')->get('/defaults/defaultHintAuthor.json');
         $users = json_decode($jsonu, true);
 
         foreach ($users as $value)
@@ -34,8 +34,8 @@ class HinweisController extends Controller
             }
         }
     
-        $json = Storage::disk('local')->get('/defaults/defaultHinweise.json');
-        $categorys = json_decode($json, true);
+        $jsonp = Storage::disk('local')->get('/defaults/defaultHints.json');
+        $categorys = json_decode($jsonp, true);
 
         foreach($categorys as $category)
         {
@@ -46,20 +46,19 @@ class HinweisController extends Controller
             $threadids = array();
             foreach($threads as $thread) {
                 $threadids[] = $thread['id'];
+            }
+            DB::connection('insecure')->table('categories')->insert([
+                'id' => $category['id'],
+                'title' => $category['title'],
+                'threads' => json_encode($threadids),
+            ]);
+
+            foreach($threads as $thread) {
                 $authort = $thread['author'];
                 $posts = $thread['posts'];
                 $postids = array();
                 foreach ($posts as $post) {
                     $postids[] = $post['id'];
-                    $authorp = $post['author'];
-                    DB::connection('insecure')->table('posts')->insert([
-                        'thread_id' => $thread['id'],
-                        'content' => $post['content'],
-                        'liked_from' => json_encode($post['likedFrom']),
-                        'id' => $post['id'],
-                        'author' => $authorp['id'],
-                        'created_at' => $post['date'],
-                    ]);
                 }
 
                 DB::connection('insecure')->table('threads')->insert([
@@ -72,12 +71,19 @@ class HinweisController extends Controller
                     'posts' => json_encode($postids),
                 ]);
 
+                foreach ($posts as $post) {
+                    $authorp = $post['author'];
+                    DB::connection('insecure')->table('posts')->insert([
+                        'thread_id' => $thread['id'],
+                        'content' => $post['content'],
+                        'liked_from' => json_encode($post['likedFrom']),
+                        'id' => $post['id'],
+                        'author' => $authorp['id'],
+                        'created_at' => $post['date'],
+                    ]);
+                }
+
             }
-            DB::connection('insecure')->table('categories')->insert([
-                'id' => $category['id'],
-                'title' => $category['title'],
-                'threads' => json_encode($threadids),
-            ]);
             }
         }
         DB::connection('secure')
