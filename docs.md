@@ -1051,4 +1051,127 @@ gesetzt habe und Fehler, Fortschritt, usw. in Echtzeit austauschen konnte. Ich w
 Management und gute Tools, die dabei unterstützen sind und werde zukünftige private Projekte in diesem Aspekt mehr ernst
 nehmen.
 
-Peter Weiß
+
+## Backend - Peter Weiß
+## Authentication, Authorization, Passwordhashing, Hinweis- und Database-Seeding
+
+### Authentication von Usern und dem Admin
+
+Laravel bietet als Framework eine Vielzahl verschiedener Authentifikationsmöglichkeiten. Dies ist zwar an sich toll,
+da für jede mögliche Situation eine Lösung vorhanden ist, aber für unsere Zwecke würde eine leichtgewichtige Lösung ausreichen.
+Aus diesem Grund hatte ich mich schlussendlich für das Laravel Sanctum package zur Authentifizierung für das Forum entschieden.
+
+Sanctum bietet eine Json-Web-Token basierte Authentifizierungsmöglichkeit, ohne unter dem Gewicht von OAuth2 zu leiden wie
+beispielsweise Laravel Passport.
+
+#### User-Registration
+
+Um ein Forum gut darzustellen ist es notwendig, dass sich neue Nutzer registrieren können.
+Bei dieser Registration wird der gewünschte Username, ein Password und das Geburtsdatum verwendet um einen neuen Nutzer anzulegen.
+Während diesem Vorgang wird der neue Nutzer auch direkt authentifiziert weshalb er einen Token bekommt und die Respone bei
+erfolgreicher Registration folgendermasen aussieht.
+
+```json
+{
+    "access_token": "2|Gs8M2oI9sIsFH56Fl8VBRZxZGMmegApUh0bdEpgM",
+    "token_type": "Bearer",
+    "user_id": 1883
+}
+```
+
+#### User-Login
+
+Um sich wieder in einen bereits existierenden Nutzer einzuloggen, muss der Nutzername und das korrekte Password übergeben werden.
+Sollte dies zutreffen wird selbe Response zurückgeschickt wie beim Registrieren.
+Andernfalls wird je nach eingestellter Schwierigkeit ein passender Error-Code zurückgesendet.
+
+#### Admin-Login
+
+Damit die Teilnehmer der Vorlesung nicht die Schwierigkeiten verändern können, muss der Admin besonders authentifiziert werden.
+Hierbei kommt eine Fähigkeit von Sanctum ins Spiel, undzwar die Möglichkeit den Tokens gewisse Abilities zu geben.
+Dadurch wird es später möglich den Admin-Token von dem "User-Token" zu unterscheiden.
+Der Login-vorgang ist identisch mit dem User-Login mitausnahmes der TokenAbility.
+
+### Authorization
+
+#### User-Authorization
+
+Es ist wichtig, dass verhindert wird, dass ein nichtauthentifizierter nutzer nicht in der Lage ist, Posts anzulegen und Ähnliches.
+Um das zu verhindern werden die dementsprechenden Routen hinter die Sanctum Middleware geschaltet.
+Diese überprüft nun, ob die Request einen gültigen Authentifizierungstoken besitzt.
+Falls nicht, wird die Request geblockt.
+
+#### Admin-Authorization
+
+Damit nun auch kein eingeloggter User auf Admin-Routen zugreifen kann, wird in der Sanctum Middleware für Admin-Route auch nach
+der "Admin" Ability geprüft. Der Zusatz an die Middleware kann direkt dahinter geschrieben werden wie etwa so:
+
+```php
+Route::middleware(['auth:sanctum', 'ability:isAdmin'])->group(function () {
+```
+Hierdurch wird garantiert, dass kein "normaler" Nutzer auf Routen innerhalb dieser Admingruppe zugreifen kann.
+
+#### Post/Thread Authorization
+
+Nun soll auch nicht der Post von Nutzer A durch Nutzer B abgeändert werden. Um dies zu verhindern, können wir aus dem Token
+den aktuell authentifizierten Nutzer ziehen, und dann dessen id mit der author id des Posts abgleichen, was in etwa so aussieht.
+
+```php
+return $authorid == $request->user()->id
+```
+
+### Password-Hashing
+
+#### Hashes im Login
+
+Eine unserer Schwachstellen ist der verschiedene Password-Hash-Schwierigkeitsgrad. Damit der Login weiter einwandfrei funktioniert,
+haben wir das eigentliche Password in ein zusätzliches Attribut verschoben und das password Attribut mit dem aktuell zu hashenden
+Alghoritmus befüllt... Dadurch umgehen wir direkte Konsequenzen im Login für den User.
+
+#### Password-Reset für User
+
+Durch das Umgehen des Problems in Hashes im Login, musste ein extra Endpunkt für den Password-Reset her.
+Dieser speicherte das Password nun in den gewünschten Wegen ab und ermöglichte dadurch die Funktionalität des Logins.
+
+#### Password-Hashes für Standard-Nutzer
+
+Um nun auch die Passwörter der vorgefertigten Nutzer bei Veränderung der Hash-Schwierigkeit anzupassen, wurde ein Seeder geschrieben,
+der die Passwörter nach ausgewählter Schwierigkeit in die vorgefertigten Nutzer seedet.
+
+### Database-Seeding
+
+Die Seeder sind dafür zuständig, die Default-Daten (Nutzer, Posts, Thread etc.) in die Datenbank zu schreiben, damit das Forum beim Start
+nicht vollständig leer ist. In diesen Seedern werden Json-Files durchlaufen. Diese Json Files wurden ursprünglich von Daniel B. erstellt und
+abschließend noch von Chris und Alex für die aktuellsten Bedürfnisse angepasst.
+
+#### Admin-Seeder
+
+Der Admin-Seeder ist besonders, da er den Nutzername und das Password des Admins setzt. Falls eine Änderung gewünscht wird, kann der Code 
+in diesem Seeder dafür angepasst werden(genauer der Beispielname/das Beispielpasswort). Hier wäre ein Beispiel:
+
+```php
+DB::connection('secure')->table('admins')->insertOrIgnore([
+            'name' => 'Beispielname',
+            'password' => Hash::make('Beispielpasswort'),
+        ]);
+```
+
+### Hinweise
+
+Ein Feature unserer Anwendung sind Hinweise zu Schwachstellen, die der Admin zusätzlich anschalten kann, um die Studierenden zu unterstützen.
+Dieses Feature wurde in Anlehnung an die Seeder realisiert. Bei aktivierung erzeugt eine Methode aus einem Json-File verschiedene Posts, die
+dann im Forum angezeigt werden können.
+Diese Hinweise kann man nicht wieder zurücknehmen, es sei denn man resettet die Datenbank.
+
+### Fazit
+
+Für mein erstes "großes" Programmierprojekt mit vielen Leuten lief es schlussendlich und rückblickend okay. Anfanngs haben wir den zu leistenden Aufwand 
+unterschätzt und relativ viel Zeit bei der Auswahl der zu verwendeten Technologien verwendet. Dieser Zeitverlust sollte sich aber erst am Ende bemerkbar
+machen.
+Ein weiteres Problem war die Verwendung von Discord als Hauptkommunikationsweg. Durch Voice-Chat und Bildschirmübertragung waren wöchentliche Besprechungen
+kein Problem, allerdings war die textuelle Kommunikation hier eher ungeeignet, da zum Teil wichtige Nachrichten von anderen verdrängt werden.
+Auch was die Teilnahme anbelangt, gab es zwischenzeitlich einige Probleme (die ich auch mitzuverantworten habe).
+Generell muss man sagen, dass ohne Daniel B. und Daniel K. das Projekt ziemlich sicher nicht so weit gekommen wäre. Die beiden haben sich extremst reingehängt
+und waren das "Rückrat" ohne die nichts funktioniert hätte.
+Die Veranstaltung war sehr lehrreich, besonders dahingehend nicht zu viel Zeit am Anfang zu verlieren, während "noch" nicht so viel anderes um die Ohren ist.
+Wiederholen würde ich das Projekt mit der Gruppe, allerdings würden wir es etwas anders aufziehen müssen.

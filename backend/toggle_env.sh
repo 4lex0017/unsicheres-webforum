@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 help_fn() {
     echo -e "Usage:  toggle_env [OPTION]\n"
     echo -e "Script to toggle between production and development .env file\n"
@@ -30,4 +29,7 @@ fi
 
 if [ $1 = "--help" ] || [ $1 = "-h" ]; then
     help_fn
+    exit 0
 fi
+
+help_fn
