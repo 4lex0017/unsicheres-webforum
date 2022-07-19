@@ -643,12 +643,14 @@ Nun steht in dem fled info das Passwort des Users mit der ID 5.
 Für ein INSERT mit Eloquent ist es nur nötig den einkommenden Body in ein `insert()` zu stecken. Mit einem Validator
 kann man davor noch Bedingungen prüfen. Um hier die Injection möglich zu machen muss man den String der Anfrage speziell
 zusammenbauen. Hierbei sind folgenden Dinge zu beachten:
+
 1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen 2. Der String sollte Allgemeingültig für alle
-Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
+   Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
+
 1. Der Nutzer muss berechtigt sein die Ressource zu erstellen. 2. Bei Ressourcen mit Author muss der Nutzer muss
-identisch oder ein Admin sein.
+   identisch oder ein Admin sein.
 
 Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben
 bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name
@@ -677,12 +679,14 @@ Validator kann man davor noch Bedingungen prüfen.
 
 Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen. Hierbei sind folgenden
 Dinge zu beachten:
+
 1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen 2. Der String sollte Allgemeingültig für alle
-Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
+   Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
+
 1. Der Nutzer muss berechtigt sein die Ressource zu bearbeiten. 2. Bei Ressourcen mit Author muss der Nutzer muss
-identisch oder ein Admin sein.
+   identisch oder ein Admin sein.
 
 Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben
 bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name
@@ -832,6 +836,225 @@ Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgend
 }
 ```
 
-Daniel Katzenberger
+# Daniel Katzenberger - Backend
+
+## Laravel, Datenbanken, Routen, Logik, Management, Docker
+
+### Wie und warum Laravel?
+
+Zu Beginn mussten wir uns entscheiden, welches Framework wir im Backend nutzen wollen.
+Da alle bereits Java Erfahrung hatten, stand lange [Spring](https://spring.io/) im Raum.
+Ich hatte aber schon sehr viel Gutes über [Laravel](https://laravel.com/) gehört und wollte das Projekt nutzen,
+um weitere PHP Erfahrung zu sammeln. Am Ende haben wir uns für Laravel entschieden,
+vor allem wegen der schönen [Dokumentation](https://laravel.com/docs/9.x) und der guten Entwicklungsumgebung.
+
+Um anfangen zu können, habe ich mich in [Laravel Sail](https://laravel.com/docs/9.x/sail#main-content) eingelesen,
+um eine Dev-Instanz zu erstellen.
+Sail ist quasi ein Commandline-Interface um mit Laravel's Docker Dev-Environment zu kommunizieren.
+Dort lässt sich über bestimmte Befehle recht einfach Boilerplate-Code generieren, welcher alle Features enthalten kann,
+die Laravel anbietet. Meine Wahl der Features war zu Beginn nicht richtig, das ist aber gar kein Problem, da man diese
+aktivieren und entfernen kann wie man möchte.
+Danach begann ich mit der ersten Konfiguration des Backends und entfernte Features, bei welchen ich mir sicher war,
+dass wir diese nicht verwenden werden.
+Dies markierte den Beginn der Backendentwicklung.
+
+### Datenbanken & Migrations
+
+Laravel verwendet [Models](https://laravel.com/docs/9.x/eloquent#generating-model-classes), um Datenbanktabellen bzw.
+Objekte zu beschreiben. Für mich war von Anfang an klar, für ein Forum brauchen wir mindestens Nutzer,
+Kategorien, Threads und Posts. Ich schlug also vor bereits vorhandene Forum-Software wie
+[vBulletin](https://forum.vbulletin.com/) und [XenForo](https://xenforo.com/community/) als Vorlagen zu verwenden.
+Durch die Informationen, welche auf diesen Foren angezeigt werden, habe ich die Models gebaut und dafür Migrations
+geschrieben.
+[Migrations](https://laravel.com/docs/9.x/migrations#main-content) erstellen die einzelnen Tabellen und es wird
+festgelegt
+welche Datentypen, Limits, Primär- und Fremdschlüssel usw. verwendet werden. Da wir ein unsicheres Forum gebaut haben,
+brach ich die Datenbanken in ein sicheres und ein unsicheres [SQLite](https://www.sqlite.org/index.html) file auf.
+Ich habe mich für SQLite entschieden, da es einfach zu verwenden und auszuliefern ist.
+Hätte ich vorher gewusst, dass mit SQLite manche SQL injections schwieriger oder nicht möglich sind,
+hätte ich [MySQL](https://www.mysql.com) bzw. [MariaDB](https://mariadb.org/) (das bessere MySQL) verwendet.
+
+Attacker, Admin, Vulnerability und alle weiteren, sicheren Tabellen, werden in der sicheren DB gespeichert,
+welche Laravel's *sanitized* Methoden verwendet. Wir wollen ja nicht, dass die Angreifer möglicherweise Zugriff auf
+diese haben. Auch dafür habe ich Migrations und Models erstellt. Laravel updated automatisch *created_at*
+und *modified_at*, wir verwenden diese z.B. um Daten im Frontend anzuzeigen und um Threads usw. sortieren zu können.
+Alles in allem wurden folgende Models von mir im Backend designt und implementiert:
+
+###### User:
+
+- Spiegelt einen Forum-Nutzer wider
+- Name, Passwort, Geburtsdatum, Berechtigungen über Gruppen
+- Location, Profilbild und "About me" welche vom Nutzer selbst gesetzt werden können
+
+###### Post:
+
+- Ein Post in einem Thread
+- Die Nachricht, wer sie verfasst hat, von welchem Nutzer "Gefällt mir" gedrückt wurde und in welchem Thread der Post
+  gepostet wurde
+
+###### Thread
+
+- Beinhaltet Posts
+- Threads haben einen Titel und eine Kategorie in der sie gepostet wurden, ebenfalls von wem "Gefällt mir" gedrückt
+  wurde und welche Posts enthalten sind
+
+###### Category
+
+- Beinhalten Threads
+- Kategorien haben einen Titel um verschiedene Sub-Foren, also Bereiche des Forums zu definieren
+
+###### Attacker
+
+- Spiegeln die Angreifer wider
+- Angreifer können einen Namen wählen & sie werden über einen Cookie getrackt
+
+###### ProfileComments
+
+- Auf Profilen von Nutzern kann man kommentieren
+- Diese Kommentare speichern was kommentiert wurde
+
+### Routen, Logik, Features
+
+Laravel verwendet [Routen](https://laravel.com/docs/9.x/routing#main-content), um Endpunkte bzw. generell URLs zu
+verwalten. Man definiert diese z.B. in einem `api.php` file, registriert sie und teilt der IDE per PHP-Doc mit,
+auf welche Funktion diese verweisen. Die Funktionen, welche durch die Routen aufgerufen werden, werden in
+[Controllern](https://laravel.com/docs/9.x/controllers) definiert. Jedes Model sollte einen Controller haben.
+Damit ist schön aufgeteilt, welcher Controller zu welchem Model gehört.
+
+Auf query parameter greift man in der Funktion über das Request Objekt zu, Sub-Routen wie `/students/*` werden als
+Parameter übergeben. Ein Beispiel dafür ist meine Suche: Man kann Global suchen in dem man `/search` aufruft,
+oder z.B. direkt nach Nutzern per `/search/users`. Über den query `?q=text` sucht man dann nach `text`.
+Die Suchfunktion ist eine simple `LIKE` Suche und existiert für XSS exploits.
+
+Ich hatte teilweise auch Einfluss auf die Post, Thread, User, Category und Site-Controller logik bzw. routen.
+Meistens waren es Endpunkte, die nicht *exploitbar* sind, aber ich habe auch viele SQL-Injections getestet und gefixed,
+falls es zu Problemen kam. Ich hatte mich auch relativ lange mit den *multi_queries* also dem Zusammenhängen von
+mehreren `SELECT`, `PUT` etc. statements beschäftigt und versucht diese mit Laravel und SQLite möglich zu machen.
+Leider ist das `SELECT`'en in `PUT` bzw. `POST` statements mit SQLite nicht möglich, da diese grundsätzlich in PHP bzw.
+Laravel nichts zurückgeben. Mir kam noch die Idee die SQLite-CLI direkt im PHP code aufzurufen und das ergebnis von dort
+zu verwenden, da es in der CLI möglich ist. Wir verwarfen diesen Exploit aber, da es den Aufwand nicht Wert war.
+Mehrere statements Zusammenhängen ist aber weiterhin im Body, bei `PUT` oder `POST` möglich, wenn man mit der Rückgabe
+etwas anderes Überschreibt, Beispiel:
+
+```json
+{
+  "name": "12345\", about = (select password from users where id = 11) where id = 11; --",
+  ...
+}
+```
+
+Hier wird in einem `PUT` das `about` Feld durch das Passwort des Users 11 Überschrieben, dabei muss aber sichergestellt
+werden, dass das `PUT` statement weiterhin syntaktisch korrekt ist und keine SQL Fehler wie Foreign-Key-Constraints
+ausgelöst werden. Das ganze herauszufinden, ohne richtige logs ist unheimlich schwierig von Hand. Dabei muss man sehr
+Kreativ werden um sich die internen Strukturen der Tabelle und den Aufbau des Queries zu überlegen.
+
+Für die User enumeration und Brute-Force-Attacken haben wir uns gedacht auf der Hauptseite einige Nutzer anzuzeigen.
+Dafür habe ich die Route und Logik implementiert, welche beim Aktualisieren der Config 10 zufällige Nutzer zurückgibt.
+
+Die Profilkommentare wurde ebenfalls vollständig von mir im Backend implementiert. Ohne diese wären die Profile der
+Nutzer relativ leer. Leider haben wir dafür keine Schwachstelle gefunden, aber sie hübschen die Profilseite etwas auf.
+
+Da wir ja Punkte für erfolgreiche Exploits vergeben sollen und dabei die Nutzer tracken müssen,
+kam uns zuerst die Idee mit IP-Tracking. Aufgrund von Problemen mit Proxies kam im Backend aber immer nur die IP
+des Proxies an und wir mussten uns etwas anderes überlegen. **Cookie tracking**.
+Beim ersten Login eines Angreifers wird ein Cookie aus dem Namen, welcher Unique ist, generiert.
+
+```php
+$tracker_data = base64_encode(openssl_encrypt($name, 'aes-256-ctr',"1337youwill420neverguess69thisxd", 0, 'lK_P:-2RB<r#W1u@'));
+```
+
+Ich verwende dafür AES auf ```$name``` mit einem Schlüssel. Das letzte Argument ist ```iv```, der
+Initialisierungsvektor, welcher nicht ```NULL``` sein darf. Base 64 encoding obendrauf und der Cookie wird automatisch
+von der Response gesetzt. Jetzt muss er bei jeder Request mitgegeben werden, damit wir die Punkte richtig verteilen
+können. Sollte der Cookie fehlen, wird ein error code zurückgegeben. Admin Routen werden dabei ignoriert, da die
+Authentication des Admins/Professors sicher über Laravel implementiert wurde.
+
+Die *secret-route-vulnerability* welche das Finden einer nicht verwendeten Route mit 2 Punkten belohnt wurde von mir
+Implementiert. Die Logik dafür ist sehr einfach, da ich die vorhandene Infrastruktur einfach verwenden konnte.
+Dort wird einfach mithilfe des Tracker-Cookies geschaut, wer die Route gefunden hat und Punkte gutgeschrieben.
+
+### Management und Probleme
+
+Mein Fokus sollte eigentlich auf den Datenbanken liegen und ich wollte mich um das Aufsetzen und Ausliefern kümmern.
+Routen, Controller etc. waren zu begin nicht mein Aufgabengebiet. Mir hat das Arbeiten mit Laravel aber viel Spaß
+gemacht und da es zu einigen, vermeidbaren, aber doch beträchtlichen Problemen kam, habe ich meinen Fokus erweitert.
+Ich habe außerdem versucht das Team im Backend zu managen, um diese Fehler zu vermeiden, und griff ein,
+wenn es meiner Meinung nach kritisch wurde.
+
+Eine Schwierigkeit dabei war es die Routen und Queries schön und funktionierend hinzubekommen,
+damit das Frontend vom *Fake-Backend* wegkommen konnte und wir endlich richtig testen konnten.
+Es wurde versucht Single- und Collection-Resources zurückgeben zu können, ohne das Laravel Fehler wirft.
+Das Frontend sollte auch mit beidem umgehen können.
+Ein Beispiel dafür ist es alle User über eine SQL injection auszugeben, welche dann im Frontend dargestellt werden.
+Laravel verwendet aber [Resources](https://laravel.com/docs/9.x/eloquent-resources),
+um festzulegen, welche Daten der Query-Response zum Frontend zurückgegeben werden sollen. Dabei mussten wir alle
+möglichen Fälle abdecken, was aber am Ende quasi unmöglich war. Wir haben es geschafft auf einer Single-Route auch
+Collections auszugeben und diese im Frontend anzuzeigen, aber andere Models in eine Resource für ein bestimmtes Model
+zu zwängen ist ohne großen Aufwand nicht möglich.
+Dieses Problem hat viel Kaputt gemacht, weshalb ich dort auch eingreifen musste, damit im
+Frontend für unsere Besprechung mit Herrn Biedermann wieder alles lief, da Deadlines teilweise nicht eingehalten wurden.
+
+Nachdem die Queries für `PUT` und `POST` queries *injectable* gemacht wurden, war das ganze ein riesen Chaos.
+Die Queries wurden in alle Controller *copy-pasted* und haben teilweise nicht richtig funktioniert oder Dinge im
+Frontend kaputt gemacht, da Fehler oder falsche Daten zurückgegeben wurden.
+Ich griff auch hier wieder ein und schrieb im `endpoint-cleanup` Branch eine dynamische Funktion, um
+zu zeigen, wie man die Query-Strings lesbarer und einfacher zusammenbauen kann, ohne gegen DRY zu verstoßen und
+Funktionen unnötig aufzublähen.
+
+Beim Löschen, Verändern und Erstellen von Posts und Threads wurde nicht darauf geachtet, dass auch Tabellen,
+welche von Post & Thread abhängen aktualisiert werden. Threads beinhalten ein Array aller Posts, welches natürlich auch
+aktualisiert werden muss, wenn sich einzelne Posts ändern, das Gleiche bei Kategorien mit Threads. Um diese Probleme
+zu bemerken und zu fixen mussten Frontend und ich bis tief in die Nacht daran Arbeiten, da sonst am nächsten Morgen
+das meiste, mit Backend-Anbindung, nicht richtig funktioniert hätte.
+
+PHP ist erst seit Version 7 Typisiert, das heißt, dass man auch keinen Typ angeben muss und Funktionen irgendetwas
+entgegennehmen bzw. zurückgeben können. Wenn man den Rückgabewert einer Funktion festlegt und etwas Falsches zurückgibt,
+schmeißt der PHP-Interpreter offensichtlich einen Fehler. Moderne IDEs helfen dabei diesen Fehler nicht zu machen,
+jedoch musste ich einige davon Fixen, da mir beim Testen solche Fehler entgegenkamen, welche einfach auf den `master`
+Branch ge-pushed wurden.
+
+### Docker
+
+Schön, wir haben jetzt ein fertiges Projekt, wie liefern wir es aus, dass es überall läuft und einfach zu installieren
+ist? [Containerization](https://en.wikipedia.org/wiki/Containerization) ist das Stichwort.
+Ich habe für das Angular-Frontend und das Laravel-Backend **production** docker-compose und Dockerfiles geschrieben.
+Dazu gibt es noch Bash-Skripte, um das ganze noch einfacher zu verwenden und schon lässt sich das Forum mit wenigen
+Schritten ausliefern. Wir haben bereits Laravel Sail verwendet, um eine Dev-Instanz aufzusetzen, das ist aber für
+Production nicht geeignet. Wir wollen release Versionen, die schnell sind und keinen Debug-Code der alles langsam macht.
+Docker Container machen das Möglich und sind relativ leicht zu konfigurieren, wenn man die Dokumentation verstanden hat.
+Außerdem gibt es bereits fertige Images im [Hub](https://hub.docker.com/), welche ich verwendet und für unsere Zwecke
+angepasst habe. Weiters zu Installation findet sich im `install.md`
+
+###### Laravel:
+
+```nginx:stable-alpine``` als proxy und ```php:8-fpm-alpine``` um den PHP code auszuführen.
+Dazu gibt es noch einen Composer container, welcher die dependencies handled und artisan, mit dem man Befehle an
+Laravel senden kann um z.B. die DB zu resetten oder caching zu steuern. Man muss also, nachdem man das Projekt ge-cloned
+hat, nur mithilfe von Composer die Dependencies downloaden, den PHP und nginx Container starten, die DB generieren und
+das ganze läuft. Die Bash skripte ermöglichen dann auch, ohne jegliche Docker erfahrung das ganze zu bauen.
+
+###### Angular:
+
+```node:lts``` welches Angular baut und sich um alle dependencies kümmert und wieder ```nginx:stable-alpine``` welche
+die Requests an das Backend weiter gibt. Angular wird also zuerst mit ```--prod``` flag gebaut, in den anderen Container
+kopiert und bekommt alle Requests weitergeleitet, welche auf Port 80 gesendet werden.
+
+### Fazit
+
+Zusammenfassend lässt sich sagen, dass für mich das erste Projekt, an dem mehr als 2 Personen gearbeitet haben doch noch
+erfolgreich war, auch wenn es zu einigen Problemen und Fehlern gekommen ist. Ich finde, wir haben das Management und
+die Kommunikation nicht ernst genug genommen. Wenn ich nicht teilweise mit dem Frontend einen Tag vor den Treffen
+alles getestet und Fehler behoben hätte, wäre unser Fortschritt deutlich schlechter rübergekommen. Partiell war man
+auch von dem Fortschritt andere Teammitglieder abhängig, was etwas stressig war, je nachdem wann zugeteilte Aufgaben
+erledigt wurden und wie gründlich getestet wurde. Ein weiteres Problem waren die Tools die wir für Dokumentation,
+Issues usw. verwendet haben. Da Jira nur per VPN erreichbar war, haben wir es gar nicht verwendet, da die VPN-Verbindung
+bei einigen Probleme machte. Ich kenne Confluence auch ganz anders, ich vermute, die Version, die hier verwendet wird,
+ist ein ältere, daher war
+die Bedienung relativ unintuitiv. Ohne richtiges Gitlab/GitHub/Gitea (oder andere Git-Frontends) issue tracking haben
+wir es uns im Nachhinein unnötig schwer gemacht. Wir hatten solche Dinge entweder in Discord oder Confluence notiert,
+aber das sind beides keine Tools die zu 100 % dafür erstellt wurden. Die Zusammenarbeit mit dem Frontend war nur so
+erfolgreich, da ich mich quasi wie im Peer-Programming zusammen mit ihnen in den Voice-Channel gesetzt habe und Fehler,
+Fortschritt, usw. in Echtzeit austauschen konnte. Ich werde für mich mitnehmen, wie wichtig Management und gute Tools,
+die dabei unterstützen sind und werde zukünftige private Projekte in diesem Aspekt mehr ernst nehmen.
 
 Peter Weiß
