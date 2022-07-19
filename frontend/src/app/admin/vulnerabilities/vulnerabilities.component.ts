@@ -43,6 +43,7 @@ export class VulnerabilitiesComponent implements OnInit {
       this.curVulnerabilities = data;
       if (this.curVulnerabilities.vulnerabilities[8].subtasks[1].checked) {
         this.helperPostStatus = 1;
+        this.btnColour = '#0cb405';
       } else {
         this.helperPostStatus = 0;
       }

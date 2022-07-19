@@ -2,7 +2,7 @@
 
 ## Frontend - Daniel Becker
 
-## Analyse; entwickeln der Prototypen; treffen der Designentscheidungen; entwickeln, implementieren und testen fast aller Komponenten und Service
+## Analyse; entwickeln der Prototypen; treffen der Designentscheidungen; generelles Management; entwickeln, implementieren und testen fast aller Komponenten und Service
 
 ## Anforderungen an das Frontend
 
