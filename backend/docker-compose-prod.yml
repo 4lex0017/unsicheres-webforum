@@ -28,6 +28,7 @@ services:
     container_name: php
     volumes:
       - .:/var/www/html:delegated
+      - ./php.ini:/usr/local/etc/php/php.ini
     networks:
       - laravel
 
