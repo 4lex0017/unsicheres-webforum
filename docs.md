@@ -501,8 +501,85 @@ Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route berei
 Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden nur für den Back-end
 Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine Route.
 
-Lukas Hein
+### Lukas Hein
 
+## Entwicklung von Posts ; Animation beim Finden von Schwachstellen
+
+## Posts
+
+Posts sind eine der wichtigsten Teile eines Forums und das Primäre Kommunikationsmittel des Forums. In ihnen können
+Nutzer sich äußern und speziell auf vorherige Posts antworten.
+
+### Posten
+
+- Das Posten findet über ein Textfeld am Ende eines Thread statt. Dort können User Posts erstellen und an 
+  beliebigen Stellen Posts, auf welche sie antworten, hinzufügen. 
+
+ <img src="assetsDocumentation/lukasH/newPost.gif" alt="createtPost" width="900"/>
+
+### Antworten
+
+- Das Hinzufügen von Antworten erlaubt es Benutzern besser auf vorherige Posts zu referenzieren oder 
+  Aufmerksamkeit zu werfen. Posts werden beim Schreiben oder Bearbeiten eines Posts durch das klicken des 
+  'Reply'-Knopfes automatisch an die Stelle im Post gesetzt, an welcher sich der Cursor zuletzt befand. 
+  In diesen Antworten befindet sich jedoch, um eine gewisse Übersicht zu behalten, nur der Posttext selbst,
+  andere Posts auf welche der Post antwortet.  
+
+ <img src="assetsDocumentation/lukasH/newPostWithRep.gif" alt="newPostWithReply" width="900"/>
+
+- Innerhalb des Postinhalts, der im Backend gespeicherten Inhalt der Posts, sind Antworten mit den Tags 
+  '[quote=Username:PostId]...[/quote]' gekennzeichnet. Diese für das Backend serialisierte From wird dann
+  im Frontend mithilfe von Regular Expressions deserialisiert und in sogenannten Blockquotes innerhalb des
+  Posts an der richtigen Stelle erstellt. Das anklicken der Antworten innerhalb der Posts bringt den Benutzer
+  zum originalen Post.  
+- Um möglicherweise auf Stellen innerhalb der Antwort hinzuweisen oder Verbesserungen durchzuführen ist es
+  Autor eines Posts erlaubt, den Inhalt von Antworten innerhalb seines Posts zu verändern
+
+- Nutzern ist es auch gestattet, durch Entfernen des sich im ersten Quote-Tag einer Anwort befindenden Doppelpunkets
+  Quotes/Antworten zu erstellen welche auf keine echten Posts hinweisen und z.B. auf Aussagen zu referenzieren. Diese 
+  "fake" Antworten führen deshalb bein anklicken auf keinen anderen Post.
+  
+### Bearbeiten von Posts
+
+- Beim Betätigung des Knopfes 'Bearbeiten', welcher mit dem Stift-Symbol gekennzeichnet ist, wird ein Post in
+  Bearbeitungszustand versetzt. In diesem Zustand wird der vorher angezeigte Inhalt wieder in den mit möglicherweise
+  Tags versehenen serialisierten Zustand versetzt. Während des Bearbeitens kann der Benutzer wie beim Erstellen eines
+  Posts an beliebigen Stellen Antworten auf andere Posts hinzufügen und seinen eigenen als auch den Text von Antworten
+  bearbeiten. Das Beenden der Bearbeitung wird beim Betätigen des Knopfes 'Done' signalisiert. Daraufhin wird der
+  Inhalt an das Backend weitergereicht und die neue Darstellung des Posts gebaut.  
+
+ <img src="assetsDocumentation/lukasH/editPost.gif" alt="editAPost" width="900"/>
+
+  Es ist mit anzumerken dass:
+  - Immer nur ein Post darf an einem Zeitpunkt bearbeitet werden. Die Bearbeitung weiterer Posts ist erst nach Beendung
+    der derzeitigen Bearbeitung möglich.
+  - Während des Bearbeitens eines Posts es nicht möglich ist Posts zu schreiben / posten
+
+ <img src="assetsDocumentation/lukasH/editRestrictions.gif" alt="editRestrictions" width="900"/>
+
+### Teilen
+
+- Beim Betätigen des Knopfes 'Share' wird in den Zwischenspeicher des Benutzers die Adresse des Posts gespeichert
+  was beim Aufrufen einen direkt zum Post innerhalb des Thread bewegt.
+
+### Reporting
+
+- Beim Betätigen des Knopfes 'Report' öffnet sich ein Dialog, in welchem sich ein Textfeld befindet, um es Benutzern 
+  zu erlauben Posts zu melden. 
+
+
+## Animation beim Finden von Schwachstellen
+
+Die Animation, welche beim Finden von Schwachstellen auftritt, ist aufgebaut aus 2 Zuständen, dem 'show' und 'hide'
+Zustand welche jeweils ihre eigenen Transformationen in den anderen Zustand besitzen. Neben dem erscheineneden Symbol 
+werden die Worte 'You did a thing' nacheinander eingefügt und nach wenigen Sekunden wieder nacheinander entfernt.  
+
+<img src="assetsDocumentation/lukasH/YouDidAThing.gif" alt="editRestrictions" width="900"/>
+
+Das einzelne Einfügen der Worte wird durch separate Übergangsanweisungen für jedes Wort erzeugt, indem die einzelnen
+verzögert voneinander beginnen.
+
+  
 Alexander Kern
 
 ## Routing und Datenbankanbindung mit Laravel
