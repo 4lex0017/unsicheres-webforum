@@ -20,8 +20,17 @@ Nachdem Backend gestartet wurde, kann das Frontend starten.
 - `./frontend.sh --start` Baut Angular, Kopiert gebautes Angular in nginx container und startet Angular.
   Weitere Parameter: `--stop` Stoppt Angular.
 
+Das Frontend ist nun über [http://localhost:80](http://localhost:80) erreichbar
+
+Das Backend über [http://localhost:42069](http://localhost:42069)
+
 ## Login für den Admin
+
 ### URL: [http://localhost/adminLogin](http://localhost/adminLogin)
+
 ### Name: Biedermann
+
 ### Passwort: H0chSchUl3_01-FhWs44
+
 Für Passwortänderung siehe Dokumentation von Peter im Punkt "Admin-Seeder"
+
