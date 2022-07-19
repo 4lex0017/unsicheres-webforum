@@ -1,10 +1,8 @@
 # Unsicheres Web-Forum für die Lehre - Dokumentation
 
-### Daniel Becker
+## Frontend - Daniel Becker
 
-## Frontend
-
-## Entwickeln der Prototypen; treffen der Designentscheidungen; entwickeln, implementieren und testen fast aller Komponenten und Service
+## Analyse; entwickeln der Prototypen; treffen der Designentscheidungen; entwickeln, implementieren und testen fast aller Komponenten und Service
 
 ## Anforderungen an das Frontend
 
@@ -18,8 +16,9 @@ deutlich moderneres Design sein sollte.
 Um einen generellen Überblick über Funktionen und Designstandards eines Forums zu erhalten, wurde zuallererst nach
 Paradebeispielen eines guten Forums gesucht. Dies bezog sich sowohl auf die gebotene Funktionalität als auch auf die
 Userexperience und generelles Design. Das vielversprechendste Forum, das gefunden wurde, war das
-von <https://xenforo.com/>. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl ein
-übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet.
+von <https://xenforo.com/>. XenForo ist ein Anbieter, der auch vorgefertigte Foren für Unternehmen anbietet und sowohl
+ein übersichtliches und modernes UI, als auch sehr viele funktionale Features bietet. Mit Blick auf Funktionalität wurde
+auch <https://www.vbulletin.com/> genauer unter die Lupe genommen.
 
 <p float="left">
 <img src="assetsDocumentation/danielB/xenforo_comparison.png" alt="XenForo" width="500"/>
@@ -37,7 +36,7 @@ Problem uns stärker hieran zu orientieren.
 Durch das sammeln der Anforderugen konnte auch besser eingegrenzt werden welche Technologien im Frontend benötigt
 werden.
 
-## Verwendete Technologien
+## Verwendete Technologien im Frontend
 
 ### Angular
 
@@ -68,7 +67,10 @@ visualisieren, als auch *ngx-virtual-scroller* für ein deutlich einfacheres Tab
   <img src="assetsDocumentation/danielB/prototype_2.png" alt="oldThreadDesign" width="490"/>
 </p>
 
-## Das Endprodukt
+## Das Endprodukt aus Sicht des Frontends
+
+In diesem Teil werden die - meines Erachtens nach - wichtigsten Komponenten und Service die ich beigetragen habe genauer
+erklärt und vorgestellt.
 
 ### Cross-Site-Scripting (XSS) in Angular
 
@@ -501,7 +503,7 @@ Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route berei
 Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden nur für den Back-end
 Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine Route.
 
-### Lukas Hein
+# Frontend - Lukas Hein
 
 ## Entwicklung von Posts ; Animation beim Finden von Schwachstellen
 
@@ -512,136 +514,146 @@ Nutzer sich äußern und speziell auf vorherige Posts antworten.
 
 ### Posten
 
-- Das Posten findet über ein Textfeld am Ende eines Thread statt. Dort können User Posts erstellen und an 
-  beliebigen Stellen Posts, auf welche sie antworten, hinzufügen. 
+- Das Posten findet über ein Textfeld am Ende eines Thread statt. Dort können User Posts erstellen und an beliebigen
+  Stellen Posts, auf welche sie antworten, hinzufügen.
 
  <img src="assetsDocumentation/lukasH/newPost.gif" alt="createtPost" width="900"/>
 
 ### Antworten
 
-- Das Hinzufügen von Antworten erlaubt es Benutzern besser auf vorherige Posts zu referenzieren oder 
-  Aufmerksamkeit zu werfen. Posts werden beim Schreiben oder Bearbeiten eines Posts durch das klicken des 
-  'Reply'-Knopfes automatisch an die Stelle im Post gesetzt, an welcher sich der Cursor zuletzt befand. 
-  In diesen Antworten befindet sich jedoch, um eine gewisse Übersicht zu behalten, nur der Posttext selbst,
-  andere Posts auf welche der Post antwortet.  
+- Das Hinzufügen von Antworten erlaubt es Benutzern besser auf vorherige Posts zu referenzieren oder Aufmerksamkeit zu
+  werfen. Posts werden beim Schreiben oder Bearbeiten eines Posts durch das klicken des
+  'Reply'-Knopfes automatisch an die Stelle im Post gesetzt, an welcher sich der Cursor zuletzt befand. In diesen
+  Antworten befindet sich jedoch, um eine gewisse Übersicht zu behalten, nur der Posttext selbst, andere Posts auf
+  welche der Post antwortet.
 
  <img src="assetsDocumentation/lukasH/newPostWithRep.gif" alt="newPostWithReply" width="900"/>
 
-- Innerhalb des Postinhalts, der im Backend gespeicherten Inhalt der Posts, sind Antworten mit den Tags 
-  '[quote=Username:PostId]...[/quote]' gekennzeichnet. Diese für das Backend serialisierte From wird dann
-  im Frontend mithilfe von Regular Expressions deserialisiert und in sogenannten Blockquotes innerhalb des
-  Posts an der richtigen Stelle erstellt.
+- Innerhalb des Postinhalts, der im Backend gespeicherten Inhalt der Posts, sind Antworten mit den Tags
+  '[quote=Username:PostId]...[/quote]' gekennzeichnet. Diese für das Backend serialisierte From wird dann im Frontend
+  mithilfe von Regular Expressions deserialisiert und in sogenannten Blockquotes innerhalb des Posts an der richtigen
+  Stelle erstellt.
 
 
-- Einigen der verwendeten Regular Expressions:  
+- Einigen der verwendeten Regular Expressions:
 - Teilen des Inhalts in Posttext und Antworten:
+
 ```php
     const splitRegex = new RegExp("\\[quote=.*?](.*?)\\[/quote]", 'gmids');
 ```
+
 - Besorgen des ersten Quote-Tags der Antwort um die nötigen Daten wie Autor und PostId zu bekommen
+
 ```php
     const replyInfoRegex = new RegExp("\\[quote=(.*?)]", 'mid');
 ```
+
 - Besorgen des Usernames aus dem ersten Quote-Tag:
 
 ```php
     const userNameRegex = new RegExp("(?<=\=)(.*?)(?=\:)", 'mid');
 ```
+
   
 - 
-- Das anklicken der Antworten innerhalb der Posts bringt den Benutzer
-  zum originalen Post.  
-- Um möglicherweise auf Stellen innerhalb der Antwort hinzuweisen oder Verbesserungen durchzuführen ist es
-  Autor eines Posts erlaubt, den Inhalt von Antworten innerhalb seines Posts zu verändern
+
+- Das anklicken der Antworten innerhalb der Posts bringt den Benutzer zum originalen Post.
+- Um möglicherweise auf Stellen innerhalb der Antwort hinzuweisen oder Verbesserungen durchzuführen ist es Autor eines
+  Posts erlaubt, den Inhalt von Antworten innerhalb seines Posts zu verändern
 - Nutzern ist es auch gestattet, durch Entfernen des sich im ersten Quote-Tag einer Anwort befindenden Doppelpunkets
-  Quotes/Antworten zu erstellen welche auf keine echten Posts hinweisen und z.B. auf Aussagen zu referenzieren. Diese 
+  Quotes/Antworten zu erstellen welche auf keine echten Posts hinweisen und z.B. auf Aussagen zu referenzieren. Diese
   "fake" Antworten führen deshalb bein anklicken auf keinen anderen Post.
-  
+
 ### Bearbeiten von Posts
 
 - Beim Betätigung des Knopfes 'Bearbeiten', welcher mit dem Stift-Symbol gekennzeichnet ist, wird ein Post in
   Bearbeitungszustand versetzt. In diesem Zustand wird der vorher angezeigte Inhalt wieder in den mit möglicherweise
   Tags versehenen serialisierten Zustand versetzt. Während des Bearbeitens kann der Benutzer wie beim Erstellen eines
   Posts an beliebigen Stellen Antworten auf andere Posts hinzufügen und seinen eigenen als auch den Text von Antworten
-  bearbeiten. Das Beenden der Bearbeitung wird beim Betätigen des Knopfes 'Done' signalisiert. Daraufhin wird der
-  Inhalt an das Backend weitergereicht und die neue Darstellung des Posts gebaut.  
+  bearbeiten. Das Beenden der Bearbeitung wird beim Betätigen des Knopfes 'Done' signalisiert. Daraufhin wird der Inhalt
+  an das Backend weitergereicht und die neue Darstellung des Posts gebaut.
 
  <img src="assetsDocumentation/lukasH/editPost.gif" alt="editAPost" width="900"/>
 
-  Es ist mit anzumerken dass:
-  - Immer nur ein Post darf an einem Zeitpunkt bearbeitet werden. Die Bearbeitung weiterer Posts ist erst nach Beendung
-    der derzeitigen Bearbeitung möglich.
-  - Während des Bearbeitens eines Posts es nicht möglich ist Posts zu schreiben / posten
+Es ist mit anzumerken dass:
+
+- Immer nur ein Post darf an einem Zeitpunkt bearbeitet werden. Die Bearbeitung weiterer Posts ist erst nach Beendung
+  der derzeitigen Bearbeitung möglich.
+- Während des Bearbeitens eines Posts es nicht möglich ist Posts zu schreiben / posten
 
  <img src="assetsDocumentation/lukasH/editRestrictions.gif" alt="editRestrictions" width="900"/>
 
 ### Teilen
 
-- Beim Betätigen des Knopfes 'Share' wird in den Zwischenspeicher des Benutzers die Adresse des Posts gespeichert
-  was beim Aufrufen einen direkt zum Post innerhalb des Thread bewegt.
+- Beim Betätigen des Knopfes 'Share' wird in den Zwischenspeicher des Benutzers die Adresse des Posts gespeichert was
+  beim Aufrufen einen direkt zum Post innerhalb des Thread bewegt.
 
 ### Reporting
 
-- Beim Betätigen des Knopfes 'Report' öffnet sich ein Dialog, in welchem sich ein Textfeld befindet, um es Benutzern 
-  zu erlauben Posts zu melden. 
-
+- Beim Betätigen des Knopfes 'Report' öffnet sich ein Dialog, in welchem sich ein Textfeld befindet, um es Benutzern zu
+  erlauben Posts zu melden.
 
 ## Animation beim Finden von Schwachstellen
 
 Die Animation, welche beim Finden von Schwachstellen auftritt, ist aufgebaut aus 2 Zuständen, dem 'show' und 'hide'
-Zustand welche jeweils ihre eigenen Transformationen in den anderen Zustand besitzen. Neben dem erscheineneden Symbol 
-werden die Worte 'You did a thing' nacheinander eingefügt und nach wenigen Sekunden wieder nacheinander entfernt.  
+Zustand welche jeweils ihre eigenen Transformationen in den anderen Zustand besitzen. Neben dem erscheineneden Symbol
+werden die Worte 'You did a thing' nacheinander eingefügt und nach wenigen Sekunden wieder nacheinander entfernt.
 
 <img src="assetsDocumentation/lukasH/YouDidAThing.gif" alt="editRestrictions" width="900"/>
 
 Das einzelne Einfügen der Worte wird durch separate Übergangsanweisungen für jedes Wort erzeugt, indem die einzelnen
 verzögert voneinander beginnen.
 
-  
 Alexander Kern
 
 ## Routing und Datenbankanbindung mit Laravel
 
 ### Probleme mit Laravel und SQl injection
 
-Laravel ist ein gutes Framework, welches für die Datenbankanbindung standardmäßig Prepared Statements in den Eloquent Modellen (siehe Beschreibung Daniel K.) nutzt.
-Diese sind Perfekt für normale Anwendungen, wenn man dagegen SQL injection explizit erlauben möchte muss man das irgendwie umgehen.
+Laravel ist ein gutes Framework, welches für die Datenbankanbindung standardmäßig Prepared Statements in den Eloquent
+Modellen (siehe Beschreibung Daniel K.) nutzt. Diese sind Perfekt für normale Anwendungen, wenn man dagegen SQL
+injection explizit erlauben möchte muss man das irgendwie umgehen.
 
 #### Injection bei SELECT Statements
 
 ##### Mögliche Injections
 
 Bei SELECT Statements sind zwei Arten von Injectons möglich:
-Zum Einen kann mann sich mit `SELECT (*) FROM users WHERE id = 1 or 1=1;` alle User ausgeben lassen, obwohl mann die IDs dieser nicht kennt.
-Zum Anderen ist es möglich ein Union Statement zu formen um sich Daten von andenen Tabellen oder Werte die nicht ausgegeben werden, sich ausgeben zu lassen.
+Zum Einen kann mann sich mit `SELECT (*) FROM users WHERE id = 1 or 1=1;` alle User ausgeben lassen, obwohl mann die IDs
+dieser nicht kennt. Zum Anderen ist es möglich ein Union Statement zu formen um sich Daten von andenen Tabellen oder
+Werte die nicht ausgegeben werden, sich ausgeben zu lassen.
 
 ##### Probleme in Laravel
 
-Laravel hat die Funktion `find()` mit welcher man ein Eloquent model in der passenden Datenbank suchen kann. Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten String mitgeben, welcher auch andere Statements enthalten kann.
+Laravel hat die Funktion `find()` mit welcher man ein Eloquent model in der passenden Datenbank suchen kann. Um dies
+Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten String
+mitgeben, welcher auch andere Statements enthalten kann.
 
 #### Injection bei INSERT Statements
 
 ##### Mögliche Injection
 
-In INSERT Statements ist möglich mit einer Subquery, einer Anfrage in einer Anfrage, Passwörter oder andere Daten in vorhandene Felder zu schreiben.
-Ein solches Statement würde ungefähr so aussehen:
+In INSERT Statements ist möglich mit einer Subquery, einer Anfrage in einer Anfrage, Passwörter oder andere Daten in
+vorhandene Felder zu schreiben. Ein solches Statement würde ungefähr so aussehen:
 `INSERT into users (name , password, info) VALUES ('Alex', 'Secret', (SELECT password FROM users where id = 5)); --`
 Nun steht in dem fled info das Passwort des Users mit der ID 5.
 
 ##### Probleme in Laravel
 
-Für ein INSERT mit Eloquent ist es nur nötig den einkommenden Body in ein `insert()` zu stecken. Mit einem Validator kann man davor noch Bedingungen prüfen.
-Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
-Hierbei sind folgenden Dinge zu beachten:
-    1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
-    2. Der String sollte Allgemeingültig für alle Ressourcen sein.
-    3. Json Arrays müssen als String encoded werden.
+Für ein INSERT mit Eloquent ist es nur nötig den einkommenden Body in ein `insert()` zu stecken. Mit einem Validator
+kann man davor noch Bedingungen prüfen. Um hier die Injection möglich zu machen muss man den String der Anfrage speziell
+zusammenbauen. Hierbei sind folgenden Dinge zu beachten:
+1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen 2. Der String sollte Allgemeingültig für alle
+Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
-    1. Der Nutzer muss berechtigt sein die Ressource zu erstellen.
-    2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
+1. Der Nutzer muss berechtigt sein die Ressource zu erstellen. 2. Bei Ressourcen mit Author muss der Nutzer muss
+identisch oder ein Admin sein.
 
-Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name des Feldes und den Wert an Verschiedene Strings angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Erstellzeitpunk und der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben
+bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name
+des Feldes und den Wert an Verschiedene Strings angehängt. Sollte der wert ein Array sein wird dies davor in json
+encoded. Der Erstellzeitpunk und der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
 
 Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
@@ -649,27 +661,33 @@ Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
 ##### Mögliche Injections
 
-In UPDATE Statements ist es möglich Werte von allen Zeilen einer Tabelle zu verändern. Hierbei darf in der Tabelle keine Einzigartigen Werte geben.
-Des weiteren ist eine Subquery ebenfalls möglich.
+In UPDATE Statements ist es möglich Werte von allen Zeilen einer Tabelle zu verändern. Hierbei darf in der Tabelle keine
+Einzigartigen Werte geben. Des weiteren ist eine Subquery ebenfalls möglich.
 
-Um Daten in alle Zeilen zu schreiben muss man aus `UPDATE threads SET title="New Title" WHERE id = 5;` `UPDATE threads SET title="New Title"` machen. Nun existiert keine Beschränkung für das und jeder Thred title wird zu "New Title" geändert.
-Dies ist einfach zu erreichen in dem man `;--` oder andere Syntax für SQL Kommentare anhängt.
+Um Daten in alle Zeilen zu schreiben muss man
+aus `UPDATE threads SET title="New Title" WHERE id = 5;` `UPDATE threads SET title="New Title"` machen. Nun existiert
+keine Beschränkung für das und jeder Thred title wird zu "New Title" geändert. Dies ist einfach zu erreichen in dem
+man `;--` oder andere Syntax für SQL Kommentare anhängt.
 
 ##### Probleme in Laravel
 
-Für ein UPDATE mit Eloquent ist es nur nötig das aktuelle Model zu suchen und anschließend den einkommenden Body in ein `->update()` zu stecken. Damit dies in der Datenbank gespeichert wird sollte man ein `-save()` ausführen. Mit einem Validator kann man davor noch Bedingungen prüfen.
+Für ein UPDATE mit Eloquent ist es nur nötig das aktuelle Model zu suchen und anschließend den einkommenden Body in
+ein `->update()` zu stecken. Damit dies in der Datenbank gespeichert wird sollte man ein `-save()` ausführen. Mit einem
+Validator kann man davor noch Bedingungen prüfen.
 
-Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen.
-Hierbei sind folgenden Dinge zu beachten:
-    1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen
-    2. Der String sollte Allgemeingültig für alle Ressourcen sein.
-    3. Json Arrays müssen als String encoded werden.
+Um hier die Injection möglich zu machen muss man den String der Anfrage speziell zusammenbauen. Hierbei sind folgenden
+Dinge zu beachten:
+1. Die zu injectenden Felder sollten nicht ganz vorne im String kommen 2. Der String sollte Allgemeingültig für alle
+Ressourcen sein. 3. Json Arrays müssen als String encoded werden.
 
 Desweitern muss noch folgendes beachtet werden:
-    1. Der Nutzer muss berechtigt sein die Ressource zu bearbeiten.
-    2. Bei Ressourcen mit Author muss der Nutzer muss identisch oder ein Admin sein.
+1. Der Nutzer muss berechtigt sein die Ressource zu bearbeiten. 2. Bei Ressourcen mit Author muss der Nutzer muss
+identisch oder ein Admin sein.
 
-Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name des Feldes und den Wert an einen String angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
+Das Resultat ist eine Funktion, die den Tabellennamen, ein Array der Felder der Ressource und die Request übergeben
+bekommt. Die Funktion Iteriert über das Array und prüft ob die Felder existieren. Wenn dies der Fall ist wird der Name
+des Feldes und den Wert an einen String angehängt. Sollte der wert ein Array sein wird dies davor in json encoded. Der
+Updatezeitpunk wird automatisch auf den aktuellen Zeitpunkt gesetzt.
 
 Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
@@ -677,23 +695,26 @@ Bestimmte Werte müssen vorher mit einem Validator überprüft werden.
 
 ##### Mögliche Injection
 
-Bei einem DELETE Statement ist eine Injection möglich. Man kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen um alle Daten zu Löschen.
+Bei einem DELETE Statement ist eine Injection möglich. Man kann wie bei einem WHERE Statement z.B. ein `or 1=1` anhängen
+um alle Daten zu Löschen.
 
 ##### Probleme in Laravel
 
-Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten String mitgeben, welcher auch andere Befehle enthalten kann.
+Um dies Injectable zu machen muss man sich ein "whereRaw" Statement schreiben. In diesem kann man einen kombinierten
+String mitgeben, welcher auch andere Befehle enthalten kann.
 
 ### Routing mit Laravel
 
 Routing in Laravel ist simpel.
 
-Zuerst muss man die Routen im RouteServiceProvider registrieren. Für die Routen kann man hier ein Prefix vergeben. Sobald dies geschehen ist kann man in der registrierten Route Funktionen und Endpunkte definieren.
+Zuerst muss man die Routen im RouteServiceProvider registrieren. Für die Routen kann man hier ein Prefix vergeben.
+Sobald dies geschehen ist kann man in der registrierten Route Funktionen und Endpunkte definieren.
 
 Als Beispiel:
 `Route::get('users/{id}', 'App\Http\Controllers\UserController@getUserById');`
 
-Hier wird in der api.php ein Endpunkt definiert, der auf `users/id` endet, und die Funtion getUserById in der Klasse UserController aufruft.
-Die Funktion kann nun `id` und `request` als Werte übergeben bekommen.
+Hier wird in der api.php ein Endpunkt definiert, der auf `users/id` endet, und die Funtion getUserById in der Klasse
+UserController aufruft. Die Funktion kann nun `id` und `request` als Werte übergeben bekommen.
 
 Beispiel:
 
@@ -708,13 +729,13 @@ Beispiel:
     }
 ```
 
-Diese Funktion sucht nach einem User mit der Injectable Funktion.
-Sollte hier kein Resultat kommen wird ein response mit 404 gesendet.
-ansonsten wird die UserRessurce aufgerufen.
+Diese Funktion sucht nach einem User mit der Injectable Funktion. Sollte hier kein Resultat kommen wird ein response mit
+404 gesendet. ansonsten wird die UserRessurce aufgerufen.
 
 #### Ressourcen
 
-Ressourcen in Laravel benutzt man um Objekte in eine Form zu bringen, die man ausgibt. Hier kann zum Beispiel bei einem User das Password versteckt werden, oder man baut sich Subressourcen aus übergebenen Arrays.
+Ressourcen in Laravel benutzt man um Objekte in eine Form zu bringen, die man ausgibt. Hier kann zum Beispiel bei einem
+User das Password versteckt werden, oder man baut sich Subressourcen aus übergebenen Arrays.
 
 Beispiel:
 (aus ThreadRessurce.php)
@@ -744,43 +765,71 @@ Beispiel Resultat:
 
 ```json
 {
-   "id": 21,
-   "title": "Community Thread 1",
-   "date": "01.01.0001",
-   "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-   "author":
-     {
-       "id": 11,
-       "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
-       "name": "TestUsername1"
-     },
-   "posts": [
-     {
-       "id": 31,
-       "content": "this is a test post",
-       "date": "04.01.0001",
-       "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-       "author":
-         {
-           "id": 12,
-           "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
-           "name": "TestUsername2"
-         }
-     }
-   ]
- }
+  "id": 21,
+  "title": "Community Thread 1",
+  "date": "01.01.0001",
+  "likedFrom": [
+    11,
+    12,
+    135,
+    1553,
+    14,
+    1882,
+    1444,
+    1555,
+    131
+  ],
+  "author": {
+    "id": 11,
+    "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
+    "name": "TestUsername1"
+  },
+  "posts": [
+    {
+      "id": 31,
+      "content": "this is a test post",
+      "date": "04.01.0001",
+      "likedFrom": [
+        11,
+        12,
+        135,
+        1553,
+        14,
+        1882,
+        1444,
+        1555,
+        131
+      ],
+      "author": {
+        "id": 12,
+        "profilePicture": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AAR...",
+        "name": "TestUsername2"
+      }
+    }
+  ]
+}
 ```
 
 Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgende Json entstanden:
 
 ```json
 {
-   "id": 21,
-   "title": "Community Thread 1",
-   "date": "01.01.0001",
-   "likedFrom": [11, 12, 135, 1553, 14, 1882, 1444, 1555, 131],
-   "author": 11
- }
+  "id": 21,
+  "title": "Community Thread 1",
+  "date": "01.01.0001",
+  "likedFrom": [
+    11,
+    12,
+    135,
+    1553,
+    14,
+    1882,
+    1444,
+    1555,
+    131
+  ],
+  "author": 11
+}
 ```
 
 Daniel Katzenberger
