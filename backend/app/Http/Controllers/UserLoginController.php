@@ -41,7 +41,7 @@ class UserLoginController extends Controller
                 'c_password' => Hash::make($request->password),
                 'birth_date' => $request->birthDate,
                 'password' => self::passwordhasher($request->password),
-                'profile_picture' => $request->profile_picture
+                'profile_picture' => $request->profilePicture
             ]);
         }
         else
