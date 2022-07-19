@@ -236,8 +236,8 @@ Nutzer beeinträchtigen.
 
 ##### Schwierigkeitsgrade:
 
-- 1: Jeder Nutzer darf bis zu 10000 Anfragen pro Minute schicken. Da diese Zahl unrealistisch hoch ist, kann das als "
-  unbegrenzt" verstanden werden.
+- 1: Jeder Nutzer darf bis zu 10000 Anfragen pro Minute schicken. Da diese Zahl unrealistisch hoch ist, kann das als 
+"unbegrenzt" verstanden werden.
 - 2: Jeder Nutzer darf bis zu 120 Anfragen pro Minute schicken.
 - 3: Jeder Nutzer darf bis zu 60 Anfragen pro Minute schicken.
 
@@ -249,7 +249,7 @@ entsprechenden Verwundbarkeiten gefiltert und geprüft werden.
 Umgesetzt wird das mit Laravels "Middleware"-Feature:
 Jede Anfrage geht eine Sammlung an Middlewares durch, die sie verarbeiten, bevor sie an die Controller durchgereicht
 wird, die dann die gesendeten Daten in der Datenbank speichern o.Ä., wie an anderen Orten in dieser Dokumentation
-erklärt wird.
+erklärt wird. Der Ablauf beim Behandeln einer Anfrage sieht also etwa so aus:
 
 <img src="assetsDocumentation/chrisR/Middleware.jpg" alt="Middleware UML sequence diagram" width="800"/>
 
@@ -307,21 +307,18 @@ Es gibt insgesamt drei XSS-Filter:
   einfacher ``<script>``-Tag würde herausgefiltert werden.
 - 3: Der Filter durchsucht den Text wiederholt nach ``<script>``- und ``</script>``-Tags und entfernt sie wiederholt.
   Andere HTML-Tags wie ``<button>`` werden weiterhin ignoriert.
-- 4: All ``<`` and ``>`` characters are filtered out. Additionally, the frontend prevents tags being injected into the
-  website.
 - 4: Alle ``<`` und ``>`` werden ausgefiltert und das Front-End verhindert, dass Tags in die DOM eingefügt werden, wie
   im Frontend-Teil dieser Dokumentation genauer erklärt.
 
 #### Insecure File Upload
 
 Profilbilder werden je nach Schwierigkeit auf verschiedene Arten gefiltert. Erkennt der Filter eine illegale Datei (die
-also weder vom Typ GIF, noch JPEG, noch PNG ist), wird eine Fehlermeldung zurückgegeben und die Anfrage nicht weiter
+also keinen der Dateitypen JPEG, PNG, WEBP oder GIF hat), wird eine Fehlermeldung zurückgegeben und die Anfrage nicht weiter
 bearbeitet.
 
 ##### Schwierigkeitsgrade:
 
 - 1: Keinerlei Filter.
-- 2: The filter checks for the data type of the encoded file using the file ending.
 - 2: Der Filter prüft den Datentyp der versendeten Datei, indem die Dateiendung überprüft wird.
 - 3: Der Filter überprüft die Magic Bytes der Datei, also die ersten paar Bytes - diese definieren den tatsächlichen
   Datentyp unabhängig von der Dateiendung.
