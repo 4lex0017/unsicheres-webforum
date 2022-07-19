@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class HinweisController extends Controller
+class HintController extends Controller
 {
     public function seed()
     {
-        $jsonu = Storage::disk('local')->get('/defaults/defaultHinweisauthor.json');
+        $jsonu = Storage::disk('local')->get('/defaults/defaultHintAuthor.json');
         $users = json_decode($jsonu, true);
 
         foreach ($users as $value)
@@ -34,7 +34,7 @@ class HinweisController extends Controller
             }
         }
     
-        $jsonp = Storage::disk('local')->get('/defaults/defaultHinweise.json');
+        $jsonp = Storage::disk('local')->get('/defaults/defaultHints.json');
         $categorys = json_decode($jsonp, true);
 
         foreach($categorys as $category)
