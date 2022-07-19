@@ -530,11 +530,29 @@ Nutzer sich äußern und speziell auf vorherige Posts antworten.
 - Innerhalb des Postinhalts, der im Backend gespeicherten Inhalt der Posts, sind Antworten mit den Tags 
   '[quote=Username:PostId]...[/quote]' gekennzeichnet. Diese für das Backend serialisierte From wird dann
   im Frontend mithilfe von Regular Expressions deserialisiert und in sogenannten Blockquotes innerhalb des
-  Posts an der richtigen Stelle erstellt. Das anklicken der Antworten innerhalb der Posts bringt den Benutzer
+  Posts an der richtigen Stelle erstellt.
+
+
+- Einigen der verwendeten Regular Expressions:  
+- Teilen des Inhalts in Posttext und Antworten:
+```php
+    const splitRegex = new RegExp("\\[quote=.*?](.*?)\\[/quote]", 'gmids');
+```
+- Besorgen des ersten Quote-Tags der Antwort um die nötigen Daten wie Autor und PostId zu bekommen
+```php
+    const replyInfoRegex = new RegExp("\\[quote=(.*?)]", 'mid');
+```
+- Besorgen des Usernames aus dem ersten Quote-Tag:
+
+```php
+    const userNameRegex = new RegExp("(?<=\=)(.*?)(?=\:)", 'mid');
+```
+  
+- 
+- Das anklicken der Antworten innerhalb der Posts bringt den Benutzer
   zum originalen Post.  
 - Um möglicherweise auf Stellen innerhalb der Antwort hinzuweisen oder Verbesserungen durchzuführen ist es
   Autor eines Posts erlaubt, den Inhalt von Antworten innerhalb seines Posts zu verändern
-
 - Nutzern ist es auch gestattet, durch Entfernen des sich im ersten Quote-Tag einer Anwort befindenden Doppelpunkets
   Quotes/Antworten zu erstellen welche auf keine echten Posts hinweisen und z.B. auf Aussagen zu referenzieren. Diese 
   "fake" Antworten führen deshalb bein anklicken auf keinen anderen Post.
