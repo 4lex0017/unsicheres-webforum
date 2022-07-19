@@ -1,6 +1,6 @@
 # Unsicheres Web-Forum für die Lehre - Dokumentation
 
-## Frontend - Daniel Becker
+## Daniel Becker - Frontend
 
 ## Analyse; entwickeln der Prototypen; treffen der Designentscheidungen; generelles Management; entwickeln, implementieren und testen fast aller Komponenten und Service
 
@@ -221,7 +221,7 @@ bzw. Konfliktlösung innerhalb des Teams einhergeht wurde absolut unterschätzt.
 anderen Teammitgliedern gelöst werden konnten und die dadurch entstandenen Wartezeiten waren bedenklich hoch und
 Fehlkalkuliert. In der Zukunft werden Managementfaktoren genauer und großzügiger einkalkuliert.
 
-Chris Reichel
+## Chris Reichel - Backend
 
 ## Filtering, Monitoring und das Scoreboard
 
@@ -500,7 +500,7 @@ Back-end Filters gleich 4 ist - ist das nicht der Fall, so wurde die Route berei
 Routen mit Front-end Filtering wird außerdem der Back-end Filter auf Stufe 1 gesetzt. Danach werden nur für den Back-end
 Filter weitere Routen zugewiesen, für den Front-end Filter gibt es also nur je Schwierigkeit eine Route.
 
-# Frontend - Lukas Hein
+## Frontend - Lukas Hein
 
 ## Entwicklung von Posts ; Animation beim Finden von Schwachstellen
 
@@ -601,7 +601,7 @@ werden die Worte 'You did a thing' nacheinander eingefügt und nach wenigen Seku
 Das einzelne Einfügen der Worte wird durch separate Übergangsanweisungen für jedes Wort erzeugt, indem die einzelnen
 verzögert voneinander beginnen.
 
-Alexander Kern
+## Alexander Kern - Backend
 
 ## Routing und Datenbankanbindung mit Laravel
 
@@ -833,7 +833,7 @@ Wenn hier die Daten aus dem Thread direkt ausgegeben worden wären wäre folgend
 }
 ```
 
-# Daniel Katzenberger - Backend
+## Daniel Katzenberger - Backend
 
 ## Laravel, Datenbanken, Routen, Logik, Management, Docker
 
@@ -1049,7 +1049,7 @@ Management und gute Tools, die dabei unterstützen sind und werde zukünftige pr
 nehmen.
 
 
-## Backend - Peter Weiß
+## Peter Weiß - Backend
 ## Authentication, Authorization, Passwordhashing, Hinweis- und Database-Seeding
 
 ### Authentication von Usern und dem Admin
