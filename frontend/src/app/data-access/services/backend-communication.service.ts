@@ -65,6 +65,9 @@ export class BackendCommunicationService {
       case 204:
         errorResponseString = 'An application breaking sqlInjection was triggered.'
         break;
+      case 413:
+        errorResponseString = 'Image size too large!'
+        break;
       case 418:
         errorResponseString = 'The uploaded image datatype is invalid.'
         break;
