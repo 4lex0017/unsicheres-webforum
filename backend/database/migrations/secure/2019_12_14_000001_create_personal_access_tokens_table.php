@@ -13,7 +13,7 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function up()
     {
-        Schema::connection('insecure')->create('personal_access_tokens', function (Blueprint $table) {
+        Schema::connection('secure')->create('personal_access_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->morphs('tokenable');
             $table->string('name');
@@ -31,6 +31,6 @@ class CreatePersonalAccessTokensTable extends Migration
      */
     public function down()
     {
-        Schema::connection('insecure')->dropIfExists('personal_access_tokens');
+        Schema::connection('secure')->dropIfExists('personal_access_tokens');
     }
 }
