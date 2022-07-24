@@ -11,5 +11,5 @@ class AccessToken extends SanctumPersonalAccessToken
     use HasFactory;
 
     protected $table = 'personal_access_tokens';
-    protected $connection = 'insecure';
+    protected $connection = 'secure';
 }
