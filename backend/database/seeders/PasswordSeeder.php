@@ -35,7 +35,7 @@ class PasswordSeeder extends Seeder
         {
             foreach ($users as $value)
             {
-                DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['password' => sha1($value['password'])]);
+                DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['password' => md5($value['password'])]);
             }
         }
 
@@ -43,7 +43,7 @@ class PasswordSeeder extends Seeder
         {
             foreach ($users as $value)
             {
-                DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['password' => md5($value['password'])]);
+                DB::connection('insecure')->table('users')->where('id' , $value['id'])->update(['password' => sha1($value['password'])]);
             }
         }
 
