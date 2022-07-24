@@ -54,8 +54,6 @@ export class SidenavComponent {
         panelClass: ['snack-bar-background'],
         data: "Scoreboard has been reset. Logging out ...",
       })
-      this.authAdmin.logoutAdmin();
-      this.router.navigate(['/userLogin'])
     });
   }
 
