@@ -14,6 +14,7 @@ import {DidAThingServiceService} from "../../shared/did-a-thing/did-a-thing-serv
 import {ThreadArrayModel} from "../../data-access/models/ThreadArrayModel";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SnackBarNotificationComponent} from "../../shared/snack-bar-notification/snack-bar-notification.component";
+import {Clipboard} from "@angular/cdk/clipboard";
 
 
 @Component({
@@ -39,7 +40,8 @@ export class UserThreadViewComponent implements OnInit {
               private diffPicker: DifficultyPickerService,
               private changeDetectorRef: ChangeDetectorRef,
               private didAThing: DidAThingServiceService,
-              private _snackBar: MatSnackBar) {
+              private _snackBar: MatSnackBar,
+              private clipboard: Clipboard) {
   }
 
   async setVulnThread() {
@@ -198,6 +200,7 @@ export class UserThreadViewComponent implements OnInit {
   }
 
   moveToPost(id: number) {
+    window.location.hash = "";
     window.location.hash = id.toString();
   }
 
@@ -250,7 +253,7 @@ export class UserThreadViewComponent implements OnInit {
 
   copyUrl(postId: number): void {
     let url = window.location.href.split("#")
-    navigator.clipboard.writeText(url[0] + "#" + postId);
+    this.clipboard.copy(url[0] + "#" + postId);
     this._snackBar.openFromComponent(SnackBarNotificationComponent, {
       duration: 5000,
       panelClass: ['snack-bar-background'],
