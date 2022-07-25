@@ -74,6 +74,13 @@
                 </th>
                 <td mat-cell *matCellDef="let element"> {{element.vulLevel}} </td>
               </ng-container>
+
+              <ng-container matColumnDef="vulFound">
+                <th mat-header-cell *matHeaderCellDef>
+                  Triggered on Route
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.uri}} </td>
+              </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedInnerColumns"></tr>
               <tr mat-row *matRowDef="let row ; columns: displayedInnerColumns;"></tr>
             </table>

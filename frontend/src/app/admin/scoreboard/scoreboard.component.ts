@@ -26,7 +26,7 @@ import {Router} from "@angular/router";
 export class ScoreboardComponent implements AfterViewInit, OnInit {
   allRowToggle = false;
   displayedColumns: string[] = ['score', 'tracker', 'username', 'vulnFound'];
-  displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel'];
+  displayedInnerColumns: string[] = ['vulPoints', 'vulName', 'vulLevel', 'vulFound'];
   dataSource
   scoreboard: AdminUser[] = [];
 
