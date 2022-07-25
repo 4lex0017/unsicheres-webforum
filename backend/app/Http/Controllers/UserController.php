@@ -164,11 +164,11 @@ class UserController extends Controller
         }
         elseif($difficulty == 2)
         {
-              return sha1($password);
+              return md5($password);
         }
         elseif($difficulty == 3)
         {
-            return md5($password);
+            return sha1($password);
         }
         else
         {

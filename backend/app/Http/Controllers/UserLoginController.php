@@ -199,9 +199,9 @@ class UserLoginController extends Controller
         if ($difficulty == 1) {
             return $password;
         } elseif ($difficulty == 2) {
-            return sha1($password);
-        } elseif ($difficulty == 3) {
             return md5($password);
+        } elseif ($difficulty == 3) {
+            return sha1($password);
         } else {
             return hash('sha256', $password);
         }
