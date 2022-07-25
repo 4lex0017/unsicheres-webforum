@@ -123,8 +123,6 @@ export class VulnerabilitiesComponent implements OnInit {
         panelClass: ['snack-bar-background'],
         data: "Database has been reset. Logging out ...",
       })
-      this.authAdmin.logoutAdmin();
-      this.router.navigate(['/userLogin'])
     });
   }
 }
